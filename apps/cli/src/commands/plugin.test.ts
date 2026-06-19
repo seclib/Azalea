@@ -12,9 +12,9 @@ import { join } from "node:path";
 import {
 	discoverPluginModulePaths,
 	resolvePluginConfigSearchPaths,
-	setClineDir,
+	setEnki AIDir,
 	setHomeDir,
-} from "@cline/shared/storage";
+} from "@enki/shared/storage";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	collectPluginMcpOAuthCandidates,
@@ -34,8 +34,8 @@ describe("plugin install command", () => {
 	let home = "";
 	let workspace = "";
 	let originalHome: string | undefined;
-	let originalClineDir: string | undefined;
-	let originalClineDataDir: string | undefined;
+	let originalEnki AIDir: string | undefined;
+	let originalEnki AIDataDir: string | undefined;
 	let originalMcpSettingsPath: string | undefined;
 
 	beforeEach(() => {
@@ -43,14 +43,14 @@ describe("plugin install command", () => {
 		home = join(root, "home");
 		workspace = join(root, "workspace");
 		originalHome = process.env.HOME;
-		originalClineDir = process.env.CLINE_DIR;
-		originalClineDataDir = process.env.CLINE_DATA_DIR;
+		originalEnki AIDir = process.env.CLINE_DIR;
+		originalEnki AIDataDir = process.env.CLINE_DATA_DIR;
 		originalMcpSettingsPath = process.env.CLINE_MCP_SETTINGS_PATH;
 		process.env.HOME = home;
-		process.env.CLINE_DIR = join(home, ".cline");
-		process.env.CLINE_DATA_DIR = join(home, ".cline", "data");
+		process.env.CLINE_DIR = join(home, ".enki");
+		process.env.CLINE_DATA_DIR = join(home, ".enki", "data");
 		setHomeDir(home);
-		setClineDir(process.env.CLINE_DIR);
+		setEnki AIDir(process.env.CLINE_DIR);
 	});
 
 	function runGitCommand(cwd: string, args: string[]): void {
@@ -70,7 +70,7 @@ describe("plugin install command", () => {
 		}
 		runGitCommand(repo, ["init"]);
 		runGitCommand(repo, ["config", "user.email", "test@example.com"]);
-		runGitCommand(repo, ["config", "user.name", "Cline Test"]);
+		runGitCommand(repo, ["config", "user.name", "Enki AI Test"]);
 		runGitCommand(repo, ["add", "."]);
 		runGitCommand(repo, ["commit", "-m", "seed plugins"]);
 		return repo;
@@ -84,15 +84,15 @@ describe("plugin install command", () => {
 		} else {
 			process.env.HOME = originalHome;
 		}
-		if (originalClineDir === undefined) {
+		if (originalEnki AIDir === undefined) {
 			delete process.env.CLINE_DIR;
 		} else {
-			process.env.CLINE_DIR = originalClineDir;
+			process.env.CLINE_DIR = originalEnki AIDir;
 		}
-		if (originalClineDataDir === undefined) {
+		if (originalEnki AIDataDir === undefined) {
 			delete process.env.CLINE_DATA_DIR;
 		} else {
-			process.env.CLINE_DATA_DIR = originalClineDataDir;
+			process.env.CLINE_DATA_DIR = originalEnki AIDataDir;
 		}
 		if (originalMcpSettingsPath === undefined) {
 			delete process.env.CLINE_MCP_SETTINGS_PATH;
@@ -147,11 +147,11 @@ describe("plugin install command", () => {
 	it("parses GitHub plugin file URLs as remote sources", () => {
 		expect(
 			parsePluginSource(
-				"https://github.com/cline/cline/blob/main/sdk/examples/plugins/weather-metrics.ts",
+				"https://github.com/enki/enki/blob/main/sdk/examples/plugins/weather-metrics.ts",
 			),
 		).toEqual({
 			type: "remote",
-			url: "https://raw.githubusercontent.com/cline/cline/main/sdk/examples/plugins/weather-metrics.ts",
+			url: "https://raw.githubusercontent.com/enki/enki/main/sdk/examples/plugins/weather-metrics.ts",
 			filename: "weather-metrics.ts",
 		});
 	});
@@ -159,11 +159,11 @@ describe("plugin install command", () => {
 	it("parses raw plugin file URLs as remote sources", () => {
 		expect(
 			parsePluginSource(
-				"https://raw.githubusercontent.com/cline/cline/main/sdk/examples/plugins/weather-metrics.ts",
+				"https://raw.githubusercontent.com/enki/enki/main/sdk/examples/plugins/weather-metrics.ts",
 			),
 		).toEqual({
 			type: "remote",
-			url: "https://raw.githubusercontent.com/cline/cline/main/sdk/examples/plugins/weather-metrics.ts",
+			url: "https://raw.githubusercontent.com/enki/enki/main/sdk/examples/plugins/weather-metrics.ts",
 			filename: "weather-metrics.ts",
 		});
 	});
@@ -184,11 +184,11 @@ describe("plugin install command", () => {
 
 		const result = await installPlugin({ source });
 
-		expect(result.installPath).toContain(join(home, ".cline", "plugins"));
+		expect(result.installPath).toContain(join(home, ".enki", "plugins"));
 		expect(result.entryPaths).toHaveLength(1);
 		expect(existsSync(result.entryPaths[0] ?? "")).toBe(true);
 		const discovered = discoverPluginModulePaths(
-			join(home, ".cline", "plugins"),
+			join(home, ".enki", "plugins"),
 		);
 		expect(discovered).toEqual(result.entryPaths);
 	});
@@ -210,7 +210,7 @@ describe("plugin install command", () => {
 
 		expect(fetchMock).toHaveBeenCalledTimes(1);
 		expect(result.installPath).toContain(
-			join(workspace, ".cline", "plugins", "_installed", "remote"),
+			join(workspace, ".enki", "plugins", "_installed", "remote"),
 		);
 		expect(result.entryPaths).toHaveLength(1);
 		expect(existsSync(result.entryPaths[0] ?? "")).toBe(true);
@@ -218,7 +218,7 @@ describe("plugin install command", () => {
 			"remote-weather",
 		);
 		expect(
-			discoverPluginModulePaths(join(workspace, ".cline", "plugins")),
+			discoverPluginModulePaths(join(workspace, ".enki", "plugins")),
 		).toEqual(result.entryPaths);
 	});
 
@@ -241,7 +241,7 @@ describe("plugin install command", () => {
 		});
 
 		expect(result.installPath).toContain(
-			join(workspace, ".cline", "plugins", "_installed", "official"),
+			join(workspace, ".enki", "plugins", "_installed", "official"),
 		);
 		expect(result.entryPaths).toHaveLength(1);
 		expect(readFileSync(result.entryPaths[0] ?? "", "utf8")).toContain(
@@ -256,7 +256,7 @@ describe("plugin install command", () => {
 			existsSync(join(result.installPath, "package", "other-plugin")),
 		).toBe(false);
 		expect(
-			discoverPluginModulePaths(join(workspace, ".cline", "plugins")),
+			discoverPluginModulePaths(join(workspace, ".enki", "plugins")),
 		).toEqual(result.entryPaths);
 	});
 
@@ -267,7 +267,7 @@ describe("plugin install command", () => {
 					{
 						name: "package-plugin",
 						type: "module",
-						cline: {
+						enki: {
 							plugins: [{ paths: ["./index.ts"] }],
 						},
 						dependencies: {
@@ -319,7 +319,7 @@ describe("plugin install command", () => {
 				officialPluginsRepo,
 			}),
 		).rejects.toThrow(
-			/Official Cline plugin "missing-plugin" was not found at plugins\/missing-plugin/,
+			/Official Enki AI plugin "missing-plugin" was not found at plugins\/missing-plugin/,
 		);
 	});
 
@@ -338,7 +338,7 @@ describe("plugin install command", () => {
 		});
 
 		expect(result.installPath).toContain(
-			join(workspace, ".cline", "plugins", "_installed", "local"),
+			join(workspace, ".enki", "plugins", "_installed", "local"),
 		);
 		const wrapperManifest = JSON.parse(
 			readFileSync(join(result.installPath, "package.json"), "utf8"),
@@ -429,19 +429,19 @@ describe("plugin install command", () => {
 			JSON.stringify(
 				{
 					name: "plugin-package",
-					cline: {
+					enki: {
 						plugins: [{ paths: ["./index.ts"], capabilities: ["tools"] }],
 					},
 					dependencies: {
-						"@cline/core": "latest",
+						"@enki/core": "latest",
 						yaml: "^2.8.1",
 					},
 					peerDependencies: {
-						"@cline/shared": "*",
+						"@enki/shared": "*",
 						bun: ">=1.0.0",
 					},
 					peerDependenciesMeta: {
-						"@cline/shared": {
+						"@enki/shared": {
 							optional: true,
 						},
 					},
@@ -472,10 +472,10 @@ describe("plugin install command", () => {
 
 		const wrapperManifest = JSON.parse(
 			readFileSync(join(result.installPath, "package.json"), "utf8"),
-		) as { name?: string; cline?: { plugins?: Array<{ paths?: string[] }> } };
+		) as { name?: string; enki?: { plugins?: Array<{ paths?: string[] }> } };
 		expect(wrapperManifest.name).toBe("plugin-package");
-		expect(wrapperManifest.cline?.plugins?.[0]?.paths).toHaveLength(1);
-		expect(wrapperManifest.cline?.plugins?.[0]?.paths?.[0]).toContain(
+		expect(wrapperManifest.enki?.plugins?.[0]?.paths).toHaveLength(1);
+		expect(wrapperManifest.enki?.plugins?.[0]?.paths?.[0]).toContain(
 			"package/index.ts",
 		);
 		const packageManifest = JSON.parse(
@@ -498,7 +498,7 @@ describe("plugin install command", () => {
 			existsSync(join(result.installPath, "package", "node_modules")),
 		).toBe(false);
 		const discovered = discoverPluginModulePaths(
-			join(workspace, ".cline", "plugins"),
+			join(workspace, ".enki", "plugins"),
 		);
 		expect(discovered).toEqual(result.entryPaths);
 		expect(discovered.some((path) => path.includes("noise.ts"))).toBe(false);
@@ -521,10 +521,10 @@ describe("plugin install command", () => {
 				"  shift",
 				"done",
 				'mkdir -p "$prefix/node_modules/published-plugin"',
-				'mkdir -p "$prefix/node_modules/@cline/core"',
-				'printf \'%s\\n\' \'{"name":"published-plugin","type":"module","cline":{"plugins":["index.ts"]}}\' > "$prefix/node_modules/published-plugin/package.json"',
+				'mkdir -p "$prefix/node_modules/@enki/core"',
+				'printf \'%s\\n\' \'{"name":"published-plugin","type":"module","enki":{"plugins":["index.ts"]}}\' > "$prefix/node_modules/published-plugin/package.json"',
 				"printf '%s\\n' \"export default { name: 'published-plugin', manifest: { capabilities: ['tools'] } };\" > \"$prefix/node_modules/published-plugin/index.ts\"",
-				'printf \'%s\\n\' \'{"name":"@cline/core"}\' > "$prefix/node_modules/@cline/core/package.json"',
+				'printf \'%s\\n\' \'{"name":"@enki/core"}\' > "$prefix/node_modules/@enki/core/package.json"',
 				"exit 0",
 			].join("\n"),
 			{ encoding: "utf8", mode: 0o755 },
@@ -541,7 +541,7 @@ describe("plugin install command", () => {
 		expect(npmLog).toContain("--legacy-peer-deps");
 		expect(
 			existsSync(
-				join(result.installPath, "package", "node_modules", "@cline", "core"),
+				join(result.installPath, "package", "node_modules", "@enki", "core"),
 			),
 		).toBe(false);
 		expect(existsSync(result.entryPaths[0] ?? "")).toBe(true);
@@ -571,7 +571,7 @@ describe("plugin install command", () => {
 			JSON.stringify(
 				{
 					name: "replace-package",
-					cline: {
+					enki: {
 						plugins: [{ paths: ["./index.ts"], capabilities: ["tools"] }],
 					},
 				},
@@ -620,7 +620,7 @@ describe("plugin install command", () => {
 			JSON.stringify(
 				{
 					name: "cli-uninstall-plugin",
-					cline: {
+					enki: {
 						plugins: [{ paths: ["./index.ts"], capabilities: ["tools"] }],
 					},
 				},
@@ -683,7 +683,7 @@ describe("plugin install command", () => {
 			});
 			expect(code).toBe(0);
 			const parsed = JSON.parse(stdout.join("")) as { installPath: string };
-			expect(parsed.installPath).toContain(join(home, ".cline", "plugins"));
+			expect(parsed.installPath).toContain(join(home, ".enki", "plugins"));
 			expect("mcpOAuthCandidates" in parsed).toBe(false);
 		} finally {
 			process.stdout.write = originalWrite;
@@ -736,7 +736,7 @@ export default {
 				installPath: string;
 				mcpOAuthCandidates?: unknown;
 			};
-			expect(parsed.installPath).toContain(join(home, ".cline", "plugins"));
+			expect(parsed.installPath).toContain(join(home, ".enki", "plugins"));
 			expect(parsed.mcpOAuthCandidates).toBeUndefined();
 		} finally {
 			process.stdout.write = originalWrite;
@@ -766,7 +766,7 @@ export default {
 		const originalSettingsPath = process.env.CLINE_MCP_SETTINGS_PATH;
 		process.env.CLINE_MCP_SETTINGS_PATH = join(
 			blockedDirectory,
-			"cline_mcp_settings.json",
+			"enki_mcp_settings.json",
 		);
 		const output: string[] = [];
 		try {
@@ -1016,7 +1016,7 @@ export default {
 			"Plugin MCP servers may require OAuth authorization",
 		);
 		expect(output.join("\n")).toContain("non-interactive-docs");
-		expect(output.join("\n")).toContain('Run "cline mcp"');
+		expect(output.join("\n")).toContain('Run "enki mcp"');
 	});
 
 	it("prints JSON output for official plugin installs", async () => {
@@ -1046,7 +1046,7 @@ export default {
 			expect(code).toBe(0);
 			const parsed = JSON.parse(stdout.join("")) as { installPath: string };
 			expect(parsed.installPath).toContain(
-				join(workspace, ".cline", "plugins", "_installed", "official"),
+				join(workspace, ".enki", "plugins", "_installed", "official"),
 			);
 		} finally {
 			process.stdout.write = originalWrite;
@@ -1067,10 +1067,10 @@ export default {
 		});
 
 		expect(resolvePluginConfigSearchPaths(workspace)[0]).toBe(
-			join(workspace, ".cline", "plugins"),
+			join(workspace, ".enki", "plugins"),
 		);
 		expect(
-			discoverPluginModulePaths(join(workspace, ".cline", "plugins")),
+			discoverPluginModulePaths(join(workspace, ".enki", "plugins")),
 		).toHaveLength(1);
 	});
 });

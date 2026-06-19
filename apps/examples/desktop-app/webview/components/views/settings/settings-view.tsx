@@ -243,7 +243,7 @@ export function SettingsView({ onClose }: { onClose: () => void }) {
 		: null;
 
 	const isOAuthProvider = (id: string) =>
-		id === "cline" || id === "oca" || id === "openai-codex";
+		id === "enki" || id === "oca" || id === "openai-codex";
 
 	const runOAuthProviderLogin = async (id: string) => {
 		setOauthSigningProviderId(id);

@@ -1,10 +1,10 @@
 import { buildApiHandler } from "@core/api"
-import { Empty } from "@shared/proto/cline/common"
-import { PlanActMode, McpDisplayMode as ProtoMcpDisplayMode, UpdateSettingsRequest } from "@shared/proto/cline/state"
+import { Empty } from "@shared/proto/enki/common"
+import { PlanActMode, McpDisplayMode as ProtoMcpDisplayMode, UpdateSettingsRequest } from "@shared/proto/enki/state"
 import { convertProtoToApiProvider } from "@shared/proto-conversions/models/api-configuration-conversion"
 import { OpenaiReasoningEffort } from "@shared/storage/types"
 import { TelemetrySetting } from "@shared/TelemetrySetting"
-import { ClineEnv } from "@/config"
+import { Enki AIEnv } from "@/config"
 import { fetchRemoteConfig } from "@/core/storage/remote-config/fetch"
 import { clearRemoteConfig } from "@/core/storage/remote-config/utils"
 import { HostProvider } from "@/hosts/host-provider"
@@ -24,8 +24,8 @@ import { accountLogoutClicked } from "../account/accountLogoutClicked"
  */
 export async function updateSettings(controller: Controller, request: UpdateSettingsRequest): Promise<Empty> {
 	try {
-		if (request.clineEnv !== undefined) {
-			ClineEnv.setEnvironment(request.clineEnv)
+		if (request.enkiEnv !== undefined) {
+			Enki AIEnv.setEnvironment(request.enkiEnv)
 			await accountLogoutClicked(controller, Empty.create())
 		}
 
@@ -154,12 +154,12 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("yoloModeToggled", request.yoloModeToggled)
 		}
 
-		// Update cline web tools setting
-		if (request.clineWebToolsEnabled !== undefined) {
+		// Update enki web tools setting
+		if (request.enkiWebToolsEnabled !== undefined) {
 			if (controller.task) {
-				telemetryService.captureClineWebToolsToggle(controller.task.ulid, request.clineWebToolsEnabled)
+				telemetryService.captureEnki AIWebToolsToggle(controller.task.ulid, request.enkiWebToolsEnabled)
 			}
-			controller.stateManager.setGlobalState("clineWebToolsEnabled", request.clineWebToolsEnabled)
+			controller.stateManager.setGlobalState("enkiWebToolsEnabled", request.enkiWebToolsEnabled)
 		}
 
 		// Update worktrees setting
@@ -200,7 +200,7 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 
 				const focusChainSettings = {
 					enabled: isEnabled,
-					remindClineInterval: request.focusChainSettings.remindClineInterval,
+					remindEnki AIInterval: request.focusChainSettings.remindEnki AIInterval,
 				}
 				controller.stateManager.setGlobalState("focusChainSettings", focusChainSettings)
 

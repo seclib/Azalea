@@ -1,5 +1,5 @@
-import type { BooleanRequest } from "@shared/proto/cline/common"
-import { Empty } from "@shared/proto/cline/common"
+import type { BooleanRequest } from "@shared/proto/enki/common"
+import { Empty } from "@shared/proto/enki/common"
 import { Logger } from "@/shared/services/Logger"
 import type { Controller } from "../index"
 

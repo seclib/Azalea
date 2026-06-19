@@ -1,5 +1,5 @@
 /**
- * Message Types — re-exported from @cline/shared
+ * Message Types — re-exported from @enki/shared
  */
 export type {
 	ContentBlock,
@@ -14,4 +14,4 @@ export type {
 	ToolDefinition,
 	ToolResultContent,
 	ToolUseContent,
-} from "@cline/shared";
+} from "@enki/shared";

@@ -1,6 +1,6 @@
-# [experimental] @cline/core
+# [experimental] @enki/core
 
-`@cline/core` is the stateful orchestration layer of the Cline SDK. It
+`@enki/core` is the stateful orchestration layer of the Enki AI SDK. It
 connects the agent runtime, provider settings, storage, default tools, and
 session lifecycle into a host-ready runtime.
 
@@ -10,28 +10,28 @@ session lifecycle into a host-ready runtime.
 - provider settings and account services
 - default runtime tools and MCP integration
 - storage-backed session and team state helpers
-- host-facing Node helpers through `@cline/core`
+- host-facing Node helpers through `@enki/core`
 
 ## Installation
 
 ```bash
-npm install @cline/core
+npm install @enki/core
 ```
 
 ## Entry Points
 
-- `@cline/core`: core contracts, shared utilities, and Node/server helpers for building hosts and runtimes
+- `@enki/core`: core contracts, shared utilities, and Node/server helpers for building hosts and runtimes
 
 ## Typical Usage
 
-Most host apps should start with `@cline/core`.
+Most host apps should start with `@enki/core`.
 
 ```ts
-import { ClineCore } from "@cline/core";
+import { Enki AICore } from "@enki/core";
 
-const cline = await ClineCore.create({});
+const enki = await Enki AICore.create({});
 
-const result = await cline.start({
+const result = await enki.start({
 	config: {
 		providerId: "anthropic",
 		modelId: "claude-sonnet-4-6",
@@ -48,12 +48,12 @@ const result = await cline.start({
 });
 
 console.log(result.result?.text);
-await cline.dispose();
+await enki.dispose();
 ```
 
 ## Session Bootstrap
 
-`ClineCore.create(...)` also accepts `prepare(input)`.
+`Enki AICore.create(...)` also accepts `prepare(input)`.
 
 Use it when a host needs to prepare workspace-scoped runtime state before each
 session starts, then apply watcher/extensions/telemetry inputs through
@@ -64,25 +64,25 @@ contract.
 
 ### Runtime and Sessions
 
-Use `@cline/core` for host-facing runtime assembly:
+Use `@enki/core` for host-facing runtime assembly:
 
-- `ClineCore.create(...)`
+- `Enki AICore.create(...)`
 - `createRuntimeHost(...)`
 - `LocalRuntimeHost`
 - `HubRuntimeHost` and `RemoteRuntimeHost`
 - `DefaultRuntimeBuilder`
 
-`ClineCore` is the app-facing session API. The lower-level `RuntimeHost`
+`Enki AICore` is the app-facing session API. The lower-level `RuntimeHost`
 boundary uses runtime-primitive names such as `startSession` and `runTurn` so
 transport adapters stay distinct from product methods like `start` and `send`.
 Service-style operations such as pending prompt edits, accumulated usage lookup,
-and active-session model switching are exposed through `ClineCore` when the
+and active-session model switching are exposed through `Enki AICore` when the
 selected transport supports them rather than being part of the minimal host
 primitive vocabulary.
 
 ### Default Tools
 
-`@cline/core` owns the built-in host tools and executors:
+`@enki/core` owns the built-in host tools and executors:
 
 - `createBuiltinTools(...)`
 - `createDefaultTools(...)`
@@ -96,15 +96,15 @@ The package also exports storage and settings helpers such as:
 - `CoreSettingsService` and `createCoreSettingsService`
 - MCP settings helpers such as `setMcpServerDisabled`
 - `SqliteTeamStore`
-- SQLite-backed local session stores and artifacts through `@cline/core`
+- SQLite-backed local session stores and artifacts through `@enki/core`
 
 ## Related Packages
 
-- `@cline/agents`: stateless agent loop and tool primitives
-- `@cline/llms`: provider/model configuration and handlers
+- `@enki/agents`: stateless agent loop and tool primitives
+- `@enki/llms`: provider/model configuration and handlers
 
 ## More Examples
 
-- Repo examples: [examples](https://github.com/cline/sdk/tree/main/examples), [apps/examples](https://github.com/cline/sdk/tree/main/apps/examples)
-- Workspace overview: [README.md](https://github.com/cline/cline/blob/main/README.md)
-- API and architecture references: [DOC.md](https://github.com/cline/cline/blob/main/DOC.md), [ARCHITECTURE.md](https://github.com/cline/cline/blob/main/ARCHITECTURE.md)
+- Repo examples: [examples](https://github.com/enki/sdk/tree/main/examples), [apps/examples](https://github.com/enki/sdk/tree/main/apps/examples)
+- Workspace overview: [README.md](https://github.com/enki/enki/blob/main/README.md)
+- API and architecture references: [DOC.md](https://github.com/enki/enki/blob/main/DOC.md), [ARCHITECTURE.md](https://github.com/enki/enki/blob/main/ARCHITECTURE.md)

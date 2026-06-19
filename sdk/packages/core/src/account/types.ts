@@ -1,4 +1,4 @@
-export interface ClineAccountOrganization {
+export interface Enki AIAccountOrganization {
 	active: boolean;
 	memberId: string;
 	name: string;
@@ -6,14 +6,14 @@ export interface ClineAccountOrganization {
 	roles: Array<"admin" | "member" | "owner">;
 }
 
-export interface ClineAccountUser {
+export interface Enki AIAccountUser {
 	id: string;
 	email: string;
 	displayName: string;
 	photoUrl: string;
 	createdAt: string;
 	updatedAt: string;
-	organizations: ClineAccountOrganization[];
+	organizations: Enki AIAccountOrganization[];
 }
 
 export interface UserRemoteConfigOrganization {
@@ -28,12 +28,12 @@ export interface UserRemoteConfigResponse {
 	organizations?: UserRemoteConfigOrganization[];
 }
 
-export interface ClineAccountBalance {
+export interface Enki AIAccountBalance {
 	balance: number;
 	userId: string;
 }
 
-export interface ClineAccountUsageTransaction {
+export interface Enki AIAccountUsageTransaction {
 	aiInferenceProviderName: string;
 	aiModelName: string;
 	aiModelTypeName: string;
@@ -55,14 +55,14 @@ export interface ClineAccountUsageTransaction {
 	userId: string;
 }
 
-export interface ClineAccountPaymentTransaction {
+export interface Enki AIAccountPaymentTransaction {
 	paidAt: string;
 	creatorId: string;
 	amountCents: number;
 	credits: number;
 }
 
-export interface ClineOrganization {
+export interface Enki AIOrganization {
 	createdAt: string;
 	defaultRemoteConfig?: string;
 	deletedAt?: string;
@@ -74,7 +74,7 @@ export interface ClineOrganization {
 	updatedAt: string;
 }
 
-export interface ClineAccountOrganizationBalance {
+export interface Enki AIAccountOrganizationBalance {
 	balance: number;
 	organizationId: string;
 }
@@ -83,7 +83,7 @@ export interface FeaturebaseTokenResponse {
 	featurebaseJwt: string;
 }
 
-export interface ClineAccountOrganizationUsageTransaction {
+export interface Enki AIAccountOrganizationUsageTransaction {
 	aiInferenceProviderName: string;
 	aiModelName: string;
 	aiModelTypeName: string;

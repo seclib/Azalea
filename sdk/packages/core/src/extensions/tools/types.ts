@@ -8,7 +8,7 @@ import type {
 	AgentToolContext,
 	ImageContent,
 	TextContent,
-} from "@cline/shared";
+} from "@enki/shared";
 import type {
 	ApplyPatchInput,
 	EditFileInput,

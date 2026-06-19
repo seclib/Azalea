@@ -1,40 +1,40 @@
 import { Mode } from "@shared/storage/types"
-import { ClineAccountInfoCard } from "../ClineAccountInfoCard"
-import ClineModelPicker from "../ClineModelPicker"
+import { Enki AIAccountInfoCard } from "../Enki AIAccountInfoCard"
+import Enki AIModelPicker from "../Enki AIModelPicker"
 
 /**
- * Props for the ClineProvider component
+ * Props for the Enki AIProvider component
  */
-interface ClineProviderProps {
+interface Enki AIProviderProps {
 	showModelOptions: boolean
 	isPopup?: boolean
 	currentMode: Mode
 	initialModelTab?: "recommended" | "free"
-	isClinePassEnabled?: boolean
+	isEnki AIPassEnabled?: boolean
 }
 
 /**
- * The Cline provider configuration component
+ * The Enki AI provider configuration component
  */
-export const ClineProvider = ({
+export const Enki AIProvider = ({
 	showModelOptions,
 	isPopup,
 	currentMode,
 	initialModelTab,
-	isClinePassEnabled,
-}: ClineProviderProps) => {
+	isEnki AIPassEnabled,
+}: Enki AIProviderProps) => {
 	return (
 		<div>
-			{/* Cline Account Info Card */}
+			{/* Enki AI Account Info Card */}
 			<div style={{ marginBottom: 14, marginTop: 4 }}>
-				<ClineAccountInfoCard />
+				<Enki AIAccountInfoCard />
 			</div>
 
 			{showModelOptions && (
-				<ClineModelPicker
+				<Enki AIModelPicker
 					currentMode={currentMode}
 					initialTab={initialModelTab}
-					isClinePassEnabled={isClinePassEnabled}
+					isEnki AIPassEnabled={isEnki AIPassEnabled}
 					isPopup={isPopup}
 					showProviderRouting={true}
 				/>

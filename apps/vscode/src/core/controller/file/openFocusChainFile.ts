@@ -1,6 +1,6 @@
 import { openFile as openFileIntegration } from "@integrations/misc/open-file"
 import { telemetryService } from "../../../services/telemetry"
-import { Empty, StringRequest } from "../../../shared/proto/cline/common"
+import { Empty, StringRequest } from "../../../shared/proto/enki/common"
 import { ensureFocusChainFile, extractFocusChainListFromText } from "../../task/focus-chain/file-utils"
 import { Controller } from ".."
 
@@ -20,9 +20,9 @@ export async function openFocusChainFile(controller: Controller, request: String
 	const currentTask = controller.task
 	if (currentTask) {
 		// Get the task's message history and find the most recent task_progress message
-		// TODO - can we decouple this from ClineMessages?
-		const clineMessages = currentTask.messageStateHandler.getClineMessages()
-		const lastProgressMessage = clineMessages
+		// TODO - can we decouple this from Enki AIMessages?
+		const enkiMessages = currentTask.messageStateHandler.getEnki AIMessages()
+		const lastProgressMessage = enkiMessages
 			.slice()
 			.reverse()
 			.find((m) => m.say === "task_progress")

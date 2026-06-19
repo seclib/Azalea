@@ -1,6 +1,6 @@
 # Desktop App Example
 
-Tauri desktop shell + Bun sidecar backend + Next.js UI for running and inspecting Cline chat sessions.
+Tauri desktop shell + Bun sidecar backend + Next.js UI for running and inspecting Enki AI chat sessions.
 
 ## Dev Commands
 
@@ -36,7 +36,7 @@ Desktop transport envelope:
 - The Settings sidebar includes a `Routine` view for hub-backed automations.
 - `Routine` lists all RPC schedules and shows status (`enabled`, `nextRunAt`, active execution).
 - From the UI you can open a create form and add, pause/resume, trigger-now, and delete schedules.
-- The view is wired to the same scheduler APIs used by `cline schedule` through Tauri commands and `scripts/routine-schedules.ts`.
+- The view is wired to the same scheduler APIs used by `enki schedule` through Tauri commands and `scripts/routine-schedules.ts`.
 
 ## Key Files
 
@@ -50,7 +50,7 @@ Desktop transport envelope:
 
 ## Data + Storage
 
-- Session artifacts are written under `~/.cline/data/sessions/<sessionId>/` (or `CLINE_SESSION_DATA_DIR`).
+- Session artifacts are written under `~/.enki/data/sessions/<sessionId>/` (or `CLINE_SESSION_DATA_DIR`).
 - Canonical replay/export artifact: `<sessionId>.messages.json`.
 - `<sessionId>.messages.json` is expected to contain ordered messages plus assistant `modelInfo` and `metrics` (including cache token fields when provided by the model runtime).
 - `<sessionId>.hooks.jsonl` is observability/debug telemetry and should not be required for normal history replay/export flows.
@@ -62,5 +62,5 @@ Desktop transport envelope:
 - Tauri restarts the desktop backend if the sidecar process exits and kills it on app teardown.
 - Chat sends now preflight provider credentials. If a provider that requires API-key auth is selected without a key, the UI blocks the turn with a clear error message instead of starting a hanging session.
 - If a turn completes with `finishReason=error` before any assistant content is produced, the UI now adds an explicit error chat message so failed turns are visible in the transcript.
-- If package changes are not reflected, rebuild SDK packages (`bun run build:sdk`). The next `cline rpc ensure` call should attach to the current build's sidecar automatically.
+- If package changes are not reflected, rebuild SDK packages (`bun run build:sdk`). The next `enki rpc ensure` call should attach to the current build's sidecar automatically.
 - Provider settings updates are patch-style: only fields you edit are changed. Unset fields are preserved instead of being cleared.

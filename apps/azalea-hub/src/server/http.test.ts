@@ -48,7 +48,7 @@ describe("normalizeWebviewIndexHtml", () => {
 			"<html><head></head><body></body></html>",
 		);
 
-		expect(normalized).toContain('id="cline-hub-theme-bootstrap"');
+		expect(normalized).toContain('id="enki-hub-theme-bootstrap"');
 		expect(normalizeWebviewIndexHtml(normalized)).toBe(normalized);
 	});
 });

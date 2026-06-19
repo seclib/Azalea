@@ -15,15 +15,15 @@ This file is the secret sauce for working effectively in this codebase. It captu
 ## Miscellaneous
 - This is a VS Code extension—check `package.json` for available scripts before trying to verify builds (e.g., `npm run compile`, not `npm run build`).
 - When creating PRs, contributors should not create changelog-entry files. Maintainers handle release versioning and changelog curation during the release process.
-- When adding new feature flags, see this PR as a reference https://github.com/cline/cline/pull/7566
-- Additional instructions about making requests: @.clinerules/network.md
+- When adding new feature flags, see this PR as a reference https://github.com/enki/enki/pull/7566
+- Additional instructions about making requests: @.enkirules/network.md
 
 ## gRPC/Protobuf Communication
 The extension and webview communicate via gRPC-like protocol over VS Code message passing.
 
-**Proto files live in `proto/`** (e.g., `proto/cline/task.proto`, `proto/cline/ui.proto`)
+**Proto files live in `proto/`** (e.g., `proto/enki/task.proto`, `proto/enki/ui.proto`)
 - Each feature domain has its own `.proto` file
-- For simple data, use shared types in `proto/cline/common.proto` (`StringRequest`, `Empty`, `Int64Request`)
+- For simple data, use shared types in `proto/enki/common.proto` (`StringRequest`, `Empty`, `Int64Request`)
 - For complex data, define custom messages in the feature's `.proto` file
 - Naming: Services `PascalCaseService`, RPCs `camelCase`, Messages `PascalCase`
 - For streaming responses, use `stream` keyword (see `subscribeToAuthCallback` in `account.proto`)
@@ -34,24 +34,24 @@ The extension and webview communicate via gRPC-like protocol over VS Code messag
 - `src/generated/nice-grpc/` - Promise-based clients
 - `src/generated/hosts/` - Generated handlers
 
-**Adding new enum values** (like a new `ClineSay` type) requires updating conversion mappings in `src/shared/proto-conversions/cline-message.ts`
+**Adding new enum values** (like a new `Enki AISay` type) requires updating conversion mappings in `src/shared/proto-conversions/enki-message.ts`
 
 **Adding new RPC methods** requires:
 - Handler in `src/core/controller/<domain>/`
 - Call from webview via generated client: `UiServiceClient.scrollToSettings(StringRequest.create({ value: "browser" }))`
 
 **Example—the `explain-changes` feature touched:**
-- `proto/cline/task.proto` - Added `ExplainChangesRequest` message and `explainChanges` RPC
-- `proto/cline/ui.proto` - Added `GENERATE_EXPLANATION = 29` to `ClineSay` enum
-- `src/shared/ExtensionMessage.ts` - Added `ClineSayGenerateExplanation` type
-- `src/shared/proto-conversions/cline-message.ts` - Added mapping for new say type
+- `proto/enki/task.proto` - Added `ExplainChangesRequest` message and `explainChanges` RPC
+- `proto/enki/ui.proto` - Added `GENERATE_EXPLANATION = 29` to `Enki AISay` enum
+- `src/shared/ExtensionMessage.ts` - Added `Enki AISayGenerateExplanation` type
+- `src/shared/proto-conversions/enki-message.ts` - Added mapping for new say type
 - `src/core/controller/task/explainChanges.ts` - Handler implementation
 - `webview-ui/src/components/chat/ChatRow.tsx` - UI rendering
 
 ## Adding a New API Provider
 When adding a new provider (e.g., "openai-codex"), you must update the proto conversion layer in THREE places or the provider will silently reset to Anthropic:
 
-1. `proto/cline/models.proto` - Add to the `ApiProvider` enum (e.g., `OPENAI_CODEX = 40;`)
+1. `proto/enki/models.proto` - Add to the `ApiProvider` enum (e.g., `OPENAI_CODEX = 40;`)
 2. `convertApiProviderToProto()` in `src/shared/proto-conversions/models/api-configuration-conversion.ts` - Add case mapping string to proto enum
 3. `convertProtoToApiProvider()` in the same file - Add case mapping proto enum back to string
 
@@ -86,11 +86,11 @@ Providers using OpenAI's Responses API require native tool calling. XML tools do
 ## Adding Tools to System Prompt
 This is tricky—multiple prompt variants and configs. **Always search for existing similar tools first and follow their pattern.** Look at the full chain from prompt definition → variant configs → handler → UI before implementing.
 
-1. **Add to `ClineDefaultTool` enum** in `src/shared/tools.ts`
+1. **Add to `Enki AIDefaultTool` enum** in `src/shared/tools.ts`
 2. **Tool definition** in `src/core/prompts/system-prompt/tools/` (create file like `generate_explanation.ts`)
    - Define variants for each `ModelFamily` (generic, next-gen, xs, etc.)
    - Export variants array (e.g., `export const my_tool_variants = [GENERIC, NATIVE_NEXT_GEN, XS]`)
-   - **Fallback behavior**: If a variant isn't defined for a model family, `ClineToolSet.getToolByNameWithFallback()` automatically falls back to GENERIC. So you only need to export `[GENERIC]` unless the tool needs model-specific behavior.
+   - **Fallback behavior**: If a variant isn't defined for a model family, `Enki AIToolSet.getToolByNameWithFallback()` automatically falls back to GENERIC. So you only need to export `[GENERIC]` unless the tool needs model-specific behavior.
 3. **Register in `src/core/prompts/system-prompt/tools/init.ts`** - Import and spread into `allToolVariants`
 4. **Add to variant configs** - Each model family has its own config in `src/core/prompts/system-prompt/variants/*/config.ts`. Add your tool's enum to the `.tools()` list:
    - `generic/config.ts`, `next-gen/config.ts`, `gpt-5/config.ts`, `native-gpt-5/config.ts`, `native-gpt-5-1/config.ts`, `native-next-gen/config.ts`, `gemini-3/config.ts`, `glm/config.ts`, `hermes/config.ts`, `xs/config.ts`
@@ -98,7 +98,7 @@ This is tricky—multiple prompt variants and configs. **Always search for exist
 5. **Create handler** in `src/core/task/tools/handlers/`
 6. **Wire up in `ToolExecutor.ts`** if needed for execution flow
 7. **Add to tool parsing** in `src/core/assistant-message/index.ts` if needed
-8. **If tool has UI feedback**: add `ClineSay` enum in proto, update `src/shared/ExtensionMessage.ts`, update `src/shared/proto-conversions/cline-message.ts`, update `webview-ui/src/components/chat/ChatRow.tsx`
+8. **If tool has UI feedback**: add `Enki AISay` enum in proto, update `src/shared/ExtensionMessage.ts`, update `src/shared/proto-conversions/enki-message.ts`, update `webview-ui/src/components/chat/ChatRow.tsx`
 
 ## Modifying System Prompt
 **Read these first:** `src/core/prompts/system-prompt/README.md`, `tools/README.md`, `__tests__/README.md`
@@ -151,7 +151,7 @@ Settings plumbing gotcha: if a key is user-toggleable from settings, wire both c
 Missing one path causes a toggle to appear to change in one surface while the backend state stays unchanged.
 
 Webview toggle gotcha: settings changes must also round-trip back in state payloads.
-- Add the field to `UpdateSettingsRequest` in `proto/cline/state.proto` (for webview update requests), then run `npm run protos`
+- Add the field to `UpdateSettingsRequest` in `proto/enki/state.proto` (for webview update requests), then run `npm run protos`
 - Include the key in `Controller.getStateToPostToWebview()` (`src/core/controller/index.ts`)
 - Ensure `ExtensionState` and webview defaults include the key (`src/shared/ExtensionMessage.ts`, `webview-ui/src/context/ExtensionStateContext.tsx`)
 If this round-trip wiring is missing, the backend value can update but the toggle in webview appears stuck or reverts.

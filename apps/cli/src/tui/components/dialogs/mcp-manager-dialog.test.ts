@@ -19,14 +19,14 @@ interface TestMcpSettings {
 	mcpServers?: Record<string, { disabled?: boolean }>;
 }
 
-vi.mock("@cline/core", () => ({
+vi.mock("@enki/core", () => ({
 	resolveDefaultMcpSettingsPath: () =>
-		process.env.CLINE_MCP_SETTINGS_PATH ?? "cline_mcp_settings.json",
+		process.env.CLINE_MCP_SETTINGS_PATH ?? "enki_mcp_settings.json",
 	setMcpServerDisabled: (options: SetMcpServerDisabledOptions) => {
 		const filePath =
 			options.filePath ??
 			process.env.CLINE_MCP_SETTINGS_PATH ??
-			"cline_mcp_settings.json";
+			"enki_mcp_settings.json";
 		const settings = JSON.parse(readFileSync(filePath, "utf8")) as {
 			mcpServers?: Record<string, { disabled?: boolean }>;
 		};
@@ -114,7 +114,7 @@ describe("mcp manager dialog helpers", () => {
 	it("does not toggle plugin-owned servers", async () => {
 		const tempRoot = await mkdtemp(join(tmpdir(), "cli-mcp-manager-"));
 		tempRoots.push(tempRoot);
-		const settingsPath = join(tempRoot, "cline_mcp_settings.json");
+		const settingsPath = join(tempRoot, "enki_mcp_settings.json");
 		await writeFile(
 			settingsPath,
 			`${JSON.stringify(

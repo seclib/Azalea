@@ -1,4 +1,4 @@
-import { buildInviteUrl, resolveClineHubServerOptions } from "./options";
+import { buildInviteUrl, resolveEnki AIHubServerOptions } from "./options";
 
 function expectEqual<T>(actual: T, expected: T, label: string): void {
 	if (actual !== expected) {
@@ -17,13 +17,13 @@ function expectThrows(fn: () => unknown, label: string): void {
 	throw new Error(`${label}: expected an error`);
 }
 
-const defaults = resolveClineHubServerOptions({});
+const defaults = resolveEnki AIHubServerOptions({});
 expectEqual(defaults.host, "127.0.0.1", "default host");
 expectEqual(defaults.port, 8787, "default port");
 expectEqual(defaults.publicUrl, "http://127.0.0.1:8787", "default public URL");
 expectEqual(defaults.roomSecret, undefined, "default room secret");
 
-const lan = resolveClineHubServerOptions({
+const lan = resolveEnki AIHubServerOptions({
 	HOST: "0.0.0.0",
 	CLINE_HUB_DASHBOARD_PORT: "9000",
 	PUBLIC_URL: "https://example.ngrok-free.app/",
@@ -42,16 +42,16 @@ expectEqual(
 );
 
 expectThrows(
-	() => resolveClineHubServerOptions({ HOST: "0.0.0.0" }),
+	() => resolveEnki AIHubServerOptions({ HOST: "0.0.0.0" }),
 	"non-local bind without ROOM_SECRET",
 );
 expectThrows(
-	() => resolveClineHubServerOptions({ CLINE_HUB_DASHBOARD_PORT: "70000" }),
+	() => resolveEnki AIHubServerOptions({ CLINE_HUB_DASHBOARD_PORT: "70000" }),
 	"invalid dashboard port",
 );
 expectThrows(
-	() => resolveClineHubServerOptions({ PUBLIC_URL: "ftp://example.test" }),
+	() => resolveEnki AIHubServerOptions({ PUBLIC_URL: "ftp://example.test" }),
 	"invalid PUBLIC_URL protocol",
 );
 
-console.log("cline-hub option validation passed");
+console.log("enki-hub option validation passed");

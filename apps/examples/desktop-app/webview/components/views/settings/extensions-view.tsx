@@ -560,7 +560,7 @@ export function RulesView() {
 			if (
 				normalizedRoot &&
 				normalized.startsWith(`${normalizedRoot}/`) &&
-				normalized.includes("/.clinerules/")
+				normalized.includes("/.enkirules/")
 			) {
 				project.push(rule);
 			} else {
@@ -579,7 +579,7 @@ export function RulesView() {
 			if (
 				normalizedRoot &&
 				normalized.startsWith(`${normalizedRoot}/`) &&
-				normalized.includes("/.clinerules/hooks")
+				normalized.includes("/.enkirules/hooks")
 			) {
 				project.push(hook);
 			} else {
@@ -598,7 +598,7 @@ export function RulesView() {
 			if (
 				normalizedRoot &&
 				normalized.startsWith(`${normalizedRoot}/`) &&
-				normalized.includes("/.cline/plugins")
+				normalized.includes("/.enki/plugins")
 			) {
 				project.push(plugin);
 			} else {

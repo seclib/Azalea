@@ -132,7 +132,7 @@ interface ProcessContext {
 }
 
 const FALLBACK_PROVIDER_MODELS: Record<string, string[]> = {
-	cline: ["anthropic/claude-sonnet-4.6"],
+	enki: ["anthropic/claude-sonnet-4.6"],
 	anthropic: ["claude-sonnet-4-6"],
 	"openai-native": ["gpt-5.3-codex"],
 	openrouter: ["anthropic/claude-sonnet-4.6"],
@@ -263,7 +263,7 @@ export function RoutineSchedulesContent() {
 		scheduleMinute: "0",
 		scheduleDays: ["MON", "TUE", "WED", "THU", "FRI"],
 		prompt: "Review PRs opened yesterday and summarize issues.",
-		provider: "cline",
+		provider: "enki",
 		model: "openai/gpt-5.3-codex",
 		mode: "act",
 		workspaceRoot: "",
@@ -550,7 +550,7 @@ export function RoutineSchedulesContent() {
 		const preferredProvider =
 			rememberedProvider && availableProviders.includes(rememberedProvider)
 				? rememberedProvider
-				: (availableProviders[0] ?? "cline");
+				: (availableProviders[0] ?? "enki");
 		const modelsForProvider = visibleProviderModels[preferredProvider] ?? [];
 		const rememberedModel =
 			lastModelSelection.lastModelByProvider[preferredProvider] ??
@@ -611,7 +611,7 @@ export function RoutineSchedulesContent() {
 			const provider =
 				normalizeProviderId(createForm.provider) ||
 				availableProviders[0] ||
-				"cline";
+				"enki";
 			const model =
 				createForm.model.trim() ||
 				(visibleProviderModels[provider] ?? [])[0] ||
@@ -697,7 +697,7 @@ export function RoutineSchedulesContent() {
 				<p className="mb-6 text-xs text-muted-foreground">
 					Routines run through the hub schedule service (same backend as
 					<code className="mx-1 rounded bg-muted px-1 py-0.5">
-						cline schedule
+						enki schedule
 					</code>
 					).
 				</p>

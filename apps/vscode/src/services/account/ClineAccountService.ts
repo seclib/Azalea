@@ -7,17 +7,17 @@ import type {
 	UsageTransaction,
 	UserRemoteConfigDiscoveryResponse,
 	UserResponse,
-} from "@shared/ClineAccount"
+} from "@shared/Enki AIAccount"
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
-import { ClineEnv } from "@/config"
-import { CLINE_API_ENDPOINT } from "@/shared/cline/api"
+import { Enki AIEnv } from "@/config"
+import { CLINE_API_ENDPOINT } from "@/shared/enki/api"
 import { getAxiosSettings } from "@/shared/net"
 import { Logger } from "@/shared/services/Logger"
 import { AuthService } from "../auth/AuthService"
-import { buildBasicClineHeaders } from "../EnvUtils"
+import { buildBasicEnki AIHeaders } from "../EnvUtils"
 
-export class ClineAccountService {
-	private static instance: ClineAccountService
+export class Enki AIAccountService {
+	private static instance: Enki AIAccountService
 	private _authService: AuthService
 
 	constructor() {
@@ -25,26 +25,26 @@ export class ClineAccountService {
 	}
 
 	/**
-	 * Returns the singleton instance of ClineAccountService
-	 * @returns Singleton instance of ClineAccountService
+	 * Returns the singleton instance of Enki AIAccountService
+	 * @returns Singleton instance of Enki AIAccountService
 	 */
-	public static getInstance(): ClineAccountService {
-		if (!ClineAccountService.instance) {
-			ClineAccountService.instance = new ClineAccountService()
+	public static getInstance(): Enki AIAccountService {
+		if (!Enki AIAccountService.instance) {
+			Enki AIAccountService.instance = new Enki AIAccountService()
 		}
-		return ClineAccountService.instance
+		return Enki AIAccountService.instance
 	}
 
 	/**
-	 * Returns the base URL for the Cline API
+	 * Returns the base URL for the Enki AI API
 	 * @returns The base URL as a string
 	 */
 	get baseUrl(): string {
-		return ClineEnv.config().apiBaseUrl
+		return Enki AIEnv.config().apiBaseUrl
 	}
 
 	/**
-	 * Helper function to make authenticated requests to the Cline API
+	 * Helper function to make authenticated requests to the Enki AI API
 	 * @param endpoint The API endpoint to call (without the base URL)
 	 * @param config Additional axios request configuration
 	 * @param options.allowNullData When true, allows response.data.data to be null without throwing.
@@ -60,16 +60,16 @@ export class ClineAccountService {
 	): Promise<T> {
 		const url = new URL(endpoint, this.baseUrl).toString() // Validate URL
 		// IMPORTANT: Prefixed with 'workos:' so backend can route verification to WorkOS provider
-		const clineAccountAuthToken = options?.authToken ?? (await this._authService.getAuthToken())
-		if (!clineAccountAuthToken) {
-			throw new Error("No Cline account auth token found")
+		const enkiAccountAuthToken = options?.authToken ?? (await this._authService.getAuthToken())
+		if (!enkiAccountAuthToken) {
+			throw new Error("No Enki AI account auth token found")
 		}
 		const requestConfig: AxiosRequestConfig = {
 			...config,
 			headers: {
-				Authorization: `Bearer ${clineAccountAuthToken}`,
+				Authorization: `Bearer ${enkiAccountAuthToken}`,
 				"Content-Type": "application/json",
-				...(await buildBasicClineHeaders()),
+				...(await buildBasicEnki AIHeaders()),
 				...config.headers,
 			},
 			...getAxiosSettings(),

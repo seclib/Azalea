@@ -85,20 +85,20 @@ describe("provider-ids", () => {
 		);
 	});
 
-	it("registers ClinePass as a distinct Cline-compatible built-in provider", async () => {
-		expect(BUILT_IN_PROVIDER_IDS).toContain("cline-pass");
-		const models = await getModelsForProvider("cline-pass");
-		const provider = await getProvider("cline-pass");
+	it("registers Enki AIPass as a distinct Enki AI-compatible built-in provider", async () => {
+		expect(BUILT_IN_PROVIDER_IDS).toContain("enki-pass");
+		const models = await getModelsForProvider("enki-pass");
+		const provider = await getProvider("enki-pass");
 
 		expect(provider).toMatchObject({
-			id: "cline-pass",
-			name: "ClinePass",
+			id: "enki-pass",
+			name: "Enki AIPass",
 			client: "openai-compatible",
 		});
 		expect(models).toHaveProperty(provider?.defaultModelId ?? "");
 
 		const registration = BUILTIN_PROVIDER_REGISTRATIONS.find(
-			(item) => item.manifest.id === "cline-pass",
+			(item) => item.manifest.id === "enki-pass",
 		);
 		await expect(registration?.loadProvider?.()).resolves.toMatchObject({
 			createProvider: createOpenAICompatibleProvider,

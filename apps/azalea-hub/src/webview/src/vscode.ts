@@ -18,7 +18,7 @@ declare global {
 let cachedApi: VsCodeApi | undefined;
 let browserSocket: WebSocket | undefined;
 const pendingMessages: WebviewInboundMessage[] = [];
-const stateKey = "cline-hub-webview-state";
+const stateKey = "enki-hub-webview-state";
 
 function dispatchHostMessage(message: WebviewOutboundMessage): void {
 	window.dispatchEvent(new MessageEvent("message", { data: message }));
@@ -62,7 +62,7 @@ function createBrowserSocket(): WebSocket {
 			pendingMessages.splice(0);
 			dispatchHostMessage({
 				type: "error",
-				text: "Received an invalid message from the Cline Hub server.",
+				text: "Received an invalid message from the Enki AI Hub server.",
 			});
 		}
 	});
@@ -70,14 +70,14 @@ function createBrowserSocket(): WebSocket {
 		pendingMessages.splice(0);
 		dispatchHostMessage({
 			type: "status",
-			text: "Disconnected from the Cline Hub server.",
+			text: "Disconnected from the Enki AI Hub server.",
 		});
 	});
 	browserSocket.addEventListener("error", () => {
 		pendingMessages.splice(0);
 		dispatchHostMessage({
 			type: "error",
-			text: "Failed to connect to the Cline Hub server.",
+			text: "Failed to connect to the Enki AI Hub server.",
 		});
 	});
 	return browserSocket;

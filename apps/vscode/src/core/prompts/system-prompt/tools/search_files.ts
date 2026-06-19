@@ -1,6 +1,6 @@
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import type { ClineToolSpec } from "../spec"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import type { Enki AIToolSpec } from "../spec"
 import { TASK_PROGRESS_PARAMETER } from "../types"
 
 /**
@@ -18,9 +18,9 @@ Usage:
 </search_files>
  */
 
-const id = ClineDefaultTool.SEARCH
+const id = Enki AIDefaultTool.SEARCH
 
-const generic: ClineToolSpec = {
+const generic: Enki AIToolSpec = {
 	variant: ModelFamily.GENERIC,
 	id,
 	name: "search_files",
@@ -50,7 +50,7 @@ const generic: ClineToolSpec = {
 	],
 }
 
-const NATIVE_NEXT_GEN: ClineToolSpec = {
+const NATIVE_NEXT_GEN: Enki AIToolSpec = {
 	variant: ModelFamily.NATIVE_NEXT_GEN,
 	id,
 	name: "search_files",
@@ -80,7 +80,7 @@ const NATIVE_NEXT_GEN: ClineToolSpec = {
 	],
 }
 
-const NATIVE_GPT_5: ClineToolSpec = {
+const NATIVE_GPT_5: Enki AIToolSpec = {
 	...NATIVE_NEXT_GEN,
 	variant: ModelFamily.NATIVE_GPT_5,
 }

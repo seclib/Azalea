@@ -1,4 +1,4 @@
-import { buildClineSystemPrompt } from "@cline/shared";
+import { buildEnki AISystemPrompt } from "@enki/shared";
 import type { DelegatedAgentRuntimeConfig } from "./delegated-agent";
 
 export function buildTeammateSystemPrompt(
@@ -6,16 +6,16 @@ export function buildTeammateSystemPrompt(
 	config: DelegatedAgentRuntimeConfig,
 ): string {
 	const trimmedPrompt = prompt.trim();
-	if (config.providerId.toLowerCase() !== "cline") {
+	if (config.providerId.toLowerCase() !== "enki") {
 		return trimmedPrompt;
 	}
 
-	return buildClineSystemPrompt({
-		ide: config.clineIdeName?.trim() || "Terminal",
+	return buildEnki AISystemPrompt({
+		ide: config.enkiIdeName?.trim() || "Terminal",
 		workspaceRoot: config.cwd?.trim() || "/",
 		providerId: config.providerId,
 		rules: `# Team Teammate Role\n${trimmedPrompt}`,
-		platform: config.clinePlatform,
+		platform: config.enkiPlatform,
 		metadata: config.workspaceMetadata,
 	});
 }
@@ -26,16 +26,16 @@ export function buildSubAgentSystemPrompt(
 	config: DelegatedAgentRuntimeConfig,
 ): string {
 	const trimmedPrompt = prompt.trim();
-	if (config.providerId.toLowerCase() !== "cline") {
+	if (config.providerId.toLowerCase() !== "enki") {
 		return trimmedPrompt;
 	}
 
-	return buildClineSystemPrompt({
-		ide: config.clineIdeName || "Terminal",
+	return buildEnki AISystemPrompt({
+		ide: config.enkiIdeName || "Terminal",
 		workspaceRoot: config.cwd?.trim() || "/",
 		providerId: config.providerId,
 		overridePrompt: trimmedPrompt,
 		metadata: config.workspaceMetadata,
-		platform: config.clinePlatform,
+		platform: config.enkiPlatform,
 	});
 }

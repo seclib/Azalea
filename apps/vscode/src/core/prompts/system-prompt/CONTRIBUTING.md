@@ -77,7 +77,7 @@ Defines the request/response structure for a model provider's API. Different for
 
 **Values:** `ANTHROPIC_CHAT`, `GEMINI_CHAT`, `OPENAI_CHAT`, `R1_CHAT`, `OPENAI_RESPONSES`
 
-**Location:** [`proto/cline/models.proto`](../../../proto/cline/models.proto)
+**Location:** [`proto/enki/models.proto`](../../../proto/enki/models.proto)
 
 **Usage:** `model.info.apiFormat` determines how requests/responses are structured
 
@@ -105,7 +105,7 @@ The system uses **automatic fallbacks** to ensure robustness:
 
 2. **Tool Variant Fallback:**
    - If a tool doesn't define a variant for the current model family, automatically falls back to `GENERIC` tool variant
-   - Handled by `ClineToolSet.getToolByNameWithFallback()`
+   - Handled by `Enki AIToolSet.getToolByNameWithFallback()`
    - **You only need to export model-specific tool variants when behavior differs from `GENERIC`**
 
 3. **Component Fallback:**
@@ -197,7 +197,7 @@ Create [`variants/my-new-model/config.ts`](./variants/):
 ```typescript
 import { isMyNewModelFamily, isNextGenModelProvider } from "@utils/model-utils"
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
+import { Enki AIDefaultTool } from "@/shared/tools"
 import { SystemPromptSection } from "../../templates/placeholders"
 import { createVariant } from "../variant-builder"
 import { validateVariant } from "../variant-validator"
@@ -237,9 +237,9 @@ export const config = createVariant(ModelFamily.MY_NEW_MODEL)
         SystemPromptSection.OBJECTIVE,
     )
     .tools(
-        ClineDefaultTool.BASH,
-        ClineDefaultTool.FILE_READ,
-        ClineDefaultTool.ASK,
+        Enki AIDefaultTool.BASH,
+        Enki AIDefaultTool.FILE_READ,
+        Enki AIDefaultTool.ASK,
     )
     .placeholders({
         MODEL_FAMILY: ModelFamily.MY_NEW_MODEL,
@@ -444,7 +444,7 @@ export const config = createVariant(ModelFamily.NEXT_GEN)
     })
     .tools(
         // Include MCP_USE for XML-based tool calling
-        ClineDefaultTool.MCP_USE,  // Instead of MCP_ACCESS
+        Enki AIDefaultTool.MCP_USE,  // Instead of MCP_ACCESS
         // ... other tools
     )
 ```
@@ -473,7 +473,7 @@ Is enableNativeToolCalls enabled?
 
 ### Setting API Format
 
-API formats are defined in [`proto/cline/models.proto`](../../../proto/cline/models.proto):
+API formats are defined in [`proto/enki/models.proto`](../../../proto/enki/models.proto):
 
 ```protobuf
 enum ApiFormat {
@@ -490,7 +490,7 @@ enum ApiFormat {
 **Example from [`src/core/api/providers/openai-native.ts`](../../api/providers/openai-native.ts):**
 
 ```typescript
-async *createMessage(systemPrompt: string, messages: ClineStorageMessage[], tools?: ChatCompletionTool[]): ApiStream {
+async *createMessage(systemPrompt: string, messages: Enki AIStorageMessage[], tools?: ChatCompletionTool[]): ApiStream {
     // Route based on API format
     if (tools?.length && this.getModel()?.info?.apiFormat === ApiFormat.OPENAI_RESPONSES) {
         yield* this.createResponseStream(systemPrompt, messages, tools)
@@ -512,9 +512,9 @@ async *createMessage(systemPrompt: string, messages: ClineStorageMessage[], tool
 
 ### Adding a New API Format
 
-1. **Add to proto:** [`proto/cline/models.proto`](../../../proto/cline/models.proto)
+1. **Add to proto:** [`proto/enki/models.proto`](../../../proto/enki/models.proto)
 2. **Regenerate:** `npm run protos`
-3. **Import:** `import { ApiFormat } from "@/shared/proto/cline/models"`
+3. **Import:** `import { ApiFormat } from "@/shared/proto/enki/models"`
 4. **Handle in provider:** Add format-specific logic in your provider handler
 
 See existing providers in [`src/core/api/providers/`](../../api/providers/) for examples.
@@ -525,7 +525,7 @@ See existing providers in [`src/core/api/providers/`](../../api/providers/) for 
 
 ### When to Create Model-Specific Tool Variants
 
-**Default behavior:** Tools automatically fall back to `GENERIC` variant via `ClineToolSet.getToolByNameWithFallback()`.
+**Default behavior:** Tools automatically fall back to `GENERIC` variant via `Enki AIToolSet.getToolByNameWithFallback()`.
 
 **Only create a model-specific tool variant when:**
 - Tool needs different parameters or descriptions for the model
@@ -545,12 +545,12 @@ See existing providers in [`src/core/api/providers/`](../../api/providers/) for 
 
 ```typescript
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import type { ClineToolSpec } from "../spec"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import type { Enki AIToolSpec } from "../spec"
 
-const id = ClineDefaultTool.FILE_NEW
+const id = Enki AIDefaultTool.FILE_NEW
 
-const GENERIC: ClineToolSpec = {
+const GENERIC: Enki AIToolSpec = {
     variant: ModelFamily.GENERIC,
     id,
     name: "write_to_file",
@@ -571,7 +571,7 @@ const GENERIC: ClineToolSpec = {
     ],
 }
 
-const NATIVE_NEXT_GEN: ClineToolSpec = {
+const NATIVE_NEXT_GEN: Enki AIToolSpec = {
     variant: ModelFamily.NATIVE_NEXT_GEN,
     id,
     name: "write_to_file",
@@ -616,13 +616,13 @@ export * from "./write_to_file"
 ```typescript
 import { write_to_file_variants } from "./write_to_file"
 
-export function registerClineToolSets(): void {
+export function registerEnki AIToolSets(): void {
     const allToolVariants = [
         ...write_to_file_variants,
         // ... other tool variants
     ]
 
-    allToolVariants.forEach((v) => ClineToolSet.register(v))
+    allToolVariants.forEach((v) => Enki AIToolSet.register(v))
 }
 ```
 
@@ -632,8 +632,8 @@ export function registerClineToolSets(): void {
 
 ```typescript
 .tools(
-    ClineDefaultTool.BASH,
-    ClineDefaultTool.FILE_NEW,  // Add your tool here
+    Enki AIDefaultTool.BASH,
+    Enki AIDefaultTool.FILE_NEW,  // Add your tool here
     // ... other tools
 )
 ```
@@ -642,7 +642,7 @@ export function registerClineToolSets(): void {
 1. The tool exports a spec for that `ModelFamily`, OR
 2. The tool exports a `GENERIC` spec (automatic fallback)
 
-**Note:** When a variant includes a tool in `.tools()` but the tool doesn't have a specific variant for that model family, the system automatically uses the `GENERIC` variant. This is handled by `ClineToolSet.getToolByNameWithFallback()`, so you don't need to manually define variants for every model family—only when behavior needs to differ.
+**Note:** When a variant includes a tool in `.tools()` but the tool doesn't have a specific variant for that model family, the system automatically uses the `GENERIC` variant. This is handled by `Enki AIToolSet.getToolByNameWithFallback()`, so you don't need to manually define variants for every model family—only when behavior needs to differ.
 
 ---
 
@@ -674,14 +674,14 @@ UPDATE_SNAPSHOTS=true npm run test:unit
 
 ### Testing in Debug Mode
 
-**For live testing with real models**, run Cline in debug mode to verify your variant works correctly:
+**For live testing with real models**, run Enki AI in debug mode to verify your variant works correctly:
 
 1. **Enable Debug Mode:**
-   - See the main [CONTRIBUTING.md](../../../../CONTRIBUTING.md) for instructions on running Cline in debug mode
+   - See the main [CONTRIBUTING.md](../../../../CONTRIBUTING.md) for instructions on running Enki AI in debug mode
    - Debug mode enables additional features for testing and verification
 
 2. **Run a Task with Your Model:**
-   - Configure your model in Cline settings
+   - Configure your model in Enki AI settings
    - Start a conversation or task with the model
    - The system will automatically select your variant based on the matcher function
 
@@ -703,7 +703,7 @@ UPDATE_SNAPSHOTS=true npm run test:unit
 **Example verification:**
 ```json
 {
-  "systemPrompt": "You are Cline...\n\n====\n\n# Agent Role\n...",
+  "systemPrompt": "You are Enki AI...\n\n====\n\n# Agent Role\n...",
   "modelFamily": "my-new-model",
   "tools": ["bash", "file_read", "ask"],
   // ... rest of task data
@@ -743,7 +743,7 @@ This exported JSON is invaluable for debugging and verifying that your variant c
 - **Tool Development:** [tools/README.md](./tools/README.md)
 - **Testing Guide:** [__tests__/README.md](./__tests__/README.md)
 - **Model Utilities:** [`src/utils/model-utils.ts`](../../../utils/model-utils.ts)
-- **Proto Definitions:** [`proto/cline/models.proto`](../../../proto/cline/models.proto)
+- **Proto Definitions:** [`proto/enki/models.proto`](../../../proto/enki/models.proto)
 - **CLAUDE.md:** [`CLAUDE.md`](../../../../CLAUDE.md) (tribal knowledge)
 
 ---
@@ -756,7 +756,7 @@ This exported JSON is invaluable for debugging and verifying that your variant c
 src/
 ├── shared/
 │   ├── prompts.ts              # ModelFamily enum
-│   └── tools.ts                # ClineDefaultTool enum
+│   └── tools.ts                # Enki AIDefaultTool enum
 ├── utils/
 │   └── model-utils.ts          # Model detection functions
 ├── core/
@@ -774,9 +774,9 @@ src/
 │       └── registry/           # Core logic
 │           ├── PromptRegistry.ts
 │           ├── PromptBuilder.ts
-│           └── ClineToolSet.ts
+│           └── Enki AIToolSet.ts
 proto/
-└── cline/
+└── enki/
     └── models.proto            # ApiFormat enum
 ```
 

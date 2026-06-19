@@ -22,7 +22,7 @@ limit.output   maximum output tokens reported for generation
 treated as the best available prompt/input ceiling. When it is absent, the
 catalog falls back to `limit.context` for the prompt/input ceiling.
 
-## Cline Fields
+## Enki AI Fields
 
 The catalog maps those source fields into `ModelInfo`:
 
@@ -56,7 +56,7 @@ underlying context budget.
 ## Catalog Data vs Request Limits
 
 The catalog should describe reported model capabilities. It should avoid baking
-in Cline request defaults, product-level safety limits, or provider-specific
+in Enki AI request defaults, product-level safety limits, or provider-specific
 workarounds unless there is no better place to represent a stable fact.
 
 The code that sends a model request is responsible for deciding how many output
@@ -91,7 +91,7 @@ path, not in generated catalog data.
 ## Do Not Invent Output Limits
 
 The catalog generator should not turn ambiguous provider metadata into a new
-Cline output limit.
+Enki AI output limit.
 
 For example, if a provider reports:
 
@@ -108,7 +108,7 @@ maxInputTokens: 202800
 maxTokens:      202800
 ```
 
-Cline may still ask for fewer output tokens on a given request. That belongs in
+Enki AI may still ask for fewer output tokens on a given request. That belongs in
 the request path because only the request path knows the current prompt size and
 the user's configured output cap.
 
@@ -132,7 +132,7 @@ src/catalog/catalog.generated.ts
 Use the package script when regenerating:
 
 ```bash
-bun -F @cline/llms generate:models
+bun -F @enki/llms generate:models
 ```
 
 Catalog changes should usually include tests in `catalog-live.test.ts` that

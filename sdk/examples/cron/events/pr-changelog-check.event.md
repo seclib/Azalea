@@ -11,7 +11,7 @@ debounceSeconds: 10
 cooldownSeconds: 60
 maxParallel: 3
 modelSelection:
-  providerId: cline
+  providerId: enki
   modelId: anthropic/claude-opus-4.7
 tags:
   - automation

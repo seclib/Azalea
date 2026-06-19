@@ -2,7 +2,7 @@
  * Shared types and interfaces for the chat view components
  */
 
-import { ClineAsk, ClineMessage } from "@shared/ExtensionMessage"
+import { Enki AIAsk, Enki AIMessage } from "@shared/ExtensionMessage"
 import { ListRange, VirtuosoHandle } from "react-virtuoso"
 import { ButtonActionType } from "../shared/buttonConfig"
 
@@ -46,10 +46,10 @@ export interface ChatState {
 	textAreaRef: React.RefObject<HTMLTextAreaElement>
 
 	// Derived values
-	lastMessage: ClineMessage | undefined
-	secondLastMessage: ClineMessage | undefined
-	clineAsk: ClineAsk | undefined
-	task: ClineMessage | undefined
+	lastMessage: Enki AIMessage | undefined
+	secondLastMessage: Enki AIMessage | undefined
+	enkiAsk: Enki AIAsk | undefined
+	task: Enki AIMessage | undefined
 
 	// Handlers
 	handleFocusChange: (isFocused: boolean) => void
@@ -90,7 +90,7 @@ export interface ScrollBehavior {
 	setIsAtBottom: React.Dispatch<React.SetStateAction<boolean>>
 	pendingScrollToMessage: number | null
 	setPendingScrollToMessage: React.Dispatch<React.SetStateAction<number | null>>
-	scrolledPastUserMessage: ClineMessage | null
+	scrolledPastUserMessage: Enki AIMessage | null
 	handleRangeChanged: (range: ListRange) => void
 }
 
@@ -118,8 +118,8 @@ export interface InputState {
  * Task section props
  */
 export interface TaskSectionProps {
-	task: ClineMessage
-	messages: ClineMessage[]
+	task: Enki AIMessage
+	messages: Enki AIMessage[]
 	scrollBehavior: ScrollBehavior
 	buttonState: ButtonState
 	messageHandlers: MessageHandlers
@@ -137,8 +137,8 @@ export interface TaskSectionProps {
 		supportsImages: boolean
 	}
 	isStreaming: boolean
-	clineAsk?: ClineAsk
-	modifiedMessages: ClineMessage[]
+	enkiAsk?: Enki AIAsk
+	modifiedMessages: Enki AIMessage[]
 }
 
 /**

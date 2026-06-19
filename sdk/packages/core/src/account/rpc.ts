@@ -1,48 +1,48 @@
 import type {
-	ClineAccountActionRequest,
+	Enki AIAccountActionRequest,
 	ProviderActionRequest,
-} from "@cline/shared";
+} from "@enki/shared";
 import type {
-	ClineAccountBalance,
-	ClineAccountOrganization,
-	ClineAccountOrganizationBalance,
-	ClineAccountOrganizationUsageTransaction,
-	ClineAccountPaymentTransaction,
-	ClineAccountUsageTransaction,
-	ClineAccountUser,
+	Enki AIAccountBalance,
+	Enki AIAccountOrganization,
+	Enki AIAccountOrganizationBalance,
+	Enki AIAccountOrganizationUsageTransaction,
+	Enki AIAccountPaymentTransaction,
+	Enki AIAccountUsageTransaction,
+	Enki AIAccountUser,
 	FeaturebaseTokenResponse,
 } from "./types";
 
-export interface ClineAccountOperations {
-	fetchMe(): Promise<ClineAccountUser>;
-	fetchBalance(userId?: string): Promise<ClineAccountBalance>;
+export interface Enki AIAccountOperations {
+	fetchMe(): Promise<Enki AIAccountUser>;
+	fetchBalance(userId?: string): Promise<Enki AIAccountBalance>;
 	fetchUsageTransactions(
 		userId?: string,
-	): Promise<ClineAccountUsageTransaction[]>;
+	): Promise<Enki AIAccountUsageTransaction[]>;
 	fetchPaymentTransactions(
 		userId?: string,
-	): Promise<ClineAccountPaymentTransaction[]>;
-	fetchUserOrganizations(): Promise<ClineAccountOrganization[]>;
+	): Promise<Enki AIAccountPaymentTransaction[]>;
+	fetchUserOrganizations(): Promise<Enki AIAccountOrganization[]>;
 	fetchOrganizationBalance(
 		organizationId: string,
-	): Promise<ClineAccountOrganizationBalance>;
+	): Promise<Enki AIAccountOrganizationBalance>;
 	fetchOrganizationUsageTransactions(input: {
 		organizationId: string;
 		memberId?: string;
-	}): Promise<ClineAccountOrganizationUsageTransaction[]>;
+	}): Promise<Enki AIAccountOrganizationUsageTransaction[]>;
 	switchAccount(organizationId?: string | null): Promise<void>;
 	fetchFeaturebaseToken?(): Promise<FeaturebaseTokenResponse | undefined>;
 }
 
-export function isClineAccountActionRequest(
+export function isEnki AIAccountActionRequest(
 	request: ProviderActionRequest,
-): request is ClineAccountActionRequest {
-	return request.action === "clineAccount";
+): request is Enki AIAccountActionRequest {
+	return request.action === "enkiAccount";
 }
 
-export async function executeClineAccountAction(
-	request: ClineAccountActionRequest,
-	service: ClineAccountOperations,
+export async function executeEnki AIAccountAction(
+	request: Enki AIAccountActionRequest,
+	service: Enki AIAccountOperations,
 ): Promise<unknown> {
 	switch (request.operation) {
 		case "fetchMe":
@@ -70,7 +70,7 @@ export async function executeClineAccountAction(
 		default: {
 			const exhaustive: never = request;
 			throw new Error(
-				`Unsupported Cline account operation: ${String(exhaustive)}`,
+				`Unsupported Enki AI account operation: ${String(exhaustive)}`,
 			);
 		}
 	}
@@ -82,23 +82,23 @@ export interface ProviderActionExecutor {
 	}>;
 }
 
-export class RpcClineAccountService implements ClineAccountOperations {
+export class RpcEnki AIAccountService implements Enki AIAccountOperations {
 	private readonly executor: ProviderActionExecutor;
 
 	constructor(executor: ProviderActionExecutor) {
 		this.executor = executor;
 	}
 
-	public async fetchMe(): Promise<ClineAccountUser> {
-		return this.request<ClineAccountUser>({
-			action: "clineAccount",
+	public async fetchMe(): Promise<Enki AIAccountUser> {
+		return this.request<Enki AIAccountUser>({
+			action: "enkiAccount",
 			operation: "fetchMe",
 		});
 	}
 
-	public async fetchBalance(userId?: string): Promise<ClineAccountBalance> {
-		return this.request<ClineAccountBalance>({
-			action: "clineAccount",
+	public async fetchBalance(userId?: string): Promise<Enki AIAccountBalance> {
+		return this.request<Enki AIAccountBalance>({
+			action: "enkiAccount",
 			operation: "fetchBalance",
 			...(userId?.trim() ? { userId: userId.trim() } : {}),
 		});
@@ -106,9 +106,9 @@ export class RpcClineAccountService implements ClineAccountOperations {
 
 	public async fetchUsageTransactions(
 		userId?: string,
-	): Promise<ClineAccountUsageTransaction[]> {
-		return this.request<ClineAccountUsageTransaction[]>({
-			action: "clineAccount",
+	): Promise<Enki AIAccountUsageTransaction[]> {
+		return this.request<Enki AIAccountUsageTransaction[]>({
+			action: "enkiAccount",
 			operation: "fetchUsageTransactions",
 			...(userId?.trim() ? { userId: userId.trim() } : {}),
 		});
@@ -116,30 +116,30 @@ export class RpcClineAccountService implements ClineAccountOperations {
 
 	public async fetchPaymentTransactions(
 		userId?: string,
-	): Promise<ClineAccountPaymentTransaction[]> {
-		return this.request<ClineAccountPaymentTransaction[]>({
-			action: "clineAccount",
+	): Promise<Enki AIAccountPaymentTransaction[]> {
+		return this.request<Enki AIAccountPaymentTransaction[]>({
+			action: "enkiAccount",
 			operation: "fetchPaymentTransactions",
 			...(userId?.trim() ? { userId: userId.trim() } : {}),
 		});
 	}
 
-	public async fetchUserOrganizations(): Promise<ClineAccountOrganization[]> {
-		return this.request<ClineAccountOrganization[]>({
-			action: "clineAccount",
+	public async fetchUserOrganizations(): Promise<Enki AIAccountOrganization[]> {
+		return this.request<Enki AIAccountOrganization[]>({
+			action: "enkiAccount",
 			operation: "fetchUserOrganizations",
 		});
 	}
 
 	public async fetchOrganizationBalance(
 		organizationId: string,
-	): Promise<ClineAccountOrganizationBalance> {
+	): Promise<Enki AIAccountOrganizationBalance> {
 		const orgId = organizationId.trim();
 		if (!orgId) {
 			throw new Error("organizationId is required");
 		}
-		return this.request<ClineAccountOrganizationBalance>({
-			action: "clineAccount",
+		return this.request<Enki AIAccountOrganizationBalance>({
+			action: "enkiAccount",
 			operation: "fetchOrganizationBalance",
 			organizationId: orgId,
 		});
@@ -148,13 +148,13 @@ export class RpcClineAccountService implements ClineAccountOperations {
 	public async fetchOrganizationUsageTransactions(input: {
 		organizationId: string;
 		memberId?: string;
-	}): Promise<ClineAccountOrganizationUsageTransaction[]> {
+	}): Promise<Enki AIAccountOrganizationUsageTransaction[]> {
 		const orgId = input.organizationId.trim();
 		if (!orgId) {
 			throw new Error("organizationId is required");
 		}
-		return this.request<ClineAccountOrganizationUsageTransaction[]>({
-			action: "clineAccount",
+		return this.request<Enki AIAccountOrganizationUsageTransaction[]>({
+			action: "enkiAccount",
 			operation: "fetchOrganizationUsageTransactions",
 			organizationId: orgId,
 			...(input.memberId?.trim() ? { memberId: input.memberId.trim() } : {}),
@@ -163,7 +163,7 @@ export class RpcClineAccountService implements ClineAccountOperations {
 
 	public async switchAccount(organizationId?: string | null): Promise<void> {
 		await this.request<{ updated: boolean }>({
-			action: "clineAccount",
+			action: "enkiAccount",
 			operation: "switchAccount",
 			organizationId: organizationId?.trim() || null,
 		});
@@ -173,12 +173,12 @@ export class RpcClineAccountService implements ClineAccountOperations {
 		FeaturebaseTokenResponse | undefined
 	> {
 		return this.request<FeaturebaseTokenResponse | undefined>({
-			action: "clineAccount",
+			action: "enkiAccount",
 			operation: "fetchFeaturebaseToken",
 		});
 	}
 
-	private async request<T>(request: ClineAccountActionRequest): Promise<T> {
+	private async request<T>(request: Enki AIAccountActionRequest): Promise<T> {
 		const response = await this.executor.runProviderAction(request);
 		return response.result as T;
 	}

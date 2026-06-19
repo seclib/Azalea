@@ -4,13 +4,13 @@ import type {
 	ResponseReasoningItem,
 } from "openai/resources/responses/responses";
 import {
-	type ClineStorageMessage,
+	type Enki AIStorageMessage,
 	getBase64ImageSource,
 	getImageDataUrl,
 } from "@/shared/messages/content";
 
 /**
- * Converts an array of ClineStorageMessage objects (extension of Anthropic format) to a ResponseInput array to use with OpenAI's Responses API.
+ * Converts an array of Enki AIStorageMessage objects (extension of Anthropic format) to a ResponseInput array to use with OpenAI's Responses API.
  *
  * ## Key Differences from Chat Completions API
  *
@@ -76,11 +76,11 @@ import {
  *
  * @link https://community.openai.com/t/openai-api-error-function-call-was-provided-without-its-required-reasoning-item-the-real-issue/1355347
  *
- * @param messages - Array of ClineStorageMessage objects to be converted
+ * @param messages - Array of Enki AIStorageMessage objects to be converted
  * @returns ResponseInput array containing the transformed messages with proper reasoning pairing
  */
 export function convertToOpenAIResponsesInput(
-	_messages: ClineStorageMessage[],
+	_messages: Enki AIStorageMessage[],
 	options?: { usePreviousResponseId?: boolean },
 ): {
 	input: ResponseInput;

@@ -1,11 +1,11 @@
-import type { ProviderSettingsManager } from "@cline/core";
+import type { ProviderSettingsManager } from "@enki/core";
 import { useTerminalDimensions } from "@opentui/react";
 import { useMouseTracker } from "../../components/tracked-robot";
 import { HOME_VIEW_MAX_WIDTH } from "../../types";
 import { useOnboardingController } from "./controller";
 import { getOAuthProviderLabel, type OnboardingResult } from "./model";
 import {
-	OnboardingClineModelScreen,
+	OnboardingEnki AIModelScreen,
 	OnboardingCodexCliScreen,
 	OnboardingCustomModelIdScreen,
 	OnboardingDeviceCodeScreen,
@@ -107,12 +107,12 @@ export function OnboardingView(props: OnboardingViewProps) {
 		);
 	}
 
-	if (state.step === "cline_model") {
+	if (state.step === "enki_model") {
 		return (
-			<OnboardingClineModelScreen
-				clineEntries={state.clineEntries}
-				clineKnownModels={state.clineKnownModels}
-				clineModelSelected={state.clineModelSelected}
+			<OnboardingEnki AIModelScreen
+				enkiEntries={state.enkiEntries}
+				enkiKnownModels={state.enkiKnownModels}
+				enkiModelSelected={state.enkiModelSelected}
 				compact={compact}
 				contentWidth={contentWidth}
 				mouse={mouse}

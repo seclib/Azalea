@@ -1,19 +1,19 @@
-# Cline CLI Changelog
+# Enki AI CLI Changelog
 
 ## 3.0.27
 
-- Added a `cline skill` command to install and manage skills, matching `cline plugin install` and `cline mcp` (installs default to the Cline agent directory)
+- Added a `enki skill` command to install and manage skills, matching `enki plugin install` and `enki mcp` (installs default to the Enki AI agent directory)
 - Added a prefilled MCP install wizard command for quicker MCP server setup
 - Improved error handling and messaging when plugin MCP OAuth authorization fails
 - The CLI now rejects unknown commands and unquoted multi-word input with a clear error instead of silently treating bad arguments as a prompt
 
 ## 3.0.26
 
-- Reverted the expandable model picker sections and ClinePass models, restoring the previous model-selection UI
+- Reverted the expandable model picker sections and Enki AIPass models, restoring the previous model-selection UI
 
 ## 3.0.25
 
-- Added ClinePass support, with selectable ClinePass models in the model picker
+- Added Enki AIPass support, with selectable Enki AIPass models in the model picker
 - Made model picker sections expandable
 - Added MCP server support to plugins, including authorizing plugin MCP OAuth during install
 - Encouraged parallel tool calls for faster task execution
@@ -25,14 +25,14 @@
 - Fixed disabled-reasoning handling for StepFun flash
 - Fixed history resume rendering isolation
 - Fixed the Hugging Face URL
-- Fixed Cline OAuth token formatting in provider config
+- Fixed Enki AI OAuth token formatting in provider config
 
 ## 3.0.24
 
 - Plugin commands can now submit prompts to the agent
 - Added support for overriding the API base URL
 - Open the verification URL automatically when starting device authentication
-- Enforced a single shared Cline Hub, so a stale hub is respawned after an upgrade
+- Enforced a single shared Enki AI Hub, so a stale hub is respawned after an upgrade
 - Suppressed flickering console windows on Windows
 - Fixed truncation of structured tool operation result strings so oversized tool output stays within limits
 - Stopped echoing the full command text in run_commands tool results
@@ -53,7 +53,7 @@
 ## 3.0.21
 
 - Added a global auto-update setting that controls automatic updates on CLI startup
-- Added a Cline credits refill link
+- Added a Enki AI credits refill link
 - Fixed scrolling for inline ask-question responses
 - Fixed connector thread session routing and stale hub session handling
 - Added support for Vertex AI Application Default Credentials (ADC) with tool use
@@ -73,19 +73,19 @@
 - Fix Slack channel mentions so replies post in the original message's thread.
 - Fix the abort indicator to clear immediately when a task is cancelled.
 - Sync the Fireworks AI model registry and refresh the bundled model catalog with current platform offerings.
-- Bump the bundled SDK to v0.0.43, which forces a running Cline Hub to restart so it picks up the latest SDK code.
+- Bump the bundled SDK to v0.0.43, which forces a running Enki AI Hub to restart so it picks up the latest SDK code.
 
 ## 3.0.17
 
-- Fix a regression introduced in 3.0.15 where the interactive CLI could get stuck after stopping and restarting Cline Hub and then pressing Escape to cancel a request. The CLI now detects stale or missing sessions, recovers any pending messages, and starts a fresh session instead of failing with "session not found".
+- Fix a regression introduced in 3.0.15 where the interactive CLI could get stuck after stopping and restarting Enki AI Hub and then pressing Escape to cancel a request. The CLI now detects stale or missing sessions, recovers any pending messages, and starts a fresh session instead of failing with "session not found".
 - Fix Ctrl+C and Hub shutdown races that surfaced as "hook dispatch failed" and WebSocket connection errors from late hook events racing against Hub shutdown.
 - Fix the Hub daemon being shut down prematurely when a runtime request was aborted, so the daemon now stays alive.
 - Improve the Telegram connector with a new `--allowed-user-id` flag to restrict which Telegram users are authorized to interact with the agent.
 
 ## 3.0.16
 
-- Install official Cline plugins by slug off the new github.com/cline/plugins collection.
-- Uninstall plugins using `cline plugin uninstall <plugin>` or in the TUI.
+- Install official Enki AI plugins by slug off the new github.com/enki/plugins collection.
+- Uninstall plugins using `enki plugin uninstall <plugin>` or in the TUI.
 - Plugins can now bundle skills, and plugin skills are grouped together in settings.
 - Add Slack socket mode support.
 - Allow a custom base URL for Anthropic vendor-type providers.
@@ -95,7 +95,7 @@
 
 ## 3.0.15
 
-- Add Cline Hub, a web app for monitoring connected clients, viewing and driving sessions, streaming assistant output, and restarting the local hub, with local, LAN, and tunnel usage gated by a room secret.
+- Add Enki AI Hub, a web app for monitoring connected clients, viewing and driving sessions, streaming assistant output, and restarting the local hub, with local, LAN, and tunnel usage gated by a room secret.
 - Support global AGENTS rules so agent rules can be applied across all sessions, not just per-project.
 - Let plugins contribute static or dynamic rule content when installed in the sandbox.
 - Bind Discord sessions to individual message authors so different Discord users no longer share chat state in a thread.
@@ -122,7 +122,7 @@
 
 - Show a loading dialog while the config screen switches provider or model so the transition no longer looks frozen.
 - Render the ask question tool prompt inline with the conversation so the question and suggested answers stay attached to the assistant turn that asked them, instead of appearing in a separate modal.
-- Allow manual `cline update` runs to install the latest published version immediately, bypassing the release age gate that delays automatic updates.
+- Allow manual `enki update` runs to install the latest published version immediately, bypassing the release age gate that delays automatic updates.
 - Refresh the bundled SDK to 0.0.42, updating the model catalog.
 
 ## 3.0.11
@@ -187,7 +187,7 @@
 
 ## 3.0.3
 
-- Add `--worktree` flag that auto-creates a fresh git worktree under `~/.cline/worktrees/` and runs the task there. Works with `--taskId` and `--continue` so you can resume a task in an isolated worktree to try a different approach.
+- Add `--worktree` flag that auto-creates a fresh git worktree under `~/.enki/worktrees/` and runs the task there. Works with `--taskId` and `--continue` so you can resume a task in an isolated worktree to try a different approach.
 - Show session status in the CLI history view and refresh status rows in place while the standalone history TUI is open.
 - Restore the OpenAI compatible provider in the auth flow and preserve stored model metadata when configuring or migrating OpenAI-compatible providers.
 - Fix dropped macOS screenshots when pasting them into the TUI or asking the agent to read them: paths containing U+202F (narrow no-break space) and other Unicode variants now resolve to the real file instead of failing with ENOENT.
@@ -207,24 +207,24 @@
 
 ## 3.0.0
 
-Introducing our new Cline CLI built on our new SDK and comes with a snappy new TUI.
+Introducing our new Enki AI CLI built on our new SDK and comes with a snappy new TUI.
 
 Install:
 
 ```sh
-npm install -g cline
+npm install -g enki
 ```
 
 For nightly builds:
 
 ```sh
-npm install -g cline@nightly
+npm install -g enki@nightly
 ```
 
 ## 0.0.13
 
 - Detect prompt-cache support from cache write pricing so providers with write-only caching are represented correctly in the model catalog
-- Dual-publish `@clinebot/cli` mirror wrapper so existing users who installed via `npm i -g @clinebot/cli` continue receiving updates
+- Dual-publish `@enkibot/cli` mirror wrapper so existing users who installed via `npm i -g @enkibot/cli` continue receiving updates
 - Fix response truncation for OpenAI Codex model responses
 
 ## 0.0.12
@@ -277,14 +277,14 @@ npm install -g cline@nightly
 
 - Fix crash when pressing Escape to cancel a running turn
 - Add plugin and SDK tool toggles to the settings panel
-- Add `@cline/sdk` as a user-facing alias for `@cline/core`
+- Add `@enki/sdk` as a user-facing alias for `@enki/core`
 - Improve hub recovery with better error handling, logging, and recovery timeouts
 - Show session summary (ID, model, cost, resume command) on exit
 - Fix OAuth browser-launch failure
 - Fix compact no-op being reported indistinctly
 - Fix CLI history resume being non-transactional (could leave blank UI or corrupt session on disk)
 - Fix cross-client session history not loading Code/VS Code sessions, and fix interactive turn status showing stale state
-- Fix configuration file paths for hooks and rules (now resolve from `~/.cline/hooks` and `~/.cline/rules`)
+- Fix configuration file paths for hooks and rules (now resolve from `~/.enki/hooks` and `~/.enki/rules`)
 - Fix Telegram connector: honor `--no-tools` flag, lock tool-disabled mode across state changes, post replies as raw text to avoid markdown parse failures, add `/help` and `/start` commands
 - Clean up CLI program description and compact slash command descriptions
 - Clean up CLI flags
@@ -318,7 +318,7 @@ npm install -g cline@nightly
 - Pasting 5+ lines into the input shows a compact preview marker instead of flooding the textarea. The full content is still submitted.
 - Arrow-key history navigation respects cursor position so you don't lose your place when scrolling through previous prompts.
 - The TUI renders immediately instead of blocking while the hub daemon boots. Hub readiness and session hydration happen in the background.
-- Listing previous sessions no longer hydrates every full session, making `cline history` and the history picker snappy even with hundreds of sessions.
+- Listing previous sessions no longer hydrates every full session, making `enki history` and the history picker snappy even with hundreds of sessions.
 - Updating the CLI no longer leaves you connected to a stale hub daemon. Incompatible versions are detected and replaced automatically, eliminating the "Unsupported hub schedule command" class of errors.
 - Schedules can now trigger on external events (webhooks, GitHub events, plugin-emitted signals) in addition to cron intervals, with deduplication, filtering, and retry policies.
 - Plugins can register automation event types that feed into the scheduling system, enabling custom triggers from any source.
@@ -334,7 +334,7 @@ npm install -g cline@nightly
 
 - Rewritten TUI from Ink to OpenTUI with streaming markdown, syntax-highlighted diffs, scrollable chat, and mouse support
 - Dialog system for model picker, tool approval, settings browser, session history, and onboarding
-- Interactive setup wizards: `cline connect`, `cline schedule`, `cline mcp`
+- Interactive setup wizards: `enki connect`, `enki schedule`, `enki mcp`
 - Plan/Act mode toggle with system prompt and tool rebuilding on switch
 - Input autocomplete for slash commands and file mentions
 - Message queuing and steer messages during running turns

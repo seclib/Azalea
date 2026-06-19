@@ -9,19 +9,19 @@ export type {
 	IFeatureFlagsProvider,
 	WorkspaceInfo,
 	WorkspaceManifest,
-} from "@cline/shared";
+} from "@enki/shared";
 export {
 	FEATURE_FLAGS,
 	FeatureFlagDefaultValue,
-} from "@cline/shared";
-export { ClineCore } from "./ClineCore";
+} from "@enki/shared";
+export { Enki AICore } from "./Enki AICore";
 export type {
-	ClineCoreListHistoryOptions,
-	ClineCoreOptions,
-	ClineCoreStartInput,
+	Enki AICoreListHistoryOptions,
+	Enki AICoreOptions,
+	Enki AICoreStartInput,
 	HubOptions,
 	RemoteOptions,
-} from "./cline-core/types";
+} from "./enki-core/types";
 export type {
 	LoadAgentPluginFromPathOptions,
 	ResolveAgentPluginPathsOptions,

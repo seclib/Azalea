@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { resolveClineDataDir } from "@cline/core";
+import { resolveEnki AIDataDir } from "@enki/core";
 import { Command, CommanderError } from "commander";
 import {
 	isProcessRunning,
@@ -87,7 +87,7 @@ export abstract class ConnectorBase<Options, State>
 	}
 
 	protected resolveConnectorPath(...segments: string[]): string {
-		return join(resolveClineDataDir(), "connectors", this.name, ...segments);
+		return join(resolveEnki AIDataDir(), "connectors", this.name, ...segments);
 	}
 
 	protected listJsonStatePaths(excludedSuffixes: string[] = []): string[] {

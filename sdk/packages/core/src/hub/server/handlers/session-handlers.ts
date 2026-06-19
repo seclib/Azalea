@@ -3,8 +3,8 @@ import type {
 	HubReplyEnvelope,
 	JsonValue,
 	ToolApprovalRequest,
-} from "@cline/shared";
-import { createSessionId, parseRuntimeConfigExtensions } from "@cline/shared";
+} from "@enki/shared";
+import { createSessionId, parseRuntimeConfigExtensions } from "@enki/shared";
 import type { RuntimeSessionConfig } from "../../../runtime/host/runtime-host";
 import {
 	SessionVersioningError,

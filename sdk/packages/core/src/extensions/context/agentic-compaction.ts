@@ -1,5 +1,5 @@
-import { createHandlerAsync } from "@cline/llms";
-import type { BasicLogger } from "@cline/shared";
+import { createHandlerAsync } from "@enki/llms";
+import type { BasicLogger } from "@enki/shared";
 import type {
 	CoreCompactionContext,
 	CoreCompactionResult,

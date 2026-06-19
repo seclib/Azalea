@@ -1,4 +1,4 @@
-export interface ClineHubServerOptions {
+export interface Enki AIHubServerOptions {
 	host: string;
 	port: number;
 	publicUrl: string;
@@ -64,9 +64,9 @@ export function isNonLocalBindHost(host: string): boolean {
 	return !isLocalBindHost(host);
 }
 
-export function resolveClineHubServerOptions(
+export function resolveEnki AIHubServerOptions(
 	env: NodeJS.ProcessEnv = process.env,
-): ClineHubServerOptions {
+): Enki AIHubServerOptions {
 	const host = normalizeHost(env.HOST);
 	const port = parsePort(env[DASHBOARD_PORT_ENV]);
 	const publicUrl = normalizePublicUrl(env.PUBLIC_URL, host, port);

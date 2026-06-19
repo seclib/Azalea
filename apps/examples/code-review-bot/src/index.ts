@@ -3,7 +3,7 @@ import {
 	type IncomingMessage,
 	type ServerResponse,
 } from "node:http";
-import { Agent, createTool } from "@cline/sdk";
+import { Agent, createTool } from "@enki/sdk";
 import { z } from "zod";
 
 const PORT = Number(process.env.PORT || 3457);
@@ -1284,7 +1284,7 @@ async function runAiReview(
 	let summary: ReviewSummary | undefined;
 
 	const agent = new Agent({
-		providerId: "cline",
+		providerId: "enki",
 		modelId: MODEL_ID,
 		apiKey: process.env.CLINE_API_KEY,
 		systemPrompt: `You are a senior code reviewer reviewing real GitHub pull requests.
@@ -1576,7 +1576,7 @@ async function githubFetch(url: string, init: RequestInit = {}) {
 	const headers = new Headers(init.headers);
 	if (!headers.has("Accept"))
 		headers.set("Accept", "application/vnd.github+json");
-	headers.set("User-Agent", "cline-sdk-code-review-bot-example");
+	headers.set("User-Agent", "enki-sdk-code-review-bot-example");
 	headers.set("X-GitHub-Api-Version", "2022-11-28");
 	if (GITHUB_TOKEN) headers.set("Authorization", `Bearer ${GITHUB_TOKEN}`);
 

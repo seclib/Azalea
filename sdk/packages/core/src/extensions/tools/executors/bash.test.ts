@@ -1,4 +1,4 @@
-import type { AgentToolContext } from "@cline/shared";
+import type { AgentToolContext } from "@enki/shared";
 import { describe, expect, it } from "vitest";
 import { CommandExitError, createBashExecutor } from "./bash";
 

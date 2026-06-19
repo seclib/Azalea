@@ -9,19 +9,19 @@ export default defineConfig({
 	resolve: {
 		alias: [
 			{
-				find: /^@cline\/core$/,
+				find: /^@enki\/core$/,
 				replacement: resolve(rootDir, "../../sdk/packages/core/src/index.ts"),
 			},
 			{
-				find: /^@cline\/core\/(.+)$/,
+				find: /^@enki\/core\/(.+)$/,
 				replacement: resolve(rootDir, "../../sdk/packages/core/src/$1"),
 			},
 			{
-				find: /^@cline\/shared$/,
+				find: /^@enki\/shared$/,
 				replacement: resolve(rootDir, "../../sdk/packages/shared/src/index.ts"),
 			},
 			{
-				find: /^@cline\/shared\/(.+)$/,
+				find: /^@enki\/shared\/(.+)$/,
 				replacement: resolve(rootDir, "../../sdk/packages/shared/src/$1"),
 			},
 		],

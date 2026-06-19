@@ -2,7 +2,7 @@ import { chmodSync, existsSync, mkdtempSync, rmSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { setClineDir, setHomeDir } from "@cline/shared/storage";
+import { setEnki AIDir, setHomeDir } from "@enki/shared/storage";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { readGlobalSettings, writeGlobalSettings } from "./global-settings";
 import { uninstallPlugin } from "./plugin-uninstall";
@@ -11,8 +11,8 @@ describe("plugin uninstall service", () => {
 	let root = "";
 	let home = "";
 	let originalHome: string | undefined;
-	let originalClineDir: string | undefined;
-	let originalClineDataDir: string | undefined;
+	let originalEnki AIDir: string | undefined;
+	let originalEnki AIDataDir: string | undefined;
 	let originalGlobalSettingsPath: string | undefined;
 	let originalMcpSettingsPath: string | undefined;
 
@@ -20,22 +20,22 @@ describe("plugin uninstall service", () => {
 		root = mkdtempSync(join(tmpdir(), "core-plugin-uninstall-"));
 		home = join(root, "home");
 		originalHome = process.env.HOME;
-		originalClineDir = process.env.CLINE_DIR;
-		originalClineDataDir = process.env.CLINE_DATA_DIR;
+		originalEnki AIDir = process.env.CLINE_DIR;
+		originalEnki AIDataDir = process.env.CLINE_DATA_DIR;
 		originalGlobalSettingsPath = process.env.CLINE_GLOBAL_SETTINGS_PATH;
 		originalMcpSettingsPath = process.env.CLINE_MCP_SETTINGS_PATH;
 		process.env.HOME = home;
-		process.env.CLINE_DIR = join(home, ".cline");
-		process.env.CLINE_DATA_DIR = join(home, ".cline", "data");
+		process.env.CLINE_DIR = join(home, ".enki");
+		process.env.CLINE_DATA_DIR = join(home, ".enki", "data");
 		process.env.CLINE_GLOBAL_SETTINGS_PATH = join(
 			home,
-			".cline",
+			".enki",
 			"data",
 			"settings",
 			"global-settings.json",
 		);
 		setHomeDir(home);
-		setClineDir(process.env.CLINE_DIR);
+		setEnki AIDir(process.env.CLINE_DIR);
 	});
 
 	afterEach(() => {
@@ -44,15 +44,15 @@ describe("plugin uninstall service", () => {
 		} else {
 			process.env.HOME = originalHome;
 		}
-		if (originalClineDir === undefined) {
+		if (originalEnki AIDir === undefined) {
 			delete process.env.CLINE_DIR;
 		} else {
-			process.env.CLINE_DIR = originalClineDir;
+			process.env.CLINE_DIR = originalEnki AIDir;
 		}
-		if (originalClineDataDir === undefined) {
+		if (originalEnki AIDataDir === undefined) {
 			delete process.env.CLINE_DATA_DIR;
 		} else {
-			process.env.CLINE_DATA_DIR = originalClineDataDir;
+			process.env.CLINE_DATA_DIR = originalEnki AIDataDir;
 		}
 		if (originalGlobalSettingsPath === undefined) {
 			delete process.env.CLINE_GLOBAL_SETTINGS_PATH;
@@ -70,7 +70,7 @@ describe("plugin uninstall service", () => {
 	it("uninstalls an installed package plugin by package name", async () => {
 		const installPath = join(
 			home,
-			".cline",
+			".enki",
 			"plugins",
 			"_installed",
 			"local",
@@ -82,8 +82,8 @@ describe("plugin uninstall service", () => {
 			join(installPath, "package.json"),
 			JSON.stringify(
 				{
-					name: "cline-installed-plugin-test",
-					cline: {
+					name: "enki-installed-plugin-test",
+					enki: {
 						plugins: [{ paths: ["./package/index.ts"] }],
 					},
 				},
@@ -94,7 +94,7 @@ describe("plugin uninstall service", () => {
 		);
 		await writeFile(
 			join(installPath, "package", "package.json"),
-			JSON.stringify({ name: "cline-internal-bundled-skills-demo" }, null, 2),
+			JSON.stringify({ name: "enki-internal-bundled-skills-demo" }, null, 2),
 			"utf8",
 		);
 		await writeFile(
@@ -107,7 +107,7 @@ describe("plugin uninstall service", () => {
 		});
 
 		const result = await uninstallPlugin({
-			name: "cline-internal-bundled-skills-demo",
+			name: "enki-internal-bundled-skills-demo",
 		});
 
 		expect(result.installPath).toBe(installPath);
@@ -120,8 +120,8 @@ describe("plugin uninstall service", () => {
 	});
 
 	it("uninstalls a direct plugin file by path", async () => {
-		const pluginPath = join(home, ".cline", "plugins", "direct-plugin.ts");
-		await mkdir(join(home, ".cline", "plugins"), { recursive: true });
+		const pluginPath = join(home, ".enki", "plugins", "direct-plugin.ts");
+		await mkdir(join(home, ".enki", "plugins"), { recursive: true });
 		await writeFile(
 			pluginPath,
 			"export default { name: 'direct', manifest: { capabilities: ['tools'] } };",
@@ -137,10 +137,10 @@ describe("plugin uninstall service", () => {
 	it.skipIf(process.platform === "win32")(
 		"keeps plugin files when MCP settings cleanup fails",
 		async () => {
-			const pluginPath = join(home, ".cline", "plugins", "mcp-plugin.ts");
-			const settingsPath = join(root, "cline_mcp_settings.json");
+			const pluginPath = join(home, ".enki", "plugins", "mcp-plugin.ts");
+			const settingsPath = join(root, "enki_mcp_settings.json");
 			process.env.CLINE_MCP_SETTINGS_PATH = settingsPath;
-			await mkdir(join(home, ".cline", "plugins"), { recursive: true });
+			await mkdir(join(home, ".enki", "plugins"), { recursive: true });
 			await writeFile(
 				pluginPath,
 				"export default { name: 'mcp-plugin', manifest: { capabilities: ['mcp'] } };",
@@ -187,7 +187,7 @@ describe("plugin uninstall service", () => {
 	it.skipIf(process.platform === "win32")(
 		"keeps disabled plugin settings if file deletion fails",
 		async () => {
-			const pluginRoot = join(home, ".cline", "plugins");
+			const pluginRoot = join(home, ".enki", "plugins");
 			const pluginPath = join(pluginRoot, "locked-plugin.ts");
 			await mkdir(pluginRoot, { recursive: true });
 			await writeFile(

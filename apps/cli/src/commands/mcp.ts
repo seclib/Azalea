@@ -67,7 +67,7 @@ export function buildMcpInstallDefaults(options: {
 	if (type === "stdio") {
 		if (targetArgs.length === 0) {
 			throw new Error(
-				"Stdio MCP install requires a command after the server name, for example: cline mcp install fs -- npx -y @modelcontextprotocol/server-filesystem /tmp",
+				"Stdio MCP install requires a command after the server name, for example: enki mcp install fs -- npx -y @modelcontextprotocol/server-filesystem /tmp",
 			);
 		}
 		return {
@@ -108,7 +108,7 @@ export async function runMcpInstallCommand(
 			options.isTty ?? (process.stdin.isTTY && process.stdout.isTTY);
 		if (!isTty) {
 			throw new Error(
-				"cline mcp install opens the MCP wizard and requires a TTY.",
+				"enki mcp install opens the MCP wizard and requires a TTY.",
 			);
 		}
 		const defaults = buildMcpInstallDefaults(options);

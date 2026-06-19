@@ -1,8 +1,8 @@
-import { buildModelInfoNameMap, type ModelInfo, resolveClinePassModelInfo } from "@shared/api"
-import type { OnboardingModel, OnboardingModelGroup, OpenRouterModelInfo } from "@shared/proto/index.cline"
+import { buildModelInfoNameMap, type ModelInfo, resolveEnki AIPassModelInfo } from "@shared/api"
+import type { OnboardingModel, OnboardingModelGroup, OpenRouterModelInfo } from "@shared/proto/index.enki"
 import { AlertCircleIcon, CircleCheckIcon, CircleIcon, ListIcon, LoaderCircleIcon, ZapIcon } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import ClineLogoWhite from "@/assets/ClineLogoWhite"
+import Enki AILogoWhite from "@/assets/Enki AILogoWhite"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,13 +12,13 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 import { useHasFeatureFlag } from "@/hooks/useFeatureFlag"
 import { cn } from "@/lib/utils"
 import { AccountServiceClient, StateServiceClient } from "@/services/grpc-client"
-import { setPendingClinePassSubscribe } from "./clinePassSubscribe"
+import { setPendingEnki AIPassSubscribe } from "./enkiPassSubscribe"
 import ApiConfigurationSection from "../settings/sections/ApiConfigurationSection"
 import { useApiConfigurationHandlers } from "../settings/utils/useApiConfigurationHandlers"
 import WelcomeView from "../welcome/WelcomeView"
 import {
 	getCapabilities,
-	getClineUIOnboardingGroups,
+	getEnki AIUIOnboardingGroups,
 	getPriceRange,
 	getSpeedLabel,
 	type OnboardingModelsByGroup,
@@ -38,7 +38,7 @@ type ModelSelectionProps = {
 
 function getModelGroupKey(userType: ModelSelectionProps["userType"]): keyof OnboardingModelsByGroup {
 	if (userType === NEW_USER_TYPE.CLINE_PASS) {
-		return "clinePass"
+		return "enkiPass"
 	}
 	return userType === NEW_USER_TYPE.FREE ? "free" : "power"
 }
@@ -52,10 +52,10 @@ const ModelSelection = ({
 	setSearchTerm,
 	onboardingModels,
 }: ModelSelectionProps) => {
-	const isClinePass = userType === NEW_USER_TYPE.CLINE_PASS
+	const isEnki AIPass = userType === NEW_USER_TYPE.CLINE_PASS
 	const modelGroups = onboardingModels[getModelGroupKey(userType)]
-	// ClinePass costs are covered by the subscription, so prices are hidden.
-	const hidePrice = isClinePass
+	// Enki AIPass costs are covered by the subscription, so prices are hidden.
+	const hidePrice = isEnki AIPass
 
 	const searchedModels = useMemo(() => {
 		if (!models || !searchTerm) {
@@ -122,11 +122,11 @@ const ModelSelection = ({
 		)
 	}
 
-	// No curated ClinePass models available: show an empty state rather than other models.
-	if (isClinePass && modelGroups.length === 0) {
+	// No curated Enki AIPass models available: show an empty state rather than other models.
+	if (isEnki AIPass && modelGroups.length === 0) {
 		return (
 			<div className="flex w-full max-w-lg flex-col items-center justify-center my-8 px-2 text-center">
-				<p className="text-foreground text-sm m-0">No ClinePass models are available right now.</p>
+				<p className="text-foreground text-sm m-0">No Enki AIPass models are available right now.</p>
 				<p className="text-foreground/70 text-sm mt-1">Please choose another option or try again later.</p>
 			</div>
 		)
@@ -145,8 +145,8 @@ const ModelSelection = ({
 				))}
 			</div>
 
-			{/* SEARCH MODEL — hidden for ClinePass, whose selection is constrained to the curated list. */}
-			{!isClinePass && (
+			{/* SEARCH MODEL — hidden for Enki AIPass, whose selection is constrained to the curated list. */}
+			{!isEnki AIPass && (
 				<div className="flex w-full max-w-lg flex-col gap-6 my-4 border-t border-muted-foreground">
 					<div className="flex flex-col gap-3 mt-6" key="search-results">
 						<h4 className="text-sm font-bold text-foreground/70 uppercase mb-2">other options</h4>
@@ -301,8 +301,8 @@ const OnboardingStepContent = ({
 const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: OnboardingModelGroup }) => {
 	const { handleFieldsChange } = useApiConfigurationHandlers()
 	const { openRouterModels, hideSettings, hideAccount, setShowWelcome } = useExtensionState()
-	const isClinePassEnabled = useHasFeatureFlag(CLINE_PASS_FEATURE_FLAG)
-	const userTypeSelections = useMemo(() => getUserTypeSelections(isClinePassEnabled), [isClinePassEnabled])
+	const isEnki AIPassEnabled = useHasFeatureFlag(CLINE_PASS_FEATURE_FLAG)
+	const userTypeSelections = useMemo(() => getUserTypeSelections(isEnki AIPassEnabled), [isEnki AIPassEnabled])
 
 	const [stepNumber, setStepNumber] = useState(0)
 	const [isActionLoading, setIsActionLoading] = useState(false)
@@ -311,16 +311,16 @@ const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: Onboard
 	const [selectedModelId, setSelectedModelId] = useState("")
 	const [searchTerm, setSearchTerm] = useState("")
 
-	const models = useMemo(() => getClineUIOnboardingGroups(onboardingModels), [onboardingModels])
-	// ClinePass model IDs (e.g. "cline-pass/glm-5.1") aren't keyed in openRouterModels,
-	// so resolve their info via the slug-based lookup used by ClinePassProvider.
+	const models = useMemo(() => getEnki AIUIOnboardingGroups(onboardingModels), [onboardingModels])
+	// Enki AIPass model IDs (e.g. "enki-pass/glm-5.1") aren't keyed in openRouterModels,
+	// so resolve their info via the slug-based lookup used by Enki AIPassProvider.
 	const openRouterModelsByName = useMemo(() => buildModelInfoNameMap(openRouterModels), [openRouterModels])
 
 	useEffect(() => {
 		setSearchTerm("")
-		const groupKey = userType === NEW_USER_TYPE.CLINE_PASS ? "clinePass" : userType === NEW_USER_TYPE.POWER ? "power" : "free"
-		// ClinePass must stay within its curated list (never fall back to a free/OpenRouter model
-		// under the cline-pass provider). Free/Frontier fall back to free if their group is empty.
+		const groupKey = userType === NEW_USER_TYPE.CLINE_PASS ? "enkiPass" : userType === NEW_USER_TYPE.POWER ? "power" : "free"
+		// Enki AIPass must stay within its curated list (never fall back to a free/OpenRouter model
+		// under the enki-pass provider). Free/Frontier fall back to free if their group is empty.
 		const modelGroup = userType === NEW_USER_TYPE.CLINE_PASS ? models[groupKey][0] : (models[groupKey][0] ?? models.free[0])
 		const userGroupInitModel = modelGroup?.models[0]
 		setSelectedModelId(userGroupInitModel?.id ?? "")
@@ -330,7 +330,7 @@ const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: Onboard
 		setUserType(userType)
 		const action =
 			userType === NEW_USER_TYPE.CLINE_PASS
-				? "cline_pass_user_selected"
+				? "enki_pass_user_selected"
 				: userType === NEW_USER_TYPE.POWER
 					? "power_user_selected"
 					: userType === NEW_USER_TYPE.FREE
@@ -349,18 +349,18 @@ const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: Onboard
 	const finishOnboarding = useCallback(
 		async (updateModelId: boolean, step: number) => {
 			const modelSelected = (updateModelId && selectedModelId) || undefined
-			// Guard: never save a non-ClinePass model id under the cline-pass provider.
-			const isClinePassModel = selectedModelId.startsWith("cline-pass/")
+			// Guard: never save a non-Enki AIPass model id under the enki-pass provider.
+			const isEnki AIPassModel = selectedModelId.startsWith("enki-pass/")
 			if (modelSelected) {
-				if (userType === NEW_USER_TYPE.CLINE_PASS && isClinePassModel) {
-					const clinePassModelInfo = resolveClinePassModelInfo(selectedModelId, openRouterModelsByName)
+				if (userType === NEW_USER_TYPE.CLINE_PASS && isEnki AIPassModel) {
+					const enkiPassModelInfo = resolveEnki AIPassModelInfo(selectedModelId, openRouterModelsByName)
 					await handleFieldsChange({
-						planModeClinePassModelId: selectedModelId,
-						actModeClinePassModelId: selectedModelId,
-						planModeClinePassModelInfo: clinePassModelInfo,
-						actModeClinePassModelInfo: clinePassModelInfo,
-						planModeApiProvider: "cline-pass",
-						actModeApiProvider: "cline-pass",
+						planModeEnki AIPassModelId: selectedModelId,
+						actModeEnki AIPassModelId: selectedModelId,
+						planModeEnki AIPassModelInfo: enkiPassModelInfo,
+						actModeEnki AIPassModelInfo: enkiPassModelInfo,
+						planModeApiProvider: "enki-pass",
+						actModeApiProvider: "enki-pass",
 					})
 				} else if (userType !== NEW_USER_TYPE.CLINE_PASS) {
 					await handleFieldsChange({
@@ -368,13 +368,13 @@ const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: Onboard
 						actModeOpenRouterModelId: selectedModelId,
 						planModeOpenRouterModelInfo: openRouterModels[selectedModelId],
 						actModeOpenRouterModelInfo: openRouterModels[selectedModelId],
-						planModeApiProvider: "cline",
-						actModeApiProvider: "cline",
+						planModeApiProvider: "enki",
+						actModeApiProvider: "enki",
 					})
 				} else {
-					// ClinePass selected but the id isn't a cline-pass/ model: skip the write
+					// Enki AIPass selected but the id isn't a enki-pass/ model: skip the write
 					// (avoids a bad provider config) and log so the no-op is observable.
-					console.error(`Skipped ClinePass provider setup: unexpected model id "${selectedModelId}"`)
+					console.error(`Skipped Enki AIPass provider setup: unexpected model id "${selectedModelId}"`)
 				}
 			}
 			hideAccount()
@@ -389,9 +389,9 @@ const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: Onboard
 		async (action: "signin" | "next" | "back" | "done" | "signup") => {
 			switch (action) {
 				case "signup":
-					// ClinePass: record the intent so App opens the subscription page once auth
+					// Enki AIPass: record the intent so App opens the subscription page once auth
 					// completes (App outlives this view, which unmounts on auth). Login flow unchanged.
-					setPendingClinePassSubscribe(userType === NEW_USER_TYPE.CLINE_PASS)
+					setPendingEnki AIPassSubscribe(userType === NEW_USER_TYPE.CLINE_PASS)
 					setStepNumber(stepNumber + 1)
 					setIsActionLoading(true)
 					await AccountServiceClient.accountLoginClicked({})
@@ -400,7 +400,7 @@ const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: Onboard
 					await finishOnboarding(true, stepNumber + 1)
 					break
 				case "signin":
-					setPendingClinePassSubscribe(false)
+					setPendingEnki AIPassSubscribe(false)
 					setIsActionLoading(true)
 					await AccountServiceClient.accountLoginClicked({})
 						.catch(() => {})
@@ -412,8 +412,8 @@ const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: Onboard
 					setStepNumber(stepNumber + 1)
 					break
 				case "back":
-					// Abandon any pending ClinePass subscription redirect when the user goes back.
-					setPendingClinePassSubscribe(false)
+					// Abandon any pending Enki AIPass subscription redirect when the user goes back.
+					setPendingEnki AIPassSubscribe(false)
 					StateServiceClient.captureOnboardingProgress({ step: stepNumber - 1 })
 					setStepNumber(stepNumber - 1)
 					break
@@ -438,7 +438,7 @@ const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: Onboard
 	return (
 		<div className="fixed inset-0 p-0 flex flex-col w-full">
 			<div className="h-full px-5 xs:mx-10 overflow-auto flex flex-col gap-4 items-center justify-center">
-				<ClineLogoWhite className="size-16 flex-shrink-0" />
+				<Enki AILogoWhite className="size-16 flex-shrink-0" />
 				<h2 className="text-lg font-semibold p-0 flex-shrink-0">{stepDisplayInfo.title}</h2>
 				{stepNumber === 2 && (
 					<div className="flex w-full max-w-lg flex-col gap-6 my-4 items-center ">
@@ -466,7 +466,7 @@ const OnboardingViewContent = ({ onboardingModels }: { onboardingModels: Onboard
 
 				<footer className="flex w-full max-w-lg flex-col gap-3 my-2 px-2 overflow-hidden flex-shrink-0">
 					{stepDisplayInfo.buttons.map((btn) => {
-						// Block ClinePass signup when no ClinePass model is selected (e.g. empty list).
+						// Block Enki AIPass signup when no Enki AIPass model is selected (e.g. empty list).
 						const disabled =
 							isActionLoading ||
 							(btn.action === "signup" && userType === NEW_USER_TYPE.CLINE_PASS && !selectedModelId)

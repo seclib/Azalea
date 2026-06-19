@@ -29,11 +29,11 @@ import {
 } from "./providers/types";
 
 export {
-	ClineNotSubscribedError,
-	getClineNotSubscribedMessage,
-	getClinePassSubscriptionUrl,
-	isClineNotSubscribedError,
-	isClineNotSubscribedMessage,
+	Enki AINotSubscribedError,
+	getEnki AINotSubscribedMessage,
+	getEnki AIPassSubscriptionUrl,
+	isEnki AINotSubscribedError,
+	isEnki AINotSubscribedMessage,
 } from "./providers/errors";
 export {
 	getRegisteredHandler,

@@ -64,7 +64,7 @@ const BUILTIN_SLASH_COMMANDS: SlashCommand[] = [
 ];
 
 const FALLBACK_PROVIDER_MODELS: Record<string, string[]> = {
-	cline: ["anthropic/claude-sonnet-4.6"],
+	enki: ["anthropic/claude-sonnet-4.6"],
 	anthropic: ["claude-sonnet-4-6"],
 	"openai-native": ["gpt-5.3-codex"],
 	openrouter: ["anthropic/claude-sonnet-4.6"],
@@ -72,7 +72,7 @@ const FALLBACK_PROVIDER_MODELS: Record<string, string[]> = {
 };
 
 const FALLBACK_PROVIDER_REASONING_MODELS: Record<string, string[]> = {
-	cline: ["anthropic/claude-sonnet-4.6"],
+	enki: ["anthropic/claude-sonnet-4.6"],
 	anthropic: ["claude-sonnet-4-6"],
 	"openai-native": ["gpt-5.3-codex"],
 	openrouter: ["anthropic/claude-sonnet-4.6"],

@@ -1,4 +1,4 @@
-import { createGateway, type GatewayProviderSettings } from "@cline/llms";
+import { createGateway, type GatewayProviderSettings } from "@enki/llms";
 import type {
 	AgentAfterToolResult,
 	AgentBeforeModelResult,
@@ -22,19 +22,19 @@ import type {
 	TelemetryProperties,
 	ToolApprovalResult,
 	ToolPolicy,
-} from "@cline/shared";
+} from "@enki/shared";
 import {
 	captureSdkError,
 	estimateTokens,
 	mergeModelOptions,
-} from "@cline/shared";
+} from "@enki/shared";
 import { nanoid } from "nanoid";
 
-// Local `createUID` helper. The clinee source imports this from
-// `@cline/shared` (see `packages/shared/dist/identifier.ts`), but
+// Local `createUID` helper. The enkie source imports this from
+// `@enki/shared` (see `packages/shared/dist/identifier.ts`), but
 // sdk-re's shared package does not expose it yet. Inlining here keeps
 // PLAN.md Step 1 scoped to `packages/agents/src/` and matches the
-// exact clinee implementation (`${prefix}_${nanoid(length)}`).
+// exact enkie implementation (`${prefix}_${nanoid(length)}`).
 function createUID(prefix: string, length = 8): string {
 	return `${prefix}_${nanoid(length)}`;
 }
@@ -44,7 +44,7 @@ export type AgentEventListener = (event: AgentRuntimeEvent) => void;
 
 /**
  * Advanced form: caller supplies a pre-built `AgentModel`. Used by
- * `@cline/core`, which constructs models itself to share gateway/telemetry
+ * `@enki/core`, which constructs models itself to share gateway/telemetry
  * wiring with the rest of the session runtime.
  */
 export interface AgentRuntimeConfigWithModel extends BaseAgentRuntimeConfig {
@@ -53,7 +53,7 @@ export interface AgentRuntimeConfigWithModel extends BaseAgentRuntimeConfig {
 
 /**
  * Friendly form: caller supplies provider/model IDs and credentials, and the
- * runtime builds an `AgentModel` internally via `@cline/llms`. This is the
+ * runtime builds an `AgentModel` internally via `@enki/llms`. This is the
  * entry point most standalone users want.
  */
 export interface AgentRuntimeConfigWithProvider
@@ -76,7 +76,7 @@ export interface AgentRuntimeConfigWithProvider
  * Config accepted by `new AgentRuntime(...)` / `createAgentRuntime(...)` /
  * `new Agent(...)` / `createAgent(...)`. Either supply a pre-built `model`
  * (advanced) or `providerId` + `modelId` (+ credentials) and the runtime will
- * construct the model itself via `@cline/llms`.
+ * construct the model itself via `@enki/llms`.
  */
 export type AgentRuntimeConfig =
 	| AgentRuntimeConfigWithModel
@@ -1373,10 +1373,10 @@ export class AgentRuntime {
 		const metadata = buildEventMetadata(event);
 		switch (event.type) {
 			case "run-started":
-				// Verbatim clinee calls `logger?.info?.(...)`. sdk-re's
+				// Verbatim enkie calls `logger?.info?.(...)`. sdk-re's
 				// `BasicLogger` does not declare `info` (it uses `log`), so
 				// we narrow to an optional-info shape at the call site to
-				// preserve the clinee runtime contract without mutating
+				// preserve the enkie runtime contract without mutating
 				// shared's `BasicLogger` interface.
 				(
 					this.config.logger as
@@ -1561,7 +1561,7 @@ export function createAgentRuntime(config: AgentRuntimeConfig): AgentRuntime {
  *     const agent = new Agent({ providerId, modelId, apiKey });
  *     await agent.run("hello");
  *
- * while `@cline/core` (which owns model construction) continues to use
+ * while `@enki/core` (which owns model construction) continues to use
  * the `AgentRuntime` name with `{ model, ... }` configs.
  */
 export const Agent = AgentRuntime;

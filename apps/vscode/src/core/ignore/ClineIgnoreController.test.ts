@@ -2,27 +2,27 @@ import fs from "fs/promises"
 import { after, beforeEach, describe, it } from "mocha"
 import os from "os"
 import path from "path"
-import { ClineIgnoreController } from "./ClineIgnoreController"
+import { Enki AIIgnoreController } from "./Enki AIIgnoreController"
 import "should"
 
-describe("ClineIgnoreController", () => {
+describe("Enki AIIgnoreController", () => {
 	let tempDir: string
-	let controller: ClineIgnoreController
+	let controller: Enki AIIgnoreController
 
 	beforeEach(async () => {
 		// Create a temp directory for testing
 		tempDir = path.join(os.tmpdir(), `llm-test-${Date.now()}-${Math.random().toString(36).slice(2)}`)
 		await fs.mkdir(tempDir)
 
-		// Create default .clineignore file
+		// Create default .enkiignore file
 		await fs.writeFile(
-			path.join(tempDir, ".clineignore"),
+			path.join(tempDir, ".enkiignore"),
 			[".env", "*.secret", "private/", "# This is a comment", "", "temp.*", "file-with-space-at-end.* ", "**/.git/**"].join(
 				"\n",
 			),
 		)
 
-		controller = new ClineIgnoreController(tempDir)
+		controller = new Enki AIIgnoreController(tempDir)
 		await controller.initialize()
 	})
 
@@ -50,8 +50,8 @@ describe("ClineIgnoreController", () => {
 			results.forEach((result) => result.should.be.true())
 		})
 
-		it("should block access to .clineignore file", async () => {
-			const result = controller.validateAccess(".clineignore")
+		it("should block access to .enkiignore file", async () => {
+			const result = controller.validateAccess(".enkiignore")
 			result.should.be.false()
 		})
 	})
@@ -81,11 +81,11 @@ describe("ClineIgnoreController", () => {
 
 		it("should handle pattern edge cases", async () => {
 			await fs.writeFile(
-				path.join(tempDir, ".clineignore"),
+				path.join(tempDir, ".enkiignore"),
 				["*.secret", "private/", "*.tmp", "data-*.json", "temp/*"].join("\n"),
 			)
 
-			controller = new ClineIgnoreController(tempDir)
+			controller = new Enki AIIgnoreController(tempDir)
 			await controller.initialize()
 
 			const results = [
@@ -103,7 +103,7 @@ describe("ClineIgnoreController", () => {
 
 		// it("should handle negation patterns", async () => {
 		// 	await fs.writeFile(
-		// 		path.join(tempDir, ".clineignore"),
+		// 		path.join(tempDir, ".enkiignore"),
 		// 		[
 		// 			"temp/*", // Ignore everything in temp
 		// 			"!temp/allowed/*", // But allow files in temp/allowed
@@ -116,7 +116,7 @@ describe("ClineIgnoreController", () => {
 		// 		].join("\n"),
 		// 	)
 
-		// 	controller = new ClineIgnoreController(tempDir)
+		// 	controller = new Enki AIIgnoreController(tempDir)
 
 		// 	const results = [
 		// 		// Basic negation
@@ -148,14 +148,14 @@ describe("ClineIgnoreController", () => {
 		// 	results[9].should.be.true() // assets/public/data.json
 		// })
 
-		it("should handle comments in .clineignore", async () => {
-			// Create a new .clineignore with comments
+		it("should handle comments in .enkiignore", async () => {
+			// Create a new .enkiignore with comments
 			await fs.writeFile(
-				path.join(tempDir, ".clineignore"),
+				path.join(tempDir, ".enkiignore"),
 				["# Comment line", "*.secret", "private/", "temp.*"].join("\n"),
 			)
 
-			controller = new ClineIgnoreController(tempDir)
+			controller = new Enki AIIgnoreController(tempDir)
 			await controller.initialize()
 
 			const result = controller.validateAccess("test.secret")
@@ -217,13 +217,13 @@ describe("ClineIgnoreController", () => {
 			result.should.be.true()
 		})
 
-		it("should handle missing .clineignore gracefully", async () => {
-			// Create a new controller in a directory without .clineignore
+		it("should handle missing .enkiignore gracefully", async () => {
+			// Create a new controller in a directory without .enkiignore
 			const emptyDir = path.join(os.tmpdir(), `llm-test-empty-${Date.now()}`)
 			await fs.mkdir(emptyDir)
 
 			try {
-				const controller = new ClineIgnoreController(emptyDir)
+				const controller = new Enki AIIgnoreController(emptyDir)
 				await controller.initialize()
 				const result = controller.validateAccess("file.txt")
 				result.should.be.true()
@@ -232,10 +232,10 @@ describe("ClineIgnoreController", () => {
 			}
 		})
 
-		it("should handle empty .clineignore", async () => {
-			await fs.writeFile(path.join(tempDir, ".clineignore"), "")
+		it("should handle empty .enkiignore", async () => {
+			await fs.writeFile(path.join(tempDir, ".enkiignore"), "")
 
-			controller = new ClineIgnoreController(tempDir)
+			controller = new Enki AIIgnoreController(tempDir)
 			await controller.initialize()
 
 			const result = controller.validateAccess("regular-file.txt")
@@ -248,29 +248,29 @@ describe("ClineIgnoreController", () => {
 			// Create a .gitignore file with patterns "*.log" and "debug/"
 			await fs.writeFile(path.join(tempDir, ".gitignore"), ["*.log", "debug/"].join("\n"))
 
-			// Create a .clineignore file that includes .gitignore and adds an extra pattern "secret.txt"
-			await fs.writeFile(path.join(tempDir, ".clineignore"), ["!include .gitignore", "secret.txt"].join("\n"))
+			// Create a .enkiignore file that includes .gitignore and adds an extra pattern "secret.txt"
+			await fs.writeFile(path.join(tempDir, ".enkiignore"), ["!include .gitignore", "secret.txt"].join("\n"))
 
-			// Initialize the controller to load the updated .clineignore
-			controller = new ClineIgnoreController(tempDir)
+			// Initialize the controller to load the updated .enkiignore
+			controller = new Enki AIIgnoreController(tempDir)
 			await controller.initialize()
 
 			// "server.log" should be ignored due to the "*.log" pattern from .gitignore
 			controller.validateAccess("server.log").should.be.false()
 			// "debug/app.js" should be ignored due to the "debug/" pattern from .gitignore
 			controller.validateAccess("debug/app.js").should.be.false()
-			// "secret.txt" should be ignored as specified directly in .clineignore
+			// "secret.txt" should be ignored as specified directly in .enkiignore
 			controller.validateAccess("secret.txt").should.be.false()
 			// Other files should be allowed
 			controller.validateAccess("app.js").should.be.true()
 		})
 
 		it("should handle non-existent included file gracefully", async () => {
-			// Create a .clineignore file that includes a non-existent file
-			await fs.writeFile(path.join(tempDir, ".clineignore"), ["!include missing-file.txt"].join("\n"))
+			// Create a .enkiignore file that includes a non-existent file
+			await fs.writeFile(path.join(tempDir, ".enkiignore"), ["!include missing-file.txt"].join("\n"))
 
 			// Initialize the controller
-			controller = new ClineIgnoreController(tempDir)
+			controller = new Enki AIIgnoreController(tempDir)
 			await controller.initialize()
 
 			// Validate access to a regular file; it should be allowed because the missing include should not break everything
@@ -279,9 +279,9 @@ describe("ClineIgnoreController", () => {
 
 		it("should handle non-existent included file gracefully alongside a valid pattern", async () => {
 			// Test with an include directive for a non-existent file alongside a valid pattern ("*.tmp")
-			await fs.writeFile(path.join(tempDir, ".clineignore"), ["!include non-existent.txt", "*.tmp"].join("\n"))
+			await fs.writeFile(path.join(tempDir, ".enkiignore"), ["!include non-existent.txt", "*.tmp"].join("\n"))
 
-			controller = new ClineIgnoreController(tempDir)
+			controller = new Enki AIIgnoreController(tempDir)
 			await controller.initialize()
 
 			// "file.tmp" should be ignored because of the "*.tmp" pattern

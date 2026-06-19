@@ -1,25 +1,25 @@
 import type {
-	ClineAccountBalance,
-	ClineAccountOrganization,
-	ClineAccountOrganizationBalance,
-	ClineAccountOrganizationUsageTransaction,
-	ClineAccountPaymentTransaction,
-	ClineAccountUsageTransaction,
-	ClineAccountUser,
-	ClineOrganization,
+	Enki AIAccountBalance,
+	Enki AIAccountOrganization,
+	Enki AIAccountOrganizationBalance,
+	Enki AIAccountOrganizationUsageTransaction,
+	Enki AIAccountPaymentTransaction,
+	Enki AIAccountUsageTransaction,
+	Enki AIAccountUser,
+	Enki AIOrganization,
 	FeaturebaseTokenResponse,
 	UserRemoteConfigResponse,
 } from "./types";
 
 const DEFAULT_TIMEOUT_MS = 30_000;
 
-interface ClineApiEnvelope<T> {
+interface Enki AIApiEnvelope<T> {
 	success?: boolean;
 	error?: string;
 	data?: T;
 }
 
-function getClineApiEnvelopeError(parsed: unknown): string | undefined {
+function getEnki AIApiEnvelopeError(parsed: unknown): string | undefined {
 	if (typeof parsed !== "object" || parsed === null || !("error" in parsed)) {
 		return undefined;
 	}
@@ -27,12 +27,12 @@ function getClineApiEnvelopeError(parsed: unknown): string | undefined {
 	return typeof error === "string" && error.trim() ? error : undefined;
 }
 
-function formatClineAccountRequestFailure(
+function formatEnki AIAccountRequestFailure(
 	status: number,
 	bodyText: string,
 	parsed: unknown,
 ): string {
-	const envelopeError = getClineApiEnvelopeError(parsed);
+	const envelopeError = getEnki AIApiEnvelopeError(parsed);
 	if (envelopeError) {
 		return envelopeError;
 	}
@@ -40,13 +40,13 @@ function formatClineAccountRequestFailure(
 	const body = bodyText.trim();
 	if (body) {
 		const preview = body.length > 200 ? `${body.slice(0, 200)}...` : body;
-		return `Cline account request failed with status ${status}: ${preview}`;
+		return `Enki AI account request failed with status ${status}: ${preview}`;
 	}
 
-	return `Cline account request failed with status ${status}`;
+	return `Enki AI account request failed with status ${status}`;
 }
 
-export interface ClineAccountServiceOptions {
+export interface Enki AIAccountServiceOptions {
 	apiBaseUrl: string;
 	getAuthToken: () => Promise<string | undefined | null>;
 	getCurrentUserId?: () =>
@@ -65,16 +65,16 @@ export interface ClineAccountServiceOptions {
 	fetchImpl?: typeof fetch;
 }
 
-export class ClineAccountService {
+export class Enki AIAccountService {
 	private readonly apiBaseUrl: string;
-	private readonly getAuthTokenFn: ClineAccountServiceOptions["getAuthToken"];
-	private readonly getCurrentUserIdFn: ClineAccountServiceOptions["getCurrentUserId"];
-	private readonly getOrganizationMemberIdFn: ClineAccountServiceOptions["getOrganizationMemberId"];
-	private readonly getHeadersFn: ClineAccountServiceOptions["getHeaders"];
+	private readonly getAuthTokenFn: Enki AIAccountServiceOptions["getAuthToken"];
+	private readonly getCurrentUserIdFn: Enki AIAccountServiceOptions["getCurrentUserId"];
+	private readonly getOrganizationMemberIdFn: Enki AIAccountServiceOptions["getOrganizationMemberId"];
+	private readonly getHeadersFn: Enki AIAccountServiceOptions["getHeaders"];
 	private readonly requestTimeoutMs: number;
 	private readonly fetchImpl: typeof fetch;
 
-	constructor(options: ClineAccountServiceOptions) {
+	constructor(options: Enki AIAccountServiceOptions) {
 		const apiBaseUrl = options.apiBaseUrl.trim();
 		if (!apiBaseUrl) {
 			throw new Error("apiBaseUrl is required");
@@ -89,8 +89,8 @@ export class ClineAccountService {
 		this.fetchImpl = options.fetchImpl ?? fetch;
 	}
 
-	public async fetchMe(): Promise<ClineAccountUser> {
-		return this.request<ClineAccountUser>("/api/v1/users/me");
+	public async fetchMe(): Promise<Enki AIAccountUser> {
+		return this.request<Enki AIAccountUser>("/api/v1/users/me");
 	}
 
 	public async fetchRemoteConfig(): Promise<UserRemoteConfigResponse | null> {
@@ -111,58 +111,58 @@ export class ClineAccountService {
 		}
 	}
 
-	public async fetchBalance(userId?: string): Promise<ClineAccountBalance> {
+	public async fetchBalance(userId?: string): Promise<Enki AIAccountBalance> {
 		const resolvedUserId = await this.resolveUserId(userId);
-		return this.request<ClineAccountBalance>(
+		return this.request<Enki AIAccountBalance>(
 			`/api/v1/users/${encodeURIComponent(resolvedUserId)}/balance`,
 		);
 	}
 
 	public async fetchUsageTransactions(
 		userId?: string,
-	): Promise<ClineAccountUsageTransaction[]> {
+	): Promise<Enki AIAccountUsageTransaction[]> {
 		const resolvedUserId = await this.resolveUserId(userId);
 		const response = await this.request<{
-			items: ClineAccountUsageTransaction[];
+			items: Enki AIAccountUsageTransaction[];
 		}>(`/api/v1/users/${encodeURIComponent(resolvedUserId)}/usages`);
 		return response.items ?? [];
 	}
 
 	public async fetchPaymentTransactions(
 		userId?: string,
-	): Promise<ClineAccountPaymentTransaction[]> {
+	): Promise<Enki AIAccountPaymentTransaction[]> {
 		const resolvedUserId = await this.resolveUserId(userId);
 		const response = await this.request<{
-			paymentTransactions: ClineAccountPaymentTransaction[];
+			paymentTransactions: Enki AIAccountPaymentTransaction[];
 		}>(`/api/v1/users/${encodeURIComponent(resolvedUserId)}/payments`);
 		return response.paymentTransactions ?? [];
 	}
 
-	public async fetchUserOrganizations(): Promise<ClineAccountOrganization[]> {
+	public async fetchUserOrganizations(): Promise<Enki AIAccountOrganization[]> {
 		const me = await this.fetchMe();
 		return me.organizations ?? [];
 	}
 
 	public async fetchOrganization(
 		organizationId: string,
-	): Promise<ClineOrganization> {
+	): Promise<Enki AIOrganization> {
 		const orgId = organizationId.trim();
 		if (!orgId) {
 			throw new Error("organizationId is required");
 		}
-		return this.request<ClineOrganization>(
+		return this.request<Enki AIOrganization>(
 			`/api/v1/organizations/${encodeURIComponent(orgId)}`,
 		);
 	}
 
 	public async fetchOrganizationBalance(
 		organizationId: string,
-	): Promise<ClineAccountOrganizationBalance> {
+	): Promise<Enki AIAccountOrganizationBalance> {
 		const orgId = organizationId.trim();
 		if (!orgId) {
 			throw new Error("organizationId is required");
 		}
-		return this.request<ClineAccountOrganizationBalance>(
+		return this.request<Enki AIAccountOrganizationBalance>(
 			`/api/v1/organizations/${encodeURIComponent(orgId)}/balance`,
 		);
 	}
@@ -170,7 +170,7 @@ export class ClineAccountService {
 	public async fetchOrganizationUsageTransactions(input: {
 		organizationId: string;
 		memberId?: string;
-	}): Promise<ClineAccountOrganizationUsageTransaction[]> {
+	}): Promise<Enki AIAccountOrganizationUsageTransaction[]> {
 		const organizationId = input.organizationId.trim();
 		if (!organizationId) {
 			throw new Error("organizationId is required");
@@ -181,7 +181,7 @@ export class ClineAccountService {
 			input.memberId,
 		);
 		const response = await this.request<{
-			items: ClineAccountOrganizationUsageTransaction[];
+			items: Enki AIAccountOrganizationUsageTransaction[];
 		}>(
 			`/api/v1/organizations/${encodeURIComponent(organizationId)}/members/${encodeURIComponent(memberId)}/usages`,
 		);
@@ -258,7 +258,7 @@ export class ClineAccountService {
 	): Promise<T> {
 		const token = (await this.getAuthTokenFn())?.trim();
 		if (!token) {
-			throw new Error("No Cline account auth token found");
+			throw new Error("No Enki AI account auth token found");
 		}
 
 		const extraHeaders = this.getHeadersFn ? await this.getHeadersFn() : {};
@@ -284,7 +284,7 @@ export class ClineAccountService {
 			if (response.status === 204 || input?.expectNoContent) {
 				if (!response.ok) {
 					throw new Error(
-						`Cline account request failed with status ${response.status}`,
+						`Enki AI account request failed with status ${response.status}`,
 					);
 				}
 				return undefined as T;
@@ -298,28 +298,28 @@ export class ClineAccountService {
 				} catch {
 					if (!response.ok) {
 						throw new Error(
-							formatClineAccountRequestFailure(
+							formatEnki AIAccountRequestFailure(
 								response.status,
 								text,
 								undefined,
 							),
 						);
 					}
-					throw new Error("Cline account response was not valid JSON");
+					throw new Error("Enki AI account response was not valid JSON");
 				}
 			}
 
 			if (!response.ok) {
 				throw new Error(
-					formatClineAccountRequestFailure(response.status, text, parsed),
+					formatEnki AIAccountRequestFailure(response.status, text, parsed),
 				);
 			}
 
 			if (typeof parsed === "object" && parsed !== null) {
-				const envelope = parsed as ClineApiEnvelope<T>;
+				const envelope = parsed as Enki AIApiEnvelope<T>;
 				if (typeof envelope.success === "boolean") {
 					if (!envelope.success) {
-						throw new Error(envelope.error || "Cline account request failed");
+						throw new Error(envelope.error || "Enki AI account request failed");
 					}
 					if (envelope.data !== undefined) {
 						return envelope.data;
@@ -328,7 +328,7 @@ export class ClineAccountService {
 			}
 
 			if (parsed === undefined || parsed === null) {
-				throw new Error("Cline account response payload was empty");
+				throw new Error("Enki AI account response payload was empty");
 			}
 			return parsed as T;
 		} finally {

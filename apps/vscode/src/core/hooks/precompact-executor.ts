@@ -1,6 +1,6 @@
 import { findLastIndex } from "@shared/array";
-import type { ClineMessage } from "@shared/ExtensionMessage";
-import type { ClineStorageMessage } from "@shared/messages/content";
+import type { Enki AIMessage } from "@shared/ExtensionMessage";
+import type { Enki AIStorageMessage } from "@shared/messages/content";
 import { Logger } from "@/shared/services/Logger";
 import type { ContextManager } from "../context/context-management/ContextManager";
 import type { MessageStateHandler } from "../task/message-state";
@@ -47,7 +47,7 @@ export interface TokenUsage {
  * @returns Token usage information, or zeros if parsing fails
  */
 export function extractTokenUsageFromMessage(
-	message: ClineMessage | undefined,
+	message: Enki AIMessage | undefined,
 ): TokenUsage {
 	const defaultUsage: TokenUsage = {
 		tokensIn: 0,
@@ -94,7 +94,7 @@ export interface PreCompactContextFiles {
  */
 export async function writePreCompactContextFiles(
 	taskId: string,
-	currentContext: ClineStorageMessage[],
+	currentContext: Enki AIStorageMessage[],
 ): Promise<PreCompactContextFiles> {
 	const { writeConversationHistoryJson, writeConversationHistoryText } =
 		await import("../storage/disk");
@@ -139,11 +139,11 @@ export interface PreCompactHookParams {
 
 	// Conversation state
 	/** API conversation history */
-	apiConversationHistory: ClineStorageMessage[];
+	apiConversationHistory: Enki AIStorageMessage[];
 	/** Current deleted range (if any) */
 	conversationHistoryDeletedRange?: [number, number];
-	/** Cline messages for extracting token usage */
-	clineMessages: ClineMessage[];
+	/** Enki AI messages for extracting token usage */
+	enkiMessages: Enki AIMessage[];
 
 	// Services
 	/** Context manager for getting truncated messages */
@@ -217,12 +217,12 @@ export async function executePreCompactHookWithCleanup(
 
 	try {
 		// Get current active context (respects previous compactions).
-		// getTruncatedMessages types its output as Anthropic.MessageParam[], but it slices the Cline-stored
-		// conversation history (ClineStorageMessage[]) passed in, so narrow it back here.
+		// getTruncatedMessages types its output as Anthropic.MessageParam[], but it slices the Enki AI-stored
+		// conversation history (Enki AIStorageMessage[]) passed in, so narrow it back here.
 		const currentContext = params.contextManager.getTruncatedMessages(
 			params.apiConversationHistory,
 			params.conversationHistoryDeletedRange,
-		) as ClineStorageMessage[];
+		) as Enki AIStorageMessage[];
 
 		// Write context files for hook access
 		const contextFiles = await writePreCompactContextFiles(
@@ -234,12 +234,12 @@ export async function executePreCompactHookWithCleanup(
 
 		// Extract token usage from the most recent API request
 		const previousApiReqIndex = findLastIndex(
-			params.clineMessages,
+			params.enkiMessages,
 			(m) => m.say === "api_req_started",
 		);
 		const previousRequest =
 			previousApiReqIndex !== -1
-				? params.clineMessages[previousApiReqIndex]
+				? params.enkiMessages[previousApiReqIndex]
 				: undefined;
 		const { tokensIn, tokensOut, tokensInCache, tokensOutCache } =
 			extractTokenUsageFromMessage(previousRequest);
@@ -297,7 +297,7 @@ export async function executePreCompactHookWithCleanup(
 			// Internalized cancellation state management (replaces handleCancellation callback)
 			// Always save state before cancelling, regardless of cancellation source
 			params.taskState.didFinishAbortingStream = true;
-			await params.messageStateHandler.saveClineMessagesAndUpdateHistory();
+			await params.messageStateHandler.saveEnki AIMessagesAndUpdateHistory();
 			await params.messageStateHandler.overwriteApiConversationHistory(
 				params.messageStateHandler.getApiConversationHistory(),
 			);

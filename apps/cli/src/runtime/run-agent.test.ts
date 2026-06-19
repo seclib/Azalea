@@ -28,14 +28,14 @@ const outputMocks = vi.hoisted(() => ({
 }));
 
 const CLINE_PASS_SUBSCRIPTION_URL =
-	"https://app.cline.bot/dashboard/subscription/";
-const CLINE_PASS_SUBSCRIPTION_MESSAGE = `No access to ClinePass subscription models yet. Subscribe to ClinePass, the low cost open weights model coding plan: ${CLINE_PASS_SUBSCRIPTION_URL}`;
+	"https://app.enki.bot/dashboard/subscription/";
+const CLINE_PASS_SUBSCRIPTION_MESSAGE = `No access to Enki AIPass subscription models yet. Subscribe to Enki AIPass, the low cost open weights model coding plan: ${CLINE_PASS_SUBSCRIPTION_URL}`;
 
-vi.mock("@cline/core", () => ({
-	getClinePassSubscriptionUrl: () => CLINE_PASS_SUBSCRIPTION_URL,
-	isClineNotSubscribedError: (error: unknown) =>
-		error instanceof Error && error.name === "ClineNotSubscribedError",
-	isClineNotSubscribedMessage: (text: string) =>
+vi.mock("@enki/core", () => ({
+	getEnki AIPassSubscriptionUrl: () => CLINE_PASS_SUBSCRIPTION_URL,
+	isEnki AINotSubscribedError: (error: unknown) =>
+		error instanceof Error && error.name === "Enki AINotSubscribedError",
+	isEnki AINotSubscribedMessage: (text: string) =>
 		text
 			.toLowerCase()
 			.includes("the user is not subscribed to required model plan"),
@@ -76,7 +76,7 @@ vi.mock("./format", () => ({
 }));
 
 vi.mock("./interactive-welcome", () => ({
-	resolveClineWelcomeLine: vi.fn(async () => undefined),
+	resolveEnki AIWelcomeLine: vi.fn(async () => undefined),
 }));
 
 vi.mock("./prompt", () => ({
@@ -522,9 +522,9 @@ describe("runAgent", () => {
 		expect(outputMocks.writeErr).toHaveBeenCalledWith("Missing API key");
 	});
 
-	it("renders ClinePass subscription errors with friendly copy when startup throws", async () => {
+	it("renders Enki AIPass subscription errors with friendly copy when startup throws", async () => {
 		const error = new Error(CLINE_PASS_SUBSCRIPTION_MESSAGE);
-		error.name = "ClineNotSubscribedError";
+		error.name = "Enki AINotSubscribedError";
 		sessionManagerMocks.start.mockRejectedValue(error);
 
 		const { runAgent } = await import("./run-agent");
@@ -540,7 +540,7 @@ describe("runAgent", () => {
 				mode: "yolo",
 				modelId: "premium-model",
 				outputMode: "text",
-				providerId: "cline-pass",
+				providerId: "enki-pass",
 				systemPrompt: "system",
 				thinking: false,
 				toolPolicies: { "*": { autoApprove: true } },
@@ -566,7 +566,7 @@ describe("runAgent", () => {
 				session_id: "session-1",
 			},
 			result: {
-				text: 'Missing API key for provider "cline".',
+				text: 'Missing API key for provider "enki".',
 				usage: {
 					inputTokens: 0,
 					outputTokens: 0,
@@ -580,7 +580,7 @@ describe("runAgent", () => {
 				finishReason: "error",
 				model: {
 					id: "anthropic/claude-sonnet-4.6",
-					provider: "cline",
+					provider: "enki",
 					info: {},
 				},
 				startedAt,
@@ -605,7 +605,7 @@ describe("runAgent", () => {
 				mode: "yolo",
 				modelId: "anthropic/claude-sonnet-4.6",
 				outputMode: "json",
-				providerId: "cline",
+				providerId: "enki",
 				systemPrompt: "system",
 				thinking: false,
 				toolPolicies: { "*": { autoApprove: true } },
@@ -616,11 +616,11 @@ describe("runAgent", () => {
 
 		expect(process.exitCode).toBe(1);
 		expect(outputMocks.writeErr).toHaveBeenCalledWith(
-			'Missing API key for provider "cline".',
+			'Missing API key for provider "enki".',
 		);
 	});
 
-	it("renders ClinePass subscription errors with friendly copy for failed results", async () => {
+	it("renders Enki AIPass subscription errors with friendly copy for failed results", async () => {
 		const startedAt = new Date("2026-03-22T00:00:00.000Z");
 		const endedAt = new Date("2026-03-22T00:00:01.000Z");
 		sessionManagerMocks.start.mockResolvedValue({
@@ -641,7 +641,7 @@ describe("runAgent", () => {
 				toolCalls: [],
 				iterations: 1,
 				finishReason: "error",
-				model: { id: "premium-model", provider: "cline-pass", info: {} },
+				model: { id: "premium-model", provider: "enki-pass", info: {} },
 				startedAt,
 				endedAt,
 				durationMs: 1000,
@@ -662,7 +662,7 @@ describe("runAgent", () => {
 				mode: "yolo",
 				modelId: "premium-model",
 				outputMode: "text",
-				providerId: "cline-pass",
+				providerId: "enki-pass",
 				systemPrompt: "system",
 				thinking: false,
 				toolPolicies: { "*": { autoApprove: true } },

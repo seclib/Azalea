@@ -1,4 +1,4 @@
-import type { ClineMessage } from "@shared/ExtensionMessage"
+import type { Enki AIMessage } from "@shared/ExtensionMessage"
 import type React from "react"
 import { useCallback, useMemo } from "react"
 import { Virtuoso } from "react-virtuoso"
@@ -10,9 +10,9 @@ import { isToolGroup } from "../../utils/messageUtils"
 import { createMessageRenderer } from "../messages/MessageRenderer"
 
 interface MessagesAreaProps {
-	task: ClineMessage
-	groupedMessages: (ClineMessage | ClineMessage[])[]
-	modifiedMessages: ClineMessage[]
+	task: Enki AIMessage
+	groupedMessages: (Enki AIMessage | Enki AIMessage[])[]
+	modifiedMessages: Enki AIMessage[]
 	scrollBehavior: ScrollBehavior
 	chatState: ChatState
 	messageHandlers: MessageHandlers
@@ -30,8 +30,8 @@ export const MessagesArea: React.FC<MessagesAreaProps> = ({
 	chatState,
 	messageHandlers,
 }) => {
-	const { clineMessages } = useExtensionState()
-	const lastRawMessage = useMemo(() => clineMessages.at(-1), [clineMessages])
+	const { enkiMessages } = useExtensionState()
+	const lastRawMessage = useMemo(() => enkiMessages.at(-1), [enkiMessages])
 
 	const {
 		virtuosoRef,
@@ -51,8 +51,8 @@ export const MessagesArea: React.FC<MessagesAreaProps> = ({
 		if (!scrolledPastUserMessage) {
 			return -1
 		}
-		return clineMessages.findIndex((msg) => msg.ts === scrolledPastUserMessage.ts)
-	}, [clineMessages, scrolledPastUserMessage])
+		return enkiMessages.findIndex((msg) => msg.ts === scrolledPastUserMessage.ts)
+	}, [enkiMessages, scrolledPastUserMessage])
 
 	// Handler to scroll to the scrolled past user message
 	const handleScrollToUserMessage = useCallback(() => {
@@ -153,11 +153,11 @@ export const MessagesArea: React.FC<MessagesAreaProps> = ({
 		return isWaitingForResponse || handoffToReasoningPending
 	}, [isWaitingForResponse, lastRawMessage, lastVisibleMessage?.say])
 
-	const displayedGroupedMessages = useMemo<(ClineMessage | ClineMessage[])[]>(() => {
+	const displayedGroupedMessages = useMemo<(Enki AIMessage | Enki AIMessage[])[]>(() => {
 		if (!showThinkingLoaderRow) {
 			return groupedMessages
 		}
-		const waitingRow: ClineMessage = {
+		const waitingRow: Enki AIMessage = {
 			ts: Number.MIN_SAFE_INTEGER,
 			type: "say",
 			say: "reasoning",

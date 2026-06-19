@@ -1,9 +1,9 @@
 import { fstatSync } from "node:fs";
 import { homedir } from "node:os";
 import { basename } from "node:path";
-import type { ToolPolicy } from "@cline/core";
+import type { ToolPolicy } from "@enki/core";
 
-import { registerDisposable } from "@cline/shared";
+import { registerDisposable } from "@enki/shared";
 import type { Command } from "commander";
 import {
 	CommanderError,
@@ -63,13 +63,13 @@ export function stdinHasPipedInput(): boolean {
 }
 
 async function createProviderSettingsManager() {
-	const { ProviderSettingsManager } = await import("@cline/core");
+	const { ProviderSettingsManager } = await import("@enki/core");
 	return new ProviderSettingsManager();
 }
 
 async function loadCliRuntimeModules() {
 	const [coreServer, prompt, runAgentModule] = await Promise.all([
-		import("@cline/core"),
+		import("@enki/core"),
 		import("./runtime/prompt"),
 		import("./runtime/run-agent"),
 	]);
@@ -87,7 +87,7 @@ async function loadInteractiveRuntimeModule() {
 
 /**
  * Two-pass approach for --config: a quick scan of process.argv extracts the
- * config directory before commander parses, because setClineDir() must run
+ * config directory before commander parses, because setEnki AIDir() must run
  * before any code that reads the home/config directory.
  *
  * Recognizes both Commander spellings:
@@ -118,9 +118,9 @@ export async function runCli(): Promise<void> {
 
 	const cliArgs = process.argv.slice(2);
 	const configDir = resolveConfigDirArg(cliArgs);
-	const { setClineDir, setHomeDir } = await import("@cline/shared/storage");
+	const { setEnki AIDir, setHomeDir } = await import("@enki/shared/storage");
 	if (configDir) {
-		setClineDir(configDir);
+		setEnki AIDir(configDir);
 	}
 	setHomeDir(homedir());
 
@@ -162,7 +162,7 @@ export async function runCli(): Promise<void> {
 		.option("-c, --cwd <path>", "Working directory")
 		.option(
 			"--data-dir <dir>",
-			"Use isolated local state at <dir> instead of ~/.cline (enables sandbox mode)",
+			"Use isolated local state at <dir> instead of ~/.enki (enables sandbox mode)",
 		)
 		.option("-v, --verbose", "Show verbose output")
 		.action(async (positionalProvider: string | undefined) => {
@@ -178,17 +178,17 @@ export async function runCli(): Promise<void> {
 				verbose?: boolean;
 			}>();
 			// Honor --config inside the action as a defense-in-depth measure.
-			// The early pre-pass in runCli() also calls setClineDir(), but only
+			// The early pre-pass in runCli() also calls setEnki AIDir(), but only
 			// for argv tokens it can spot before commander runs. Reapplying
 			// here ensures opts.config (parsed by commander, including the
 			// --config=<dir> form) is always respected before any provider
-			// settings manager is constructed against ~/.cline.
+			// settings manager is constructed against ~/.enki.
 			if (opts.config?.trim()) {
-				const { setClineDir } = await import("@cline/shared/storage");
-				setClineDir(opts.config.trim());
+				const { setEnki AIDir } = await import("@enki/shared/storage");
+				setEnki AIDir(opts.config.trim());
 			}
 			// Honor --data-dir before constructing the provider settings manager
-			// so writes land under the chosen data dir instead of ~/.cline.
+			// so writes land under the chosen data dir instead of ~/.enki.
 			configureSandboxEnvironment({
 				enabled: !!opts.dataDir || process.env.CLINE_SANDBOX?.trim() === "1",
 				cwd: opts.cwd ?? process.cwd(),
@@ -246,7 +246,7 @@ export async function runCli(): Promise<void> {
 
 	const pluginCmd = program
 		.command("plugin")
-		.description("Manage Cline Plugins")
+		.description("Manage Enki AI Plugins")
 		.action(() => {
 			pluginCmd.help();
 		});
@@ -254,7 +254,7 @@ export async function runCli(): Promise<void> {
 		.command("install")
 		.alias("i")
 		.description(
-			"Install a Cline Plugin from an official keyword, npm, git, URL, or a local path",
+			"Install a Enki AI Plugin from an official keyword, npm, git, URL, or a local path",
 		)
 		.argument(
 			"<source>",
@@ -264,7 +264,7 @@ export async function runCli(): Promise<void> {
 		.option("--git", "Treat source as a git repository")
 		.option("--force", "Replace an existing install for the same source")
 		.option("--json", "Output as JSON")
-		.option("--cwd <path>", "Install to <path>/.cline/plugins")
+		.option("--cwd <path>", "Install to <path>/.enki/plugins")
 		.action(async (source: string) => {
 			const opts = pluginInstallCmd.opts<{
 				npm?: boolean;
@@ -296,12 +296,12 @@ export async function runCli(): Promise<void> {
 		.command("uninstall")
 		.alias("remove")
 		.alias("rm")
-		.description("Uninstall a Cline Plugin by name or path")
+		.description("Uninstall a Enki AI Plugin by name or path")
 		.argument("<name>", "plugin package name, installed slug, or plugin path")
 		.option("--json", "Output as JSON")
 		.option(
 			"--cwd <path>",
-			"Search <path>/.cline/plugins before global plugins",
+			"Search <path>/.enki/plugins before global plugins",
 		)
 		.action(async (name: string) => {
 			const opts = pluginUninstallCmd.opts<{
@@ -318,19 +318,19 @@ export async function runCli(): Promise<void> {
 		});
 	const skillCmd = program
 		.command("skill")
-		.description("Manage Cline Skills via the open skills CLI (npx skills)")
+		.description("Manage Enki AI Skills via the open skills CLI (npx skills)")
 		.allowUnknownOption()
 		.passThroughOptions()
 		.argument("[args...]", "arguments forwarded to the skills CLI")
 		.addHelpText(
 			"after",
 			"\nForwards to the open skills CLI via npx. Examples:\n" +
-				"  cline skill add <owner/repo>       Add a skill into Cline\n" +
-				"  cline skill install <owner/repo>   Alias for add\n" +
-				"  cline skill list                   List installed skills\n" +
-				"  cline skill remove                 Remove installed skills\n" +
-				"  cline skill uninstall              Alias for remove\n" +
-				"\nadd/install and remove/uninstall default to '--agent cline' unless you pass your own --agent.\n" +
+				"  enki skill add <owner/repo>       Add a skill into Enki AI\n" +
+				"  enki skill install <owner/repo>   Alias for add\n" +
+				"  enki skill list                   List installed skills\n" +
+				"  enki skill remove                 Remove installed skills\n" +
+				"  enki skill uninstall              Alias for remove\n" +
+				"\nadd/install and remove/uninstall default to '--agent enki' unless you pass your own --agent.\n" +
 				"Run 'npx skills --help' for the full command reference.",
 		)
 		.action(async () => {
@@ -341,7 +341,7 @@ export async function runCli(): Promise<void> {
 	const connectCmd = program
 		.command("connect")
 		.description("Connect to an external channel")
-		.argument("[channel]", "Channel to connect Cline CLI to")
+		.argument("[channel]", "Channel to connect Enki AI CLI to")
 		.option("--stop", "Kill all current channel connections")
 		.allowUnknownOption()
 		.passThroughOptions()
@@ -387,7 +387,7 @@ export async function runCli(): Promise<void> {
 				ctx.exitCode = await runMcpWizard();
 			} else {
 				writeln(
-					"MCP wizard requires a TTY. Use cline config mcp to list servers.",
+					"MCP wizard requires a TTY. Use enki config mcp to list servers.",
 				);
 			}
 		});
@@ -595,12 +595,12 @@ export async function runCli(): Promise<void> {
 
 	const dashboardCmd = program
 		.command("dashboard")
-		.description("Start the Cline Hub dashboard and open it in a browser")
+		.description("Start the Enki AI Hub dashboard and open it in a browser")
 		.option("--config <dir>", "configuration directory")
 		.option("-c, --cwd <path>", "Workspace root", process.cwd())
 		.option(
 			"--data-dir <dir>",
-			"Use isolated local state at <dir> instead of ~/.cline (enables sandbox mode)",
+			"Use isolated local state at <dir> instead of ~/.enki (enables sandbox mode)",
 		)
 		.option("--host <host>", "Dashboard bind host")
 		.option("--port <port>", "Dashboard HTTP/WebSocket port")
@@ -648,7 +648,7 @@ export async function runCli(): Promise<void> {
 
 	program
 		.command("version")
-		.description("Show Cline CLI version number")
+		.description("Show Enki AI CLI version number")
 		.action(async () => {
 			const { showVersion } = await import("./commands/help");
 			showVersion();
@@ -724,7 +724,7 @@ export async function runCli(): Promise<void> {
 	let args = commanderToParsedArgs(program);
 	if (program.args.length > 1) {
 		writeErr(
-			`Unknown command or extra arguments: ${program.args.join(" ")}\nPrompt text with spaces must be quoted as a single argument, for example: cline "fix the tests". Use "cline --help" to see available commands and flags.`,
+			`Unknown command or extra arguments: ${program.args.join(" ")}\nPrompt text with spaces must be quoted as a single argument, for example: enki "fix the tests". Use "enki --help" to see available commands and flags.`,
 		);
 		process.exitCode = 1;
 		return;
@@ -735,7 +735,7 @@ export async function runCli(): Promise<void> {
 		// The history picker already created (and tore down) an OpenTUI renderer
 		// in this process; starting the interactive TUI here would create a
 		// second one, which can crash natively during teardown. Resume in a
-		// fresh `cline --id <session-id>` child process instead.
+		// fresh `enki --id <session-id>` child process instead.
 		const { spawnHistoryResume } = await import("./utils/history-resume");
 		const childExitCode = await spawnHistoryResume({
 			sessionId: resumeSessionId,
@@ -880,7 +880,7 @@ export async function runCli(): Promise<void> {
 	const workspaceRoot = resolveWorkspaceRoot(cwd);
 	// Sandbox mode is enabled implicitly whenever --data-dir is provided, or
 	// when CLINE_SANDBOX=1 is set in the environment (in which case the data
-	// dir falls back to $CLINE_SANDBOX_DATA_DIR or /tmp/cline-sandbox).
+	// dir falls back to $CLINE_SANDBOX_DATA_DIR or /tmp/enki-sandbox).
 	const sandboxEnabled =
 		!!args.dataDir || process.env.CLINE_SANDBOX?.trim() === "1";
 	const sandboxDataDir = configureSandboxEnvironment({
@@ -920,20 +920,20 @@ export async function runCli(): Promise<void> {
 	};
 	registerDisposable(stopUserInstructionService);
 	try {
-		const persistedClineAccountId = providerSettingsManager
-			.getProviderSettings("cline")
+		const persistedEnki AIAccountId = providerSettingsManager
+			.getProviderSettings("enki")
 			?.auth?.accountId?.trim();
-		if (persistedClineAccountId) {
-			setCliFeatureFlagsAccountContext({ id: persistedClineAccountId });
+		if (persistedEnki AIAccountId) {
+			setCliFeatureFlagsAccountContext({ id: persistedEnki AIAccountId });
 		}
 		refreshCliFeatureFlagsInBackground();
 		const lastUsedProviderSettings =
 			providerSettingsManager.getLastUsedProviderSettings({
-				isClinePassEnabled:
-					getCliFeatureFlagsService().getBooleanFlagEnabled("ext-cline-pass"),
+				isEnki AIPassEnabled:
+					getCliFeatureFlagsService().getBooleanFlagEnabled("ext-enki-pass"),
 			});
 		const provider = normalizeProviderId(
-			args.provider?.trim() || lastUsedProviderSettings?.provider || "cline",
+			args.provider?.trim() || lastUsedProviderSettings?.provider || "enki",
 		);
 		let selectedProviderSettings =
 			providerSettingsManager.getProviderSettings(provider);
@@ -1064,7 +1064,7 @@ export async function runCli(): Promise<void> {
 			cwd,
 			workspaceRoot,
 			extensionContext: {
-				client: { name: "cline-cli" },
+				client: { name: "enki-cli" },
 				workspace: {
 					rootPath: workspaceRoot,
 					cwd,
@@ -1152,8 +1152,8 @@ export async function runCli(): Promise<void> {
 			} else if (resumeSessionId) {
 				initialView = "chat";
 			}
-			const initialClineProviderSettings =
-				provider === "cline" ? selectedProviderSettings : undefined;
+			const initialEnki AIProviderSettings =
+				provider === "enki" ? selectedProviderSettings : undefined;
 			let initialNotice:
 				| import("./kanban-migration/notice").CliMigrationNotice
 				| undefined;
@@ -1163,19 +1163,19 @@ export async function runCli(): Promise<void> {
 				  ) => void)
 				| undefined;
 			if (!launchConfigView && process.stdin.isTTY && process.stdout.isTTY) {
-				const { getClineCliMigrationNotice, markClineCliMigrationNoticeShown } =
+				const { getEnki AICliMigrationNotice, markEnki AICliMigrationNoticeShown } =
 					await import("./kanban-migration/notice");
-				initialNotice = getClineCliMigrationNotice();
+				initialNotice = getEnki AICliMigrationNotice();
 				if (initialNotice) {
 					markInitialNoticeShown = () => {
-						markClineCliMigrationNoticeShown();
+						markEnki AICliMigrationNoticeShown();
 					};
 				}
 			}
 			await runInteractive(config, userInstructionService, resumeSessionId, {
 				initialPrompt: args.prompt,
-				clineApiBaseUrl: initialClineProviderSettings?.baseUrl,
-				clineProviderSettings: initialClineProviderSettings,
+				enkiApiBaseUrl: initialEnki AIProviderSettings?.baseUrl,
+				enkiProviderSettings: initialEnki AIProviderSettings,
 				initialView,
 				initialNotice,
 				onInitialNoticeShown: markInitialNoticeShown,

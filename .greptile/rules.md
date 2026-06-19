@@ -19,7 +19,7 @@ OpenTelemetryAdapter → OpenTelemetryProvider    ← OTLP transport
 OTLP endpoint (collector or vendor)
 ```
 
-The SDK does **not** depend on the original `cline/cline` repo for telemetry. The two have
+The SDK does **not** depend on the original `enki/enki` repo for telemetry. The two have
 parallel-but-independent stacks; this `.greptile/` config covers only the SDK.
 
 ## The Single Source of Truth
@@ -60,14 +60,14 @@ Emission ownership:
   emitter in `prepareLocalRuntimeBootstrap`. Hosts must NOT re-emit these.
 - `workspace.path_resolved`: emitted from default tool executors **only when**
   `WorkspaceManager` exposes more than one root.
-- `task.*`: emitted by core session lifecycle code in `sdk/packages/core/src/cline-core/` and
+- `task.*`: emitted by core session lifecycle code in `sdk/packages/core/src/enki-core/` and
   `sdk/packages/core/src/runtime/`. Hosts must not duplicate this emission.
 
 ## `task.completed` Semantics
 
 `task.completed` marks the moment the **assistant declared the task done**, not the moment
 the SDK session record was finalized. The local runtime emits it when it observes a successful
-`submit_and_exit` tool call (the SDK analog of original Cline's `attempt_completion`). For
+`submit_and_exit` tool call (the SDK analog of original Enki AI's `attempt_completion`). For
 non-interactive runs that finish without invoking the explicit completion tool,
 `shutdownSession` emits it as a fallback with `source: "shutdown"`.
 
@@ -76,28 +76,28 @@ Each session is guaranteed at most one `task.completed` emission. The `source` f
 
 ## CLI Directory-Ordering Rule
 
-The CLI accepts `--config <dir>`. The CLI **must** apply `setClineDir(...)` and
-`setHomeDir(...)` from `@cline/shared/storage` **before** calling
+The CLI accepts `--config <dir>`. The CLI **must** apply `setEnki AIDir(...)` and
+`setHomeDir(...)` from `@enki/shared/storage` **before** calling
 `captureCliExtensionActivated()`. Otherwise the telemetry singleton's persisted distinct-id
-and any other on-disk telemetry state lands under `~/.cline` instead of the user's chosen
+and any other on-disk telemetry state lands under `~/.enki` instead of the user's chosen
 config dir.
 
 The canonical pattern is in `apps/cli/src/main.ts` (PR #357):
 
 ```ts
-if (configDir) setClineDir(configDir);
+if (configDir) setEnki AIDir(configDir);
 setHomeDir(homedir());
 captureCliExtensionActivated();   // <-- after dir overrides
 ```
 
 ## Hub Daemon Metadata Forwarding
 
-Hosts that spawn a detached `@cline/core/hub/daemon-entry` process must forward telemetry
+Hosts that spawn a detached `@enki/core/hub/daemon-entry` process must forward telemetry
 metadata into the daemon argv so the daemon can reconstruct an equivalent
 `ITelemetryService`. The expected payload is base64-encoded JSON with snake_case keys:
 
 ```
-{ extension_version, cline_type, platform, platform_version, os_type, os_version, is_remote_workspace }
+{ extension_version, enki_type, platform, platform_version, os_type, os_version, is_remote_workspace }
 ```
 
 The reference implementation is `apps/vscode/src/hub-daemon.ts` (PR #357). Without this
@@ -115,7 +115,7 @@ events using the typed helpers:
 | Token error | `captureAuthFailed(provider, errorMessage)` | In the catch block |
 | Token invalidation | `captureAuthLoggedOut(provider, reason)` | On invalid_grant or explicit logout |
 
-Cross-reference `sdk/packages/core/src/auth/cline.ts` and `sdk/packages/core/src/auth/codex.ts` as
+Cross-reference `sdk/packages/core/src/auth/enki.ts` and `sdk/packages/core/src/auth/codex.ts` as
 canonical examples of all four phases.
 
 ## Single Telemetry Service Per Host

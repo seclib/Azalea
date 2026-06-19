@@ -61,7 +61,7 @@ export interface CoreSettingsMutationResult {
 	changedTypes: CoreSettingsType[];
 }
 
-export interface ClineCoreSettingsApi {
+export interface Enki AICoreSettingsApi {
 	list(input?: CoreSettingsListInput): Promise<CoreSettingsSnapshot>;
 	toggle(input: CoreSettingsToggleInput): Promise<CoreSettingsMutationResult>;
 }

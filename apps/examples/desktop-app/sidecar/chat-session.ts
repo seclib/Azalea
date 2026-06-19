@@ -2,14 +2,14 @@ import { existsSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import {
 	buildWorkspaceMetadata,
-	type ClineCore,
+	type Enki AICore,
 	type CoreSessionConfig,
 	type SessionPendingPrompt,
 	SessionSource,
 	splitCoreSessionConfig,
-} from "@cline/core";
-import type { Message } from "@cline/llms";
-import { buildClineSystemPrompt } from "@cline/shared";
+} from "@enki/core";
+import type { Message } from "@enki/llms";
+import { buildEnki AISystemPrompt } from "@enki/shared";
 import { emitChunk, nowMs, sendEvent } from "./context";
 import { readSessionManifest, sharedSessionDataDir } from "./paths";
 import type {
@@ -154,7 +154,7 @@ async function resolveSystemPrompt(config: JsonRecord): Promise<string> {
 		typeof config.rules === "string" && config.rules.trim().length > 0
 			? config.rules
 			: undefined;
-	return buildClineSystemPrompt({
+	return buildEnki AISystemPrompt({
 		ide: "Terminal Shell",
 		workspaceRoot: cwd,
 		workspaceName: basename(cwd),
@@ -218,7 +218,7 @@ function applyPendingPrompts(
 	return mapped;
 }
 
-function getSessionManager(ctx: SidecarContext): ClineCore {
+function getSessionManager(ctx: SidecarContext): Enki AICore {
 	if (!ctx.sessionManager) throw new Error("Session manager not initialized");
 	return ctx.sessionManager;
 }

@@ -1,4 +1,4 @@
-import { ClineIgnoreController } from "@core/ignore/ClineIgnoreController"
+import { Enki AIIgnoreController } from "@core/ignore/Enki AIIgnoreController"
 import { listFiles } from "@services/glob/list-files"
 import { fileExistsAtPath, isDirectory } from "@utils/fs"
 import * as fs from "fs/promises"
@@ -9,7 +9,7 @@ import { LanguageParser, loadRequiredLanguageParsers } from "./languageParser"
 // TODO: implement caching behavior to avoid having to keep analyzing project for new tasks.
 export async function parseSourceCodeForDefinitionsTopLevel(
 	dirPath: string,
-	clineIgnoreController?: ClineIgnoreController,
+	enkiIgnoreController?: Enki AIIgnoreController,
 ): Promise<string> {
 	// ensure input is a directory before listing files
 	const resolvedPath = path.resolve(dirPath)
@@ -34,10 +34,10 @@ export async function parseSourceCodeForDefinitionsTopLevel(
 	// const filesWithoutDefinitions: string[] = []
 
 	// Filter filepaths for access if controller is provided
-	const allowedFilesToParse = clineIgnoreController ? clineIgnoreController.filterPaths(filesToParse) : filesToParse
+	const allowedFilesToParse = enkiIgnoreController ? enkiIgnoreController.filterPaths(filesToParse) : filesToParse
 
 	for (const filePath of allowedFilesToParse) {
-		const definitions = await parseFile(filePath, languageParsers, clineIgnoreController)
+		const definitions = await parseFile(filePath, languageParsers, enkiIgnoreController)
 		if (definitions) {
 			result += `${path.relative(dirPath, filePath).toPosix()}\n${definitions}\n`
 		}
@@ -115,9 +115,9 @@ This approach allows us to focus on the most relevant parts of the code (defined
 async function parseFile(
 	filePath: string,
 	languageParsers: LanguageParser,
-	clineIgnoreController?: ClineIgnoreController,
+	enkiIgnoreController?: Enki AIIgnoreController,
 ): Promise<string | null> {
-	if (clineIgnoreController && !clineIgnoreController.validateAccess(filePath)) {
+	if (enkiIgnoreController && !enkiIgnoreController.validateAccess(filePath)) {
 		return null
 	}
 	const fileContent = await fs.readFile(filePath, "utf8")

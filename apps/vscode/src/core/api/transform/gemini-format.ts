@@ -1,6 +1,6 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
 import type { Content, GenerateContentResponse, Part } from "@google/genai";
-import type { ClineStorageMessage } from "@/shared/messages/content";
+import type { Enki AIStorageMessage } from "@/shared/messages/content";
 
 // Source: https://ai.google.dev/gemini-api/docs/thought-signatures#faqs
 // While injecting custom function call blocks into the request is strongly discouraged,
@@ -11,7 +11,7 @@ import type { ClineStorageMessage } from "@/shared/messages/content";
 const GEMINI_DUMMY_THOUGHT_SIGNATURE = "skip_thought_signature_validator";
 
 export function convertAnthropicContentToGemini(
-	content: string | ClineStorageMessage["content"],
+	content: string | Enki AIStorageMessage["content"],
 ): Part[] {
 	if (typeof content === "string") {
 		return [{ text: content }];
@@ -63,7 +63,7 @@ export function convertAnthropicContentToGemini(
 }
 
 export function convertAnthropicMessageToGemini(
-	message: ClineStorageMessage,
+	message: Enki AIStorageMessage,
 ): Content {
 	return {
 		role: message.role === "assistant" ? "model" : "user",

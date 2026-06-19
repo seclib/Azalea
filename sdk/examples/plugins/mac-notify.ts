@@ -1,15 +1,15 @@
 /**
  * macOS Notification Plugin Example
  *
- * Sends a Notification Center alert when a Cline run completes successfully.
+ * Sends a Notification Center alert when a Enki AI run completes successfully.
  *
  * CLI usage:
- *   cline plugin install https://github.com/cline/cline/blob/main/sdk/examples/plugins/mac-notify.ts --cwd .
- *   cline -i "Run the test suite"
+ *   enki plugin install https://github.com/enki/enki/blob/main/sdk/examples/plugins/mac-notify.ts --cwd .
+ *   enki -i "Run the test suite"
  */
 
 import { execFile } from "node:child_process";
-import type { AgentPlugin, AgentRunResult } from "@cline/core";
+import type { AgentPlugin, AgentRunResult } from "@enki/core";
 
 function quoteAppleScriptString(value: string): string {
 	return `"${value
@@ -58,7 +58,7 @@ const plugin: AgentPlugin = {
 			if (result.status !== "completed") {
 				return;
 			}
-			sendMacNotification("Cline session completed", summarizeResult(result));
+			sendMacNotification("Enki AI session completed", summarizeResult(result));
 		},
 	},
 };

@@ -8,11 +8,11 @@ export default defineConfig({
 	resolve: {
 		alias: [
 			{
-				find: /^@cline\/shared\/(.+)$/,
+				find: /^@enki\/shared\/(.+)$/,
 				replacement: resolve(rootDir, "../shared/src/$1"),
 			},
 			{
-				find: /^@cline\/shared$/,
+				find: /^@enki\/shared$/,
 				replacement: resolve(rootDir, "../shared/src/index.ts"),
 			},
 		],

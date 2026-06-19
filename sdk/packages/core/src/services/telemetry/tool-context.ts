@@ -1,6 +1,6 @@
-import type { ITelemetryService } from "@cline/shared";
+import type { ITelemetryService } from "@enki/shared";
 
-export const CLINE_INTERNAL_TELEMETRY_METADATA_KEY = "__clineInternalTelemetry";
+export const CLINE_INTERNAL_TELEMETRY_METADATA_KEY = "__enkiInternalTelemetry";
 
 export function getToolContextTelemetry(
 	metadata: Record<string, unknown> | undefined,

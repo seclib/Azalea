@@ -19,8 +19,8 @@
  * OAuth-retry and run replay feasible.
  */
 
-import type { AgentRuntime } from "@cline/agents";
-import { createAgentRuntime } from "@cline/agents";
+import type { AgentRuntime } from "@enki/agents";
+import { createAgentRuntime } from "@enki/agents";
 import {
 	type AgentConfig,
 	type AgentEvent,
@@ -46,7 +46,7 @@ import {
 	type ModelInfo,
 	mergeModelOptions,
 	type ToolCallRecord,
-} from "@cline/shared";
+} from "@enki/shared";
 import { filterDisabledTools } from "../../services/global-settings";
 import {
 	createAgentModelFromConfig,

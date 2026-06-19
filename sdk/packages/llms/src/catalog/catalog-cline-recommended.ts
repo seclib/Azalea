@@ -1,14 +1,14 @@
-import { getClineEnvironmentConfig } from "@cline/shared";
+import { getEnki AIEnvironmentConfig } from "@enki/shared";
 import type { ModelInfo } from "./types";
 
-export interface ClineRecommendedModelEntry {
+export interface Enki AIRecommendedModelEntry {
 	id: string;
 	name?: string;
 	description?: string;
 }
 
-export interface ClineRecommendedModelsPayload {
-	clinePass?: ClineRecommendedModelEntry[];
+export interface Enki AIRecommendedModelsPayload {
+	enkiPass?: Enki AIRecommendedModelEntry[];
 }
 
 type ModelCapabilities = Pick<
@@ -16,7 +16,7 @@ type ModelCapabilities = Pick<
 	"contextWindow" | "maxInputTokens" | "maxTokens" | "capabilities" | "pricing"
 >;
 
-const CLINE_PASS_PROVIDER_ID = "cline-pass";
+const CLINE_PASS_PROVIDER_ID = "enki-pass";
 
 const CLINE_PASS_MODEL_DEFAULTS = {
 	contextWindow: 128_000,
@@ -32,7 +32,7 @@ const CLINE_PASS_MODEL_DEFAULTS = {
 } as const satisfies ModelCapabilities;
 
 function findORModelCapabilities(
-	entry: ClineRecommendedModelEntry,
+	entry: Enki AIRecommendedModelEntry,
 	openRouterModels: Record<string, ModelInfo>,
 ): ModelCapabilities {
 	if (!openRouterModels) {
@@ -44,8 +44,8 @@ function findORModelCapabilities(
 	return openRouterModels[modelSlug] || CLINE_PASS_MODEL_DEFAULTS;
 }
 
-// Cline-Pass models have only the model name (and not the lab),
-// so we need to look-up using glm-5.1 instead of cline-pass/glm-5.1
+// Enki AI-Pass models have only the model name (and not the lab),
+// so we need to look-up using glm-5.1 instead of enki-pass/glm-5.1
 function buildModelsNameMap(
 	openrouterModels: Record<string, ModelInfo>,
 ): Record<string, ModelInfo> {
@@ -60,19 +60,19 @@ function buildModelsNameMap(
 	return nameMap;
 }
 
-export function normalizeClineRecommendedProviderModels(
-	payload: ClineRecommendedModelsPayload,
+export function normalizeEnki AIRecommendedProviderModels(
+	payload: Enki AIRecommendedModelsPayload,
 	openRouterModels: Record<string, ModelInfo>,
 ): Record<string, Record<string, ModelInfo>> {
-	const clinePass = payload.clinePass ?? [];
-	if (clinePass.length === 0) {
+	const enkiPass = payload.enkiPass ?? [];
+	if (enkiPass.length === 0) {
 		return {};
 	}
 
 	const models: Record<string, ModelInfo> = {};
 	const openRouterModelsByName = buildModelsNameMap(openRouterModels);
 
-	clinePass.forEach((entry) => {
+	enkiPass.forEach((entry) => {
 		const capabilities = findORModelCapabilities(entry, openRouterModelsByName);
 
 		models[entry.id] = {
@@ -91,18 +91,18 @@ export function normalizeClineRecommendedProviderModels(
 	return { [CLINE_PASS_PROVIDER_ID]: models };
 }
 
-export async function fetchClineRecommendedProviderModels(
+export async function fetchEnki AIRecommendedProviderModels(
 	fetcher: typeof fetch = fetch,
 	openRouterModels: Record<string, ModelInfo>,
 ): Promise<Record<string, Record<string, ModelInfo>>> {
-	const url = `${getClineEnvironmentConfig().apiBaseUrl}/api/v1/ai/cline/recommended-models`;
+	const url = `${getEnki AIEnvironmentConfig().apiBaseUrl}/api/v1/ai/enki/recommended-models`;
 	const response = await fetcher(url);
 	if (!response.ok) {
 		throw new Error(
-			`Failed to load Cline recommended models from ${url}: HTTP ${response.status}`,
+			`Failed to load Enki AI recommended models from ${url}: HTTP ${response.status}`,
 		);
 	}
 
-	const payload = (await response.json()) as ClineRecommendedModelsPayload;
-	return normalizeClineRecommendedProviderModels(payload, openRouterModels);
+	const payload = (await response.json()) as Enki AIRecommendedModelsPayload;
+	return normalizeEnki AIRecommendedProviderModels(payload, openRouterModels);
 }

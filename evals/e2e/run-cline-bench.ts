@@ -1,8 +1,8 @@
 #!/usr/bin/env npx tsx
 /**
- * cline-bench Runner
+ * enki-bench Runner
  *
- * Runs real-world tasks from cline-bench using Harbor framework.
+ * Runs real-world tasks from enki-bench using Harbor framework.
  * Designed for nightly CI execution.
  *
  * Prerequisites:
@@ -11,7 +11,7 @@
  *   - Docker (for local) or DAYTONA_API_KEY (for cloud)
  *
  * Usage:
- *   npx tsx evals/e2e/run-cline-bench.ts [options]
+ *   npx tsx evals/e2e/run-enki-bench.ts [options]
  *
  * Options:
  *   --env <docker|daytona>  Execution environment (default: docker)
@@ -78,8 +78,8 @@ function checkPrerequisites(): { ok: boolean; error?: string } {
 	return { ok: true }
 }
 
-function getTaskList(clineBenchDir: string, filter?: string): string[] {
-	const tasksDir = path.join(clineBenchDir, "tasks")
+function getTaskList(enkiBenchDir: string, filter?: string): string[] {
+	const tasksDir = path.join(enkiBenchDir, "tasks")
 	if (!fs.existsSync(tasksDir)) {
 		throw new Error(`Tasks directory not found: ${tasksDir}`)
 	}
@@ -103,7 +103,7 @@ interface TaskResult {
 	error?: string
 }
 
-function runHarborTask(clineBenchDir: string, taskId: string, options: RunOptions): TaskResult {
+function runHarborTask(enkiBenchDir: string, taskId: string, options: RunOptions): TaskResult {
 	const startTime = Date.now()
 
 	// Build Harbor model string
@@ -129,13 +129,13 @@ function runHarborTask(clineBenchDir: string, taskId: string, options: RunOption
 	}
 
 	// Build Harbor command
-	const harborArgs = ["run", "-p", `tasks/${taskId}`, "-a", "cline-cli", "-m", harborModel, "--env", options.env]
+	const harborArgs = ["run", "-p", `tasks/${taskId}`, "-a", "enki-cli", "-m", harborModel, "--env", options.env]
 
 	console.log(`  Running: harbor ${harborArgs.join(" ")}`)
 
 	try {
 		const result = spawnSync("harbor", harborArgs, {
-			cwd: clineBenchDir,
+			cwd: enkiBenchDir,
 			env: harborEnv,
 			stdio: ["inherit", "pipe", "pipe"],
 			timeout: 30 * 60 * 1000, // 30 minutes
@@ -154,7 +154,7 @@ function runHarborTask(clineBenchDir: string, taskId: string, options: RunOption
 
 		// Check if task passed by looking at the latest job results
 		// Harbor writes results to jobs/ directory
-		const jobsDir = path.join(clineBenchDir, "jobs")
+		const jobsDir = path.join(enkiBenchDir, "jobs")
 		if (fs.existsSync(jobsDir)) {
 			const latestJob = fs
 				.readdirSync(jobsDir)
@@ -247,22 +247,22 @@ async function main() {
 		process.exit(1)
 	}
 
-	// Find cline-bench directory
-	const clineBenchDir = path.join(__dirname, "..", "cline-bench")
-	if (!fs.existsSync(clineBenchDir)) {
-		console.error(`cline-bench not found at: ${clineBenchDir}`)
+	// Find enki-bench directory
+	const enkiBenchDir = path.join(__dirname, "..", "enki-bench")
+	if (!fs.existsSync(enkiBenchDir)) {
+		console.error(`enki-bench not found at: ${enkiBenchDir}`)
 		console.error("Ensure the submodule is initialized: git submodule update --init")
 		process.exit(1)
 	}
 
 	// Get task list
-	const tasks = getTaskList(clineBenchDir, options.tasks)
+	const tasks = getTaskList(enkiBenchDir, options.tasks)
 	if (tasks.length === 0) {
 		console.error("No tasks found matching filter:", options.tasks)
 		process.exit(1)
 	}
 
-	console.log(`cline-bench E2E Runner`)
+	console.log(`enki-bench E2E Runner`)
 	console.log(`======================`)
 	console.log(`Provider: ${options.provider}`)
 	console.log(`Model: ${options.model}`)
@@ -282,7 +282,7 @@ async function main() {
 				console.log(`  Trial ${trial + 1}/${options.trials}`)
 			}
 
-			const result = runHarborTask(clineBenchDir, taskId, options)
+			const result = runHarborTask(enkiBenchDir, taskId, options)
 			results.push(result)
 
 			console.log(`  Result: ${result.passed ? "✓ PASS" : `✗ FAIL: ${result.error || "unknown"}`}`)

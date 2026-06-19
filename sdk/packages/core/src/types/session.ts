@@ -1,5 +1,5 @@
-import type * as LlmsProviders from "@cline/llms";
-import type { AgentFinishReason } from "@cline/shared";
+import type * as LlmsProviders from "@enki/llms";
+import type { AgentFinishReason } from "@enki/shared";
 import type { SessionAccumulatedUsage } from "../runtime/host/runtime-host";
 import type { BuiltRuntime } from "../runtime/orchestration/session-runtime";
 import type { SessionRuntime } from "../runtime/orchestration/session-runtime-orchestrator";
@@ -42,7 +42,7 @@ export type ActiveSession = {
 	 * completion tool (`submit_and_exit`) for this session. Used to:
 	 *
 	 * 1. Emit `task.completed` exactly once at the moment the assistant
-	 *    declares completion (parity with original Cline's
+	 *    declares completion (parity with original Enki AI's
 	 *    `attempt_completion`).
 	 * 2. Suppress the fallback `task.completed` emission from
 	 *    `shutdownSession(...)` so the same logical completion is not

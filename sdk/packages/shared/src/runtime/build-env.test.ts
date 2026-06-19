@@ -4,14 +4,14 @@ import {
 	CLINE_BUILD_ENV_ENV,
 	CLINE_DEBUG_HOST_ENV,
 	CLINE_DEBUG_PORT_BASE_ENV,
-	resolveClineBuildEnv,
-	withResolvedClineBuildEnv,
+	resolveEnki AIBuildEnv,
+	withResolvedEnki AIBuildEnv,
 } from "./build-env";
 
 describe("build env helpers", () => {
 	it("prefers explicit CLINE_BUILD_ENV", () => {
 		expect(
-			resolveClineBuildEnv({
+			resolveEnki AIBuildEnv({
 				env: { [CLINE_BUILD_ENV_ENV]: "development", NODE_ENV: "production" },
 			}),
 		).toBe("development");
@@ -19,7 +19,7 @@ describe("build env helpers", () => {
 
 	it("treats development conditions as a development build", () => {
 		expect(
-			resolveClineBuildEnv({
+			resolveEnki AIBuildEnv({
 				env: {},
 				execArgv: ["--conditions=development"],
 			}),
@@ -27,30 +27,30 @@ describe("build env helpers", () => {
 	});
 
 	it("defaults to production otherwise", () => {
-		expect(resolveClineBuildEnv({ env: {}, execArgv: [] })).toBe("production");
+		expect(resolveEnki AIBuildEnv({ env: {}, execArgv: [] })).toBe("production");
 	});
 
 	it("treats NODE_ENV=development as a development build", () => {
 		expect(
-			resolveClineBuildEnv({ env: { NODE_ENV: "development" }, execArgv: [] }),
+			resolveEnki AIBuildEnv({ env: { NODE_ENV: "development" }, execArgv: [] }),
 		).toBe("development");
 	});
 
 	it("does not treat NODE_ENV=test as a development build", () => {
 		expect(
-			resolveClineBuildEnv({ env: { NODE_ENV: "test" }, execArgv: [] }),
+			resolveEnki AIBuildEnv({ env: { NODE_ENV: "test" }, execArgv: [] }),
 		).toBe("production");
 	});
 
 	it("does not treat NODE_ENV=staging as a development build", () => {
 		expect(
-			resolveClineBuildEnv({ env: { NODE_ENV: "staging" }, execArgv: [] }),
+			resolveEnki AIBuildEnv({ env: { NODE_ENV: "staging" }, execArgv: [] }),
 		).toBe("production");
 	});
 
 	it("materializes CLINE_BUILD_ENV when absent", () => {
 		expect(
-			withResolvedClineBuildEnv({ NODE_ENV: "development" }, { execArgv: [] })[
+			withResolvedEnki AIBuildEnv({ NODE_ENV: "development" }, { execArgv: [] })[
 				CLINE_BUILD_ENV_ENV
 			],
 		).toBe("development");

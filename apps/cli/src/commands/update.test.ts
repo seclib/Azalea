@@ -28,7 +28,7 @@ function createFile(path: string): string {
 }
 
 function createTempFile(pathSuffix: string): string {
-	const root = mkdtempSync(join(tmpdir(), "cline-update-test-"));
+	const root = mkdtempSync(join(tmpdir(), "enki-update-test-"));
 	tempDirs.push(root);
 	return createFile(join(root, pathSuffix));
 }
@@ -78,36 +78,36 @@ describe("getInstallationInfo", () => {
 	});
 
 	it("detects npm installs from the wrapper path passed to the compiled binary", () => {
-		const wrapperPath = createTempFile("lib/node_modules/cline/bin/cline");
+		const wrapperPath = createTempFile("lib/node_modules/enki/bin/enki");
 		process.env.CLINE_WRAPPER_PATH = wrapperPath;
-		process.argv = ["bun", "/$bunfs/root/cline", "update", "--verbose"];
+		process.argv = ["bun", "/$bunfs/root/enki", "update", "--verbose"];
 
 		expect(getInstallationInfo("1.2.3")).toEqual({
 			packageManager: PackageManager.NPM,
-			packageName: "cline",
-			updateCommand: "npm update -g cline --tag latest",
+			packageName: "enki",
+			updateCommand: "npm update -g enki --tag latest",
 		});
 	});
 
 	it("uses the nightly tag when the current CLI version is nightly", () => {
-		const wrapperPath = createTempFile("lib/node_modules/cline/bin/cline");
+		const wrapperPath = createTempFile("lib/node_modules/enki/bin/enki");
 		process.env.CLINE_WRAPPER_PATH = wrapperPath;
-		process.argv = ["bun", "/$bunfs/root/cline", "update", "--verbose"];
+		process.argv = ["bun", "/$bunfs/root/enki", "update", "--verbose"];
 
 		expect(getInstallationInfo("1.2.3-nightly.456")).toEqual({
 			packageManager: PackageManager.NPM,
-			packageName: "cline",
-			updateCommand: "npm update -g cline --tag nightly",
+			packageName: "enki",
+			updateCommand: "npm update -g enki --tag nightly",
 		});
 	});
 
 	it("falls back to unknown when only Bun's virtual compiled path is available", () => {
 		delete process.env.CLINE_WRAPPER_PATH;
-		process.argv = ["bun", "/$bunfs/root/cline", "update", "--verbose"];
+		process.argv = ["bun", "/$bunfs/root/enki", "update", "--verbose"];
 
 		expect(getInstallationInfo("1.2.3")).toEqual({
 			packageManager: PackageManager.UNKNOWN,
-			packageName: "cline",
+			packageName: "enki",
 		});
 	});
 });
@@ -208,14 +208,14 @@ describe("hub restart owner selection", () => {
 
 	it("uses the shared hub owner outside production builds", () => {
 		process.env.CLINE_BUILD_ENV = "development";
-		process.env.CLINE_DATA_DIR = "/tmp/cline-update-test-data";
+		process.env.CLINE_DATA_DIR = "/tmp/enki-update-test-data";
 		delete process.env.CLINE_HUB_DISCOVERY_PATH;
 
 		const owner = resolveCliHubOwnerContext();
 
 		expect(owner.discoveryPath).toContain("/locks/hub/owners/");
 		expect(owner.discoveryPath).not.toBe(
-			"/tmp/cline-update-test-data/locks/hub/production.json",
+			"/tmp/enki-update-test-data/locks/hub/production.json",
 		);
 	});
 });
@@ -224,30 +224,30 @@ describe("withMinimumReleaseAgeBypass", () => {
 	it("adds the package-manager-specific cooldown bypass", () => {
 		expect(
 			withMinimumReleaseAgeBypass(
-				"npm update -g cline --tag latest",
+				"npm update -g enki --tag latest",
 				PackageManager.NPM,
 			).command,
-		).toBe("npm update -g cline --tag latest --min-release-age=0");
+		).toBe("npm update -g enki --tag latest --min-release-age=0");
 		expect(
-			withMinimumReleaseAgeBypass("bun add -g cline@latest", PackageManager.BUN)
+			withMinimumReleaseAgeBypass("bun add -g enki@latest", PackageManager.BUN)
 				.command,
-		).toBe("bun add -g cline@latest --minimum-release-age=0");
+		).toBe("bun add -g enki@latest --minimum-release-age=0");
 		expect(
 			withMinimumReleaseAgeBypass(
-				"yarn global add cline@latest",
+				"yarn global add enki@latest",
 				PackageManager.YARN,
 			).command,
-		).toBe("yarn global add cline@latest");
+		).toBe("yarn global add enki@latest");
 		expect(
 			withMinimumReleaseAgeBypass(
-				"yarn global add cline@latest",
+				"yarn global add enki@latest",
 				PackageManager.YARN,
 			).env?.YARN_NPM_MINIMAL_AGE_GATE,
 		).toBe("0");
 
 		expect(
 			withMinimumReleaseAgeBypass(
-				"pnpm add -g cline@latest",
+				"pnpm add -g enki@latest",
 				PackageManager.PNPM,
 			).env?.pnpm_config_minimum_release_age,
 		).toBe("0");

@@ -1,4 +1,4 @@
-import { ApiFormat } from "./proto/cline/models"
+import { ApiFormat } from "./proto/enki/models"
 import type { ApiHandlerSettings } from "./storage/state-keys"
 
 export type ApiProvider =
@@ -21,8 +21,8 @@ export type ApiProvider =
 	| "doubao"
 	| "mistral"
 	| "vscode-lm"
-	| "cline"
-	| "cline-pass"
+	| "enki"
+	| "enki-pass"
 	| "litellm"
 	| "moonshot"
 	| "nebius"
@@ -1012,8 +1012,8 @@ export const openRouterDefaultModelInfo: ModelInfo = {
 		"Claude Sonnet 4.5 delivers superior intelligence across coding, agentic search, and AI agent capabilities. It's a powerful choice for agentic coding, and can complete tasks across the entire software development lifecycle, from initial planning to bug fixes, maintenance to large refactors. It offers strong performance in both planning and solving for complex coding tasks, making it an ideal choice to power end-to-end software development processes.\n\nRead more in the [blog post here](https://www.anthropic.com/claude/sonnet)",
 }
 
-// Cline custom model - Devstral
-export const clineDevstralModelInfo: ModelInfo = {
+// Enki AI custom model - Devstral
+export const enkiDevstralModelInfo: ModelInfo = {
 	contextWindow: 256000,
 	supportsImages: false,
 	supportsPromptCache: false,
@@ -1024,9 +1024,9 @@ export const clineDevstralModelInfo: ModelInfo = {
 	description: "A stealth model for agentic coding tasks",
 }
 
-export type ClinePassModelId = keyof typeof clinePassModels
-export const clinePassDefaultModelId = "cline-pass/glm-5.1"
-export const clinePassModelInfoSaneDefaults: ModelInfo = {
+export type Enki AIPassModelId = keyof typeof enkiPassModels
+export const enkiPassDefaultModelId = "enki-pass/glm-5.1"
+export const enkiPassModelInfoSaneDefaults: ModelInfo = {
 	maxTokens: 8_192,
 	contextWindow: 128_000,
 	supportsImages: false,
@@ -1038,9 +1038,9 @@ export const clinePassModelInfoSaneDefaults: ModelInfo = {
 	cacheWritesPrice: 0,
 	description: "",
 }
-export const clinePassModels = {
-	"cline-pass/glm-5.1": {
-		name: "cline-pass/glm-5.1",
+export const enkiPassModels = {
+	"enki-pass/glm-5.1": {
+		name: "enki-pass/glm-5.1",
 		maxTokens: 131_072,
 		contextWindow: 202_752,
 		supportsImages: false,
@@ -1068,11 +1068,11 @@ export function buildModelInfoNameMap(models: Record<string, ModelInfo>): Record
 	return nameMap
 }
 
-export function resolveClinePassModelInfo(modelId: string, modelInfoByName?: Record<string, ModelInfo>): ModelInfo {
+export function resolveEnki AIPassModelInfo(modelId: string, modelInfoByName?: Record<string, ModelInfo>): ModelInfo {
 	return (
-		clinePassModels[modelId as keyof typeof clinePassModels] ??
+		enkiPassModels[modelId as keyof typeof enkiPassModels] ??
 		modelInfoByName?.[getModelSlug(modelId)] ??
-		clinePassModelInfoSaneDefaults
+		enkiPassModelInfoSaneDefaults
 	)
 }
 

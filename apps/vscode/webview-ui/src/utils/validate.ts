@@ -1,4 +1,4 @@
-import { ApiConfiguration, clinePassDefaultModelId, clinePassModels, ModelInfo, openRouterDefaultModelId } from "@shared/api"
+import { ApiConfiguration, enkiPassDefaultModelId, enkiPassModels, ModelInfo, openRouterDefaultModelId } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { getModeSpecificFields } from "@/components/settings/utils/providerUtils"
 
@@ -70,8 +70,8 @@ export function validateApiConfiguration(currentMode: Mode, apiConfiguration?: A
 					return "You must provide a valid API key or choose a different provider."
 				}
 				break
-			case "cline":
-			case "cline-pass":
+			case "enki":
+			case "enki-pass":
 				break
 			case "openai-codex":
 				// Authentication is handled via OAuth, not API key
@@ -187,10 +187,10 @@ export function validateModelId(
 	currentMode: Mode,
 	apiConfiguration?: ApiConfiguration,
 	openRouterModels?: Record<string, ModelInfo>,
-	clineModels?: Record<string, ModelInfo>,
+	enkiModels?: Record<string, ModelInfo>,
 ): string | undefined {
 	if (apiConfiguration) {
-		const { apiProvider, openRouterModelId, clineModelId } = getModeSpecificFields(apiConfiguration, currentMode)
+		const { apiProvider, openRouterModelId, enkiModelId } = getModeSpecificFields(apiConfiguration, currentMode)
 		switch (apiProvider) {
 			case "openrouter": {
 				const modelId = openRouterModelId || openRouterDefaultModelId // in case the user hasn't changed the model id, it will be undefined by default
@@ -203,26 +203,26 @@ export function validateModelId(
 				}
 				break
 			}
-			case "cline": {
-				const clineResolvedModelId = clineModelId || openRouterDefaultModelId
-				if (!clineResolvedModelId) {
+			case "enki": {
+				const enkiResolvedModelId = enkiModelId || openRouterDefaultModelId
+				if (!enkiResolvedModelId) {
 					return "You must provide a model ID."
 				}
-				if (clineModels && !Object.keys(clineModels).includes(clineResolvedModelId)) {
+				if (enkiModels && !Object.keys(enkiModels).includes(enkiResolvedModelId)) {
 					return "The model ID you provided is not available. Please choose a different model."
 				}
 				break
 			}
-			case "cline-pass": {
-				const clinePassModelId =
-					currentMode === "plan" ? apiConfiguration.planModeClinePassModelId : apiConfiguration.actModeClinePassModelId
-				const clinePassResolvedModelId = clinePassModelId || clinePassDefaultModelId
-				if (!clinePassResolvedModelId) {
+			case "enki-pass": {
+				const enkiPassModelId =
+					currentMode === "plan" ? apiConfiguration.planModeEnki AIPassModelId : apiConfiguration.actModeEnki AIPassModelId
+				const enkiPassResolvedModelId = enkiPassModelId || enkiPassDefaultModelId
+				if (!enkiPassResolvedModelId) {
 					return "You must provide a model ID."
 				}
 				if (
-					!Object.keys(clinePassModels).includes(clinePassResolvedModelId) &&
-					!clinePassResolvedModelId.startsWith("cline-pass/")
+					!Object.keys(enkiPassModels).includes(enkiPassResolvedModelId) &&
+					!enkiPassResolvedModelId.startsWith("enki-pass/")
 				) {
 					return "The model ID you provided is not available. Please choose a different model."
 				}

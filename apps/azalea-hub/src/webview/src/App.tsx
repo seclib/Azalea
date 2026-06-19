@@ -412,9 +412,9 @@ function Shell({
 					<img
 						alt=""
 						className="size-6 shrink-0 dark:invert"
-						src="/cline-logo-filled.svg"
+						src="/enki-logo-filled.svg"
 					/>
-					<span className="truncate">Cline Hub</span>
+					<span className="truncate">Enki AI Hub</span>
 				</button>
 				<nav
 					className="grid gap-1 overflow-y-auto max-[720px]:grid-flow-col max-[720px]:auto-cols-max max-[720px]:overflow-x-auto max-[720px]:[scrollbar-width:none] max-[720px]:[&::-webkit-scrollbar]:hidden"
@@ -432,7 +432,7 @@ function Shell({
 						<span className="shrink-0 text-border">|</span>
 						<a
 							className="truncate underline-offset-2 transition-colors hover:text-foreground hover:underline"
-							href="https://github.com/cline/cline/issues/new"
+							href="https://github.com/enki/enki/issues/new"
 							rel="noopener noreferrer"
 							target="_blank"
 						>
@@ -485,7 +485,7 @@ function HomeView({
 	return (
 		<PageFrame>
 			<PageHeader
-				title="Cline Hub"
+				title="Enki AI Hub"
 				description="Monitor connected clients, sessions, and hub activity."
 				className="mb-10"
 				actions={
@@ -517,7 +517,7 @@ function HomeView({
 							disabled={!hubState.connected || restartPending}
 							onClick={() => setRestartDialogOpen(true)}
 							size="sm"
-							title="Restart Cline Hub"
+							title="Restart Enki AI Hub"
 							type="button"
 							variant="outline"
 							className="h-7 rounded px-2 text-xs"
@@ -540,7 +540,7 @@ function HomeView({
 			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>Restart Cline Hub</AlertDialogTitle>
+						<AlertDialogTitle>Restart Enki AI Hub</AlertDialogTitle>
 						<AlertDialogDescription>
 							This will shut down the current hub process and start it again.
 							Connected clients and active sessions may disconnect while the hub

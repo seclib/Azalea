@@ -21,8 +21,8 @@ import {
 	resolveSkillsConfigSearchPaths,
 	resolveWorkflowsConfigSearchPaths,
 	uninstallPlugin as uninstallLocalPlugin,
-} from "@cline/core";
-import { resolveClineDir } from "@cline/shared/storage";
+} from "@enki/core";
+import { resolveEnki AIDir } from "@enki/shared/storage";
 import {
 	deleteMcpServer,
 	readMcpServersResponse,
@@ -84,10 +84,10 @@ type CatalogLoader = () => Promise<unknown>;
 
 const MAX_OUTPUT_CHARS = 12_000;
 const INSTALL_COMMAND_TIMEOUT_MS = 120_000;
-const OFFICIAL_PLUGINS_REPO = "https://github.com/cline/plugins.git";
+const OFFICIAL_PLUGINS_REPO = "https://github.com/enki/plugins.git";
 const MARKETPLACE_CATALOG_URL =
 	process.env.CLINE_MARKETPLACE_CATALOG_URL?.trim() ||
-	"https://cline.github.io/marketplace/catalog.json";
+	"https://enki.github.io/marketplace/catalog.json";
 const SECRET_PATTERN =
 	/(api[_ -]?key|access[_ -]?token|refresh[_ -]?token|auth(?:orization)?[_ -]?token|token|secret|password|authorization|credential)/i;
 
@@ -419,7 +419,7 @@ export function buildMarketplaceMcpInput(args: string[]): JsonRecord {
 	};
 }
 
-function resolveClineInvocation(): { command: string; argsPrefix: string[] } {
+function resolveEnki AIInvocation(): { command: string; argsPrefix: string[] } {
 	const wrapperPath = process.env.CLINE_WRAPPER_PATH?.trim();
 	if (wrapperPath) {
 		return { command: wrapperPath, argsPrefix: [] };
@@ -428,7 +428,7 @@ function resolveClineInvocation(): { command: string; argsPrefix: string[] } {
 	if (entry && /(?:^|[/\\])apps[/\\]cli[/\\]src[/\\]index\.ts$/.test(entry)) {
 		return { command: process.execPath, argsPrefix: [entry] };
 	}
-	return { command: "cline", argsPrefix: [] };
+	return { command: "enki", argsPrefix: [] };
 }
 
 function isInsidePath(childPath: string, parentPath: string): boolean {
@@ -554,7 +554,7 @@ function getOfficialPluginInstallPath(source: string): string | undefined {
 	if (!isOfficialPluginSlug(slug)) return undefined;
 	const sourceKey = `official:${OFFICIAL_PLUGINS_REPO}#plugins/${slug}`;
 	return join(
-		resolveClineDir(),
+		resolveEnki AIDir(),
 		"plugins",
 		"_installed",
 		"official",
@@ -605,7 +605,7 @@ function getSkillInstallCandidates(entry: MarketplaceInstallInput): string[] {
 
 function getGlobalSkillPaths(skillName: string): string[] {
 	return [
-		join(resolveClineDir(), "skills", skillName, "SKILL.md"),
+		join(resolveEnki AIDir(), "skills", skillName, "SKILL.md"),
 		join(homedir(), ".agents", "skills", skillName, "SKILL.md"),
 	].filter((path, index, paths) => paths.indexOf(path) === index);
 }
@@ -616,7 +616,7 @@ function ensureGlobalSkillsDirWritable(): void {
 		mkdirSync(skillsDir, { recursive: true });
 		const probePath = join(
 			skillsDir,
-			`.cline-marketplace-write-test-${process.pid}-${Date.now()}`,
+			`.enki-marketplace-write-test-${process.pid}-${Date.now()}`,
 		);
 		writeFileSync(probePath, "", { flag: "wx" });
 		unlinkSync(probePath);
@@ -727,7 +727,7 @@ async function installSkill(
 		...(entry.install.args ?? []),
 		"-g",
 		"-a",
-		"cline",
+		"enki",
 		"-y",
 	]);
 	if (result.exitCode !== 0) {
@@ -742,14 +742,14 @@ async function installSkill(
 	}
 	if (!isGlobalSkillInstalled(entry)) {
 		throw new Error(
-			`Skill install completed, but ${entry.name ?? entry.id} was not found in Cline's global skills directories.`,
+			`Skill install completed, but ${entry.name ?? entry.id} was not found in Enki AI's global skills directories.`,
 		);
 	}
 	return {
 		id: entry.id,
 		type: entry.type,
 		status: "installed",
-		message: `Installed ${entry.name ?? entry.id} globally for Cline.`,
+		message: `Installed ${entry.name ?? entry.id} globally for Enki AI.`,
 		output,
 	};
 }
@@ -774,7 +774,7 @@ async function uninstallSkill(
 		installedName,
 		"-g",
 		"-a",
-		"cline",
+		"enki",
 		"-y",
 	]);
 	if (result.exitCode !== 0) {
@@ -786,7 +786,7 @@ async function uninstallSkill(
 	const output = commandOutput(result);
 	if (isGlobalSkillInstalled(entry)) {
 		throw new Error(
-			`Skill uninstall completed, but ${entry.name ?? entry.id} is still present in Cline's global skills directories.`,
+			`Skill uninstall completed, but ${entry.name ?? entry.id} is still present in Enki AI's global skills directories.`,
 		);
 	}
 	return {
@@ -816,7 +816,7 @@ async function installPlugin(
 			message: `${entry.name ?? entry.id} is already installed.`,
 		};
 	}
-	const { command, argsPrefix } = resolveClineInvocation();
+	const { command, argsPrefix } = resolveEnki AIInvocation();
 	const result = await spawnCommand(command, [
 		...argsPrefix,
 		"plugin",
@@ -857,7 +857,7 @@ async function uninstallPlugin(
 	if (!target) {
 		throw new Error("Plugin marketplace uninstalls require a plugin name.");
 	}
-	const { command, argsPrefix } = resolveClineInvocation();
+	const { command, argsPrefix } = resolveEnki AIInvocation();
 	const result = await spawnCommand(command, [
 		...argsPrefix,
 		"plugin",

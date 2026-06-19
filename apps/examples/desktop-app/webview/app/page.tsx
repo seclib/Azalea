@@ -712,7 +712,7 @@ function ChatThreadPane({
 			hydratedSessionRef.current = null;
 			manualTitleSessionRef.current = null;
 			window.dispatchEvent(
-				new CustomEvent("cline:session-deleted", {
+				new CustomEvent("enki:session-deleted", {
 					detail: {
 						sessionId: activeSessionToDelete,
 					},
@@ -796,7 +796,7 @@ function ChatThreadPane({
 					title: normalizedTitle || undefined,
 				});
 				window.dispatchEvent(
-					new CustomEvent("cline:session-title-updated", {
+					new CustomEvent("enki:session-title-updated", {
 						detail: {
 							sessionId: activeSessionForTitle,
 							title: normalizedTitle,

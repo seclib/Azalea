@@ -1,28 +1,28 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
 import {
-	type ClineStorageMessage,
-	convertClineStorageToAnthropicMessage,
+	type Enki AIStorageMessage,
+	convertEnki AIStorageToAnthropicMessage,
 } from "@/shared/messages/content";
 
 /**
- * Converts Cline storage messages to Anthropic API format with optional cache control.
+ * Converts Enki AI storage messages to Anthropic API format with optional cache control.
  * Adds ephemeral cache control to the last two user messages to prevent them from being
  * stored in Anthropic's cache.
  *
- * @param clineMessages - Array of Cline storage messages to convert
+ * @param enkiMessages - Array of Enki AI storage messages to convert
  * @param lastUserMsgIndex - Optional index of the last user message
  * @param secondLastMsgUserIndex - Optional index of the second-to-last user message
  * @returns Array of Anthropic-compatible messages with cache control applied
  */
 export function sanitizeAnthropicMessages(
-	clineMessages: ClineStorageMessage[],
+	enkiMessages: Enki AIStorageMessage[],
 	supportCache: boolean,
 ): Array<Anthropic.MessageParam> {
 	// The latest message will be the new user message, one before will be the assistant message from a previous request,
 	// and the user message before that will be a previously cached user message. So we need to mark the latest user message
 	// as ephemeral to cache it for the next request, and mark the second to last user message as ephemeral to let the server
 	// know the last message to retrieve from the cache for the current request.
-	const userMsgIndices = clineMessages.reduce((acc, msg, index) => {
+	const userMsgIndices = enkiMessages.reduce((acc, msg, index) => {
 		if (msg.role === "user") {
 			acc.push(index);
 		}
@@ -33,8 +33,8 @@ export function sanitizeAnthropicMessages(
 	const lastUserMsgIndex = userMsgIndices[indicesLength - 1];
 	const secondLastMsgUserIndex = userMsgIndices[indicesLength - 2];
 
-	return clineMessages.map((msg, index) => {
-		const anthropicMsg = convertClineStorageToAnthropicMessage(msg);
+	return enkiMessages.map((msg, index) => {
+		const anthropicMsg = convertEnki AIStorageToAnthropicMessage(msg);
 
 		// Add cache control to the last two user messages
 		if (

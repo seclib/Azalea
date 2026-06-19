@@ -3,7 +3,7 @@
 	"providers": {
 		"cline-glm-4.6-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "z-ai/glm-4.6",
 				"reasoning": {
 					"enabled": false
@@ -17,7 +17,7 @@
 		},
 		"cline-glm-4.7-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "z-ai/glm-4.7",
 				"reasoning": {
 					"enabled": false
@@ -31,7 +31,7 @@
 		},
 		"cline-glm-5-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "z-ai/glm-5",
 				"reasoning": {
 					"enabled": false
@@ -199,7 +199,7 @@
 		},
 		"cline-gpt-5.4-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "openai/gpt-5.4",
 				"reasoning": {
 					"enabled": false
@@ -213,7 +213,7 @@
 		},
 		"cline-gpt-5.3-codex-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "openai/gpt-5.3-codex",
 				"reasoning": {
 					"enabled": false
@@ -312,7 +312,7 @@
 		},
 		"cline-deepseek-v3.2-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "deepseek/deepseek-v3.2",
 				"reasoning": {
 					"enabled": false
@@ -326,7 +326,7 @@
 		},
 		"cline-kimi-k2.6-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "moonshotai/kimi-k2.6",
 				"reasoning": {
 					"enabled": false
@@ -340,7 +340,7 @@
 		},
 		"cline-qwen3-next-instruct": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "qwen/qwen3-next-80b-a3b-instruct"
 			},
 			"prompt": "Answer with only the number: what is 47*83?",
@@ -351,7 +351,7 @@
 		},
 		"cline-grok-4.20-beta-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "x-ai/grok-4.20-beta",
 				"reasoning": {
 					"enabled": false
@@ -365,7 +365,7 @@
 		},
 		"cline-grok-4.1-fast-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "x-ai/grok-4.1-fast",
 				"reasoning": {
 					"enabled": false
@@ -379,7 +379,7 @@
 		},
 		"cline-mistral-medium-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "mistralai/mistral-medium-3.1",
 				"reasoning": {
 					"enabled": false
@@ -393,7 +393,7 @@
 		},
 		"cline-claude-sonnet-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "anthropic/claude-sonnet-4.6",
 				"reasoning": {
 					"enabled": false
@@ -407,7 +407,7 @@
 		},
 		"cline-gemini-flash-lite-thinking-off": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "google/gemini-3.1-flash-lite-preview",
 				"reasoning": {
 					"enabled": false

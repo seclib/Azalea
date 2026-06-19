@@ -1,6 +1,6 @@
 {
 	"name": "@cline/cli",
-	"displayName": "cline",
+	"displayName": "enki",
 	"version": "3.0.27",
 	"description": "Autonomous coding agent CLI - capable of creating/editing files, running commands, using the browser, and more",
 	"type": "module",
@@ -13,7 +13,7 @@
 		"directory": "apps/cli"
 	},
 	"keywords": [
-		"cline",
+		"enki",
 		"claude",
 		"dev",
 		"mcp",
@@ -36,7 +36,7 @@
 		"url": "https://github.com/cline/cline/issues"
 	},
 	"bin": {
-		"cline": "src/index.ts"
+		"enki": "src/index.ts"
 	},
 	"engines": {
 		"node": ">=22"

@@ -7,15 +7,15 @@ import { formatResponse } from "@core/prompts/responses"
 import { PromptRegistry } from "@core/prompts/system-prompt"
 import type { SystemPromptContext } from "@core/prompts/system-prompt/types"
 import { StreamResponseHandler } from "@core/task/StreamResponseHandler"
-import { ClineAssistantToolUseBlock, ClineStorageMessage, ClineTextContentBlock, ClineUserContent } from "@shared/messages"
+import { Enki AIAssistantToolUseBlock, Enki AIStorageMessage, Enki AITextContentBlock, Enki AIUserContent } from "@shared/messages"
 import { Logger } from "@shared/services/Logger"
-import { ClineDefaultTool, ClineTool } from "@shared/tools"
+import { Enki AIDefaultTool, Enki AITool } from "@shared/tools"
 import { ContextManager } from "@/core/context/context-management/ContextManager"
 import { checkContextWindowExceededError } from "@/core/context/context-management/context-error-handling"
 import { getContextWindowInfo } from "@/core/context/context-management/context-window-utils"
 import { HostRegistryInfo } from "@/registry"
-import { ClineError, ClineErrorType } from "@/services/error"
-import { ApiFormat } from "@/shared/proto/cline/models"
+import { Enki AIError, Enki AIErrorType } from "@/services/error"
+import { ApiFormat } from "@/shared/proto/enki/models"
 import { calculateApiCostAnthropic } from "@/utils/cost"
 import { isNextGenModelFamily } from "@/utils/model-utils"
 import { TaskState } from "../../TaskState"
@@ -182,7 +182,7 @@ function resolveToolUseId(call: { id?: string; call_id?: string; name?: string }
 	return fallbackId
 }
 
-function toAssistantToolUseBlock(call: SubagentToolCall): ClineAssistantToolUseBlock {
+function toAssistantToolUseBlock(call: SubagentToolCall): Enki AIAssistantToolUseBlock {
 	return {
 		type: "tool_use",
 		id: call.toolUseId,
@@ -229,7 +229,7 @@ function pushSubagentToolResultBlock(toolResultBlocks: any[], call: SubagentTool
 export class SubagentRunner {
 	private readonly agent: SubagentBuilder
 	private readonly apiHandler: ApiHandler
-	private readonly allowedTools: ClineDefaultTool[]
+	private readonly allowedTools: Enki AIDefaultTool[]
 	private activeApiAbort: (() => void) | undefined
 	private abortRequested = false
 	private activeCommandExecutions = 0
@@ -390,14 +390,14 @@ export class SubagentRunner {
 				return { status: "failed", error, stats }
 			}
 
-			const conversation: ClineStorageMessage[] = [
+			const conversation: Enki AIStorageMessage[] = [
 				{
 					role: "user",
 					content: [
 						{
 							type: "text",
 							text: prompt,
-						} as ClineTextContentBlock,
+						} as Enki AITextContentBlock,
 						// Server-side task loop checks require workspace metadata to be present in the
 						// initial user message of subagent runs.
 						...(workspaceMetadataEnvironmentBlock
@@ -405,7 +405,7 @@ export class SubagentRunner {
 									{
 										type: "text",
 										text: workspaceMetadataEnvironmentBlock,
-									} as ClineTextContentBlock,
+									} as Enki AITextContentBlock,
 								]
 							: []),
 					],
@@ -605,12 +605,12 @@ export class SubagentRunner {
 				}
 				emptyAssistantResponseRetries = 0
 
-				const toolResultBlocks = [] as ClineUserContent[]
+				const toolResultBlocks = [] as Enki AIUserContent[]
 				for (const call of finalizedToolCalls) {
-					const toolName = call.name as ClineDefaultTool
+					const toolName = call.name as Enki AIDefaultTool
 					const toolCallParams = toToolUseParams(call.input)
 
-					if (toolName === ClineDefaultTool.ATTEMPT) {
+					if (toolName === Enki AIDefaultTool.ATTEMPT) {
 						const completionResult = toolCallParams.result?.trim()
 						if (!completionResult) {
 							const missingResultError = formatResponse.missingToolParameterError("result")
@@ -695,7 +695,7 @@ export class SubagentRunner {
 	private createSubagentTaskConfig(state: TaskState): TaskConfig {
 		const baseCallbacks = this.baseConfig.callbacks
 		const coordinator = new ToolExecutorCoordinator()
-		const validator = new ToolValidator(this.baseConfig.services.clineIgnoreController)
+		const validator = new ToolValidator(this.baseConfig.services.enkiIgnoreController)
 
 		for (const tool of this.allowedTools) {
 			coordinator.registerByName(tool, validator)
@@ -730,10 +730,10 @@ export class SubagentRunner {
 
 	private shouldRetryInitialStreamError(error: unknown, providerId: string, modelId: string): boolean {
 		// Mirror main loop behavior: do not auto-retry auth/balance failures.
-		const parsedError = ClineError.transform(error, modelId, providerId)
-		const isAuthError = parsedError.isErrorType(ClineErrorType.Auth)
-		const isBalanceError = parsedError.isErrorType(ClineErrorType.Balance)
-		const isEntitlementError = parsedError.isErrorType(ClineErrorType.Entitlement)
+		const parsedError = Enki AIError.transform(error, modelId, providerId)
+		const isAuthError = parsedError.isErrorType(Enki AIErrorType.Auth)
+		const isBalanceError = parsedError.isErrorType(Enki AIErrorType.Balance)
+		const isEntitlementError = parsedError.isErrorType(Enki AIErrorType.Entitlement)
 
 		if (isAuthError || isBalanceError || isEntitlementError) {
 			return false
@@ -744,7 +744,7 @@ export class SubagentRunner {
 
 	private compactConversationForContextWindow(
 		contextManager: ContextManager,
-		conversation: ClineStorageMessage[],
+		conversation: Enki AIStorageMessage[],
 		conversationHistoryDeletedRange: [number, number] | undefined,
 	): {
 		didCompact: boolean
@@ -790,7 +790,7 @@ export class SubagentRunner {
 
 	private optimizeConversationForContextWindow(
 		contextManager: ContextManager,
-		conversation: ClineStorageMessage[],
+		conversation: Enki AIStorageMessage[],
 	): {
 		didOptimize: boolean
 		needToTruncate: boolean
@@ -802,7 +802,7 @@ export class SubagentRunner {
 		}
 
 		const optimizedConversation = optimizationResult.optimizedConversationHistory.map(
-			(message) => message as ClineStorageMessage,
+			(message) => message as Enki AIStorageMessage,
 		)
 		conversation.splice(0, conversation.length, ...optimizedConversation)
 		return { didOptimize: true, needToTruncate: optimizationResult.needToTruncate }
@@ -828,8 +828,8 @@ export class SubagentRunner {
 	private async *createMessageWithInitialChunkRetry(
 		api: ReturnType<typeof buildApiHandler>,
 		systemPrompt: string,
-		fullConversation: ClineStorageMessage[],
-		nativeTools: ClineTool[] | undefined,
+		fullConversation: Enki AIStorageMessage[],
+		nativeTools: Enki AITool[] | undefined,
 		providerId: string,
 		modelId: string,
 		contextManager: ContextManager,
@@ -838,7 +838,7 @@ export class SubagentRunner {
 		for (let attempt = 1; attempt <= MAX_INITIAL_STREAM_ATTEMPTS; attempt += 1) {
 			const truncatedConversation = contextManager
 				.getTruncatedMessages(fullConversation, contextState.conversationHistoryDeletedRange)
-				.map((message) => message as ClineStorageMessage)
+				.map((message) => message as Enki AIStorageMessage)
 			const stream = api.createMessage(systemPrompt, truncatedConversation, nativeTools)
 			const iterator = stream[Symbol.asyncIterator]()
 

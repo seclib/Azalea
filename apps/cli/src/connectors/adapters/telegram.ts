@@ -1,13 +1,13 @@
 import { createTelegramAdapter } from "@chat-adapter/telegram";
-import type { ChatStartSessionRequest } from "@cline/core";
+import type { ChatStartSessionRequest } from "@enki/core";
 import {
 	createUserInstructionConfigService,
 	HubSessionClient,
-} from "@cline/core";
+} from "@enki/core";
 import type {
 	ConnectTelegramOptions,
 	TelegramConnectorState,
-} from "@cline/shared";
+} from "@enki/shared";
 import { Chat, ConsoleLogger, type Thread } from "chat";
 import type { Command } from "commander";
 import type { CliLoggerAdapter } from "../../logging/adapter";
@@ -452,7 +452,7 @@ class TelegramConnector extends ConnectorBase<
 					"Notes:",
 					"  - Without -i, the connector is launched in the background.",
 					"  - Tools are enabled by default for Telegram sessions.",
-					"  - Use --allowed-user-id or `cline connect` to restrict Telegram access.",
+					"  - Use --allowed-user-id or `enki connect` to restrict Telegram access.",
 					"  - Bot username is discovered from the Telegram bot token when omitted.",
 					"  - Provider/model default to the CLI's last-used provider settings.",
 				].join("\n"),
@@ -662,7 +662,7 @@ class TelegramConnector extends ConnectorBase<
 				formatBackgroundStartMessage: (pid) =>
 					`[telegram] starting background connector pid=${pid} bot=@${options.botUsername}`,
 				foregroundHint:
-					"[telegram] use `cline connect telegram -i ...` to run in the foreground",
+					"[telegram] use `enki connect telegram -i ...` to run in the foreground",
 				launchFailureMessage:
 					"failed to launch Telegram connector in background",
 			})

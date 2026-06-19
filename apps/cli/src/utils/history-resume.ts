@@ -23,8 +23,8 @@ export interface BuildHistoryResumeArgsInput {
 }
 
 /**
- * Builds argv for relaunching the CLI as `cline <globalFlags> --id <sessionId>`
- * after a session is picked in `cline history`. Returns undefined when the
+ * Builds argv for relaunching the CLI as `enki <globalFlags> --id <sessionId>`
+ * after a session is picked in `enki history`. Returns undefined when the
  * global-flag prefix cannot be derived safely (caller falls back to resuming
  * in-process).
  */
@@ -71,7 +71,7 @@ export function buildHistoryResumeCommand(
 }
 
 /**
- * Resumes a history-picked session in a fresh `cline --id <sessionId>` child
+ * Resumes a history-picked session in a fresh `enki --id <sessionId>` child
  * process with inherited stdio, and returns its exit code. Creating a second
  * OpenTUI renderer in the picker's process can crash natively during teardown
  * (Bun "panic(main thread): Segmentation fault" on Ctrl+C), so the resumed

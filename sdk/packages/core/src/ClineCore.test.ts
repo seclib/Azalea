@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ClineCoreStartInput } from "./cline-core/types";
+import type { Enki AICoreStartInput } from "./enki-core/types";
 import type {
 	StartSessionInput,
 	StartSessionResult,
@@ -16,11 +16,11 @@ vi.mock("./runtime/host/host", () => ({
 	createRuntimeHost: createRuntimeHostMock,
 }));
 
-import type { AgentResult } from "@cline/shared";
-import { ClineCore } from "./ClineCore";
+import type { AgentResult } from "@enki/shared";
+import { Enki AICore } from "./Enki AICore";
 import { NoOpFeatureFlagsProvider } from "./services/feature-flags";
 
-function createStartInput(): ClineCoreStartInput {
+function createStartInput(): Enki AICoreStartInput {
 	return {
 		config: {
 			providerId: "anthropic",
@@ -70,7 +70,7 @@ function createAgentResult(text: string): AgentResult {
 	};
 }
 
-describe("ClineCore", () => {
+describe("Enki AICore", () => {
 	beforeEach(() => {
 		createRuntimeHostMock.mockReset();
 	});
@@ -107,7 +107,7 @@ describe("ClineCore", () => {
 
 		const dispose = vi.fn(async () => {});
 		const applyToStartSessionInput = vi.fn(
-			async (input: ClineCoreStartInput) => ({
+			async (input: Enki AICoreStartInput) => ({
 				...input,
 				config: {
 					...input.config,
@@ -123,7 +123,7 @@ describe("ClineCore", () => {
 			}),
 		);
 
-		const core = await ClineCore.create({
+		const core = await Enki AICore.create({
 			prepare: async () => ({
 				applyToStartSessionInput,
 				dispose,
@@ -163,7 +163,7 @@ describe("ClineCore", () => {
 		createRuntimeHostMock.mockResolvedValue(host);
 
 		const dispose = vi.fn(async () => {});
-		const core = await ClineCore.create({
+		const core = await Enki AICore.create({
 			prepare: async () => ({
 				applyToStartSessionInput: (input) => input,
 				dispose,
@@ -212,7 +212,7 @@ describe("ClineCore", () => {
 			dispose: vi.fn().mockResolvedValue(undefined),
 		};
 
-		const core = await ClineCore.create({
+		const core = await Enki AICore.create({
 			backendMode: "local",
 			clientName: "unit-test-client",
 			telemetry: telemetry as never,
@@ -259,7 +259,7 @@ describe("ClineCore", () => {
 		const submit = vi.fn(async () => "submitted");
 		const requestToolApproval = vi.fn(async () => ({ approved: true }));
 
-		const core = await ClineCore.create({
+		const core = await Enki AICore.create({
 			capabilities: {
 				toolExecutors: { askQuestion },
 				requestToolApproval,
@@ -287,7 +287,7 @@ describe("ClineCore", () => {
 		);
 	});
 
-	it("prefers the per-session telemetry service over the ClineCore one", async () => {
+	it("prefers the per-session telemetry service over the Enki AICore one", async () => {
 		const host = {
 			runtimeAddress: undefined,
 			startSession: vi.fn(async () => createStartResult("session-override")),
@@ -318,7 +318,7 @@ describe("ClineCore", () => {
 			isEnabled: vi.fn(() => true),
 		};
 
-		const core = await ClineCore.create({
+		const core = await Enki AICore.create({
 			backendMode: "local",
 			telemetry: coreTelemetry as never,
 		});
@@ -350,7 +350,7 @@ describe("ClineCore", () => {
 		};
 		createRuntimeHostMock.mockResolvedValue(host);
 
-		const core = await ClineCore.create();
+		const core = await Enki AICore.create();
 
 		expect(core.featureFlags.getProvider()).toBeInstanceOf(
 			NoOpFeatureFlagsProvider,
@@ -400,7 +400,7 @@ describe("ClineCore", () => {
 					role: "assistant",
 					content: [{ type: "text", text: "hi" }],
 					modelInfo: {
-						provider: "cline",
+						provider: "enki",
 						id: "anthropic/claude-sonnet-4.6",
 					},
 					metrics: {
@@ -414,14 +414,14 @@ describe("ClineCore", () => {
 		};
 		createRuntimeHostMock.mockResolvedValue(host);
 
-		const core = await ClineCore.create();
+		const core = await Enki AICore.create();
 		const [row] = await core.list(10);
 
 		expect(host.listSessions).toHaveBeenCalledWith(20);
 		expect(host.readSessionMessages).toHaveBeenCalledWith("session-3");
 		expect(row).toMatchObject({
 			sessionId: "session-3",
-			provider: "cline",
+			provider: "enki",
 			model: "anthropic/claude-sonnet-4.6",
 			metadata: {
 				title: "hello",
@@ -448,7 +448,7 @@ describe("ClineCore", () => {
 					startedAt: "2026-04-21T02:17:46.169Z",
 					status: "completed",
 					interactive: false,
-					provider: "cline",
+					provider: "enki",
 					model: "anthropic/claude-sonnet-4.6",
 					cwd: "/tmp/workspace",
 					workspaceRoot: "/tmp/workspace",
@@ -469,27 +469,27 @@ describe("ClineCore", () => {
 		};
 		createRuntimeHostMock.mockResolvedValue(host);
 
-		const core = await ClineCore.create();
+		const core = await Enki AICore.create();
 		const [row] = await core.list(10, { hydrate: false });
 
 		// Hydration and default root-session filtering are consumed by
-		// ClineCore/listSessionHistory; the host list contract only receives the
+		// Enki AICore/listSessionHistory; the host list contract only receives the
 		// numeric scan limit.
 		expect(host.listSessions.mock.calls).toEqual([[20]]);
 		expect(host.readSessionMessages).not.toHaveBeenCalled();
 		expect(row).toMatchObject({
 			sessionId: "session-lightweight",
-			provider: "cline",
+			provider: "enki",
 			model: "anthropic/claude-sonnet-4.6",
 			metadata: { title: "stored title" },
 		});
 	});
 
-	it("exposes event automation through ClineCore instead of CronService", async () => {
-		const root = mkdtempSync(join(tmpdir(), "cline-core-automation-"));
-		const cronDir = join(root, ".cline", "cron");
+	it("exposes event automation through Enki AICore instead of CronService", async () => {
+		const root = mkdtempSync(join(tmpdir(), "enki-core-automation-"));
+		const cronDir = join(root, ".enki", "cron");
 		const reportsDir = join(cronDir, "reports");
-		const dbPath = join(root, ".cline", "data", "db", "cron.db");
+		const dbPath = join(root, ".enki", "data", "db", "cron.db");
 		mkdirSync(join(cronDir, "events"), { recursive: true });
 		writeFileSync(
 			join(cronDir, "events", "local.event.md"),
@@ -526,7 +526,7 @@ Summarize the local event.
 		createRuntimeHostMock.mockResolvedValue(host);
 
 		try {
-			const core = await ClineCore.create({
+			const core = await Enki AICore.create({
 				automation: {
 					cronDir,
 					reportsDir,
@@ -600,7 +600,7 @@ Summarize the local event.
 		};
 		createRuntimeHostMock.mockResolvedValue(host);
 
-		const core = await ClineCore.create();
+		const core = await Enki AICore.create();
 		const result = await core.restore({
 			sessionId: "source-session",
 			checkpointRunCount: 2,

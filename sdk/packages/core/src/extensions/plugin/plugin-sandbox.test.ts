@@ -8,7 +8,7 @@ import type {
 	AgentTool,
 	AgentToolContext,
 	Message,
-} from "@cline/shared";
+} from "@enki/shared";
 import {
 	afterAll,
 	beforeAll,
@@ -103,7 +103,7 @@ describe("plugin-sandbox", () => {
 				"      description: 'emit host event',",
 				"      inputSchema: { type: 'object', properties: { value: { type: 'string' } }, required: ['value'] },",
 				"      execute: async (input) => {",
-				"        globalThis.__clinePluginHost?.emitEvent?.('test_event', { value: input.value });",
+				"        globalThis.__enkiPluginHost?.emitEvent?.('test_event', { value: input.value });",
 				"        return { ok: true };",
 				"      },",
 				"    });",
@@ -120,7 +120,7 @@ describe("plugin-sandbox", () => {
 				"  name: 'sandbox-run-end',",
 				"  manifest: { capabilities: ['hooks'] },",
 				"  hooks: { afterRun(ctx) {",
-				"    globalThis.__clinePluginHost?.emitEvent?.('run_end_hook', {",
+				"    globalThis.__enkiPluginHost?.emitEvent?.('run_end_hook', {",
 				"      finishReason: ctx.result?.status,",
 				"      iterations: ctx.result?.iterations,",
 				"    });",
@@ -257,12 +257,12 @@ describe("plugin-sandbox", () => {
 			"utf8",
 		);
 
-		const sdkDepDir = join(dir, "node_modules", "@cline", "shared");
+		const sdkDepDir = join(dir, "node_modules", "@enki", "shared");
 		await mkdir(sdkDepDir, { recursive: true });
 		await writeFile(
 			join(sdkDepDir, "package.json"),
 			JSON.stringify({
-				name: "@cline/shared",
+				name: "@enki/shared",
 				type: "module",
 				exports: "./index.js",
 			}),
@@ -276,7 +276,7 @@ describe("plugin-sandbox", () => {
 		await writeFile(
 			join(dir, "plugin-sdk.ts"),
 			[
-				"import { sdkMarker } from '@cline/shared';",
+				"import { sdkMarker } from '@enki/shared';",
 				"export default {",
 				"  name: sdkMarker,",
 				"  manifest: { capabilities: ['tools'] },",
@@ -288,10 +288,10 @@ describe("plugin-sandbox", () => {
 		await writeFile(
 			join(dir, "plugin-host-dep.ts"),
 			[
-				"import { resolveClineDataDir } from '@cline/shared/storage';",
+				"import { resolveEnki AIDataDir } from '@enki/shared/storage';",
 				"import YAML from 'yaml';",
 				"export default {",
-				"  name: YAML.stringify({ host: !!resolveClineDataDir() }).trim(),",
+				"  name: YAML.stringify({ host: !!resolveEnki AIDataDir() }).trim(),",
 				"  manifest: { capabilities: ['tools'] },",
 				"};",
 			].join("\n"),
@@ -301,7 +301,7 @@ describe("plugin-sandbox", () => {
 		await writeFile(
 			join(dir, "plugin-create-tool.ts"),
 			[
-				"import { createTool } from '@cline/agents';",
+				"import { createTool } from '@enki/agents';",
 				"export default {",
 				"  name: 'sandbox-create-tool',",
 				"  manifest: { capabilities: ['tools'] },",
@@ -508,7 +508,7 @@ describe("plugin-sandbox", () => {
 		const packageRoot = join(
 			wrapperRoot,
 			"node_modules",
-			"@cline",
+			"@enki",
 			`cli-${platform}-${process.arch}`,
 		);
 		const wrapperBinDir = join(wrapperRoot, "bin");
@@ -517,7 +517,7 @@ describe("plugin-sandbox", () => {
 			"extensions",
 			"plugin-sandbox-bootstrap.js",
 		);
-		const wrapperPath = join(wrapperBinDir, "cline");
+		const wrapperPath = join(wrapperBinDir, "enki");
 		const events: Array<{ name: string; payload?: unknown }> = [];
 
 		try {
@@ -527,7 +527,7 @@ describe("plugin-sandbox", () => {
 			await writeFile(
 				join(packageRoot, "package.json"),
 				JSON.stringify({
-					name: `@cline/cli-${platform}-${process.arch}`,
+					name: `@enki/cli-${platform}-${process.arch}`,
 					version: "0.0.0-test",
 					type: "module",
 				}),

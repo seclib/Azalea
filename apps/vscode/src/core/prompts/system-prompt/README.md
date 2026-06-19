@@ -17,7 +17,7 @@ npm run test:unit
 ```
 src/core/prompts/system-prompt/
 ├── registry/
-│   ├── ClineToolSet.ts            # Tool set management & registry
+│   ├── Enki AIToolSet.ts            # Tool set management & registry
 │   ├── PromptRegistry.ts          # Singleton registry for loading/managing prompts
 │   ├── PromptBuilder.ts           # Builds final prompts with template resolution
 │   └── utils.ts                   # Model family detection utilities
@@ -143,15 +143,15 @@ interface PromptVariant {
   placeholders: { [key: string]: string };      // Default placeholder values
 
   // Tool configuration
-  tools?: ClineDefaultTool[];                    // Ordered list of tools to include
-  toolOverrides?: { [K in ClineDefaultTool]?: ConfigOverride }; // Tool-specific customizations
+  tools?: Enki AIDefaultTool[];                    // Ordered list of tools to include
+  toolOverrides?: { [K in Enki AIDefaultTool]?: ConfigOverride }; // Tool-specific customizations
 }
 
 interface PromptConfig {
   modelName?: string;
   temperature?: number;
   maxTokens?: number;
-  tools?: ClineToolSpec[];
+  tools?: Enki AIToolSpec[];
   [key: string]: any;                            // Additional arbitrary config
 }
 
@@ -298,7 +298,7 @@ class TemplateEngine {
 
 **Base Template Example:**
 ```markdown
-You are Cline, a highly skilled software engineer...
+You are Enki AI, a highly skilled software engineer...
 
 ====
 
@@ -357,26 +357,26 @@ Current Working Directory: {{workingDir}}
 
 ### 6. Tool System
 
-Tools are managed through the `ClineToolSet` and can be configured per variant:
+Tools are managed through the `Enki AIToolSet` and can be configured per variant:
 
 ```typescript
-class ClineToolSet {
-  private static variants: Map<ModelFamily, Set<ClineToolSet>> = new Map();
+class Enki AIToolSet {
+  private static variants: Map<ModelFamily, Set<Enki AIToolSet>> = new Map();
 
-  static register(config: ClineToolSpec): ClineToolSet {
-    return new ClineToolSet(config.id, config);
+  static register(config: Enki AIToolSpec): Enki AIToolSet {
+    return new Enki AIToolSet(config.id, config);
   }
 
-  static getTools(variant: ModelFamily): ClineToolSet[] {
-    const toolsSet = ClineToolSet.variants.get(variant) || new Set();
-    const defaultSet = ClineToolSet.variants.get(ModelFamily.GENERIC) || new Set();
+  static getTools(variant: ModelFamily): Enki AIToolSet[] {
+    const toolsSet = Enki AIToolSet.variants.get(variant) || new Set();
+    const defaultSet = Enki AIToolSet.variants.get(ModelFamily.GENERIC) || new Set();
     return toolsSet ? Array.from(toolsSet) : Array.from(defaultSet);
   }
 }
 
 // Tool generation in PromptBuilder
 public static async getToolsPrompts(variant: PromptVariant, context: SystemPromptContext) {
-  const tools = ClineToolSet.getTools(variant.family);
+  const tools = Enki AIToolSet.getTools(variant.family);
   
   // Filter and sort tools based on variant configuration
   const enabledTools = tools.filter((tool) => 
@@ -411,7 +411,7 @@ public static async getToolsPrompts(variant: PromptVariant, context: SystemPromp
 ```typescript
 // variants/generic/config.ts
 import { ModelFamily } from "@/shared/prompts";
-import { ClineDefaultTool } from "@/shared/tools";
+import { Enki AIDefaultTool } from "@/shared/tools";
 import { SystemPromptSection } from "../../templates/placeholders";
 import { validateVariant } from "../../validation/VariantValidator";
 import { createVariant } from "../builder";
@@ -441,22 +441,22 @@ export const config = createVariant(ModelFamily.GENERIC)
     SystemPromptSection.USER_INSTRUCTIONS,
   )
   .tools(
-    ClineDefaultTool.BASH,
-    ClineDefaultTool.FILE_READ,
-    ClineDefaultTool.FILE_NEW,
-    ClineDefaultTool.FILE_EDIT,
-    ClineDefaultTool.SEARCH,
-    ClineDefaultTool.LIST_FILES,
-    ClineDefaultTool.LIST_CODE_DEF,
-    ClineDefaultTool.BROWSER,
-    ClineDefaultTool.MCP_USE,
-    ClineDefaultTool.MCP_ACCESS,
-    ClineDefaultTool.ASK,
-    ClineDefaultTool.ATTEMPT,
-    ClineDefaultTool.NEW_TASK,
-    ClineDefaultTool.PLAN_MODE,
-    ClineDefaultTool.MCP_DOCS,
-    ClineDefaultTool.TODO,
+    Enki AIDefaultTool.BASH,
+    Enki AIDefaultTool.FILE_READ,
+    Enki AIDefaultTool.FILE_NEW,
+    Enki AIDefaultTool.FILE_EDIT,
+    Enki AIDefaultTool.SEARCH,
+    Enki AIDefaultTool.LIST_FILES,
+    Enki AIDefaultTool.LIST_CODE_DEF,
+    Enki AIDefaultTool.BROWSER,
+    Enki AIDefaultTool.MCP_USE,
+    Enki AIDefaultTool.MCP_ACCESS,
+    Enki AIDefaultTool.ASK,
+    Enki AIDefaultTool.ATTEMPT,
+    Enki AIDefaultTool.NEW_TASK,
+    Enki AIDefaultTool.PLAN_MODE,
+    Enki AIDefaultTool.MCP_DOCS,
+    Enki AIDefaultTool.TODO,
   )
   .placeholders({
     MODEL_FAMILY: "generic",
@@ -480,7 +480,7 @@ export type GenericVariantConfig = typeof config;
 ```typescript
 // variants/next-gen/config.ts
 import { ModelFamily } from "@/shared/prompts";
-import { ClineDefaultTool } from "@/shared/tools";
+import { Enki AIDefaultTool } from "@/shared/tools";
 import { SystemPromptSection } from "../../templates/placeholders";
 import { validateVariant } from "../../validation/VariantValidator";
 import { createVariant } from "../builder";
@@ -512,23 +512,23 @@ export const config = createVariant(ModelFamily.NEXT_GEN)
     SystemPromptSection.USER_INSTRUCTIONS,
   )
   .tools(
-    ClineDefaultTool.BASH,
-    ClineDefaultTool.FILE_READ,
-    ClineDefaultTool.FILE_NEW,
-    ClineDefaultTool.FILE_EDIT,
-    ClineDefaultTool.SEARCH,
-    ClineDefaultTool.LIST_FILES,
-    ClineDefaultTool.LIST_CODE_DEF,
-    ClineDefaultTool.BROWSER,
-    ClineDefaultTool.WEB_FETCH,  // Additional tool for next-gen
-    ClineDefaultTool.MCP_USE,
-    ClineDefaultTool.MCP_ACCESS,
-    ClineDefaultTool.ASK,
-    ClineDefaultTool.ATTEMPT,
-    ClineDefaultTool.NEW_TASK,
-    ClineDefaultTool.PLAN_MODE,
-    ClineDefaultTool.MCP_DOCS,
-    ClineDefaultTool.TODO,
+    Enki AIDefaultTool.BASH,
+    Enki AIDefaultTool.FILE_READ,
+    Enki AIDefaultTool.FILE_NEW,
+    Enki AIDefaultTool.FILE_EDIT,
+    Enki AIDefaultTool.SEARCH,
+    Enki AIDefaultTool.LIST_FILES,
+    Enki AIDefaultTool.LIST_CODE_DEF,
+    Enki AIDefaultTool.BROWSER,
+    Enki AIDefaultTool.WEB_FETCH,  // Additional tool for next-gen
+    Enki AIDefaultTool.MCP_USE,
+    Enki AIDefaultTool.MCP_ACCESS,
+    Enki AIDefaultTool.ASK,
+    Enki AIDefaultTool.ATTEMPT,
+    Enki AIDefaultTool.NEW_TASK,
+    Enki AIDefaultTool.PLAN_MODE,
+    Enki AIDefaultTool.MCP_DOCS,
+    Enki AIDefaultTool.TODO,
   )
   .placeholders({
     MODEL_FAMILY: ModelFamily.NEXT_GEN,
@@ -556,7 +556,7 @@ export type NextGenVariantConfig = typeof config;
 ```typescript
 // variants/xs/config.ts
 import { ModelFamily } from "@/shared/prompts";
-import { ClineDefaultTool } from "@/shared/tools";
+import { Enki AIDefaultTool } from "@/shared/tools";
 import { SystemPromptSection } from "../../templates/placeholders";
 import { validateVariant } from "../../validation/VariantValidator";
 import { createVariant } from "../builder";
@@ -585,19 +585,19 @@ export const config = createVariant(ModelFamily.XS)
     SystemPromptSection.USER_INSTRUCTIONS,
   )
   .tools(
-    ClineDefaultTool.BASH,
-    ClineDefaultTool.FILE_READ,
-    ClineDefaultTool.FILE_NEW,
-    ClineDefaultTool.FILE_EDIT,
-    ClineDefaultTool.SEARCH,
-    ClineDefaultTool.LIST_FILES,
-    ClineDefaultTool.ASK,
-    ClineDefaultTool.ATTEMPT,
-    ClineDefaultTool.NEW_TASK,
-    ClineDefaultTool.PLAN_MODE,
-    ClineDefaultTool.MCP_USE,
-    ClineDefaultTool.MCP_ACCESS,
-    ClineDefaultTool.MCP_DOCS,
+    Enki AIDefaultTool.BASH,
+    Enki AIDefaultTool.FILE_READ,
+    Enki AIDefaultTool.FILE_NEW,
+    Enki AIDefaultTool.FILE_EDIT,
+    Enki AIDefaultTool.SEARCH,
+    Enki AIDefaultTool.LIST_FILES,
+    Enki AIDefaultTool.ASK,
+    Enki AIDefaultTool.ATTEMPT,
+    Enki AIDefaultTool.NEW_TASK,
+    Enki AIDefaultTool.PLAN_MODE,
+    Enki AIDefaultTool.MCP_USE,
+    Enki AIDefaultTool.MCP_ACCESS,
+    Enki AIDefaultTool.MCP_DOCS,
   )
   .placeholders({
     MODEL_FAMILY: ModelFamily.XS,
@@ -639,8 +639,8 @@ const config = createVariant(ModelFamily.GENERIC)
     // ... more components
   )
   .tools(                                          // Optional, type-safe tool selection
-    ClineDefaultTool.BASH,
-    ClineDefaultTool.FILE_READ,
+    Enki AIDefaultTool.BASH,
+    Enki AIDefaultTool.FILE_READ,
     // ... more tools
   )
   .placeholders({                                  // Optional
@@ -654,7 +654,7 @@ const config = createVariant(ModelFamily.GENERIC)
   .overrideComponent(SystemPromptSection.RULES, {  // Optional, component overrides
     template: customRulesTemplate,
   })
-  .overrideTool(ClineDefaultTool.BASH, {          // Optional, tool overrides
+  .overrideTool(Enki AIDefaultTool.BASH, {          // Optional, tool overrides
     enabled: false,
   })
   .build();                                       // Returns Omit<PromptVariant, "id">
@@ -750,7 +750,7 @@ The system includes the following built-in components:
 
 ## Available Tools
 
-The system supports the following tools (mapped to `ClineDefaultTool` enum):
+The system supports the following tools (mapped to `Enki AIDefaultTool` enum):
 
 - `BASH`: Execute shell commands
 - `FILE_READ`: Read file contents
@@ -774,17 +774,17 @@ The system supports the following tools (mapped to `ClineDefaultTool` enum):
 
 ### Tool Structure and Anatomy
 
-Each tool in Cline follows a specific structure with variants for different model families. Here's the anatomy of a tool:
+Each tool in Enki AI follows a specific structure with variants for different model families. Here's the anatomy of a tool:
 
 ```typescript
 // src/core/prompts/system-prompt/tools/my_new_tool.ts
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import type { ClineToolSpec } from "../spec"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import type { Enki AIToolSpec } from "../spec"
 
-const id = ClineDefaultTool.MY_NEW_TOOL // Add to enum first
+const id = Enki AIDefaultTool.MY_NEW_TOOL // Add to enum first
 
-const generic: ClineToolSpec = {
+const generic: Enki AIToolSpec = {
 	variant: ModelFamily.GENERIC,
 	id,
 	name: "my_new_tool",
@@ -801,7 +801,7 @@ const generic: ClineToolSpec = {
 			required: false,
 			instruction: "Description of optional parameter",
 			usage: "Optional example (optional)",
-			dependencies: [ClineDefaultTool.SOME_OTHER_TOOL], // Only show if dependency exists
+			dependencies: [Enki AIDefaultTool.SOME_OTHER_TOOL], // Only show if dependency exists
 		},
 	],
 }
@@ -818,11 +818,11 @@ export const my_new_tool_variants = [generic, nextGen, gpt, gemini]
 
 #### 1. Add Tool ID to Enum
 
-First, add your tool ID to the `ClineDefaultTool` enum:
+First, add your tool ID to the `Enki AIDefaultTool` enum:
 
 ```typescript
 // src/shared/tools.ts
-export enum ClineDefaultTool {
+export enum Enki AIDefaultTool {
 	// ... existing tools
 	MY_NEW_TOOL = "my_new_tool",
 }
@@ -835,12 +835,12 @@ Create a new file in `src/core/prompts/system-prompt/tools/` following the namin
 ```typescript
 // src/core/prompts/system-prompt/tools/my_new_tool.ts
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import type { ClineToolSpec } from "../spec"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import type { Enki AIToolSpec } from "../spec"
 
-const id = ClineDefaultTool.MY_NEW_TOOL
+const id = Enki AIDefaultTool.MY_NEW_TOOL
 
-const generic: ClineToolSpec = {
+const generic: Enki AIToolSpec = {
 	variant: ModelFamily.GENERIC,
 	id,
 	name: "my_new_tool",
@@ -882,14 +882,14 @@ Add your tool to the registration function:
 // src/core/prompts/system-prompt/tools/init.ts
 import { my_new_tool_variants } from "./my_new_tool"
 
-export function registerClineToolSets(): void {
+export function registerEnki AIToolSets(): void {
 	const allToolVariants = [
 		// ... existing tool variants
 		...my_new_tool_variants,
 	]
 
 	allToolVariants.forEach((v) => {
-		ClineToolSet.register(v)
+		Enki AIToolSet.register(v)
 	})
 }
 ```
@@ -899,7 +899,7 @@ export function registerClineToolSets(): void {
 Create the actual tool implementation in the appropriate handler:
 
 ```typescript
-// In your tool handler class (e.g., ClineProvider)
+// In your tool handler class (e.g., Enki AIProvider)
 async handleMyNewTool(args: { input_parameter: string; options?: string }) {
 	// Implement your tool logic here
 	const result = await performToolOperation(args.input_parameter, args.options)
@@ -918,9 +918,9 @@ async handleMyNewTool(args: { input_parameter: string; options?: string }) {
 Tools can be conditionally enabled based on context:
 
 ```typescript
-const contextAwareTool: ClineToolSpec = {
+const contextAwareTool: Enki AIToolSpec = {
 	variant: ModelFamily.GENERIC,
-	id: ClineDefaultTool.CONTEXT_TOOL,
+	id: Enki AIDefaultTool.CONTEXT_TOOL,
 	name: "context_tool",
 	description: "Tool that only appears in certain contexts",
 	contextRequirements: (context: SystemPromptContext) => {
@@ -938,9 +938,9 @@ const contextAwareTool: ClineToolSpec = {
 Create different tool behaviors for different model families:
 
 ```typescript
-const claude: ClineToolSpec = {
+const claude: Enki AIToolSpec = {
 	variant: ModelFamily.GENERIC,
-	id: ClineDefaultTool.MODEL_SPECIFIC_TOOL,
+	id: Enki AIDefaultTool.MODEL_SPECIFIC_TOOL,
 	name: "model_specific_tool",
 	description: "Tool optimized for Claude models with detailed instructions",
 	parameters: [
@@ -953,7 +953,7 @@ const claude: ClineToolSpec = {
 	],
 }
 
-const gpt: ClineToolSpec = {
+const gpt: Enki AIToolSpec = {
 	...claude,
 	variant: ModelFamily.GPT,
 	description: "Tool optimized for GPT models with concise instructions",
@@ -975,9 +975,9 @@ export const model_specific_tool_variants = [claude, gpt]
 Tools can have parameters that only appear when other tools are available:
 
 ```typescript
-const dependentTool: ClineToolSpec = {
+const dependentTool: Enki AIToolSpec = {
 	variant: ModelFamily.GENERIC,
-	id: ClineDefaultTool.DEPENDENT_TOOL,
+	id: Enki AIDefaultTool.DEPENDENT_TOOL,
 	name: "dependent_tool",
 	description: "Tool with conditional parameters",
 	parameters: [
@@ -992,7 +992,7 @@ const dependentTool: ClineToolSpec = {
 			required: false,
 			instruction: "This parameter only appears if TODO tool is available",
 			usage: "Conditional input (optional)",
-			dependencies: [ClineDefaultTool.TODO],
+			dependencies: [Enki AIDefaultTool.TODO],
 		},
 	],
 }
@@ -1069,19 +1069,19 @@ Here's a complete example of adding a new "analyze_file" tool:
 
 ```typescript
 // 1. Add to src/shared/tools.ts
-export enum ClineDefaultTool {
+export enum Enki AIDefaultTool {
 	// ... existing tools
 	ANALYZE_FILE = "analyze_file",
 }
 
 // 2. Create src/core/prompts/system-prompt/tools/analyze_file.ts
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import type { ClineToolSpec } from "../spec"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import type { Enki AIToolSpec } from "../spec"
 
-const id = ClineDefaultTool.ANALYZE_FILE
+const id = Enki AIDefaultTool.ANALYZE_FILE
 
-const generic: ClineToolSpec = {
+const generic: Enki AIToolSpec = {
 	variant: ModelFamily.GENERIC,
 	id,
 	name: "analyze_file",
@@ -1108,7 +1108,7 @@ const generic: ClineToolSpec = {
 	],
 }
 
-const nextGen: ClineToolSpec = {
+const nextGen: Enki AIToolSpec = {
 	...generic,
 	variant: ModelFamily.NEXT_GEN,
 	description: "Perform comprehensive file analysis including structure, dependencies, code quality, and improvement suggestions. Ideal for code review and refactoring planning.",
@@ -1122,7 +1122,7 @@ export * from "./analyze_file"
 // 4. Add to src/core/prompts/system-prompt/tools/init.ts
 import { analyze_file_variants } from "./analyze_file"
 
-export function registerClineToolSets(): void {
+export function registerEnki AIToolSets(): void {
 	const allToolVariants = [
 		// ... existing variants
 		...analyze_file_variants,
@@ -1131,7 +1131,7 @@ export function registerClineToolSets(): void {
 }
 ```
 
-This comprehensive guide should help developers understand both the architecture and practical steps needed to extend Cline with new tools.
+This comprehensive guide should help developers understand both the architecture and practical steps needed to extend Enki AI with new tools.
 
 ## Key Features
 

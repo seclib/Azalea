@@ -3,15 +3,15 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-	getClineCliMigrationNotice,
-	markClineCliMigrationNoticeShown,
+	getEnki AICliMigrationNotice,
+	markEnki AICliMigrationNoticeShown,
 	resolveCliNoticeStatePath,
 } from "./notice";
 
 const tempDirs: string[] = [];
 
 function createTempDataDir(): string {
-	const dir = mkdtempSync(join(tmpdir(), "cline-cli-notice-"));
+	const dir = mkdtempSync(join(tmpdir(), "enki-cli-notice-"));
 	tempDirs.push(dir);
 	return dir;
 }
@@ -26,26 +26,26 @@ describe("migration notice", () => {
 	it("returns the notice for a fresh data dir", () => {
 		const dataDir = createTempDataDir();
 
-		expect(getClineCliMigrationNotice(dataDir)?.title).toBe(
-			"Welcome to the new Cline CLI",
+		expect(getEnki AICliMigrationNotice(dataDir)?.title).toBe(
+			"Welcome to the new Enki AI CLI",
 		);
 	});
 
 	it("does not show after the notice is marked as shown", () => {
 		const dataDir = createTempDataDir();
 
-		markClineCliMigrationNoticeShown(dataDir);
+		markEnki AICliMigrationNoticeShown(dataDir);
 
-		expect(getClineCliMigrationNotice(dataDir)).toBeUndefined();
+		expect(getEnki AICliMigrationNotice(dataDir)).toBeUndefined();
 	});
 
 	it("shows after the notice is marked as shown when forced", () => {
 		const dataDir = createTempDataDir();
 
-		markClineCliMigrationNoticeShown(dataDir);
+		markEnki AICliMigrationNoticeShown(dataDir);
 
 		expect(
-			getClineCliMigrationNotice(dataDir, {
+			getEnki AICliMigrationNotice(dataDir, {
 				CLINE_FORCE_MIGRATION_NOTICE: "1",
 			}),
 		).toBeDefined();
@@ -55,7 +55,7 @@ describe("migration notice", () => {
 		const dataDir = createTempDataDir();
 
 		expect(
-			getClineCliMigrationNotice(dataDir, {
+			getEnki AICliMigrationNotice(dataDir, {
 				CLINE_DISABLE_MIGRATION_NOTICE: "1",
 			}),
 		).toBeUndefined();
@@ -65,7 +65,7 @@ describe("migration notice", () => {
 		const dataDir = createTempDataDir();
 
 		expect(
-			getClineCliMigrationNotice(dataDir, {
+			getEnki AICliMigrationNotice(dataDir, {
 				CLINE_DISABLE_MIGRATION_NOTICE: "1",
 				CLINE_FORCE_MIGRATION_NOTICE: "1",
 			}),
@@ -75,10 +75,10 @@ describe("migration notice", () => {
 	it("marks the notice as shown", () => {
 		const dataDir = createTempDataDir();
 
-		markClineCliMigrationNoticeShown(dataDir);
+		markEnki AICliMigrationNoticeShown(dataDir);
 
 		const rawState = readFileSync(resolveCliNoticeStatePath(dataDir), "utf8");
-		expect(rawState).toContain("cline-cli-tui-default");
-		expect(getClineCliMigrationNotice(dataDir)).toBeUndefined();
+		expect(rawState).toContain("enki-cli-tui-default");
+		expect(getEnki AICliMigrationNotice(dataDir)).toBeUndefined();
 	});
 });

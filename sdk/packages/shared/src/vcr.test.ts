@@ -11,7 +11,7 @@ const ORIGINAL_FETCH = globalThis.fetch;
 const tempDirs: string[] = [];
 
 function createTempCassettePath(): string {
-	const dir = mkdtempSync(path.join(os.tmpdir(), "cline-vcr-test-"));
+	const dir = mkdtempSync(path.join(os.tmpdir(), "enki-vcr-test-"));
 	tempDirs.push(dir);
 	return path.join(dir, "cassette.json");
 }

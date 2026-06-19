@@ -14,9 +14,9 @@ const {
 	mockGetBooleanFlagEnabled: vi.fn(),
 }));
 
-vi.mock("@cline/core", async () => {
+vi.mock("@enki/core", async () => {
 	const actual =
-		await vi.importActual<typeof import("@cline/core")>("@cline/core");
+		await vi.importActual<typeof import("@enki/core")>("@enki/core");
 	return {
 		...actual,
 		ProviderSettingsManager: class {
@@ -101,14 +101,14 @@ describe("buildConnectorStartRequest", () => {
 		expect(request.apiKey).toBe("env-openrouter-key");
 		expect(request.model).toBe("anthropic/claude-sonnet-4.6");
 		expect(mockGetLastUsedProviderSettings).toHaveBeenCalledWith({
-			isClinePassEnabled: false,
+			isEnki AIPassEnabled: false,
 		});
 	});
 
 	it("uses auth material resolved by provider settings manager", async () => {
-		mockGetLastUsedProviderSettings.mockReturnValue({ provider: "cline-pass" });
+		mockGetLastUsedProviderSettings.mockReturnValue({ provider: "enki-pass" });
 		mockGetProviderSettings.mockReturnValue({
-			provider: "cline-pass",
+			provider: "enki-pass",
 			auth: { accessToken: "workos:resolved-token" },
 		});
 		mockGetProviderCollection.mockReturnValue({
@@ -125,18 +125,18 @@ describe("buildConnectorStartRequest", () => {
 			io: { writeln: vi.fn(), writeErr: vi.fn() },
 			loggerConfig: { enabled: false, level: "info", destination: "stdout" },
 			systemRules: "Rules",
-			defaultModel: "cline-pass/glm-5.1",
+			defaultModel: "enki-pass/glm-5.1",
 		});
 
-		expect(request.provider).toBe("cline-pass");
+		expect(request.provider).toBe("enki-pass");
 		expect(request.apiKey).toBe("workos:resolved-token");
-		expect(request.model).toBe("cline-pass/glm-5.1");
+		expect(request.model).toBe("enki-pass/glm-5.1");
 	});
 
 	it("uses auth material resolved by provider settings manager", async () => {
-		mockGetLastUsedProviderSettings.mockReturnValue({ provider: "cline-pass" });
+		mockGetLastUsedProviderSettings.mockReturnValue({ provider: "enki-pass" });
 		mockGetProviderSettings.mockReturnValue({
-			provider: "cline-pass",
+			provider: "enki-pass",
 			auth: { accessToken: "workos:resolved-token" },
 		});
 		mockGetProviderCollection.mockReturnValue({
@@ -153,11 +153,11 @@ describe("buildConnectorStartRequest", () => {
 			io: { writeln: vi.fn(), writeErr: vi.fn() },
 			loggerConfig: { enabled: false, level: "info", destination: "stdout" },
 			systemRules: "Rules",
-			defaultModel: "cline-pass/glm-5.1",
+			defaultModel: "enki-pass/glm-5.1",
 		});
 
-		expect(request.provider).toBe("cline-pass");
+		expect(request.provider).toBe("enki-pass");
 		expect(request.apiKey).toBe("workos:resolved-token");
-		expect(request.model).toBe("cline-pass/glm-5.1");
+		expect(request.model).toBe("enki-pass/glm-5.1");
 	});
 });

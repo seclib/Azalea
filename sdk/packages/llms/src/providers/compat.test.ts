@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createGatewayApiHandler, toGatewayRequestMessages } from "./compat";
-import { ClineNotSubscribedError } from "./errors";
+import { Enki AINotSubscribedError } from "./errors";
 import type { Message } from "./types";
 
 const streamTextSpy = vi.fn();
@@ -170,7 +170,7 @@ describe("createGatewayApiHandler.getMessages", () => {
 		// `toGatewayRequestMessages` now forwards the raw `tool_result.content`
 		// unchanged. Downstream `formatMessagesForAiSdk` /
 		// `toAiSdkToolResultOutput` is responsible for any flattening or
-		// image-extraction; this layer only translates Cline's `Message[]`
+		// image-extraction; this layer only translates Enki AI's `Message[]`
 		// shape into AI-SDK formatter parts.
 		expect(request.messages[1]).toMatchObject({
 			role: "user",
@@ -517,7 +517,7 @@ describe("createGatewayApiHandler.createMessage", () => {
 		);
 	});
 
-	it("throws ClineNotSubscribedError for ClinePass required-plan 403 responses", async () => {
+	it("throws Enki AINotSubscribedError for Enki AIPass required-plan 403 responses", async () => {
 		streamTextSpy.mockReturnValue({
 			fullStream: (async function* () {
 				yield { type: "finish", finishReason: "stop" };
@@ -537,7 +537,7 @@ describe("createGatewayApiHandler.createMessage", () => {
 		) as unknown as typeof fetch;
 
 		const handler = createGatewayApiHandler({
-			providerId: "cline-pass",
+			providerId: "enki-pass",
 			clientType: "openai-compatible",
 			modelId: "premium-model",
 			apiKey: "test-key",
@@ -555,10 +555,10 @@ describe("createGatewayApiHandler.createMessage", () => {
 			| undefined;
 
 		await expect(
-			factoryConfig?.fetch?.("https://api.cline.bot/api/v1/chat/completions", {
+			factoryConfig?.fetch?.("https://api.enki.bot/api/v1/chat/completions", {
 				method: "POST",
 			}),
-		).rejects.toBeInstanceOf(ClineNotSubscribedError);
+		).rejects.toBeInstanceOf(Enki AINotSubscribedError);
 	});
 });
 

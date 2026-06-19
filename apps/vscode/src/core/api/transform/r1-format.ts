@@ -1,8 +1,8 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
 import type OpenAI from "openai";
 import {
-	type ClineAssistantThinkingBlock,
-	type ClineStorageMessage,
+	type Enki AIAssistantThinkingBlock,
+	type Enki AIStorageMessage,
 	getImageDataUrl,
 } from "@/shared/messages/content";
 
@@ -20,7 +20,7 @@ export type DeepSeekReasonerMessage = OpenAI.Chat.ChatCompletionMessageParam & {
  */
 export function addReasoningContent(
 	openAiMessages: OpenAI.Chat.ChatCompletionMessageParam[],
-	originalMessages: ClineStorageMessage[],
+	originalMessages: Enki AIStorageMessage[],
 ): DeepSeekReasonerMessage[] {
 	// Find last user message index (start of current turn)
 	// If no user message exists (lastUserIndex = -1), all messages are in the "current turn",
@@ -41,7 +41,7 @@ export function addReasoningContent(
 			if (Array.isArray(msg.content)) {
 				const thinking = msg.content
 					.filter(
-						(p): p is ClineAssistantThinkingBlock => p.type === "thinking",
+						(p): p is Enki AIAssistantThinkingBlock => p.type === "thinking",
 					)
 					.map((p) => p.thinking)
 					.join("\n");

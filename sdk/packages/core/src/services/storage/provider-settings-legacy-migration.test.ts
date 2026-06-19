@@ -3,9 +3,9 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-	type LegacyClineUserInfo,
+	type LegacyEnki AIUserInfo,
 	migrateLegacyProviderSettings,
-	resolveLegacyClineAuth,
+	resolveLegacyEnki AIAuth,
 } from "./provider-settings-legacy-migration";
 import { ProviderSettingsManager } from "./provider-settings-manager";
 
@@ -177,7 +177,7 @@ describe("migrateLegacyProviderSettings", () => {
 		);
 	});
 
-	it("migrates legacy Cline OAuth account auth even without a clineApiKey", () => {
+	it("migrates legacy Enki AI OAuth account auth even without a enkiApiKey", () => {
 		const tempDir = mkdtempSync(
 			path.join(os.tmpdir(), "core-legacy-provider-"),
 		);
@@ -200,9 +200,9 @@ describe("migrateLegacyProviderSettings", () => {
 			path.join(tempDir, "secrets.json"),
 			JSON.stringify(
 				{
-					"cline:clineAccountId": makeClineAccountJson({
-						idToken: "legacy-cline-access",
-						refreshToken: "legacy-cline-refresh",
+					"enki:enkiAccountId": makeEnki AIAccountJson({
+						idToken: "legacy-enki-access",
+						refreshToken: "legacy-enki-refresh",
 						expiresAt: 1_750_000_000,
 						userId: "user-123",
 					}),
@@ -218,13 +218,13 @@ describe("migrateLegacyProviderSettings", () => {
 		});
 
 		expect(result.migrated).toBe(true);
-		expect(manager.getProviderSettings("cline")?.auth).toEqual({
-			accessToken: "legacy-cline-access",
-			refreshToken: "legacy-cline-refresh",
+		expect(manager.getProviderSettings("enki")?.auth).toEqual({
+			accessToken: "legacy-enki-access",
+			refreshToken: "legacy-enki-refresh",
 			expiresAt: 1_750_000_000_000,
 			accountId: "user-123",
 		});
-		expect(manager.read().providers.cline?.tokenSource).toBe("migration");
+		expect(manager.read().providers.enki?.tokenSource).toBe("migration");
 	});
 
 	it("migrates legacy OpenAI-compatible config into the openai-compatible provider", () => {
@@ -521,12 +521,12 @@ describe("migrateLegacyProviderSettings", () => {
 });
 
 // =============================================================================
-// resolveLegacyClineAuth – pure in-memory tests
+// resolveLegacyEnki AIAuth – pure in-memory tests
 // =============================================================================
 
-/** Builds a realistic LegacyClineUserInfo JSON string. */
-function makeClineAccountJson(
-	overrides: Partial<LegacyClineUserInfo> & { userId?: string } = {},
+/** Builds a realistic LegacyEnki AIUserInfo JSON string. */
+function makeEnki AIAccountJson(
+	overrides: Partial<LegacyEnki AIUserInfo> & { userId?: string } = {},
 ): string {
 	return JSON.stringify({
 		idToken: overrides.idToken ?? "id-token-abc",
@@ -537,19 +537,19 @@ function makeClineAccountJson(
 			email: "test@example.com",
 			displayName: "Test User",
 			termsAcceptedAt: "2025-01-01T00:00:00Z",
-			clineBenchConsent: false,
+			enkiBenchConsent: false,
 			createdAt: "2025-01-01T00:00:00Z",
 			updatedAt: "2025-01-01T00:00:00Z",
 		},
 		provider: overrides.provider ?? "google",
 		startedAt: overrides.startedAt ?? Date.now(),
-	} satisfies LegacyClineUserInfo);
+	} satisfies LegacyEnki AIUserInfo);
 }
 
-describe("resolveLegacyClineAuth", () => {
+describe("resolveLegacyEnki AIAuth", () => {
 	it("extracts all auth fields from a complete legacy account JSON", () => {
-		const result = resolveLegacyClineAuth(
-			makeClineAccountJson({
+		const result = resolveLegacyEnki AIAuth(
+			makeEnki AIAccountJson({
 				idToken: "my-id-token",
 				expiresAt: 1750000000000,
 				refreshToken: "my-refresh",
@@ -566,30 +566,30 @@ describe("resolveLegacyClineAuth", () => {
 	});
 
 	it("maps idToken to accessToken", () => {
-		const result = resolveLegacyClineAuth(
-			makeClineAccountJson({ idToken: "tok-abc" }),
+		const result = resolveLegacyEnki AIAuth(
+			makeEnki AIAccountJson({ idToken: "tok-abc" }),
 		);
 		expect(result?.accessToken).toBe("tok-abc");
 	});
 
 	it("preserves millisecond expiresAt values", () => {
-		const result = resolveLegacyClineAuth(
-			makeClineAccountJson({ expiresAt: 9999999999999 }),
+		const result = resolveLegacyEnki AIAuth(
+			makeEnki AIAccountJson({ expiresAt: 9999999999999 }),
 		);
 		expect(result?.expiresAt).toBe(9999999999999);
 		expect(typeof result?.expiresAt).toBe("number");
 	});
 
 	it("normalizes classic second-based expiresAt values to milliseconds", () => {
-		const result = resolveLegacyClineAuth(
-			makeClineAccountJson({ expiresAt: 1_750_000_000 }),
+		const result = resolveLegacyEnki AIAuth(
+			makeEnki AIAccountJson({ expiresAt: 1_750_000_000 }),
 		);
 		expect(result?.expiresAt).toBe(1_750_000_000_000);
 	});
 
 	it("maps userInfo.id to accountId", () => {
-		const result = resolveLegacyClineAuth(
-			makeClineAccountJson({ userId: "uid-xyz" }),
+		const result = resolveLegacyEnki AIAuth(
+			makeEnki AIAccountJson({ userId: "uid-xyz" }),
 		);
 		expect(result?.accountId).toBe("uid-xyz");
 	});
@@ -603,7 +603,7 @@ describe("resolveLegacyClineAuth", () => {
 			startedAt: 1,
 		});
 
-		const result = resolveLegacyClineAuth(raw);
+		const result = resolveLegacyEnki AIAuth(raw);
 		expect(result).toBeDefined();
 		expect(result?.accessToken).toBe("tok");
 		expect(result?.accountId).toBeUndefined();
@@ -618,7 +618,7 @@ describe("resolveLegacyClineAuth", () => {
 				email: "x@y.com",
 				displayName: "X",
 				termsAcceptedAt: "2025-01-01T00:00:00Z",
-				clineBenchConsent: false,
+				enkiBenchConsent: false,
 				createdAt: "2025-01-01T00:00:00Z",
 				updatedAt: "2025-01-01T00:00:00Z",
 			},
@@ -626,17 +626,17 @@ describe("resolveLegacyClineAuth", () => {
 			startedAt: 1,
 		});
 
-		const result = resolveLegacyClineAuth(raw);
+		const result = resolveLegacyEnki AIAuth(raw);
 		expect(result).toBeDefined();
 		expect(result?.accountId).toBeUndefined();
 	});
 
 	it("returns undefined for invalid json", () => {
-		expect(resolveLegacyClineAuth(undefined)).toBeUndefined();
-		expect(resolveLegacyClineAuth("")).toBeUndefined();
-		expect(resolveLegacyClineAuth("   \n\t  ")).toBeUndefined();
-		expect(resolveLegacyClineAuth("not-json{{{")).toBeUndefined();
-		expect(resolveLegacyClineAuth("null")).toBeUndefined();
+		expect(resolveLegacyEnki AIAuth(undefined)).toBeUndefined();
+		expect(resolveLegacyEnki AIAuth("")).toBeUndefined();
+		expect(resolveLegacyEnki AIAuth("   \n\t  ")).toBeUndefined();
+		expect(resolveLegacyEnki AIAuth("not-json{{{")).toBeUndefined();
+		expect(resolveLegacyEnki AIAuth("null")).toBeUndefined();
 	});
 
 	it("returns undefined fields when idToken/refreshToken are missing from JSON", () => {
@@ -646,7 +646,7 @@ describe("resolveLegacyClineAuth", () => {
 			startedAt: 1,
 		});
 
-		const result = resolveLegacyClineAuth(raw);
+		const result = resolveLegacyEnki AIAuth(raw);
 		expect(result).toBeDefined();
 		expect(result?.accessToken).toBeUndefined();
 		expect(result?.refreshToken).toBeUndefined();

@@ -102,11 +102,11 @@ function resolveDefaultWebviewDistDir(): string | undefined {
 	const candidates = [
 		...resolveInstalledPlatformPackageWebviewCandidates(),
 		// Source checkout: apps/cli/src/commands/dashboard.ts
-		join(moduleDir, "../../../cline-hub/dist/webview"),
+		join(moduleDir, "../../../enki-hub/dist/webview"),
 		// Node bundle: apps/cli/dist/index.js
-		join(moduleDir, "cline-hub/webview"),
-		// Compiled platform package: apps/cli/dist/<platform>/bin/cline
-		join(dirname(process.execPath), "../cline-hub/webview"),
+		join(moduleDir, "enki-hub/webview"),
+		// Compiled platform package: apps/cli/dist/<platform>/bin/enki
+		join(dirname(process.execPath), "../enki-hub/webview"),
 	];
 
 	return candidates.find((candidate) => existsSync(candidate));
@@ -125,7 +125,7 @@ function resolveInstalledPlatformPackageWebviewCandidates(): string[] {
 		let current = start;
 		for (;;) {
 			candidates.push(
-				join(current, "node_modules", packageName, "cline-hub/webview"),
+				join(current, "node_modules", packageName, "enki-hub/webview"),
 			);
 			const parent = dirname(current);
 			if (parent === current) break;
@@ -137,12 +137,12 @@ function resolveInstalledPlatformPackageWebviewCandidates(): string[] {
 
 function resolvePlatformPackageName(): string {
 	const platformName = platform() === "win32" ? "windows" : platform();
-	return `@cline/cli-${platformName}-${arch()}`;
+	return `@enki/cli-${platformName}-${arch()}`;
 }
 
 async function startDefaultDashboardServer(): Promise<DashboardServerHandle> {
-	const { startClineHubDashboardServer } = await import("@cline/cline-hub");
-	return await startClineHubDashboardServer();
+	const { startEnki AIHubDashboardServer } = await import("@enki/enki-hub");
+	return await startEnki AIHubDashboardServer();
 }
 
 async function openDefaultUrl(url: string): Promise<void> {
@@ -191,7 +191,7 @@ export async function runDashboardCommand(
 		const dashboardUrl =
 			server.inviteUrl || server.publicUrl || server.listenUrl;
 		options.io.writeln(
-			`${c.green}Cline dashboard listening at${c.reset} ${dashboardUrl}`,
+			`${c.green}Enki AI dashboard listening at${c.reset} ${dashboardUrl}`,
 		);
 		if (server.hubUrl) {
 			options.io.writeln(`${c.dim}Hub endpoint: ${server.hubUrl}${c.reset}`);

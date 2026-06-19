@@ -1,7 +1,7 @@
 import {
-	getClineEnvironmentConfig,
+	getEnki AIEnvironmentConfig,
 	type ITelemetryService,
-} from "@cline/shared";
+} from "@enki/shared";
 import {
 	captureAuthFailed,
 	captureAuthLoggedOut,
@@ -43,37 +43,37 @@ const DEFAULT_HTTP_TIMEOUT_MS = 30 * 1000;
 const DEFAULT_DEVICE_AUTH_EXPIRES_IN_SECONDS = 300;
 const DEFAULT_DEVICE_AUTH_INTERVAL_SECONDS = 5;
 
-export type ClineTokenResolution = {
+export type Enki AITokenResolution = {
 	forceRefresh?: boolean;
 	refreshBufferMs?: number;
 	retryableTokenGraceMs?: number;
 };
 
-interface ClineAuthApiUser {
+interface Enki AIAuthApiUser {
 	subject: string | null;
 	email: string;
 	name: string;
-	clineUserId: string | null;
+	enkiUserId: string | null;
 	accounts: string[] | null;
 }
 
-interface ClineAuthResponseData {
+interface Enki AIAuthResponseData {
 	accessToken: string;
 	refreshToken?: string;
 	tokenType: string;
 	expiresAt: string;
-	userInfo: ClineAuthApiUser;
+	userInfo: Enki AIAuthApiUser;
 }
 
-type ClineTokenResponse = {
+type Enki AITokenResponse = {
 	success: boolean;
-	data: ClineAuthResponseData;
+	data: Enki AIAuthResponseData;
 };
 
 type HeaderMap = Record<string, string>;
 type HeaderInput = HeaderMap | (() => Promise<HeaderMap> | HeaderMap);
 
-export interface ClineOAuthProviderOptions {
+export interface Enki AIOAuthProviderOptions {
 	apiBaseUrl: string;
 	headers?: HeaderInput;
 	requestTimeoutMs?: number;
@@ -87,22 +87,22 @@ export interface ClineOAuthProviderOptions {
 	provider?: string;
 }
 
-export interface ClineOAuthCredentials extends OAuthCredentials {
+export interface Enki AIOAuthCredentials extends OAuthCredentials {
 	metadata?: {
 		provider?: string;
 		tokenType?: string;
-		userInfo?: ClineAuthApiUser;
+		userInfo?: Enki AIAuthApiUser;
 		[key: string]: unknown;
 	};
 }
 
-class ClineOAuthTokenError extends Error {
+class Enki AIOAuthTokenError extends Error {
 	public readonly status?: number;
 	public readonly errorCode?: string;
 
 	constructor(message: string, opts?: { status?: number; errorCode?: string }) {
 		super(message);
-		this.name = "ClineOAuthTokenError";
+		this.name = "Enki AIOAuthTokenError";
 		this.status = opts?.status;
 		this.errorCode = opts?.errorCode;
 	}
@@ -129,12 +129,12 @@ function toEpochMs(isoDateTime: string): number {
 	return epoch;
 }
 
-function toClineCredentials(
-	responseData: ClineAuthResponseData,
+function toEnki AICredentials(
+	responseData: Enki AIAuthResponseData,
 	provider: string | undefined,
-	fallback: Partial<ClineOAuthCredentials> = {},
-): ClineOAuthCredentials {
-	const accountId = responseData.userInfo.clineUserId ?? fallback.accountId;
+	fallback: Partial<Enki AIOAuthCredentials> = {},
+): Enki AIOAuthCredentials {
+	const accountId = responseData.userInfo.enkiUserId ?? fallback.accountId;
 	const refreshToken = responseData.refreshToken ?? fallback.refresh;
 
 	if (!refreshToken) {
@@ -199,10 +199,10 @@ type WorkOSTokenSuccess = {
 	tokenType: string;
 };
 
-function requireClineTokenResponse(
-	payload: ClineTokenResponse,
+function requireEnki AITokenResponse(
+	payload: Enki AITokenResponse,
 	message: string,
-): ClineAuthResponseData {
+): Enki AIAuthResponseData {
 	if (!payload.success || !payload.data?.accessToken) {
 		throw new Error(message);
 	}
@@ -241,7 +241,7 @@ async function requestWorkOSDeviceAuthorization(
 		.json()
 		.catch(() => ({}))) as WorkOSDeviceAuthorizationResponse;
 	if (!response.ok) {
-		throw new ClineOAuthTokenError(
+		throw new Enki AIOAuthTokenError(
 			`Device authorization failed: ${response.status}${json.error_description ? ` - ${json.error_description}` : ""}`,
 			{ status: response.status, errorCode: json.error },
 		);
@@ -324,7 +324,7 @@ async function pollWorkOSTokens(options: {
 			case "access_denied":
 			case "expired_token":
 			case "invalid_grant": {
-				throw new ClineOAuthTokenError(
+				throw new Enki AIOAuthTokenError(
 					payload.error_description || "WorkOS authorization failed",
 					{
 						status: response.status,
@@ -333,7 +333,7 @@ async function pollWorkOSTokens(options: {
 				);
 			}
 			default: {
-				throw new ClineOAuthTokenError(
+				throw new Enki AIOAuthTokenError(
 					`WorkOS token polling failed: ${response.status}${payload.error_description ? ` - ${payload.error_description}` : ""}`,
 					{
 						status: response.status,
@@ -351,9 +351,9 @@ async function pollWorkOSTokens(options: {
 
 async function registerWorkOSTokens(
 	workosTokens: WorkOSTokenSuccess,
-	options: ClineOAuthProviderOptions,
+	options: Enki AIOAuthProviderOptions,
 	provider?: string,
-): Promise<ClineOAuthCredentials> {
+): Promise<Enki AIOAuthCredentials> {
 	const body = {
 		accessToken: workosTokens.accessToken,
 		refreshToken: workosTokens.refreshToken,
@@ -377,15 +377,15 @@ async function registerWorkOSTokens(
 	if (!response.ok) {
 		const text = await response.text().catch(() => "");
 		const details = parseOAuthError(text);
-		throw new ClineOAuthTokenError(
+		throw new Enki AIOAuthTokenError(
 			`Token registration failed: ${response.status}${details.message ? ` - ${details.message}` : ""}`,
 			{ status: response.status, errorCode: details.code },
 		);
 	}
 
-	const json = (await response.json()) as ClineTokenResponse;
-	return toClineCredentials(
-		requireClineTokenResponse(json, "Invalid token exchange response"),
+	const json = (await response.json()) as Enki AITokenResponse;
+	return toEnki AICredentials(
+		requireEnki AITokenResponse(json, "Invalid token exchange response"),
 		provider ?? options.provider,
 	);
 }
@@ -393,9 +393,9 @@ async function registerWorkOSTokens(
 async function exchangeAuthorizationCode(
 	code: string,
 	callbackUrl: string,
-	options: ClineOAuthProviderOptions,
+	options: Enki AIOAuthProviderOptions,
 	provider?: string,
-): Promise<ClineOAuthCredentials> {
+): Promise<Enki AIOAuthCredentials> {
 	const body = {
 		grant_type: "authorization_code",
 		code,
@@ -422,25 +422,25 @@ async function exchangeAuthorizationCode(
 	if (!response.ok) {
 		const text = await response.text().catch(() => "");
 		const details = parseOAuthError(text);
-		throw new ClineOAuthTokenError(
+		throw new Enki AIOAuthTokenError(
 			`Token exchange failed: ${response.status}${details.message ? ` - ${details.message}` : ""}`,
 			{ status: response.status, errorCode: details.code },
 		);
 	}
 
-	const json = (await response.json()) as ClineTokenResponse;
-	return toClineCredentials(
-		requireClineTokenResponse(json, "Invalid token exchange response"),
+	const json = (await response.json()) as Enki AITokenResponse;
+	return toEnki AICredentials(
+		requireEnki AITokenResponse(json, "Invalid token exchange response"),
 		provider ?? options.provider,
 	);
 }
 
-export async function loginClineOAuth(
-	options: ClineOAuthProviderOptions & {
+export async function loginEnki AIOAuth(
+	options: Enki AIOAuthProviderOptions & {
 		callbacks: OAuthLoginCallbacks;
 	},
-): Promise<ClineOAuthCredentials> {
-	captureAuthStarted(options.telemetry, options.provider ?? "cline");
+): Promise<Enki AIOAuthCredentials> {
+	captureAuthStarted(options.telemetry, options.provider ?? "enki");
 	const useWorkOSDeviceAuth = options.useWorkOSDeviceAuth ?? true;
 	const callbackPorts = options.callbackPorts?.length
 		? options.callbackPorts
@@ -459,9 +459,9 @@ export async function loginClineOAuth(
 		`http://127.0.0.1:${callbackPorts[0] ?? DEFAULT_CALLBACK_PORTS[0]}${callbackPath}`;
 
 	try {
-		let credentials: ClineOAuthCredentials;
+		let credentials: Enki AIOAuthCredentials;
 		if (useWorkOSDeviceAuth) {
-			const clientId = getClineEnvironmentConfig().workOsClientId;
+			const clientId = getEnki AIEnvironmentConfig().workOsClientId;
 			const deviceAuthorization = await requestWorkOSDeviceAuthorization(
 				clientId,
 				options,
@@ -534,17 +534,17 @@ export async function loginClineOAuth(
 			);
 		}
 
-		captureAuthSucceeded(options.telemetry, options.provider ?? "cline");
+		captureAuthSucceeded(options.telemetry, options.provider ?? "enki");
 		identifyAccount(options.telemetry, {
 			id: credentials.accountId,
 			email: credentials.email,
-			provider: options.provider ?? "cline",
+			provider: options.provider ?? "enki",
 		});
 		return credentials;
 	} catch (error) {
 		captureAuthFailed(
 			options.telemetry,
-			options.provider ?? "cline",
+			options.provider ?? "enki",
 			error instanceof Error ? error.message : String(error),
 		);
 		throw error;
@@ -553,7 +553,7 @@ export async function loginClineOAuth(
 	}
 }
 
-export async function startClineDeviceAuth(options?: {
+export async function startEnki AIDeviceAuth(options?: {
 	requestTimeoutMs?: number;
 }): Promise<{
 	deviceCode: string;
@@ -564,12 +564,12 @@ export async function startClineDeviceAuth(options?: {
 	pollIntervalSeconds: number;
 }> {
 	return await requestWorkOSDeviceAuthorization(
-		getClineEnvironmentConfig().workOsClientId,
+		getEnki AIEnvironmentConfig().workOsClientId,
 		options,
 	);
 }
 
-export async function completeClineDeviceAuth(options: {
+export async function completeEnki AIDeviceAuth(options: {
 	deviceCode: string;
 	expiresInSeconds: number;
 	pollIntervalSeconds: number;
@@ -578,12 +578,12 @@ export async function completeClineDeviceAuth(options: {
 	headers?: HeaderInput;
 	requestTimeoutMs?: number;
 	telemetry?: ITelemetryService;
-}): Promise<ClineOAuthCredentials> {
-	const providerName = options.provider ?? "cline";
+}): Promise<Enki AIOAuthCredentials> {
+	const providerName = options.provider ?? "enki";
 	captureAuthStarted(options.telemetry, providerName);
 	try {
 		const workosTokens = await pollWorkOSTokens({
-			clientId: getClineEnvironmentConfig().workOsClientId,
+			clientId: getEnki AIEnvironmentConfig().workOsClientId,
 			deviceCode: options.deviceCode,
 			expiresInSeconds: options.expiresInSeconds,
 			initialPollIntervalSeconds: options.pollIntervalSeconds,
@@ -617,10 +617,10 @@ export async function completeClineDeviceAuth(options: {
 	}
 }
 
-export async function refreshClineToken(
-	current: ClineOAuthCredentials,
-	options: ClineOAuthProviderOptions,
-): Promise<ClineOAuthCredentials> {
+export async function refreshEnki AIToken(
+	current: Enki AIOAuthCredentials,
+	options: Enki AIOAuthProviderOptions,
+): Promise<Enki AIOAuthCredentials> {
 	const response = await fetch(
 		resolveUrl(options.apiBaseUrl, DEFAULT_AUTH_ENDPOINTS.refresh),
 		{
@@ -642,27 +642,27 @@ export async function refreshClineToken(
 	if (!response.ok) {
 		const text = await response.text().catch(() => "");
 		const details = parseOAuthError(text);
-		throw new ClineOAuthTokenError(
+		throw new Enki AIOAuthTokenError(
 			`Token refresh failed: ${response.status}${details.message ? ` - ${details.message}` : ""}`,
 			{ status: response.status, errorCode: details.code },
 		);
 	}
 
-	const json = (await response.json()) as ClineTokenResponse;
+	const json = (await response.json()) as Enki AITokenResponse;
 	const provider =
 		(current.metadata?.provider as string | undefined) ?? options.provider;
-	return toClineCredentials(
-		requireClineTokenResponse(json, "Invalid token refresh response"),
+	return toEnki AICredentials(
+		requireEnki AITokenResponse(json, "Invalid token refresh response"),
 		provider,
 		current,
 	);
 }
 
-export async function getValidClineCredentials(
-	currentCredentials: ClineOAuthCredentials | null,
-	providerOptions: ClineOAuthProviderOptions,
-	options?: ClineTokenResolution,
-): Promise<ClineOAuthCredentials | null> {
+export async function getValidEnki AICredentials(
+	currentCredentials: Enki AIOAuthCredentials | null,
+	providerOptions: Enki AIOAuthProviderOptions,
+	options?: Enki AITokenResolution,
+): Promise<Enki AIOAuthCredentials | null> {
 	if (!currentCredentials) {
 		return null;
 	}
@@ -680,12 +680,12 @@ export async function getValidClineCredentials(
 	}
 
 	try {
-		return await refreshClineToken(currentCredentials, providerOptions);
+		return await refreshEnki AIToken(currentCredentials, providerOptions);
 	} catch (error) {
-		if (error instanceof ClineOAuthTokenError && error.isLikelyInvalidGrant()) {
+		if (error instanceof Enki AIOAuthTokenError && error.isLikelyInvalidGrant()) {
 			captureAuthLoggedOut(
 				providerOptions.telemetry,
-				providerOptions.provider ?? "cline",
+				providerOptions.provider ?? "enki",
 				"invalid_grant",
 			);
 			return null;

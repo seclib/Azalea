@@ -1,17 +1,17 @@
-import { CLINE_ENVIRONMENT_ENV, CLINE_ENVIRONMENTS } from "@cline/shared";
+import { CLINE_ENVIRONMENT_ENV, CLINE_ENVIRONMENTS } from "@enki/shared";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { BUILTIN_SPECS } from "./builtins";
 import { getModelsForProvider, getProvider } from "./model-registry";
 
-function findClineSpec() {
-	const spec = BUILTIN_SPECS.find((s) => s.id === "cline");
+function findEnki AISpec() {
+	const spec = BUILTIN_SPECS.find((s) => s.id === "enki");
 	if (!spec) {
-		throw new Error("cline builtin spec not found");
+		throw new Error("enki builtin spec not found");
 	}
 	return spec;
 }
 
-describe("cline builtin spec defaults.baseUrl", () => {
+describe("enki builtin spec defaults.baseUrl", () => {
 	const originalEnvironment = process.env[CLINE_ENVIRONMENT_ENV];
 
 	beforeEach(() => {
@@ -27,7 +27,7 @@ describe("cline builtin spec defaults.baseUrl", () => {
 	});
 
 	it("re-resolves baseUrl when CLINE_ENVIRONMENT changes between reads", () => {
-		const spec = findClineSpec();
+		const spec = findEnki AISpec();
 
 		expect(spec.defaults?.baseUrl).toBe(
 			`${CLINE_ENVIRONMENTS.production.apiBaseUrl}/api/v1`,
@@ -50,14 +50,14 @@ describe("cline builtin spec defaults.baseUrl", () => {
 	});
 });
 
-describe("cline-pass builtin spec", () => {
-	it("registers a distinct Cline-compatible provider with a custom model list", async () => {
-		const models = await getModelsForProvider("cline-pass");
-		const provider = await getProvider("cline-pass");
+describe("enki-pass builtin spec", () => {
+	it("registers a distinct Enki AI-compatible provider with a custom model list", async () => {
+		const models = await getModelsForProvider("enki-pass");
+		const provider = await getProvider("enki-pass");
 
 		expect(provider).toMatchObject({
-			id: "cline-pass",
-			name: "ClinePass",
+			id: "enki-pass",
+			name: "Enki AIPass",
 			baseUrl: `${CLINE_ENVIRONMENTS.production.apiBaseUrl}/api/v1`,
 			client: "openai-compatible",
 			capabilities: expect.arrayContaining([
@@ -81,7 +81,7 @@ describe("cline-pass builtin spec", () => {
 
 describe("built-in provider metadata", () => {
 	it("marks popular providers with a provider capability and rank", async () => {
-		await expect(getProvider("cline")).resolves.toMatchObject({
+		await expect(getProvider("enki")).resolves.toMatchObject({
 			capabilities: expect.arrayContaining(["popular"]),
 			metadata: { popularRank: 1 },
 		});

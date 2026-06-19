@@ -1,26 +1,26 @@
-# [experimental] @cline/llms
+# [experimental] @enki/llms
 
-`@cline/llms` is the model and provider layer for the Cline SDK. It gives
+`@enki/llms` is the model and provider layer for the Enki AI SDK. It gives
 you typed provider settings, model catalogs, shared gateway contracts, and
 AI SDK-backed handler creation for supported LLM backends.
 
 ## What You Get
 
-- `@cline/llms/runtime` for declarative config and runtime registry creation
-- `@cline/llms/providers` for handler creation and provider settings/types
-- `@cline/llms/models` for model catalogs and query helpers
-- `@cline/llms` root exports for the gateway registry and shared llm contracts
+- `@enki/llms/runtime` for declarative config and runtime registry creation
+- `@enki/llms/providers` for handler creation and provider settings/types
+- `@enki/llms/models` for model catalogs and query helpers
+- `@enki/llms` root exports for the gateway registry and shared llm contracts
 
 ## Installation
 
 ```bash
-npm install @cline/llms zod
+npm install @enki/llms zod
 ```
 
 ## Quick Start
 
 ```ts
-import { createHandler } from "@cline/llms";
+import { createHandler } from "@enki/llms";
 
 const handler = createHandler({
 	providerId: "anthropic",
@@ -49,12 +49,12 @@ Use `createLlmsRuntime(...)` when you want a small registry around:
 Preferred import:
 
 ```ts
-import { createLlmsRuntime, defineLlmsConfig } from "@cline/llms/runtime";
+import { createLlmsRuntime, defineLlmsConfig } from "@enki/llms/runtime";
 ```
 
 ### Providers
 
-Use `@cline/llms/providers` for:
+Use `@enki/llms/providers` for:
 
 - `createHandler(...)` and `createHandlerAsync(...)`
 - `ProviderSettings` and `ProviderSettingsSchema`
@@ -63,11 +63,11 @@ Use `@cline/llms/providers` for:
 
 Built-in providers are routed through the internal gateway registry and backed by
 AI SDK provider implementations. Shared gateway contracts are exported from both
-`@cline/llms` and `@cline/shared`.
+`@enki/llms` and `@enki/shared`.
 
 ### Models
 
-Use `@cline/llms/models` when you need generated provider/model metadata for
+Use `@enki/llms/models` when you need generated provider/model metadata for
 selection UIs, defaults, or validation.
 
 For generated catalog field semantics and token-limit behavior, see
@@ -75,22 +75,22 @@ For generated catalog field semantics and token-limit behavior, see
 
 ## Entry Points
 
-- `@cline/llms`: runtime-focused convenience entrypoint
-- `@cline/llms/node`: explicit Node/runtime entrypoint
-- `@cline/llms/browser`: browser-safe bundle
-- `@cline/llms/runtime`: focused runtime entrypoint
-- `@cline/llms/models`: model catalog/query entrypoint
-- `@cline/llms/providers`: provider handler/settings entrypoint
+- `@enki/llms`: runtime-focused convenience entrypoint
+- `@enki/llms/node`: explicit Node/runtime entrypoint
+- `@enki/llms/browser`: browser-safe bundle
+- `@enki/llms/runtime`: focused runtime entrypoint
+- `@enki/llms/models`: model catalog/query entrypoint
+- `@enki/llms/providers`: provider handler/settings entrypoint
 
 ## Related Packages
 
-- `@cline/agents`: agent loop and tool execution
-- `@cline/core`: stateful runtime assembly and provider settings storage
+- `@enki/agents`: agent loop and tool execution
+- `@enki/core`: stateful runtime assembly and provider settings storage
 
 ## More Examples
 
-- Workspace overview: [README.md](https://github.com/cline/cline/blob/main/README.md)
-- API and architecture references: [DOC.md](https://github.com/cline/cline/blob/main/DOC.md), [ARCHITECTURE.md](https://github.com/cline/cline/blob/main/ARCHITECTURE.md)
+- Workspace overview: [README.md](https://github.com/enki/enki/blob/main/README.md)
+- API and architecture references: [DOC.md](https://github.com/enki/enki/blob/main/DOC.md), [ARCHITECTURE.md](https://github.com/enki/enki/blob/main/ARCHITECTURE.md)
 
 ## Live Provider Smoke Test
 
@@ -103,7 +103,7 @@ Use this for API-key-backed provider validation against real endpoints.
 ```bash
 LLMS_LIVE_TESTS=1 \
 LLMS_LIVE_PROVIDERS_PATH=/absolute/path/to/packages/llms/src/tests/live-providers.example.json \
-bun -F @cline/llms run test:live
+bun -F @enki/llms run test:live
 ```
 
 Reasoning-focused live run (same command, different flags):
@@ -111,7 +111,7 @@ Reasoning-focused live run (same command, different flags):
 ```bash
 LLMS_LIVE_REASONING_TESTS=1 \
 LLMS_LIVE_REASONING_PROVIDERS_PATH=/absolute/path/to/packages/llms/src/tests/live-providers.reasoning.example.json \
-bun -F @cline/llms run test:live
+bun -F @enki/llms run test:live
 ```
 
 Tool-use-focused live run (same command, different flags):
@@ -119,7 +119,7 @@ Tool-use-focused live run (same command, different flags):
 ```bash
 LLMS_LIVE_TOOL_TESTS=1 \
 LLMS_LIVE_TOOL_PROVIDERS_PATH=/absolute/path/to/packages/llms/src/tests/live-providers.tools.example.json \
-bun -F @cline/llms run test:live
+bun -F @enki/llms run test:live
 ```
 
 Optional:
@@ -133,7 +133,7 @@ Optional:
 - Use `apiKeyEnv`, `baseUrlEnv`, and `headersEnv` in a provider entry when a live config needs secrets without writing them to JSON.
 - When recording provider cassettes for committed replay tests, set `CLINE_VCR=record` and `CLINE_VCR_INCLUDE_REQUEST_BODY=1` so playback also verifies the sanitized request body contract.
 
-OpenAI Codex subscription live runs use the saved OAuth credentials from `~/.cline/data/settings/providers.json` after `cline auth --provider openai-codex`. Point the plain or reasoning suite at `packages/llms/src/tests/live-providers.openai-codex.example.json` or `packages/llms/src/tests/live-providers.openai-codex.reasoning.example.json`.
+OpenAI Codex subscription live runs use the saved OAuth credentials from `~/.enki/data/settings/providers.json` after `enki auth --provider openai-codex`. Point the plain or reasoning suite at `packages/llms/src/tests/live-providers.openai-codex.example.json` or `packages/llms/src/tests/live-providers.openai-codex.reasoning.example.json`.
 
 Per-provider live assertions are configured in the JSON via `expectations`:
 
@@ -146,7 +146,7 @@ Per-provider live assertions are configured in the JSON via `expectations`:
 - `requireToolCall`: fail unless at least one `tool_calls` chunk is emitted.
 
 In reasoning suites, set `requireReasoningSignal: true` to require either a reasoning chunk or `thoughtsTokenCount > 0` (provider-dependent; can be flaky on some endpoints).
-To check that disabling reasoning actually suppresses reasoning output across models, use `packages/llms/src/tests/live-providers.reasoning-disabled.example.json`; it covers direct and routed provider paths across `cline`, `openai`, `openrouter`, `anthropic`, `gemini`, `vercel-ai-gateway`, `zai`, and `deepseek` where model support exists, with `reasoning.enabled: false` and `requireNoReasoningChunk: true`.
+To check that disabling reasoning actually suppresses reasoning output across models, use `packages/llms/src/tests/live-providers.reasoning-disabled.example.json`; it covers direct and routed provider paths across `enki`, `openai`, `openrouter`, `anthropic`, `gemini`, `vercel-ai-gateway`, `zai`, and `deepseek` where model support exists, with `reasoning.enabled: false` and `requireNoReasoningChunk: true`.
 
 Common live failure classes:
 

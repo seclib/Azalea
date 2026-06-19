@@ -1,5 +1,5 @@
-import { captureSdkError } from "@cline/shared";
-import type { ClineCoreOptions } from "../../cline-core/types";
+import { captureSdkError } from "@enki/shared";
+import type { Enki AICoreOptions } from "../../enki-core/types";
 import {
 	ensureCompatibleLocalHubUrl,
 	resolveCompatibleLocalHubUrl,
@@ -15,7 +15,7 @@ import { LocalRuntimeHost } from "./local-runtime-host";
 import type { RuntimeHost, RuntimeHostMode } from "./runtime-host";
 
 function resolveConfiguredBackendMode(
-	options: ClineCoreOptions,
+	options: Enki AICoreOptions,
 ): RuntimeHostMode {
 	if (options.backendMode) {
 		return options.backendMode;
@@ -37,7 +37,7 @@ let backendInitPromise: Promise<SessionBackend> | undefined;
 
 function prewarmLocalHubIfNeeded(
 	configuredMode: RuntimeHostMode,
-	options: ClineCoreOptions,
+	options: Enki AICoreOptions,
 ): void {
 	if (configuredMode !== "auto" && configuredMode !== "hub") {
 		return;
@@ -61,7 +61,7 @@ async function reconcileDeadSessionsIfSupported(
 	await service.reconcileDeadSessions?.().catch(() => {});
 }
 
-function createLocalBackend(options: ClineCoreOptions): SessionBackend {
+function createLocalBackend(options: Enki AICoreOptions): SessionBackend {
 	try {
 		const store = new SqliteSessionStore();
 		store.init();
@@ -97,7 +97,7 @@ function createLocalBackend(options: ClineCoreOptions): SessionBackend {
 }
 
 function createLocalRuntimeHost(
-	options: ClineCoreOptions,
+	options: Enki AICoreOptions,
 	distinctId: string,
 	backend?: SessionBackend,
 ): LocalRuntimeHost {
@@ -113,7 +113,7 @@ function createLocalRuntimeHost(
 }
 
 export async function resolveSessionBackend(
-	options: ClineCoreOptions,
+	options: Enki AICoreOptions,
 ): Promise<SessionBackend> {
 	if (cachedBackend) {
 		return cachedBackend;
@@ -134,7 +134,7 @@ export async function resolveSessionBackend(
 }
 
 export async function createRuntimeHost(
-	options: ClineCoreOptions,
+	options: Enki AICoreOptions,
 ): Promise<RuntimeHost> {
 	const distinctId = resolveCoreDistinctId(options.distinctId);
 	options.telemetry?.setDistinctId(distinctId);

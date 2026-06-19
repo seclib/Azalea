@@ -1,13 +1,13 @@
 import { createWhatsAppAdapter } from "@chat-adapter/whatsapp";
-import type { ChatStartSessionRequest } from "@cline/core";
+import type { ChatStartSessionRequest } from "@enki/core";
 import {
 	createUserInstructionConfigService,
 	HubSessionClient,
-} from "@cline/core";
+} from "@enki/core";
 import type {
 	ConnectWhatsAppOptions,
 	WhatsAppConnectorState,
-} from "@cline/shared";
+} from "@enki/shared";
 import { Chat, ConsoleLogger, type Thread } from "chat";
 import type { Command } from "commander";
 import type { CliLoggerAdapter } from "../../logging/adapter";
@@ -477,7 +477,7 @@ class WhatsAppConnector extends ConnectorBase<
 				formatBackgroundStartMessage: (pid) =>
 					`[whatsapp] starting background connector pid=${pid} user=${options.userName}`,
 				foregroundHint:
-					"[whatsapp] use `cline connect whatsapp -i ...` to run in the foreground",
+					"[whatsapp] use `enki connect whatsapp -i ...` to run in the foreground",
 				launchFailureMessage:
 					"failed to launch WhatsApp connector in background",
 			})

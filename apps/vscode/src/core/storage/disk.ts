@@ -4,7 +4,7 @@ import type {
 	TaskMetadata,
 } from "@core/context/context-tracking/ContextTrackerTypes";
 import { execa } from "@packages/execa";
-import type { ClineMessage } from "@shared/ExtensionMessage";
+import type { Enki AIMessage } from "@shared/ExtensionMessage";
 import type { HistoryItem } from "@shared/HistoryItem";
 import type { RemoteConfig } from "@shared/remote-config/schema";
 import type { GlobalState, Settings } from "@shared/storage/state-keys";
@@ -16,7 +16,7 @@ import { HostProvider } from "@/hosts/host-provider";
 import { ExtensionRegistryInfo } from "@/registry";
 import { telemetryService } from "@/services/telemetry";
 import type { McpMarketplaceCatalog } from "@/shared/mcp";
-import type { ClineStorageMessage } from "@/shared/messages/content";
+import type { Enki AIStorageMessage } from "@/shared/messages/content";
 import { Logger } from "@/shared/services/Logger";
 import { syncWorker } from "@/shared/services/worker/sync";
 import { reconstructTaskHistory } from "../commands/reconstructTaskHistory";
@@ -49,19 +49,19 @@ export const GlobalFileNames = {
 	apiConversationHistory: "api_conversation_history.json",
 	contextHistory: "context_history.json",
 	uiMessages: "ui_messages.json",
-	clineRecommendedModels: "cline_recommended_models.json",
-	clineModels: "cline_models.json",
+	enkiRecommendedModels: "enki_recommended_models.json",
+	enkiModels: "enki_models.json",
 	openRouterModels: "openrouter_models.json",
 	vercelAiGatewayModels: "vercel_ai_gateway_models.json",
 	groqModels: "groq_models.json",
 	basetenModels: "baseten_models.json",
 	hicapModels: "hicap_models.json",
-	mcpSettings: "cline_mcp_settings.json",
-	clineRules: ".clinerules",
-	workflows: ".clinerules/workflows",
-	hooksDir: ".clinerules/hooks",
-	clineruleSkillsDir: ".clinerules/skills",
-	clineSkillsDir: ".cline/skills",
+	mcpSettings: "enki_mcp_settings.json",
+	enkiRules: ".enkirules",
+	workflows: ".enkirules/workflows",
+	hooksDir: ".enkirules/hooks",
+	enkiruleSkillsDir: ".enkirules/skills",
+	enkiSkillsDir: ".enki/skills",
 	claudeSkillsDir: ".claude/skills",
 	agentsSkillsDir: ".agents/skills",
 	cursorRulesDir: ".cursor/rules",
@@ -114,16 +114,16 @@ export async function getDocumentsPath(): Promise<string> {
 }
 
 /**
- * Returns the cross-platform path to the Cline home directory (~/.cline).
+ * Returns the cross-platform path to the Enki AI home directory (~/.enki).
  * This works on macOS, Linux, and Windows:
- * - macOS: /Users/username/.cline
- * - Linux: /home/username/.cline
- * - Windows: C:\Users\username\.cline
+ * - macOS: /Users/username/.enki
+ * - Linux: /home/username/.enki
+ * - Windows: C:\Users\username\.enki
  *
- * This is intended to eventually replace ~/Documents/Cline as the global config location.
+ * This is intended to eventually replace ~/Documents/Enki AI as the global config location.
  */
-export function getClineHomePath(): string {
-	return path.join(os.homedir(), ".cline");
+export function getEnki AIHomePath(): string {
+	return path.join(os.homedir(), ".enki");
 }
 
 export async function ensureTaskDirectoryExists(
@@ -134,53 +134,53 @@ export async function ensureTaskDirectoryExists(
 
 export async function ensureRulesDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath();
-	const clineRulesDir = path.join(userDocumentsPath, "Cline", "Rules");
+	const enkiRulesDir = path.join(userDocumentsPath, "Enki AI", "Rules");
 	try {
-		await fs.mkdir(clineRulesDir, { recursive: true });
+		await fs.mkdir(enkiRulesDir, { recursive: true });
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "Rules"); // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", "Enki AI", "Rules"); // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
-	return clineRulesDir;
+	return enkiRulesDir;
 }
 
 export async function ensureWorkflowsDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath();
-	const clineWorkflowsDir = path.join(userDocumentsPath, "Cline", "Workflows");
+	const enkiWorkflowsDir = path.join(userDocumentsPath, "Enki AI", "Workflows");
 	try {
-		await fs.mkdir(clineWorkflowsDir, { recursive: true });
+		await fs.mkdir(enkiWorkflowsDir, { recursive: true });
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "Workflows"); // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", "Enki AI", "Workflows"); // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
-	return clineWorkflowsDir;
+	return enkiWorkflowsDir;
 }
 
 export async function ensureMcpServersDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath();
-	const mcpServersDir = path.join(userDocumentsPath, "Cline", "MCP");
+	const mcpServersDir = path.join(userDocumentsPath, "Enki AI", "MCP");
 	try {
 		await fs.mkdir(mcpServersDir, { recursive: true });
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "MCP"); // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine since this path is only ever used in the system prompt
+		return path.join(os.homedir(), "Documents", "Enki AI", "MCP"); // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine since this path is only ever used in the system prompt
 	}
 	return mcpServersDir;
 }
 
 export async function ensureHooksDirectoryExists(): Promise<string> {
 	const userDocumentsPath = await getDocumentsPath();
-	const clineHooksDir = path.join(userDocumentsPath, "Cline", "Hooks");
+	const enkiHooksDir = path.join(userDocumentsPath, "Enki AI", "Hooks");
 	try {
-		await fs.mkdir(clineHooksDir, { recursive: true });
+		await fs.mkdir(enkiHooksDir, { recursive: true });
 	} catch (_error) {
-		return path.join(os.homedir(), "Documents", "Cline", "Hooks"); // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
+		return path.join(os.homedir(), "Documents", "Enki AI", "Hooks"); // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine because we will fail gracefully with a path that does not exist
 	}
-	return clineHooksDir;
+	return enkiHooksDir;
 }
 
 /**
- * Returns the global skills directory path (~/.cline/skills) without creating it.
+ * Returns the global skills directory path (~/.enki/skills) without creating it.
  */
-function getClineSkillsDirectoryPath(): string {
-	return path.join(getClineHomePath(), "skills");
+function getEnki AISkillsDirectoryPath(): string {
+	return path.join(getEnki AIHomePath(), "skills");
 }
 
 function getAgentSkillsDirectoryPath(): string {
@@ -222,10 +222,10 @@ export function getSkillsDirectoriesForScan(
 ): SkillsScanDirectory[] {
 	return [
 		{
-			path: path.join(cwd, GlobalFileNames.clineruleSkillsDir),
+			path: path.join(cwd, GlobalFileNames.enkiruleSkillsDir),
 			source: "project",
 		},
-		{ path: path.join(cwd, GlobalFileNames.clineSkillsDir), source: "project" },
+		{ path: path.join(cwd, GlobalFileNames.enkiSkillsDir), source: "project" },
 		{
 			path: path.join(cwd, GlobalFileNames.claudeSkillsDir),
 			source: "project",
@@ -234,7 +234,7 @@ export function getSkillsDirectoriesForScan(
 			path: path.join(cwd, GlobalFileNames.agentsSkillsDir),
 			source: "project",
 		},
-		{ path: getClineSkillsDirectoryPath(), source: "global" },
+		{ path: getEnki AISkillsDirectoryPath(), source: "global" },
 		{ path: getAgentSkillsDirectoryPath(), source: "global" },
 	];
 }
@@ -267,7 +267,7 @@ export async function getMcpSettingsFilePath(
 
 export async function getSavedApiConversationHistory(
 	taskId: string,
-): Promise<ClineStorageMessage[]> {
+): Promise<Enki AIStorageMessage[]> {
 	const filePath = path.join(
 		await ensureTaskDirectoryExists(taskId),
 		GlobalFileNames.apiConversationHistory,
@@ -302,9 +302,9 @@ export async function saveApiConversationHistory(
 	}
 }
 
-export async function getSavedClineMessages(
+export async function getSavedEnki AIMessages(
 	taskId: string,
-): Promise<ClineMessage[]> {
+): Promise<Enki AIMessage[]> {
 	const filePath = path.join(
 		await ensureTaskDirectoryExists(taskId),
 		GlobalFileNames.uiMessages,
@@ -325,9 +325,9 @@ export async function getSavedClineMessages(
 	return [];
 }
 
-export async function saveClineMessages(
+export async function saveEnki AIMessages(
 	taskId: string,
-	uiMessages: ClineMessage[],
+	uiMessages: Enki AIMessage[],
 ) {
 	try {
 		const taskDir = await ensureTaskDirectoryExists(taskId);
@@ -355,7 +355,7 @@ export async function collectEnvironmentMetadata(): Promise<
 			os_arch: os.arch(),
 			host_name: hostVersion.platform || "Unknown",
 			host_version: hostVersion.version || "Unknown",
-			cline_version: ExtensionRegistryInfo.version,
+			enki_version: ExtensionRegistryInfo.version,
 		};
 	} catch (error) {
 		Logger.error("Failed to collect environment metadata:", error);
@@ -366,7 +366,7 @@ export async function collectEnvironmentMetadata(): Promise<
 			os_arch: os.arch(),
 			host_name: "Unknown",
 			host_version: "Unknown",
-			cline_version: "Unknown",
+			enki_version: "Unknown",
 		};
 	}
 }
@@ -633,7 +633,7 @@ export function setRuntimeHooksDir(dir: string | undefined): void {
  * Gets the paths to all hooks directories to search for hooks, including:
  * 1. The runtime hooks directory (if set via --hooks-dir CLI flag)
  * 2. The global hooks directory (if it exists)
- * 3. Each workspace root's .clinerules/hooks directory (if they exist)
+ * 3. Each workspace root's .enkirules/hooks directory (if they exist)
  *
  * Note: Hooks from different directories may be executed concurrently.
  * No execution order is guaranteed between hooks from different directories.
@@ -662,7 +662,7 @@ export async function getAllHooksDirs(): Promise<string[]> {
 }
 
 /**
- * Gets the paths to the workspace's .clinerules/hooks directories to search for
+ * Gets the paths to the workspace's .enkirules/hooks directories to search for
  * hooks. A workspace may not use hooks, and the resulting array will be empty. A
  * multi-root workspace may have multiple hooks directories.
  */
@@ -675,7 +675,7 @@ export async function getWorkspaceHooksDirs(): Promise<string[]> {
 	return (
 		await Promise.all(
 			workspaceRootPaths.map(async (workspaceRootPath) => {
-				// Look for a .clinerules/hooks folder in this workspace root.
+				// Look for a .enkirules/hooks folder in this workspace root.
 				const candidate = path.join(
 					workspaceRootPath,
 					GlobalFileNames.hooksDir,

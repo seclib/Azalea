@@ -1,5 +1,5 @@
-import { Empty } from "@shared/proto/cline/common"
-import { AutoApprovalSettingsRequest } from "@shared/proto/cline/state"
+import { Empty } from "@shared/proto/enki/common"
+import { AutoApprovalSettingsRequest } from "@shared/proto/enki/state"
 import { Controller } from ".."
 
 /**

@@ -5,7 +5,7 @@ import {
 	Llms,
 	type ProviderOAuthCredentials,
 	type ProviderSettings,
-} from "@cline/core";
+} from "@enki/core";
 
 export type OAuthCredentials = ProviderOAuthCredentials;
 

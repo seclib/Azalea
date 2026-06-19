@@ -32,8 +32,8 @@
 			"maxBudget": 6000
 		}
 	},
-	"actModeApiProvider": "cline",
-	"planModeApiProvider": "cline",
+	"actModeApiProvider": "enki",
+	"planModeApiProvider": "enki",
 	"actModeClineModelId": "anthropic/claude-sonnet-4.6",
 	"planModeClineModelId": "anthropic/claude-sonnet-4.6",
 	"openAiHeaders": {},

@@ -202,8 +202,8 @@ export {
 } from "./parse/string";
 export { formatHumanReadableDate, formatUptime } from "./parse/time";
 export { validateWithZod, zodToJsonSchema } from "./parse/zod";
-export type { ClineSystemPromptOptions } from "./prompt/cline";
-export { buildClineSystemPrompt } from "./prompt/cline";
+export type { Enki AISystemPromptOptions } from "./prompt/enki";
+export { buildEnki AISystemPrompt } from "./prompt/enki";
 export {
 	formatDisplayUserInput,
 	formatFileContentBlock,
@@ -213,7 +213,7 @@ export {
 	parseUserCommandEnvelope,
 	xmlTagsRemoval,
 } from "./prompt/format";
-export { isClineProvider } from "./providers/utils";
+export { isEnki AIProvider } from "./providers/utils";
 export { REMOTE_URI_SCHEME } from "./remote-config/constants";
 export type {
 	AnthropicModel,
@@ -245,8 +245,8 @@ export {
 	AwsBedrockCustomModelSchema,
 	AwsBedrockModelSchema,
 	AwsBedrockSettingsSchema,
-	ClineModelSchema,
-	ClineSettingsSchema,
+	Enki AIModelSchema,
+	Enki AISettingsSchema,
 	EnterpriseTelemetrySchema,
 	GlobalInstructionsFileSchema,
 	LiteLLMModelSchema,
@@ -272,7 +272,7 @@ export type {
 	ChatStartSessionResponse,
 	ChatToolCallResult,
 	ChatTurnResult,
-	ClineAccountActionRequest,
+	Enki AIAccountActionRequest,
 	EnterpriseAuthenticateRequest,
 	EnterpriseAuthenticateResponse,
 	EnterpriseStatusRequest,
@@ -320,18 +320,18 @@ export {
 	TEAM_PROGRESS_EVENT_TYPE,
 } from "./rpc/team-progress";
 export type {
-	ClineEnvironment,
-	ClineEnvironmentConfig,
-	ResolveClineEnvironmentOptions,
-} from "./runtime/cline-environment";
+	Enki AIEnvironment,
+	Enki AIEnvironmentConfig,
+	ResolveEnki AIEnvironmentOptions,
+} from "./runtime/enki-environment";
 export {
 	CLINE_ENVIRONMENT_ENV,
 	CLINE_ENVIRONMENT_OVERRIDE_ENV,
 	CLINE_ENVIRONMENTS,
 	DEFAULT_CLINE_ENVIRONMENT,
-	getClineEnvironmentConfig,
-	resolveClineEnvironment,
-} from "./runtime/cline-environment";
+	getEnki AIEnvironmentConfig,
+	resolveEnki AIEnvironment,
+} from "./runtime/enki-environment";
 export type {
 	CaptureSdkErrorInput,
 	ITelemetryService,
@@ -351,10 +351,10 @@ export {
 	normalizeSdkError,
 	SDK_ERROR_TELEMETRY_EVENT,
 } from "./services/telemetry";
-export type { ClineTelemetryServiceConfig } from "./services/telemetry-config";
+export type { Enki AITelemetryServiceConfig } from "./services/telemetry-config";
 export {
-	createClineTelemetryServiceConfig,
-	createClineTelemetryServiceMetadata,
+	createEnki AITelemetryServiceConfig,
+	createEnki AITelemetryServiceMetadata,
 } from "./services/telemetry-config";
 export type {
 	HookSessionContext,

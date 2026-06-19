@@ -17,11 +17,11 @@ export function getConfiguredProviders(
 	const configured: ApiProvider[] = []
 
 	if (!apiConfiguration) {
-		return ["cline"] // Cline is always available
+		return ["enki"] // Enki AI is always available
 	}
 
-	// Cline - always available (uses account-based auth)
-	configured.push("cline")
+	// Enki AI - always available (uses account-based auth)
+	configured.push("enki")
 
 	// Anthropic - requires API key
 	if (apiConfiguration.apiKey) {

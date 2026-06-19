@@ -1,4 +1,4 @@
-import type { ClineMessage } from "@shared/ExtensionMessage"
+import type { Enki AIMessage } from "@shared/ExtensionMessage"
 import type { Mode } from "@shared/storage/types"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
 import type React from "react"
@@ -8,8 +8,8 @@ import { ButtonActionType, getButtonConfig } from "../../shared/buttonConfig"
 import type { ChatState, MessageHandlers } from "../../types/chatTypes"
 
 interface ActionButtonsProps {
-	task?: ClineMessage
-	messages: ClineMessage[]
+	task?: Enki AIMessage
+	messages: Enki AIMessage[]
 	chatState: ChatState
 	messageHandlers: MessageHandlers
 	mode: Mode

@@ -1,6 +1,6 @@
-# Cline Plugin Examples
+# Enki AI Plugin Examples
 
-A plugin is a single file (or directory) that extends any Cline agent — CLI, Kanban, VS Code, JetBrains, or anything built on the Core SDK. Drop one in, get new tools, hooks, providers, or message rewriters everywhere.
+A plugin is a single file (or directory) that extends any Enki AI agent — CLI, Kanban, VS Code, JetBrains, or anything built on the Core SDK. Drop one in, get new tools, hooks, providers, or message rewriters everywhere.
 
 What a plugin can do:
 
@@ -17,11 +17,11 @@ What a plugin can do:
 | [mac-notify.ts](./mac-notify.ts) | macOS Notification Center alert via `afterRun` | Sends a native macOS notification when a run completes successfully, using the final output text or iteration count as the notification body. Non-macOS hosts no-op. |
 | [custom-compaction.ts](./custom-compaction.ts) | Provider-message compaction via `registerMessageBuilder` | Rewrites oversized provider-bound message history by preserving the first user message and recent context, then replacing older middle history with a structured summary of roles, tools, files, and highlights. |
 | [background-terminal.ts](./background-terminal.ts) | Detached shell jobs with persisted logs and session steering | Registers `start_background_command`, `get_background_command`, and `delete_background_command` so agents can launch long-running shell commands, poll stdout/stderr tails, clean up job metadata, and receive completion summaries as steer messages. |
-| [automation-events.ts](./automation-events.ts) | Plugin-emitted automation events | Registers a normalized `local.plugin_event` automation event type and, when `CLINE_LOCAL_EVENT_INTERVAL_MS` is set, periodically emits demo events into Cline automation. |
+| [automation-events.ts](./automation-events.ts) | Plugin-emitted automation events | Registers a normalized `local.plugin_event` automation event type and, when `CLINE_LOCAL_EVENT_INTERVAL_MS` is set, periodically emits demo events into Enki AI automation. |
 | [gitignore-read-files-guard.ts](./gitignore-read-files-guard.ts) | Runtime hook policy for workspace `.gitignore` boundaries | Uses `beforeTool` to inspect `read_files`, `editor`, and `apply_patch` requests and skips them when target paths match workspace `.gitignore` rules, preventing ignored files from being read or modified. |
 | [env-blocker.ts](./env-blocker.ts) | Deterministic secret protection via `beforeTool` | Uses `beforeTool` to block `read_files` and `run_commands` (e.g. `cat .env`) calls that read `.env` secret files, while leaving `.env.example`/`.env.sample`/`.env.template` readable. A hard guarantee where an AGENTS.md rule is only a suggestion. |
 | [web-search.ts](./web-search.ts) | `web_search` tool backed by an Exa API key | Adds a `web_search` tool that queries Exa for current public web results, with optional result limits, domain filters, recency windows, and country localization. Requires `EXA_API_KEY`. |
-| [openrouter-provider.ts](./openrouter-provider.ts) | Custom model provider via `registerProvider` | Registers an OpenAI-compatible model provider (pointed at OpenRouter) plus its model catalog so the agent can run inference against it. Swap the base URL, API key env var, and models to add any OpenAI-compatible endpoint Cline does not bundle. Requires `OPENROUTER_API_KEY`. |
+| [openrouter-provider.ts](./openrouter-provider.ts) | Custom model provider via `registerProvider` | Registers an OpenAI-compatible model provider (pointed at OpenRouter) plus its model catalog so the agent can run inference against it. Swap the base URL, API key env var, and models to add any OpenAI-compatible endpoint Enki AI does not bundle. Requires `OPENROUTER_API_KEY`. |
 | [typescript-lsp/](./typescript-lsp/) | `goto_definition` tool powered by the TypeScript Language Service | Adds `goto_definition(file, line)` for TypeScript/JavaScript projects. It loads the target project’s own TypeScript version, finds identifiers on a line, and resolves definitions through imports, re-exports, aliases, and other language-service semantics. |
 | [agents-squad/](./agents-squad/) | Multi-agent team — spin up subagents with their own models and personalities | Adds tools for starting, messaging, polling, and coordinating background subagents. It includes bundled agent presets, skill discovery/loading, and a shared handoff store for passing notes between subagents in the same conversation. |
 
@@ -29,11 +29,11 @@ The runtime-hook variant of compaction lives in [../hooks/custom-compaction-hook
 
 ## Try it with the CLI
 
-The CLI auto-discovers plugins from `.cline/plugins` in the workspace, `~/.cline/plugins`, and the system Plugins folder. Use `cline plugin install` for local files, GitHub file URLs, package directories, git repos, and npm packages:
+The CLI auto-discovers plugins from `.enki/plugins` in the workspace, `~/.enki/plugins`, and the system Plugins folder. Use `enki plugin install` for local files, GitHub file URLs, package directories, git repos, and npm packages:
 
 ```bash
-cline plugin install https://github.com/cline/cline/blob/main/sdk/examples/plugins/weather-metrics.ts --cwd .
-cline -i "What's the weather like in Tokyo and Paris?"
+enki plugin install https://github.com/enki/enki/blob/main/sdk/examples/plugins/weather-metrics.ts --cwd .
+enki -i "What's the weather like in Tokyo and Paris?"
 ```
 
 Swap the GitHub URL for any other single-file example.
@@ -41,28 +41,28 @@ Swap the GitHub URL for any other single-file example.
 To block file access for paths ignored by workspace `.gitignore` files:
 
 ```bash
-cline plugin install https://github.com/cline/cline/blob/main/sdk/examples/plugins/gitignore-read-files-guard.ts --cwd .
-cline -i "Read the ignored .env file"
+enki plugin install https://github.com/enki/enki/blob/main/sdk/examples/plugins/gitignore-read-files-guard.ts --cwd .
+enki -i "Read the ignored .env file"
 ```
 
 The guard uses the `beforeTool` runtime hook. When a `read_files`, `editor`, or `apply_patch` call targets an ignored workspace file, the hook returns `{ skip: true }`, so the tool result records a policy error and the file is not accessed.
 
-For a plugin that lives in a directory (with its own `package.json`), use `cline plugin install`:
+For a plugin that lives in a directory (with its own `package.json`), use `enki plugin install`:
 
 ```bash
-cline plugin install ./examples/plugins/agents-squad
+enki plugin install ./examples/plugins/agents-squad
 ```
 
 To add web search through a normal plugin tool:
 
 ```bash
-cline plugin install https://github.com/cline/cline/blob/main/sdk/examples/plugins/web-search.ts --cwd .
+enki plugin install https://github.com/enki/enki/blob/main/sdk/examples/plugins/web-search.ts --cwd .
 
 export EXA_API_KEY=...
 export OPENROUTER_API_KEY=...
 
-cline auth --provider openrouter --apikey "$OPENROUTER_API_KEY" --modelid anthropic/claude-sonnet-4.6
-cline -P openrouter -m anthropic/claude-sonnet-4.6 "Search the web for recent Bun release notes, then fetch the most relevant page"
+enki auth --provider openrouter --apikey "$OPENROUTER_API_KEY" --modelid anthropic/claude-sonnet-4.6
+enki -P openrouter -m anthropic/claude-sonnet-4.6 "Search the web for recent Bun release notes, then fetch the most relevant page"
 ```
 
 The plugin registers `web_search`, which returns normalized search results from
@@ -81,8 +81,8 @@ ANTHROPIC_API_KEY=sk-... bun run examples/plugins/weather-metrics.ts
 ## Anatomy of a plugin
 
 ```ts
-import type { AgentPlugin } from "@cline/core";
-import { createTool } from "@cline/core";
+import type { AgentPlugin } from "@enki/core";
+import { createTool } from "@enki/core";
 
 const myPlugin: AgentPlugin = {
   name: "my-plugin",
@@ -108,9 +108,9 @@ Pass it to the SDK:
 
 ```ts
 import plugin from "./my-plugin";
-import { ClineCore } from "@cline/core";
+import { Enki AICore } from "@enki/core";
 
-const host = await ClineCore.create({ backendMode: "local" });
+const host = await Enki AICore.create({ backendMode: "local" });
 await host.start({
   config: {
     providerId: "anthropic",
@@ -145,7 +145,7 @@ The setup `ctx` may include `session`, `client`, `user`, `workspaceInfo`, `autom
 
 ## Runtime hooks
 
-Hooks are typed, in-process callbacks on the same hook layer as `@cline/agents`. They run inside the agent loop with full type information.
+Hooks are typed, in-process callbacks on the same hook layer as `@enki/agents`. They run inside the agent loop with full type information.
 
 | Hook          | When it fires |
 | ------------- | ------------- |
@@ -161,7 +161,7 @@ Hooks are typed, in-process callbacks on the same hook layer as `@cline/agents`.
 
 ### Plugin hooks vs file hooks
 
-File hooks are external scripts in `.cline/hooks` that the runtime invokes with serialized JSON payloads. Plugin runtime hooks are typed callbacks inside the agent loop. Core adapts file hooks onto the runtime hook layer.
+File hooks are external scripts in `.enki/hooks` that the runtime invokes with serialized JSON payloads. Plugin runtime hooks are typed callbacks inside the agent loop. Core adapts file hooks onto the runtime hook layer.
 
 | File hook | File event | Backed by runtime hook |
 | --------- | ---------- | ---------------------- |
@@ -196,7 +196,7 @@ Reach for `beforeModel` only when you need the runtime snapshot or want to mutat
 
 | Tool | Purpose |
 | ---- | ------- |
-| `start_background_command` | starts a detached shell command, returns a job id immediately, captures stdout/stderr under Cline's data directory |
+| `start_background_command` | starts a detached shell command, returns a job id immediately, captures stdout/stderr under Enki AI's data directory |
 | `get_background_command` | reads job status plus recent stdout/stderr tails |
 | `delete_background_command` | deletes saved job metadata, optionally deletes captured logs |
 

@@ -12,7 +12,7 @@ import { sendMcpButtonClickedEvent } from "./core/controller/ui/subscribeToMcpBu
 import { sendSettingsButtonClickedEvent } from "./core/controller/ui/subscribeToSettingsButtonClicked"
 import { sendWorktreesButtonClickedEvent } from "./core/controller/ui/subscribeToWorktreesButtonClicked"
 import { WebviewProvider } from "./core/webview"
-import { createClineAPI } from "./exports"
+import { createEnki AIAPI } from "./exports"
 import { initializeTestMode } from "./services/test/TestMode"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 import path from "node:path"
@@ -22,10 +22,10 @@ import { vscodeHostBridgeClient } from "@/hosts/vscode/hostbridge/client/host-gr
 import { createStorageContext } from "@/shared/storage/storage-context"
 import { readTextFromClipboard, writeTextToClipboard } from "@/utils/env"
 import { initialize, tearDown } from "./common"
-import { addToCline } from "./core/controller/commands/addToCline"
-import { explainWithCline } from "./core/controller/commands/explainWithCline"
-import { fixWithCline } from "./core/controller/commands/fixWithCline"
-import { improveWithCline } from "./core/controller/commands/improveWithCline"
+import { addToEnki AI } from "./core/controller/commands/addToEnki AI"
+import { explainWithEnki AI } from "./core/controller/commands/explainWithEnki AI"
+import { fixWithEnki AI } from "./core/controller/commands/fixWithEnki AI"
+import { improveWithEnki AI } from "./core/controller/commands/improveWithEnki AI"
 import { sendAddToInputEvent } from "./core/controller/ui/subscribeToAddToInput"
 import { sendShowWebviewEvent } from "./core/controller/ui/subscribeToShowWebview"
 import { HookDiscoveryCache } from "./core/hooks/HookDiscoveryCache"
@@ -40,7 +40,7 @@ import {
 import { workspaceResolver } from "./core/workspace"
 import { findMatchingNotebookCell, getContextForCommand, showWebview } from "./hosts/vscode/commandUtils"
 import { abortCommitGeneration, generateCommitMsg } from "./hosts/vscode/commit-message-generator"
-import { registerClineOutputChannel } from "./hosts/vscode/hostbridge/env/debugLog"
+import { registerEnki AIOutputChannel } from "./hosts/vscode/hostbridge/env/debugLog"
 import {
 	disposeVscodeCommentReviewController,
 	getVscodeCommentReviewController,
@@ -73,7 +73,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	await cleanupLegacyVSCodeStorage(context)
 
 	// 3. One-time export of VSCode's native storage to shared file-backed stores.
-	// After this, all platforms (VSCode, CLI, JetBrains) read from ~/.cline/data/.
+	// After this, all platforms (VSCode, CLI, JetBrains) read from ~/.enki/data/.
 	const workspacePath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
 	const storageContext = createStorageContext({ workspacePath })
 	await exportVSCodeStorageToSharedFiles(context, storageContext)
@@ -164,14 +164,14 @@ export async function activate(context: vscode.ExtensionContext) {
 		const isTaskUri = uriPath === TASK_URI_PATH || uriPath === LG_TASK_URI_PATH
 
 		if (isTaskUri) {
-			await openClineSidebarForTaskUri()
+			await openEnki AISidebarForTaskUri()
 		}
 
 		let success = await SharedUriHandler.handleUri(url)
 
 		// Task deeplinks can race with first-time sidebar initialization.
 		if (!success && isTaskUri) {
-			await openClineSidebarForTaskUri()
+			await openEnki AISidebarForTaskUri()
 			success = await SharedUriHandler.handleUri(url)
 		}
 
@@ -183,16 +183,16 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	// Register size testing commands in development mode
 	if (IS_DEV) {
-		vscode.commands.executeCommand("setContext", "cline.isDevMode", IS_DEV)
+		vscode.commands.executeCommand("setContext", "enki.isDevMode", IS_DEV)
 		// Use dynamic import to avoid loading the module in production
 		import("./dev/commands/tasks")
 			.then((module) => {
 				const devTaskCommands = module.registerTaskCommands(webview.controller)
 				context.subscriptions.push(...devTaskCommands)
-				Logger.log("[Cline Dev] Dev mode activated & dev commands registered")
+				Logger.log("[Enki AI Dev] Dev mode activated & dev commands registered")
 			})
 			.catch((error) => {
-				Logger.log("[Cline Dev] Failed to register dev commands: " + error)
+				Logger.log("[Enki AI Dev] Failed to register dev commands: " + error)
 			})
 	}
 
@@ -285,40 +285,40 @@ export async function activate(context: vscode.ExtensionContext) {
 						)
 					}
 
-					// Add to Cline (Always available)
-					const addAction = new vscode.CodeAction("Add to Cline", vscode.CodeActionKind.QuickFix)
+					// Add to Enki AI (Always available)
+					const addAction = new vscode.CodeAction("Add to Enki AI", vscode.CodeActionKind.QuickFix)
 					addAction.command = {
 						command: commands.AddToChat,
-						title: "Add to Cline",
+						title: "Add to Enki AI",
 						arguments: [expandedRange, context.diagnostics],
 					}
 					actions.push(addAction)
 
-					// Explain with Cline (Always available)
-					const explainAction = new vscode.CodeAction("Explain with Cline", vscode.CodeActionKind.RefactorExtract) // Using a refactor kind
+					// Explain with Enki AI (Always available)
+					const explainAction = new vscode.CodeAction("Explain with Enki AI", vscode.CodeActionKind.RefactorExtract) // Using a refactor kind
 					explainAction.command = {
 						command: commands.ExplainCode,
-						title: "Explain with Cline",
+						title: "Explain with Enki AI",
 						arguments: [expandedRange],
 					}
 					actions.push(explainAction)
 
-					// Improve with Cline (Always available)
-					const improveAction = new vscode.CodeAction("Improve with Cline", vscode.CodeActionKind.RefactorRewrite) // Using a refactor kind
+					// Improve with Enki AI (Always available)
+					const improveAction = new vscode.CodeAction("Improve with Enki AI", vscode.CodeActionKind.RefactorRewrite) // Using a refactor kind
 					improveAction.command = {
 						command: commands.ImproveCode,
-						title: "Improve with Cline",
+						title: "Improve with Enki AI",
 						arguments: [expandedRange],
 					}
 					actions.push(improveAction)
 
-					// Fix with Cline (Only if diagnostics exist)
+					// Fix with Enki AI (Only if diagnostics exist)
 					if (context.diagnostics.length > 0) {
-						const fixAction = new vscode.CodeAction("Fix with Cline", vscode.CodeActionKind.QuickFix)
+						const fixAction = new vscode.CodeAction("Fix with Enki AI", vscode.CodeActionKind.QuickFix)
 						fixAction.isPreferred = true
 						fixAction.command = {
-							command: commands.FixWithCline,
-							title: "Fix with Cline",
+							command: commands.FixWithEnki AI,
+							title: "Fix with Enki AI",
 							arguments: [expandedRange, context.diagnostics],
 						}
 						actions.push(fixAction)
@@ -343,16 +343,16 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!context) {
 				return
 			}
-			await addToCline(context.controller, context.commandContext)
+			await addToEnki AI(context.controller, context.commandContext)
 		}),
 	)
 	context.subscriptions.push(
-		vscode.commands.registerCommand(commands.FixWithCline, async (range: vscode.Range, diagnostics: vscode.Diagnostic[]) => {
+		vscode.commands.registerCommand(commands.FixWithEnki AI, async (range: vscode.Range, diagnostics: vscode.Diagnostic[]) => {
 			const context = await getContextForCommand(range, diagnostics)
 			if (!context) {
 				return
 			}
-			await fixWithCline(context.controller, context.commandContext)
+			await fixWithEnki AI(context.controller, context.commandContext)
 		}),
 	)
 	context.subscriptions.push(
@@ -361,7 +361,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!context) {
 				return
 			}
-			await explainWithCline(context.controller, context.commandContext)
+			await explainWithEnki AI(context.controller, context.commandContext)
 		}),
 	)
 	context.subscriptions.push(
@@ -370,7 +370,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (!context) {
 				return
 			}
-			await improveWithCline(context.controller, context.commandContext)
+			await improveWithEnki AI(context.controller, context.commandContext)
 		}),
 	)
 
@@ -450,7 +450,7 @@ Current Notebook Cell Context (JSON, sanitized of image data):
 ${ctx.cellJson || "{}"}
 \`\`\``
 
-				await addToCline(ctx.controller, ctx.commandContext, notebookContext)
+				await addToEnki AI(ctx.controller, ctx.commandContext, notebookContext)
 			},
 		),
 	)
@@ -466,7 +466,7 @@ ${ctx.cellJson || "{}"}
 					? `\n\nCurrent Notebook Cell Context (JSON, sanitized of image data):\n\`\`\`json\n${ctx.cellJson}\n\`\`\``
 					: undefined
 
-				await explainWithCline(ctx.controller, ctx.commandContext, notebookContext)
+				await explainWithEnki AI(ctx.controller, ctx.commandContext, notebookContext)
 			},
 		),
 	)
@@ -492,7 +492,7 @@ Current Notebook Cell Context (JSON, sanitized of image data):
 ${ctx.cellJson || "{}"}
 \`\`\``
 
-				await improveWithCline(ctx.controller, ctx.commandContext, notebookContext)
+				await improveWithEnki AI(ctx.controller, ctx.commandContext, notebookContext)
 			},
 		),
 	)
@@ -500,7 +500,7 @@ ${ctx.cellJson || "{}"}
 	// Register the openWalkthrough command handler
 	context.subscriptions.push(
 		vscode.commands.registerCommand(commands.Walkthrough, async () => {
-			await vscode.commands.executeCommand("workbench.action.openWalkthrough", `${context.extension.id}#ClineWalkthrough`)
+			await vscode.commands.executeCommand("workbench.action.openWalkthrough", `${context.extension.id}#Enki AIWalkthrough`)
 			telemetryService.captureButtonClick("command_openWalkthrough")
 		}),
 	)
@@ -526,7 +526,7 @@ ${ctx.cellJson || "{}"}
 
 	// Listen for secrets changes (e.g., cross-window login/logout sync)
 	const unsubSecrets = storageContext.secrets.onDidChange((event) => {
-		if (event.key === "cline:clineAccountId") {
+		if (event.key === "enki:enkiAccountId") {
 			const secretValue = storageContext.secrets.get<string>(event.key)
 			const activeWebview = WebviewProvider.getVisibleInstance()
 			const controller = activeWebview?.controller
@@ -543,9 +543,9 @@ ${ctx.cellJson || "{}"}
 	})
 	context.subscriptions.push({ dispose: unsubSecrets })
 
-	Logger.log(`[Cline] extension activated in ${performance.now() - activationStartTime} ms`)
+	Logger.log(`[Enki AI] extension activated in ${performance.now() - activationStartTime} ms`)
 
-	return createClineAPI(webview.controller)
+	return createEnki AIAPI(webview.controller)
 }
 
 async function showJupyterPromptInput(title: string, placeholder: string): Promise<string | undefined> {
@@ -595,8 +595,8 @@ async function showJupyterPromptInput(title: string, placeholder: string): Promi
 }
 
 function setupHostProvider(context: ExtensionContext) {
-	const outputChannel = registerClineOutputChannel(context)
-	outputChannel.appendLine("[Cline] Setting up VS Code host...")
+	const outputChannel = registerEnki AIOutputChannel(context)
+	outputChannel.appendLine("[Enki AI] Setting up VS Code host...")
 
 	const createWebview = () => new VscodeWebviewProvider(context)
 	const createDiffView = () => new VscodeDiffViewProvider()
@@ -640,7 +640,7 @@ function getUriPath(url: string): string | undefined {
 	}
 }
 
-async function openClineSidebarForTaskUri(): Promise<void> {
+async function openEnki AISidebarForTaskUri(): Promise<void> {
 	const sidebarWaitTimeoutMs = 3000
 	const sidebarWaitIntervalMs = 50
 
@@ -654,7 +654,7 @@ async function openClineSidebarForTaskUri(): Promise<void> {
 		await new Promise((resolve) => setTimeout(resolve, sidebarWaitIntervalMs))
 	}
 
-	Logger.warn("Task URI handling timed out waiting for Cline sidebar visibility")
+	Logger.warn("Task URI handling timed out waiting for Enki AI sidebar visibility")
 }
 
 async function getBinaryLocation(name: string): Promise<string> {
@@ -732,7 +732,7 @@ async function cleanupLegacyVSCodeStorage(context: ExtensionContext): Promise<vo
 
 		Logger.info("[VS Code Storage Migrations] Starting")
 
-		// Migrate custom instructions to global Cline rules (one-time cleanup)
+		// Migrate custom instructions to global Enki AI rules (one-time cleanup)
 		await migrateCustomInstructionsToGlobalRules(context)
 
 		// Migrate welcomeViewCompleted setting based on existing API keys (one-time cleanup)

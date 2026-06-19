@@ -3,15 +3,15 @@ import type { ChoiceContext } from "@opentui-ui/dialog";
 import { useDialogKeyboard } from "@opentui-ui/dialog/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { palette } from "../../palette";
-import type { ClineModelPickerEntry } from "./cline-model-picker";
+import type { Enki AIModelPickerEntry } from "./enki-model-picker";
 import { CHANGE_PROVIDER_ACTION } from "./model-selector";
 import { ProviderRow } from "./provider-row";
 
 export const BROWSE_ALL_ACTION = "__browse_all__";
 
-type ClineModelEntriesState =
+type Enki AIModelEntriesState =
 	| { status: "loading"; message: string }
-	| { status: "loaded"; entries: ClineModelPickerEntry[] }
+	| { status: "loaded"; entries: Enki AIModelPickerEntry[] }
 	| { status: "error"; message: string };
 
 function tagColor(tag: string): string {
@@ -37,12 +37,12 @@ function resolveDisplayName(
 		: modelId;
 }
 
-export function ClineModelSelectorContent(
+export function Enki AIModelSelectorContent(
 	props: ChoiceContext<string> & {
 		currentModel: string;
 		currentProviderName: string;
 		knownModels?: Record<string, unknown>;
-		entries: ClineModelPickerEntry[];
+		entries: Enki AIModelPickerEntry[];
 	},
 ) {
 	const {
@@ -214,25 +214,25 @@ export function ClineModelSelectorContent(
 	);
 }
 
-export function ClineModelSelectorDialogContent(
+export function Enki AIModelSelectorDialogContent(
 	props: ChoiceContext<string> & {
 		currentModel: string;
 		currentProviderName: string;
 		knownModels?: Record<string, unknown>;
-		loadEntries: () => Promise<ClineModelPickerEntry[]>;
+		loadEntries: () => Promise<Enki AIModelPickerEntry[]>;
 	},
 ) {
 	const { dismiss, dialogId, loadEntries } = props;
-	const [state, setState] = useState<ClineModelEntriesState>({
+	const [state, setState] = useState<Enki AIModelEntriesState>({
 		status: "loading",
-		message: "Loading Cline models...",
+		message: "Loading Enki AI models...",
 	});
 	const generation = useRef(0);
 
 	const reload = useCallback(async () => {
 		const currentGeneration = generation.current + 1;
 		generation.current = currentGeneration;
-		setState({ status: "loading", message: "Loading Cline models..." });
+		setState({ status: "loading", message: "Loading Enki AI models..." });
 		try {
 			const entries = await loadEntries();
 			if (generation.current === currentGeneration) {
@@ -266,7 +266,7 @@ export function ClineModelSelectorDialogContent(
 	}, dialogId);
 
 	if (state.status === "loaded") {
-		return <ClineModelSelectorContent {...props} entries={state.entries} />;
+		return <Enki AIModelSelectorContent {...props} entries={state.entries} />;
 	}
 
 	if (state.status === "error") {

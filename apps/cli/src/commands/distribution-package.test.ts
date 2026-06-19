@@ -40,25 +40,25 @@ describe("CLI distribution package shape", () => {
 	});
 
 	it("packs the generated npm wrapper package", async () => {
-		const packageDir = await mkdtemp(join(tmpdir(), "cline-cli-pack-"));
+		const packageDir = await mkdtemp(join(tmpdir(), "enki-cli-pack-"));
 		try {
 			await mkdir(join(packageDir, "bin"), { recursive: true });
 			await writeFile(
 				join(packageDir, "package.json"),
 				`${JSON.stringify(
 					{
-						name: "cline",
+						name: "enki",
 						version: "1.2.3",
 						description: "CLI test package",
 						license: "Apache-2.0",
 						bin: {
-							cline: "./bin/cline",
+							enki: "./bin/enki",
 						},
 						scripts: {
 							postinstall: "node ./postinstall.mjs || true",
 						},
 						optionalDependencies: {
-							"@cline/cli-linux-x64": "1.2.3",
+							"@enki/cli-linux-x64": "1.2.3",
 						},
 					},
 					null,
@@ -66,14 +66,14 @@ describe("CLI distribution package shape", () => {
 				)}\n`,
 			);
 			await writeFile(
-				join(packageDir, "bin", "cline"),
+				join(packageDir, "bin", "enki"),
 				[
 					"#!/usr/bin/env node",
-					'console.log("cline wrapper smoke test");',
+					'console.log("enki wrapper smoke test");',
 					"",
 				].join("\n"),
 			);
-			await chmod(join(packageDir, "bin", "cline"), 0o755);
+			await chmod(join(packageDir, "bin", "enki"), 0o755);
 			await writeFile(
 				join(packageDir, "postinstall.mjs"),
 				"process.exit(0);\n",

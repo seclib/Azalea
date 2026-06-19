@@ -7,23 +7,23 @@ import type {
 } from "./contribution-registry";
 
 /**
- * The IDE or client surface the user is running Cline from.
+ * The IDE or client surface the user is running Enki AI from.
  */
 export type ClientName =
-	| "cline-vscode"
-	| "cline-jetbrains"
-	| "cline-cli"
-	| "cline-sdk"
-	| "cline-kanban"
-	| "cline-acp"
-	| "cline-platform"
+	| "enki-vscode"
+	| "enki-jetbrains"
+	| "enki-cli"
+	| "enki-sdk"
+	| "enki-kanban"
+	| "enki-acp"
+	| "enki-platform"
 	| (string & {});
 
 /**
  * Identity of the calling client (surface + version).
  */
 export interface ClientContext {
-	/** e.g. "cline-vscode", "cline-cli", "cline-sdk" */
+	/** e.g. "enki-vscode", "enki-cli", "enki-sdk" */
 	name: ClientName;
 	/** Semver string, e.g. "3.12.0" */
 	version?: string;
@@ -43,7 +43,7 @@ export interface UserContext {
  * Everything needed to describe the workspace and build the system prompt.
  *
  * Extends WorkspaceInfo (rootPath + git fields) with the additional fields
- * required by buildClineSystemPrompt, so callers can spread a WorkspaceInfo
+ * required by buildEnki AISystemPrompt, so callers can spread a WorkspaceInfo
  * and add only what they know.
  */
 export interface WorkspaceContext extends WorkspaceInfo {
@@ -84,7 +84,7 @@ export interface ExtensionContext {
 	session?: AgentExtensionSessionContext;
 	/**
 	 * Host-provided automation ingress for plugins. Present when the session is
-	 * started through a ClineCore instance with automation enabled.
+	 * started through a Enki AICore instance with automation enabled.
 	 */
 	automation?: AgentExtensionAutomationContext;
 	logger?: BasicLogger;

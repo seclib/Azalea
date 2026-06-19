@@ -2,7 +2,7 @@ import type {
 	ChatMessage as CoreChatMessage,
 	ProviderListItem,
 	ProviderModel,
-} from "@cline/core";
+} from "@enki/core";
 
 export type WebviewUsage = {
 	inputTokens?: number;

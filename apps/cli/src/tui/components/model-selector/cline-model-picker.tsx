@@ -1,28 +1,28 @@
 // @jsxImportSource @opentui/react
 
 import {
-	type ClineRecommendedModel,
-	type ClineRecommendedModelsData,
-	fetchClineRecommendedModels,
-} from "@cline/core";
+	type Enki AIRecommendedModel,
+	type Enki AIRecommendedModelsData,
+	fetchEnki AIRecommendedModels,
+} from "@enki/core";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import "opentui-spinner/react";
 import { palette } from "../../palette";
 
-export interface ClineModelPickerItem {
+export interface Enki AIModelPickerItem {
 	kind: "model";
-	model: ClineRecommendedModel;
+	model: Enki AIRecommendedModel;
 	tier: "recommended" | "free";
 }
 
-export interface ClineModelPickerBrowse {
+export interface Enki AIModelPickerBrowse {
 	kind: "browse";
 }
 
-export type ClineModelPickerEntry =
-	| ClineModelPickerItem
-	| ClineModelPickerBrowse;
+export type Enki AIModelPickerEntry =
+	| Enki AIModelPickerItem
+	| Enki AIModelPickerBrowse;
 
 function tagColor(tag: string): string {
 	if (tag === "FREE") return palette.success;
@@ -47,13 +47,13 @@ function resolveDisplayName(
 		: modelId;
 }
 
-export function useClineRecommendedModels() {
-	const [data, setData] = useState<ClineRecommendedModelsData | null>(null);
+export function useEnki AIRecommendedModels() {
+	const [data, setData] = useState<Enki AIRecommendedModelsData | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		let cancelled = false;
-		fetchClineRecommendedModels()
+		fetchEnki AIRecommendedModels()
 			.then((result) => {
 				if (!cancelled) setData(result);
 			})
@@ -68,10 +68,10 @@ export function useClineRecommendedModels() {
 	return { data, loading };
 }
 
-export function buildClineModelEntries(
-	data: ClineRecommendedModelsData,
-): ClineModelPickerEntry[] {
-	const entries: ClineModelPickerEntry[] = [];
+export function buildEnki AIModelEntries(
+	data: Enki AIRecommendedModelsData,
+): Enki AIModelPickerEntry[] {
+	const entries: Enki AIModelPickerEntry[] = [];
 	for (const m of data.recommended) {
 		entries.push({ kind: "model", model: m, tier: "recommended" });
 	}
@@ -82,8 +82,8 @@ export function buildClineModelEntries(
 	return entries;
 }
 
-export function ClineModelPicker(props: {
-	entries: ClineModelPickerEntry[];
+export function Enki AIModelPicker(props: {
+	entries: Enki AIModelPickerEntry[];
 	selected: number;
 	loading?: boolean;
 	knownModels?: Record<string, unknown>;

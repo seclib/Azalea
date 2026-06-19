@@ -1,10 +1,10 @@
 import { createSlackAdapter, type SlackAdapter } from "@chat-adapter/slack";
-import type { ChatStartSessionRequest } from "@cline/core";
+import type { ChatStartSessionRequest } from "@enki/core";
 import {
 	createUserInstructionConfigService,
 	HubSessionClient,
-} from "@cline/core";
-import type { ConnectSlackOptions, SlackConnectorState } from "@cline/shared";
+} from "@enki/core";
+import type { ConnectSlackOptions, SlackConnectorState } from "@enki/shared";
 import {
 	type Adapter,
 	Chat,
@@ -559,7 +559,7 @@ class SlackConnector extends ConnectorBase<
 			userName:
 				opts.userName?.trim() ||
 				process.env.SLACK_BOT_USERNAME?.trim() ||
-				"cline-slack",
+				"enki-slack",
 			connectionMode,
 			botToken,
 			signingSecret:
@@ -700,7 +700,7 @@ class SlackConnector extends ConnectorBase<
 				formatBackgroundStartMessage: (pid) =>
 					`[slack] starting background connector pid=${pid} user=${options.userName} mode=${options.connectionMode}`,
 				foregroundHint:
-					"[slack] use `cline connect slack -i ...` to run in the foreground",
+					"[slack] use `enki connect slack -i ...` to run in the foreground",
 				launchFailureMessage: "failed to launch Slack connector in background",
 			})
 		) {

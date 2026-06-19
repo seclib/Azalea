@@ -1,12 +1,12 @@
 import { getFileMentionFromPath } from "@/core/mentions"
 import { HostProvider } from "@/hosts/host-provider"
 import { telemetryService } from "@/services/telemetry"
-import { CommandContext, Empty } from "@/shared/proto/index.cline"
+import { CommandContext, Empty } from "@/shared/proto/index.enki"
 import { ShowMessageType } from "@/shared/proto/index.host"
 import { Logger } from "@/shared/services/Logger"
 import { Controller } from "../index"
 
-export async function improveWithCline(
+export async function improveWithEnki AI(
 	controller: Controller,
 	request: CommandContext,
 	notebookContext?: string,
@@ -29,7 +29,7 @@ export async function improveWithCline(
 		: `Improve the current code in the current notebook cell from ${fileMention}. Suggest refactorings, optimizations, or better practices based on the cell context.`
 
 	if (notebookContext) {
-		Logger.log("Adding notebook context to improveWithCline task")
+		Logger.log("Adding notebook context to improveWithEnki AI task")
 		prompt += `\n${notebookContext}`
 	}
 

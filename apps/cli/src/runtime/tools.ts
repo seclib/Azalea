@@ -3,9 +3,9 @@ import {
 	getCoreBuiltinToolCatalog,
 	resolveDisabledToolNames,
 	type ToolCatalogEntry,
-} from "@cline/core";
+} from "@enki/core";
 
-export type { ToolCatalogEntry } from "@cline/core";
+export type { ToolCatalogEntry } from "@enki/core";
 
 export function getToolCatalog(
 	availabilityContext?: BuiltinToolAvailabilityContext,

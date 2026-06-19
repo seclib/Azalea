@@ -105,7 +105,7 @@ async function main() {
 			request: {
 				action: "start",
 				config: {
-					provider: "cline",
+					provider: "enki",
 					model: "claude-sonnet-4-20250514",
 					apiKey: process.env.CLINE_API_KEY || "",
 					workspaceRoot: cwd,

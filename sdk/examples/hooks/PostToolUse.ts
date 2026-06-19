@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 /**
- * Cline Hook: PostToolUse (TypeScript)
+ * Enki AI Hook: PostToolUse (TypeScript)
  * Logs tool results with structured output.
- * Copy to ~/.cline/hooks/PostToolUse.ts and chmod +x
+ * Copy to ~/.enki/hooks/PostToolUse.ts and chmod +x
  */
 
 interface ToolResult {

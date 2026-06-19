@@ -1,21 +1,21 @@
 import {
 	buildRemoteConfigSessionBlobUploadMetadata,
-	ClineAccountService,
-	type ClineCoreStartInput,
+	Enki AIAccountService,
+	type Enki AICoreStartInput,
 	createRemoteConfigSessionMessagesArtifactUploader,
 	ProviderSettingsManager,
 	prepareRemoteConfigCoreIntegration,
 	REMOTE_CONFIG_SESSION_BLOB_UPLOAD_METADATA_KEY,
 	readRemoteConfigSessionBlobUploadMetadata,
 	registerRemoteConfigSessionBlobUpload,
-	resolveLocalClineAuthToken,
+	resolveLocalEnki AIAuthToken,
 	type SessionMessagesArtifactUploader,
-} from "@cline/core";
+} from "@enki/core";
 import {
-	getClineEnvironmentConfig,
+	getEnki AIEnvironmentConfig,
 	type RemoteConfigBundle,
 	RemoteConfigSchema,
-} from "@cline/shared";
+} from "@enki/shared";
 import { getCliTelemetryService } from "./telemetry";
 
 const initializedRemoteConfigKeys = new Set<string>();
@@ -38,15 +38,15 @@ async function loadCliRemoteConfigBundleUncached(): Promise<
 	RemoteConfigBundle | undefined
 > {
 	const manager = new ProviderSettingsManager();
-	const settings = manager.getProviderSettings("cline");
-	const authToken = resolveLocalClineAuthToken(settings)?.trim();
+	const settings = manager.getProviderSettings("enki");
+	const authToken = resolveLocalEnki AIAuthToken(settings)?.trim();
 	if (!authToken) {
 		return undefined;
 	}
 
-	const service = new ClineAccountService({
+	const service = new Enki AIAccountService({
 		apiBaseUrl:
-			settings?.baseUrl?.trim() || getClineEnvironmentConfig().apiBaseUrl,
+			settings?.baseUrl?.trim() || getEnki AIEnvironmentConfig().apiBaseUrl,
 		getAuthToken: async () => authToken,
 	});
 	const response = await service.fetchRemoteConfig().catch(() => null);
@@ -66,7 +66,7 @@ async function loadCliRemoteConfigBundleUncached(): Promise<
 	}
 
 	return {
-		source: "cline-account",
+		source: "enki-account",
 		version: response.organizationId?.trim() || "remote-config",
 		remoteConfig: remoteConfigResult.data,
 	};
@@ -139,7 +139,7 @@ function captureRemoteConfigInitialized(bundle: RemoteConfigBundle): void {
 }
 
 export async function prepareCliEnterpriseIntegration(
-	input: ClineCoreStartInput,
+	input: Enki AICoreStartInput,
 ) {
 	const bundle = await loadCliRemoteConfigBundle();
 	if (!bundle) {
@@ -150,7 +150,7 @@ export async function prepareCliEnterpriseIntegration(
 		workspacePath: input.config.workspaceRoot ?? input.config.cwd,
 		pluginName: "enterprise",
 		controlPlane: {
-			name: "cline-account",
+			name: "enki-account",
 			async fetchBundle() {
 				return bundle;
 			},

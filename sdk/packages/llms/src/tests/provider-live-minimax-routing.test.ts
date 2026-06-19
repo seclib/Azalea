@@ -195,8 +195,8 @@ function buildCases(): LiveCase[] {
 		unexpectedBodyKeys: ["thinking"],
 	});
 	addCase({
-		label: "Cline Gateway MiniMax M3 reasoning enabled",
-		providerId: "cline",
+		label: "Enki AI Gateway MiniMax M3 reasoning enabled",
+		providerId: "enki",
 		modelId: "minimax/minimax-m3",
 		apiKeyEnv: "CLINE_API_KEY",
 		reasoning: { enabled: true },
@@ -204,8 +204,8 @@ function buildCases(): LiveCase[] {
 		unexpectedBodyKeys: ["thinking"],
 	});
 	addCase({
-		label: "Cline Gateway MiniMax M3 reasoning disabled",
-		providerId: "cline",
+		label: "Enki AI Gateway MiniMax M3 reasoning disabled",
+		providerId: "enki",
 		modelId: "minimax/minimax-m3",
 		apiKeyEnv: "CLINE_API_KEY",
 		reasoning: { enabled: false },

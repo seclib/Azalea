@@ -13,7 +13,7 @@ function createProviderSettingsManager(settings?: ProviderSettings) {
 function createStartInput() {
 	return {
 		config: {
-			providerId: "cline",
+			providerId: "enki",
 			modelId: "anthropic/claude-haiku-4.5",
 			apiKey: "test-key",
 			cwd: "/tmp/project",
@@ -94,7 +94,7 @@ describe("prepareLocalRuntimeBootstrap", () => {
 			},
 			sessionId: "sess-1",
 			providerSettingsManager: createProviderSettingsManager({
-				provider: "cline",
+				provider: "enki",
 				model: "anthropic/claude-haiku-4.5",
 				modelCatalog: {
 					loadLatestOnInit: false,
@@ -199,13 +199,13 @@ describe("prepareLocalRuntimeBootstrap", () => {
 					modelId?: string;
 				}) => ({
 					extensions:
-						providerId === "cline" && modelId === "anthropic/claude-haiku-4.5"
+						providerId === "enki" && modelId === "anthropic/claude-haiku-4.5"
 							? [
 									{
 										name: "plugin-compatible",
 										manifest: {
 											capabilities: ["tools"],
-											providerIds: ["cline"],
+											providerIds: ["enki"],
 											modelIds: ["anthropic/claude-haiku-4.5"],
 										},
 										setup: (api: {
@@ -232,7 +232,7 @@ describe("prepareLocalRuntimeBootstrap", () => {
 								],
 					failures: [],
 					pluginPaths:
-						providerId === "cline" && modelId === "anthropic/claude-haiku-4.5"
+						providerId === "enki" && modelId === "anthropic/claude-haiku-4.5"
 							? ["/tmp/compatible-plugin.js"]
 							: [],
 					warnings: [],
@@ -428,7 +428,7 @@ describe("prepareLocalRuntimeBootstrap", () => {
 		});
 
 		expect(bootstrap.providerConfig.headers).toMatchObject({
-			originator: "cline",
+			originator: "enki",
 			session_id: "sess-codex",
 			"ChatGPT-Account-Id": "acct-123",
 			"x-stored": "stored",
@@ -485,7 +485,7 @@ describe("prepareLocalRuntimeBootstrap", () => {
 		});
 
 		expect(bootstrap.providerConfig.headers).toMatchObject({
-			originator: "cline",
+			originator: "enki",
 			session_id: "sess-codex-invariants",
 			"ChatGPT-Account-Id": "acct-stored",
 			"x-config": "config",
@@ -493,7 +493,7 @@ describe("prepareLocalRuntimeBootstrap", () => {
 			"x-shared": "config-wins",
 		});
 		expect(bootstrap.providerConfig.headers?.["User-Agent"]).toMatch(
-			/^Cline\//,
+			/^Enki AI\//,
 		);
 	});
 
@@ -537,7 +537,7 @@ describe("prepareLocalRuntimeBootstrap", () => {
 		});
 
 		expect(bootstrap.providerConfig.headers).toMatchObject({
-			originator: "cline",
+			originator: "enki",
 			session_id: "sess-codex-derived",
 			"ChatGPT-Account-Id": "acct-derived",
 		});

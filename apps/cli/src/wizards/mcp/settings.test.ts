@@ -23,9 +23,9 @@ describe("MCP wizard settings", () => {
 	});
 
 	async function useTempSettingsPath(): Promise<string> {
-		const dir = await mkdtemp(join(tmpdir(), "cline-mcp-settings-"));
+		const dir = await mkdtemp(join(tmpdir(), "enki-mcp-settings-"));
 		tempDirs.push(dir);
-		const settingsPath = join(dir, "cline_mcp_settings.json");
+		const settingsPath = join(dir, "enki_mcp_settings.json");
 		process.env.CLINE_MCP_SETTINGS_PATH = settingsPath;
 		return settingsPath;
 	}

@@ -1,12 +1,12 @@
 import {
-	ClineCore,
+	Enki AICore,
 	ensureDetachedHubServer,
 	type HubServerDiscoveryRecord,
 	HubUIClient,
 	stopLocalHubServerGracefully,
 	toHubHealthUrl,
-} from "@cline/core";
-import type { HubUINotifyPayload } from "@cline/shared";
+} from "@enki/core";
+import type { HubUINotifyPayload } from "@enki/shared";
 import { handleSessionEvent } from "./agent-events";
 import {
 	rejectAllPendingApprovals,
@@ -94,8 +94,8 @@ export async function attachHub(ctx: HubContext): Promise<void> {
 	ctx.hubUrl = hub.url;
 	ctx.hubAuthToken = hub.authToken;
 
-	ctx.cline = await ClineCore.create({
-		clientName: "cline-hub",
+	ctx.enki = await Enki AICore.create({
+		clientName: "enki-hub",
 		backendMode: "hub",
 		capabilities: {
 			requestToolApproval: (request) =>
@@ -104,8 +104,8 @@ export async function attachHub(ctx: HubContext): Promise<void> {
 		hub: {
 			endpoint: ctx.hubUrl,
 			authToken: ctx.hubAuthToken,
-			clientType: "cline-hub-chat",
-			displayName: "Cline Hub Chat",
+			clientType: "enki-hub-chat",
+			displayName: "Enki AI Hub Chat",
 			workspaceRoot,
 		},
 	});
@@ -113,8 +113,8 @@ export async function attachHub(ctx: HubContext): Promise<void> {
 	ctx.uiClient = new HubUIClient({
 		address: ctx.hubUrl,
 		authToken: ctx.hubAuthToken,
-		clientType: "cline-hub-server",
-		displayName: "Cline Hub Server",
+		clientType: "enki-hub-server",
+		displayName: "Enki AI Hub Server",
 	});
 	await ctx.uiClient.connect();
 
@@ -215,7 +215,7 @@ export async function attachHub(ctx: HubContext): Promise<void> {
 		},
 	});
 
-	ctx.cline.subscribe((event) => handleSessionEvent(ctx, event));
+	ctx.enki.subscribe((event) => handleSessionEvent(ctx, event));
 
 	await syncHubClientsAndSessions(ctx);
 	await syncHubHealth(ctx);
@@ -237,11 +237,11 @@ export async function detachHub(ctx: HubContext): Promise<void> {
 	}
 	ctx.uiClient = undefined;
 	try {
-		await ctx.cline?.dispose();
+		await ctx.enki?.dispose();
 	} catch {
 		// ignore
 	}
-	ctx.cline = undefined;
+	ctx.enki = undefined;
 	ctx.clients.clear();
 	ctx.sessions.clear();
 	ctx.hubStartedAt = undefined;

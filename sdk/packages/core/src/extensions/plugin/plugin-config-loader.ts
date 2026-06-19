@@ -4,13 +4,13 @@ import type {
 	AgentConfig,
 	PluginSetupContext,
 	WorkspaceInfo,
-} from "@cline/shared";
+} from "@enki/shared";
 import {
 	discoverPluginModulePaths as discoverPluginModulePathsFromShared,
 	resolveConfiguredPluginModulePaths,
 	resolvePluginConfigSearchPaths as resolvePluginConfigSearchPathsFromShared,
 	SKILLS_CONFIG_DIRECTORY_NAME,
-} from "@cline/shared/storage";
+} from "@enki/shared/storage";
 import { filterDisabledPluginPaths } from "../../services/global-settings";
 import type { PluginLoadDiagnostics } from "./plugin-load-report";
 import { loadAgentPluginsFromPathsWithDiagnostics } from "./plugin-loader";
@@ -97,10 +97,10 @@ function readDeclaredPluginEntryPaths(packageRoot: string): string[] {
 		const parsed = JSON.parse(
 			readFileSync(join(packageRoot, PACKAGE_JSON_FILE_NAME), "utf8"),
 		) as unknown;
-		if (!isRecord(parsed) || !isRecord(parsed.cline)) {
+		if (!isRecord(parsed) || !isRecord(parsed.enki)) {
 			return [];
 		}
-		const entries = parsed.cline.plugins;
+		const entries = parsed.enki.plugins;
 		if (!Array.isArray(entries)) {
 			return [];
 		}

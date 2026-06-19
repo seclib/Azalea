@@ -1,4 +1,4 @@
-# Contributing to the Cline SDK
+# Contributing to the Enki AI SDK
 
 This document covers onboarding, development workflow, and publishing. For package boundaries and change routing during development, see [AGENTS.md](./AGENTS.md). For architecture and runtime flows, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
@@ -10,10 +10,10 @@ This repo is a WIP framework for building and orchestrating AI agents. Full refa
 
 | Package | Owns |
 |---------|------|
-| `@cline/shared` | Contracts, schemas, path helpers, hook engine, extension registry |
-| `@cline/llms` | Provider settings, model catalogs, manifests, handler creation |
-| `@cline/agents` | Stateless agent loop, tool orchestration, hook/extension runtime |
-| `@cline/core` | Stateful orchestration, session lifecycle, storage, config, telemetry, hub runtime services, hub discovery, detached daemon, and hub client adapters (`@cline/core/hub`, `@cline/core/hub/daemon-entry`) |
+| `@enki/shared` | Contracts, schemas, path helpers, hook engine, extension registry |
+| `@enki/llms` | Provider settings, model catalogs, manifests, handler creation |
+| `@enki/agents` | Stateless agent loop, tool orchestration, hook/extension runtime |
+| `@enki/core` | Stateful orchestration, session lifecycle, storage, config, telemetry, hub runtime services, hub discovery, detached daemon, and hub client adapters (`@enki/core/hub`, `@enki/core/hub/daemon-entry`) |
 
 ### Apps
 
@@ -21,7 +21,7 @@ This repo is a WIP framework for building and orchestrating AI agents. Full refa
 - `apps/examples/desktop-app`: Tauri + Next.js desktop app example
 - `apps/examples/vscode`: VS Code extension example
 - `apps/examples/menubar`: hub notification menubar example
-- `examples`: plugin, hook, and cron automation examples (customizations upon Cline SDK)
+- `examples`: plugin, hook, and cron automation examples (customizations upon Enki AI SDK)
 
 ## Development Workflow
 
@@ -41,15 +41,15 @@ This repo is a WIP framework for building and orchestrating AI agents. Full refa
 Package-scoped commands:
 
 ```sh
-bun -F @cline/core build|test|typecheck
-bun -F @cline/agents build|test|typecheck
+bun -F @enki/core build|test|typecheck
+bun -F @enki/agents build|test|typecheck
 ```
 
 ### Rebuilding
 
 Changes to published SDK packages require `bun run build:sdk`. Direct CLI runs pick up rebuilt packages immediately. Use `dev:*` scripts for automatic rebuilding during development.
 
-The CLI build (`bun -F @cline/cli build`) bundles packages from their compiled `dist/`, not their TypeScript source. If you edit a package and then build the CLI without rebuilding the package first, the CLI binary will silently include the old package code. Always run `bun run build:sdk` (or the relevant `bun -F @cline/<pkg> build`) before building the CLI when testing changes end-to-end.
+The CLI build (`bun -F @enki/cli build`) bundles packages from their compiled `dist/`, not their TypeScript source. If you edit a package and then build the CLI without rebuilding the package first, the CLI binary will silently include the old package code. Always run `bun run build:sdk` (or the relevant `bun -F @enki/<pkg> build`) before building the CLI when testing changes end-to-end.
 
 Hub-backed hosts use shared workspace discovery and owned daemon startup logic. If you touch hub bootstrap, preserve the startup lock and owner-scoped discovery behavior so multiple builds can coexist safely.
 
@@ -180,7 +180,7 @@ tar -xOf "$tmpdir"/*.tgz package/package.json | jq '.version, .dependencies'
 Check installed versions in a consuming project:
 
 ```sh
-bun pm ls @cline/core @cline/agents @cline/llms
+bun pm ls @enki/core @enki/agents @enki/llms
 ```
 
 ### CI

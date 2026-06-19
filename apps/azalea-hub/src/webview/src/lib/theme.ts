@@ -1,4 +1,4 @@
-export const HUB_THEME_STORAGE_KEY = "cline-hub-theme";
+export const HUB_THEME_STORAGE_KEY = "enki-hub-theme";
 
 export type HubTheme = "light" | "dark";
 
@@ -16,7 +16,7 @@ export function readSystemHubTheme(): HubTheme {
 
 export function applyHubTheme(theme: HubTheme): HubTheme {
 	document.documentElement.classList.toggle("dark", theme === "dark");
-	document.documentElement.dataset.clineHubTheme = theme;
+	document.documentElement.dataset.enkiHubTheme = theme;
 	return theme;
 }
 

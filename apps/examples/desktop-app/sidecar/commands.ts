@@ -9,21 +9,21 @@ import {
 } from "node:fs";
 import { basename, dirname, extname, join } from "node:path";
 import type {
-	ClineAccountActionRequest,
+	Enki AIAccountActionRequest,
 	ProviderCapability,
 	ProviderClient,
 	ProviderProtocol,
 	SaveProviderSettingsActionRequest,
-} from "@cline/core";
+} from "@enki/core";
 import {
 	addLocalProvider,
-	ClineAccountService,
+	Enki AIAccountService,
 	createLocalHubScheduleRuntimeHandlers,
 	createUserInstructionConfigService,
 	discoverPluginModulePaths,
 	ensureCustomProvidersLoaded,
 	ensureHubServer,
-	executeClineAccountAction,
+	executeEnki AIAccountAction,
 	getCoreBuiltinToolCatalog,
 	getLocalProviderModels,
 	HubScheduleCommandService,
@@ -35,7 +35,7 @@ import {
 	normalizeOAuthProvider,
 	ProviderSettingsManager,
 	readGlobalSettings,
-	resolveLocalClineAuthToken,
+	resolveLocalEnki AIAuthToken,
 	resolvePluginConfigSearchPaths,
 	resolveSessionBackend,
 	resolveAgentConfigSearchPaths as resolveSharedAgentConfigSearchPaths,
@@ -45,8 +45,8 @@ import {
 	setDisabledPlugin,
 	setDisabledTools,
 	toggleDisabledTool,
-} from "@cline/core";
-import { getClineEnvironmentConfig } from "@cline/shared";
+} from "@enki/core";
+import { getEnki AIEnvironmentConfig } from "@enki/shared";
 import { broadcastEvent, resolveSidecarAskQuestion } from "./context";
 import {
 	findArtifactUnderDir,
@@ -419,7 +419,7 @@ async function handleRoutineScheduleCommand(
 				cronPattern,
 				prompt,
 				modelSelection: {
-					providerId: asTrimmedString(args?.provider) ?? "cline",
+					providerId: asTrimmedString(args?.provider) ?? "enki",
 					modelId: asTrimmedString(args?.model) ?? "openai/gpt-5.3-codex",
 				},
 				mode: args?.mode === "plan" ? "plan" : "act",
@@ -930,19 +930,19 @@ export async function handleCommand(
 		return await searchWorkspaceFiles(ctx, args);
 	}
 
-	// ── Cline account ──────────────────────────────────────────────────
-	if (command === "cline_account") {
+	// ── Enki AI account ──────────────────────────────────────────────────
+	if (command === "enki_account") {
 		const operation = String(args?.operation ?? "").trim();
 		if (!operation) throw new Error("operation is required");
 		const manager = new ProviderSettingsManager();
-		const settings = manager.getProviderSettings("cline");
-		const accountService = new ClineAccountService({
+		const settings = manager.getProviderSettings("enki");
+		const accountService = new Enki AIAccountService({
 			apiBaseUrl:
-				settings?.baseUrl?.trim() || getClineEnvironmentConfig().apiBaseUrl,
-			getAuthToken: async () => resolveLocalClineAuthToken(settings),
+				settings?.baseUrl?.trim() || getEnki AIEnvironmentConfig().apiBaseUrl,
+			getAuthToken: async () => resolveLocalEnki AIAuthToken(settings),
 		});
-		return await executeClineAccountAction(
-			args as ClineAccountActionRequest,
+		return await executeEnki AIAccountAction(
+			args as Enki AIAccountActionRequest,
 			accountService,
 		);
 	}

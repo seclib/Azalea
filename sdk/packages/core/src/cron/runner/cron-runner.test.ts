@@ -61,7 +61,7 @@ describe("CronRunner", () => {
 	let materializer: CronMaterializer;
 
 	beforeEach(() => {
-		dir = mkdtempSync(join(tmpdir(), "cline-runner-"));
+		dir = mkdtempSync(join(tmpdir(), "enki-runner-"));
 		workspaceRoot = join(dir, "ws");
 		cronDir = join(dir, "cron-specs");
 		mkdirSync(workspaceRoot, { recursive: true });

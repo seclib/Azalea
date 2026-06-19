@@ -26,7 +26,7 @@ import {
 	type SkillConfig,
 	type UserInstructionConfigService,
 	type WorkflowConfig,
-} from "@cline/core";
+} from "@enki/core";
 import { getToolCatalog } from "../runtime/tools";
 import {
 	type InteractiveSlashCommand,

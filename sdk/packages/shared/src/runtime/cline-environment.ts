@@ -1,10 +1,10 @@
 export const CLINE_ENVIRONMENT_ENV = "CLINE_ENVIRONMENT";
 export const CLINE_ENVIRONMENT_OVERRIDE_ENV = "CLINE_ENVIRONMENT_OVERRIDE";
 
-export type ClineEnvironment = "production" | "staging" | "local";
+export type Enki AIEnvironment = "production" | "staging" | "local";
 
-export interface ClineEnvironmentConfig {
-	readonly environment: ClineEnvironment;
+export interface Enki AIEnvironmentConfig {
+	readonly environment: Enki AIEnvironment;
 	readonly appBaseUrl: string;
 	readonly apiBaseUrl: string;
 	readonly mcpBaseUrl: string;
@@ -12,20 +12,20 @@ export interface ClineEnvironmentConfig {
 }
 
 export const CLINE_ENVIRONMENTS: Readonly<
-	Record<ClineEnvironment, ClineEnvironmentConfig>
+	Record<Enki AIEnvironment, Enki AIEnvironmentConfig>
 > = {
 	production: {
 		environment: "production",
-		appBaseUrl: "https://app.cline.bot",
-		apiBaseUrl: "https://api.cline.bot",
-		mcpBaseUrl: "https://api.cline.bot/v1/mcp",
+		appBaseUrl: "https://app.enki.bot",
+		apiBaseUrl: "https://api.enki.bot",
+		mcpBaseUrl: "https://api.enki.bot/v1/mcp",
 		workOsClientId: "client_01K3A541FN8TA3EPPHTD2325AR",
 	},
 	staging: {
 		environment: "staging",
-		appBaseUrl: "https://staging-app.cline.bot",
-		apiBaseUrl: "https://core-api.staging.int.cline.bot",
-		mcpBaseUrl: "https://core-api.staging.int.cline.bot/v1/mcp",
+		appBaseUrl: "https://staging-app.enki.bot",
+		apiBaseUrl: "https://core-api.staging.int.enki.bot",
+		mcpBaseUrl: "https://core-api.staging.int.enki.bot/v1/mcp",
 		workOsClientId: "client_01K3A5415VF6QBQBG3XYCW91G6",
 	},
 	local: {
@@ -37,15 +37,15 @@ export const CLINE_ENVIRONMENTS: Readonly<
 	},
 };
 
-export const DEFAULT_CLINE_ENVIRONMENT: ClineEnvironment = "production";
+export const DEFAULT_CLINE_ENVIRONMENT: Enki AIEnvironment = "production";
 
-export interface ResolveClineEnvironmentOptions {
+export interface ResolveEnki AIEnvironmentOptions {
 	env?: Partial<NodeJS.ProcessEnv>;
 }
 
-function normalizeClineEnvironment(
+function normalizeEnki AIEnvironment(
 	value: string | undefined,
-): ClineEnvironment | undefined {
+): Enki AIEnvironment | undefined {
 	const normalized = value?.trim().toLowerCase();
 	if (
 		normalized === "production" ||
@@ -59,7 +59,7 @@ function normalizeClineEnvironment(
 
 function readProcessEnv(): NodeJS.ProcessEnv {
 	// `process` may be absent in browser-style runtimes (this module ships
-	// from the browser entry of `@cline/shared`). Treat its absence as "no
+	// from the browser entry of `@enki/shared`). Treat its absence as "no
 	// env vars set" so callers always get a deterministic default.
 	if (typeof process === "undefined" || !process?.env) {
 		return {};
@@ -67,26 +67,26 @@ function readProcessEnv(): NodeJS.ProcessEnv {
 	return process.env;
 }
 
-export function resolveClineEnvironment(): ClineEnvironment {
+export function resolveEnki AIEnvironment(): Enki AIEnvironment {
 	const env = readProcessEnv();
 	return (
-		normalizeClineEnvironment(env[CLINE_ENVIRONMENT_OVERRIDE_ENV]) ??
-		normalizeClineEnvironment(env[CLINE_ENVIRONMENT_ENV]) ??
+		normalizeEnki AIEnvironment(env[CLINE_ENVIRONMENT_OVERRIDE_ENV]) ??
+		normalizeEnki AIEnvironment(env[CLINE_ENVIRONMENT_ENV]) ??
 		DEFAULT_CLINE_ENVIRONMENT
 	);
 }
 
-function getEnvConfig(env?: ClineEnvironment) {
+function getEnvConfig(env?: Enki AIEnvironment) {
 	if (typeof env === "string") {
 		return CLINE_ENVIRONMENTS[env];
 	}
-	return CLINE_ENVIRONMENTS[resolveClineEnvironment()];
+	return CLINE_ENVIRONMENTS[resolveEnki AIEnvironment()];
 }
 
 function applyConfigOverrides(
-	config: ClineEnvironmentConfig,
+	config: Enki AIEnvironmentConfig,
 	env: NodeJS.ProcessEnv,
-): ClineEnvironmentConfig {
+): Enki AIEnvironmentConfig {
 	if (env.CLINE_API_BASE_URL) {
 		config = {
 			...config,
@@ -98,9 +98,9 @@ function applyConfigOverrides(
 	return config;
 }
 
-export function getClineEnvironmentConfig(
-	env?: ClineEnvironment,
-): ClineEnvironmentConfig {
+export function getEnki AIEnvironmentConfig(
+	env?: Enki AIEnvironment,
+): Enki AIEnvironmentConfig {
 	const config = getEnvConfig(env);
 
 	return applyConfigOverrides(config, readProcessEnv());

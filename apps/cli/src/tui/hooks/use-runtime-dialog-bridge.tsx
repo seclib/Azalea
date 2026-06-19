@@ -1,5 +1,5 @@
-import type { AgentMode } from "@cline/core";
-import type { ToolApprovalRequest, ToolApprovalResult } from "@cline/shared";
+import type { AgentMode } from "@enki/core";
+import type { ToolApprovalRequest, ToolApprovalResult } from "@enki/shared";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { RuntimeToolInteraction, TuiProps } from "../types";
 

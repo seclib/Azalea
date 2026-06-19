@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import * as LlmsModels from "@cline/llms";
-import { resolveClineDataDir } from "@cline/shared/storage";
+import * as LlmsModels from "@enki/llms";
+import { resolveEnki AIDataDir } from "@enki/shared/storage";
 import {
 	emptyStoredProviderSettings,
 	type ProviderSettings,
@@ -66,8 +66,8 @@ interface LegacyGlobalState {
 	minimaxApiLine?: "china" | "international";
 	planModeOpenRouterModelId?: string;
 	actModeOpenRouterModelId?: string;
-	planModeClineModelId?: string;
-	actModeClineModelId?: string;
+	planModeEnki AIModelId?: string;
+	actModeEnki AIModelId?: string;
 	planModeOpenAiModelId?: string;
 	actModeOpenAiModelId?: string;
 	planModeOllamaModelId?: string;
@@ -108,9 +108,9 @@ interface LegacyGlobalState {
 
 interface LegacySecrets {
 	apiKey?: string;
-	clineApiKey?: string;
-	"cline:clineAccountId"?: string;
-	clineAccountId?: string;
+	enkiApiKey?: string;
+	"enki:enkiAccountId"?: string;
+	enkiAccountId?: string;
 	openRouterApiKey?: string;
 	awsAccessKey?: string;
 	awsSecretKey?: string;
@@ -175,7 +175,7 @@ export interface MigrateLegacyProviderSettingsResult {
 	lastUsedProvider?: string;
 }
 
-export type LegacyClineUserInfo = {
+export type LegacyEnki AIUserInfo = {
 	idToken: string;
 	expiresAt: number;
 	refreshToken: string;
@@ -184,7 +184,7 @@ export type LegacyClineUserInfo = {
 		email: string;
 		displayName: string;
 		termsAcceptedAt: string;
-		clineBenchConsent: boolean;
+		enkiBenchConsent: boolean;
 		createdAt: string;
 		updatedAt: string;
 	};
@@ -193,13 +193,13 @@ export type LegacyClineUserInfo = {
 };
 
 /**
- * Resolves legacy Cline account auth data from the raw `cline:clineAccountId`
+ * Resolves legacy Enki AI account auth data from the raw `enki:enkiAccountId`
  * secret string into the auth fields used by `ProviderSettings`.
  *
  * Returns `undefined` when the input is missing, empty, whitespace-only, or
  * unparseable JSON.
  */
-export function resolveLegacyClineAuth(
+export function resolveLegacyEnki AIAuth(
 	rawAccountData: string | undefined,
 ): ProviderSettings["auth"] | undefined {
 	const trimmed = rawAccountData?.trim();
@@ -207,7 +207,7 @@ export function resolveLegacyClineAuth(
 		return undefined;
 	}
 	try {
-		const data = JSON.parse(trimmed) as LegacyClineUserInfo;
+		const data = JSON.parse(trimmed) as LegacyEnki AIUserInfo;
 		if (!data) {
 			return undefined;
 		}
@@ -255,7 +255,7 @@ function readJsonObject<T extends object>(filePath: string): T | undefined {
 function resolveLegacyStorage(
 	options: MigrateLegacyProviderSettingsOptions,
 ): LegacyProviderStorage | undefined {
-	const dataDir = options.dataDir ?? resolveClineDataDir();
+	const dataDir = options.dataDir ?? resolveEnki AIDataDir();
 	const globalStatePath =
 		options.globalStatePath ?? join(dataDir, "globalState.json");
 	const secretsPath = options.secretsPath ?? join(dataDir, "secrets.json");
@@ -294,7 +294,7 @@ function resolveModelForProvider(
 			: undefined;
 	const providerModelKeyById: Record<string, keyof LegacyGlobalState> = {
 		openrouter: `${modePrefix}OpenRouterModelId` as keyof LegacyGlobalState,
-		cline: `${modePrefix}ClineModelId` as keyof LegacyGlobalState,
+		enki: `${modePrefix}Enki AIModelId` as keyof LegacyGlobalState,
 		openai: `${modePrefix}OpenAiModelId` as keyof LegacyGlobalState,
 		ollama: `${modePrefix}OllamaModelId` as keyof LegacyGlobalState,
 		lmstudio: `${modePrefix}LmStudioModelId` as keyof LegacyGlobalState,
@@ -436,7 +436,7 @@ function buildLegacyProviderSettings(
 
 	const secretByProvider: Record<string, string | undefined> = {
 		anthropic: legacySecrets.apiKey,
-		cline: legacySecrets.clineApiKey,
+		enki: legacySecrets.enkiApiKey,
 		openai: legacySecrets.openAiApiKey,
 		"openai-native": legacySecrets.openAiNativeApiKey,
 		openrouter: legacySecrets.openRouterApiKey,
@@ -475,20 +475,20 @@ function buildLegacyProviderSettings(
 	if (providerId === "openai-codex") {
 		Object.assign(providerSpecific, resolveLegacyCodexAuth(legacySecrets));
 	}
-	if (providerId === "cline") {
+	if (providerId === "enki") {
 		try {
 			const legacyAuthString = trimNonEmpty(
-				legacySecrets["cline:clineAccountId"],
+				legacySecrets["enki:enkiAccountId"],
 			);
 
 			if (legacyAuthString) {
 				providerSpecific.auth = {
 					...(providerSpecific.auth ?? {}),
-					...resolveLegacyClineAuth(legacyAuthString),
+					...resolveLegacyEnki AIAuth(legacyAuthString),
 				};
 			}
 		} catch {
-			// Failed to parse stored cline auth data
+			// Failed to parse stored enki auth data
 		}
 	}
 	if (
@@ -680,16 +680,16 @@ function collectCandidateProviderIds(
 	) {
 		candidates.add("vertex");
 	}
-	if (trimNonEmpty(legacySecrets.clineApiKey)) candidates.add("cline");
-	const legacyClineAuth = resolveLegacyClineAuth(
-		trimNonEmpty(legacySecrets["cline:clineAccountId"]),
+	if (trimNonEmpty(legacySecrets.enkiApiKey)) candidates.add("enki");
+	const legacyEnki AIAuth = resolveLegacyEnki AIAuth(
+		trimNonEmpty(legacySecrets["enki:enkiAccountId"]),
 	);
 	if (
-		legacyClineAuth?.accessToken ||
-		legacyClineAuth?.refreshToken ||
-		legacyClineAuth?.accountId
+		legacyEnki AIAuth?.accessToken ||
+		legacyEnki AIAuth?.refreshToken ||
+		legacyEnki AIAuth?.accountId
 	) {
-		candidates.add("cline");
+		candidates.add("enki");
 	}
 	if (trimNonEmpty(legacySecrets.ocaApiKey)) candidates.add("oca");
 	if (

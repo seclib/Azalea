@@ -1,32 +1,32 @@
-import type { BasicLogger, ITelemetryService } from "@cline/shared";
+import type { BasicLogger, ITelemetryService } from "@enki/shared";
 import {
-	ClineCoreAutomationController,
-	createClineCoreAutomationExtensionContext,
-	createClineCoreAutomationRuntimeHandlers,
+	Enki AICoreAutomationController,
+	createEnki AICoreAutomationExtensionContext,
+	createEnki AICoreAutomationRuntimeHandlers,
 	normalizeAutomationCronScope,
 	normalizeAutomationOptions,
-} from "./cline-core/automation";
+} from "./enki-core/automation";
 import {
-	createClineCorePendingPromptsApi,
-	createClineCoreSettingsApi,
+	createEnki AICorePendingPromptsApi,
+	createEnki AICoreSettingsApi,
 	type RuntimeHostServiceExtensions,
-} from "./cline-core/runtime-services";
+} from "./enki-core/runtime-services";
 import {
-	normalizeClineCoreStartInput,
-	toClineCoreStartInput,
-} from "./cline-core/start-input";
-import { emitSessionStartedTelemetry } from "./cline-core/telemetry";
+	normalizeEnki AICoreStartInput,
+	toEnki AICoreStartInput,
+} from "./enki-core/start-input";
+import { emitSessionStartedTelemetry } from "./enki-core/telemetry";
 import type {
-	ClineCoreAutomationApi,
-	ClineCoreAutomationOptions,
-	ClineCoreListHistoryOptions,
-	ClineCoreOptions,
-	ClineCoreSettingsApi,
-	ClineCoreStartInput,
+	Enki AICoreAutomationApi,
+	Enki AICoreAutomationOptions,
+	Enki AICoreListHistoryOptions,
+	Enki AICoreOptions,
+	Enki AICoreSettingsApi,
+	Enki AICoreStartInput,
 	RestoreInput,
 	RestoreResult,
 	StartSessionBootstrap,
-} from "./cline-core/types";
+} from "./enki-core/types";
 
 import { CronService } from "./cron/service/cron-service";
 import type { RuntimeCapabilities } from "./runtime/capabilities";
@@ -51,21 +51,21 @@ import type { CoreSessionEvent } from "./types/events";
 import type { SessionHistoryRecord } from "./types/sessions";
 
 export type {
-	ClineAutomationEventIngressResult,
-	ClineAutomationEventLog,
-	ClineAutomationEventSuppression,
-	ClineAutomationListEventsOptions,
-	ClineAutomationListRunsOptions,
-	ClineAutomationListSpecsOptions,
-	ClineAutomationRun,
-	ClineAutomationRunStatus,
-	ClineAutomationSpec,
-	ClineCoreAutomationApi,
-	ClineCoreAutomationOptions,
-	ClineCoreListHistoryOptions,
-	ClineCoreOptions,
-	ClineCoreSettingsApi,
-	ClineCoreStartInput,
+	Enki AIAutomationEventIngressResult,
+	Enki AIAutomationEventLog,
+	Enki AIAutomationEventSuppression,
+	Enki AIAutomationListEventsOptions,
+	Enki AIAutomationListRunsOptions,
+	Enki AIAutomationListSpecsOptions,
+	Enki AIAutomationRun,
+	Enki AIAutomationRunStatus,
+	Enki AIAutomationSpec,
+	Enki AICoreAutomationApi,
+	Enki AICoreAutomationOptions,
+	Enki AICoreListHistoryOptions,
+	Enki AICoreOptions,
+	Enki AICoreSettingsApi,
+	Enki AICoreStartInput,
 	HubOptions,
 	RemoteOptions,
 	RestoreInput,
@@ -73,28 +73,28 @@ export type {
 	RestoreResult,
 	RuntimeHostMode,
 	StartSessionBootstrap,
-} from "./cline-core/types";
+} from "./enki-core/types";
 
 /**
- * The primary entry point for the Cline Core SDK.
+ * The primary entry point for the Enki AI Core SDK.
  *
  * @example
  * ```ts
- * import { ClineCore } from "@cline/core";
+ * import { Enki AICore } from "@enki/core";
  *
- * const cline = await ClineCore.create({ clientName: "my-app" });
- * const session = await cline.start({ ... });
+ * const enki = await Enki AICore.create({ clientName: "my-app" });
+ * const session = await enki.start({ ... });
  * ```
  */
-export class ClineCore {
+export class Enki AICore {
 	readonly clientName: string | undefined;
 	readonly runtimeAddress: string | undefined;
-	readonly automation: ClineCoreAutomationApi;
-	readonly settings: ClineCoreSettingsApi;
+	readonly automation: Enki AICoreAutomationApi;
+	readonly settings: Enki AICoreSettingsApi;
 	readonly featureFlags: FeatureFlagsService;
 	readonly pendingPrompts: PendingPromptsServiceApi;
 	private readonly host: RuntimeHost;
-	private readonly prepare: ClineCoreOptions["prepare"] | undefined;
+	private readonly prepare: Enki AICoreOptions["prepare"] | undefined;
 	private readonly capabilities: RuntimeCapabilities | undefined;
 	private readonly logger: BasicLogger | undefined;
 	private readonly telemetry: ITelemetryService | undefined;
@@ -110,14 +110,14 @@ export class ClineCore {
 		host: RuntimeHost,
 		clientName: string | undefined,
 		runtimeAddress: string | undefined,
-		prepare: ClineCoreOptions["prepare"],
+		prepare: Enki AICoreOptions["prepare"],
 		capabilities: RuntimeCapabilities | undefined,
 		logger: BasicLogger | undefined,
 		telemetry: ITelemetryService | undefined,
 		distinctId: string | undefined,
 		featureFlags: FeatureFlagsService,
 		automationOptions:
-			| (ClineCoreAutomationOptions & { logger?: BasicLogger })
+			| (Enki AICoreAutomationOptions & { logger?: BasicLogger })
 			| undefined,
 	) {
 		this.clientName = clientName;
@@ -129,12 +129,12 @@ export class ClineCore {
 		this.telemetry = telemetry;
 		this.distinctId = distinctId;
 		this.featureFlags = featureFlags;
-		this.settings = createClineCoreSettingsApi(host);
-		this.pendingPrompts = createClineCorePendingPromptsApi(host);
-		this.automation = new ClineCoreAutomationController(() => {
+		this.settings = createEnki AICoreSettingsApi(host);
+		this.pendingPrompts = createEnki AICorePendingPromptsApi(host);
+		this.automation = new Enki AICoreAutomationController(() => {
 			if (!this.automationService) {
 				throw new Error(
-					"ClineCore automation is not enabled. Pass `automation: true` or automation options to ClineCore.create().",
+					"Enki AICore automation is not enabled. Pass `automation: true` or automation options to Enki AICore.create().",
 				);
 			}
 			return this.automationService;
@@ -148,10 +148,10 @@ export class ClineCore {
 						scope: normalizeAutomationCronScope(automationOptions.cronScope),
 						workspaceRoot: automationOptions.workspaceRoot,
 					},
-					runtimeHandlers: createClineCoreAutomationRuntimeHandlers({
+					runtimeHandlers: createEnki AICoreAutomationRuntimeHandlers({
 						host,
 						getExtensionContext: () =>
-							createClineCoreAutomationExtensionContext({
+							createEnki AICoreAutomationExtensionContext({
 								automationService: this.automationService,
 								automation: this.automation,
 								clientName: this.clientName,
@@ -177,24 +177,24 @@ export class ClineCore {
 	}
 
 	/**
-	 * Creates a new ClineCore instance.
+	 * Creates a new Enki AICore instance.
 	 *
 	 * This is the primary factory method for initializing the SDK. It sets up the runtime
 	 * host (local, hub, or remote) based on the provided options and prepares the SDK for
 	 * starting sessions.
 	 *
 	 * @param options Configuration options for the SDK instance
-	 * @returns A promise that resolves to a new ClineCore instance
+	 * @returns A promise that resolves to a new Enki AICore instance
 	 *
 	 * @example
 	 * ```ts
-	 * const cline = await ClineCore.create({
+	 * const enki = await Enki AICore.create({
 	 *   clientName: "my-app",
 	 *   backendMode: "local",
 	 * });
 	 * ```
 	 */
-	static async create(options: ClineCoreOptions = {}): Promise<ClineCore> {
+	static async create(options: Enki AICoreOptions = {}): Promise<Enki AICore> {
 		const distinctId = resolveCoreDistinctId(options.distinctId);
 		const capabilities = normalizeRuntimeCapabilities(options.capabilities);
 		const normalizedOptions = { ...options, capabilities, distinctId };
@@ -211,7 +211,7 @@ export class ClineCore {
 					clientName: options.clientName,
 				},
 			});
-		const core = new ClineCore(
+		const core = new Enki AICore(
 			host,
 			options.clientName,
 			host.runtimeAddress,
@@ -241,7 +241,7 @@ export class ClineCore {
 	}
 
 	/**
-	 * Starts a new Cline session with the provided configuration.
+	 * Starts a new Enki AI session with the provided configuration.
 	 *
 	 * This method initializes and begins a new agent session. It handles session setup,
 	 * runs any preparation hooks, and returns session metadata along with event streams.
@@ -252,7 +252,7 @@ export class ClineCore {
 	 *
 	 * @example
 	 * ```ts
-	 * const result = await cline.start({
+	 * const result = await enki.start({
 	 *   config: {
 	 *     providerId: "anthropic",
 	 *     modelId: "claude-opus-4-1",
@@ -267,24 +267,24 @@ export class ClineCore {
 	 */
 	start(input: StartSessionInput): Promise<StartSessionResult>;
 	/**
-	 * Starts a new Cline session with extended core-specific configuration.
+	 * Starts a new Enki AI session with extended core-specific configuration.
 	 * This overload allows specifying local runtime options and config overrides.
 	 */
-	start(input: ClineCoreStartInput): Promise<StartSessionResult>;
+	start(input: Enki AICoreStartInput): Promise<StartSessionResult>;
 	async start(
-		input: StartSessionInput | ClineCoreStartInput,
+		input: StartSessionInput | Enki AICoreStartInput,
 	): Promise<StartSessionResult> {
-		const clineCoreInput = toClineCoreStartInput(input);
-		const bootstrap = await this.prepare?.(clineCoreInput);
+		const enkiCoreInput = toEnki AICoreStartInput(input);
+		const bootstrap = await this.prepare?.(enkiCoreInput);
 		try {
 			const preparedInput = bootstrap
-				? await bootstrap.applyToStartSessionInput(clineCoreInput)
-				: clineCoreInput;
+				? await bootstrap.applyToStartSessionInput(enkiCoreInput)
+				: enkiCoreInput;
 			const result = await this.host.startSession(
-				normalizeClineCoreStartInput(preparedInput, {
+				normalizeEnki AICoreStartInput(preparedInput, {
 					defaultCapabilities: this.capabilities,
 					withExtensionContext: (context) =>
-						createClineCoreAutomationExtensionContext({
+						createEnki AICoreAutomationExtensionContext({
 							automationService: this.automationService,
 							automation: this.automation,
 							context,
@@ -324,7 +324,7 @@ export class ClineCore {
 	 *
 	 * @example
 	 * ```ts
-	 * await cline.send(sessionId, {
+	 * await enki.send(sessionId, {
 	 *   type: "user_message",
 	 *   text: "Please implement the login feature",
 	 * });
@@ -340,7 +340,7 @@ export class ClineCore {
 	 *
 	 * @example
 	 * ```ts
-	 * const usageSummary = await cline.getAccumulatedUsage(sessionId);
+	 * const usageSummary = await enki.getAccumulatedUsage(sessionId);
 	 * console.log(`Total cost: $${usageSummary?.aggregateUsage?.totalCost}`);
 	 * ```
 	 */
@@ -360,7 +360,7 @@ export class ClineCore {
 	 * @example
 	 * ```ts
 	 * // Stop the current operation but keep the session running
-	 * await cline.abort(sessionId);
+	 * await enki.abort(sessionId);
 	 * ```
 	 */
 	abort: RuntimeHost["abort"] = (...args) => this.host.abort(...args);
@@ -373,7 +373,7 @@ export class ClineCore {
 	 * @example
 	 * ```ts
 	 * // Cleanly shutdown the session
-	 * await cline.stop(sessionId);
+	 * await enki.stop(sessionId);
 	 * ```
 	 */
 	stop: RuntimeHost["stopSession"] = async (sessionId) => {
@@ -381,7 +381,7 @@ export class ClineCore {
 		await this.disposeSessionBootstrap(sessionId);
 	};
 	/**
-	 * Disposes the ClineCore instance and all associated resources.
+	 * Disposes the Enki AICore instance and all associated resources.
 	 *
 	 * Shuts down the runtime host, closes connections, and cleans up all active sessions
 	 * and bootstraps. Call this when you're done using the SDK instance, typically at
@@ -390,7 +390,7 @@ export class ClineCore {
 	 * @example
 	 * ```ts
 	 * // Clean up when done
-	 * await cline.dispose();
+	 * await enki.dispose();
 	 * ```
 	 */
 	dispose: RuntimeHost["dispose"] = async (...args) => {
@@ -413,7 +413,7 @@ export class ClineCore {
 	 *
 	 * @example
 	 * ```ts
-	 * const session = await cline.get(sessionId);
+	 * const session = await enki.get(sessionId);
 	 * console.log("Session status:", session?.status);
 	 * ```
 	 */
@@ -422,7 +422,7 @@ export class ClineCore {
 	 * Lists recent sessions through the shared history-listing path.
 	 */
 	listHistory = async (
-		options: ClineCoreListHistoryOptions = {},
+		options: Enki AICoreListHistoryOptions = {},
 	): Promise<SessionHistoryRecord[]> =>
 		await listSessionHistory(this.host, options);
 	/**
@@ -436,7 +436,7 @@ export class ClineCore {
 	 *
 	 * @example
 	 * ```ts
-	 * const sessions = await cline.list(50);
+	 * const sessions = await enki.list(50);
 	 * sessions.forEach((session) => {
 	 *   console.log(`Session ${session.sessionId}: ${session.metadata?.title}`);
 	 * });
@@ -444,7 +444,7 @@ export class ClineCore {
 	 */
 	list = async (
 		limit = 200,
-		options: Omit<ClineCoreListHistoryOptions, "limit"> = {},
+		options: Omit<Enki AICoreListHistoryOptions, "limit"> = {},
 	): Promise<SessionHistoryRecord[]> =>
 		await this.listHistory({ ...options, limit });
 	/**
@@ -458,7 +458,7 @@ export class ClineCore {
 	 *
 	 * @example
 	 * ```ts
-	 * const deleted = await cline.delete(sessionId);
+	 * const deleted = await enki.delete(sessionId);
 	 * if (deleted) {
 	 *   console.log("Session deleted successfully");
 	 * }
@@ -479,7 +479,7 @@ export class ClineCore {
 	 *
 	 * @example
 	 * ```ts
-	 * await cline.update(sessionId, {
+	 * await enki.update(sessionId, {
 	 *   title: "Updated session title",
 	 * });
 	 * ```
@@ -494,7 +494,7 @@ export class ClineCore {
 	 *
 	 * @example
 	 * ```ts
-	 * const messages = await cline.readMessages(sessionId);
+	 * const messages = await enki.readMessages(sessionId);
 	 * messages.forEach((msg) => {
 	 *   console.log(`${msg.role}: ${msg.content}`);
 	 * });
@@ -505,10 +505,10 @@ export class ClineCore {
 
 	async restore(input: RestoreInput): Promise<RestoreResult> {
 		const normalizedStart = input.start
-			? normalizeClineCoreStartInput(input.start, {
+			? normalizeEnki AICoreStartInput(input.start, {
 					defaultCapabilities: this.capabilities,
 					withExtensionContext: (context) =>
-						createClineCoreAutomationExtensionContext({
+						createEnki AICoreAutomationExtensionContext({
 							automationService: this.automationService,
 							automation: this.automation,
 							context,
@@ -551,7 +551,7 @@ export class ClineCore {
 	 *
 	 * @example
 	 * ```ts
-	 * const unsubscribe = cline.subscribe((event) => {
+	 * const unsubscribe = enki.subscribe((event) => {
 	 *   if (event.type === "message") {
 	 *     console.log("New message:", event.payload.message);
 	 *   }
@@ -576,7 +576,7 @@ export class ClineCore {
 	 * @example
 	 * ```ts
 	 * // Switch to a different model mid-session
-	 * await cline.updateSessionModel(sessionId, "claude-opus-4-1");
+	 * await enki.updateSessionModel(sessionId, "claude-opus-4-1");
 	 * ```
 	 */
 	updateSessionModel: SessionModelRuntimeService["updateSessionModel"] = (

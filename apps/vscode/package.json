@@ -1,6 +1,6 @@
 {
 	"name": "claude-dev",
-	"displayName": "Cline",
+	"displayName": "Enki AI",
 	"description": "Autonomous coding agent right in your IDE, capable of creating/editing files, running commands, using the browser, and more with your permission every step of the way.",
 	"version": "3.89.2",
 	"icon": "assets/icons/icon.png",
@@ -26,7 +26,7 @@
 		"Testing"
 	],
 	"keywords": [
-		"cline",
+		"enki",
 		"claude",
 		"dev",
 		"mcp",
@@ -49,7 +49,7 @@
 	"contributes": {
 		"icons": {
 			"cline-icon": {
-				"description": "cline",
+				"description": "enki",
 				"default": {
 					"fontPath": "assets/icons/cline-bot.woff",
 					"fontCharacter": "\\e900"
@@ -112,7 +112,7 @@
 			"activitybar": [
 				{
 					"id": "claude-dev-ActivityBar",
-					"title": "Cline",
+					"title": "Enki AI",
 					"icon": "assets/icons/icon.svg"
 				}
 			]
@@ -156,90 +156,90 @@
 			{
 				"command": "cline.dev.createTestTasks",
 				"title": "Create Test Tasks",
-				"category": "Cline",
+				"category": "Enki AI",
 				"when": "cline.isDevMode"
 			},
 			{
 				"command": "cline.dev.expireMcpOAuthTokens",
 				"title": "Expire MCP OAuth Tokens (for testing)",
-				"category": "Cline",
+				"category": "Enki AI",
 				"when": "cline.isDevMode"
 			},
 			{
 				"command": "cline.addToChat",
 				"title": "Add to Cline",
-				"category": "Cline"
+				"category": "Enki AI"
 			},
 			{
 				"command": "cline.addTerminalOutputToChat",
 				"title": "Add to Cline",
-				"category": "Cline"
+				"category": "Enki AI"
 			},
 			{
 				"command": "cline.focusChatInput",
 				"title": "Jump to Chat Input",
-				"category": "Cline"
+				"category": "Enki AI"
 			},
 			{
 				"command": "cline.generateGitCommitMessage",
 				"title": "Generate Commit Message with Cline",
-				"category": "Cline",
+				"category": "Enki AI",
 				"icon": "$(cline-icon)"
 			},
 			{
 				"command": "cline.abortGitCommitMessage",
 				"title": "Generate Commit Message with Cline - Stop",
-				"category": "Cline",
+				"category": "Enki AI",
 				"icon": "$(debug-stop)"
 			},
 			{
 				"command": "cline.explainCode",
 				"title": "Explain with Cline",
-				"category": "Cline"
+				"category": "Enki AI"
 			},
 			{
 				"command": "cline.improveCode",
 				"title": "Improve with Cline",
-				"category": "Cline"
+				"category": "Enki AI"
 			},
 			{
 				"command": "cline.jupyterGenerateCell",
 				"title": "Generate Jupyter Cell with Cline",
-				"category": "Cline",
+				"category": "Enki AI",
 				"icon": "$(sparkle)"
 			},
 			{
 				"command": "cline.jupyterExplainCell",
 				"title": "Explain Jupyter Cell with Cline",
-				"category": "Cline",
+				"category": "Enki AI",
 				"icon": "$(question)"
 			},
 			{
 				"command": "cline.jupyterImproveCell",
 				"title": "Improve Jupyter Cell with Cline",
-				"category": "Cline",
+				"category": "Enki AI",
 				"icon": "$(lightbulb)"
 			},
 			{
 				"command": "cline.openWalkthrough",
 				"title": "Open Walkthrough",
-				"category": "Cline"
+				"category": "Enki AI"
 			},
 			{
 				"command": "cline.reconstructTaskHistory",
 				"title": "Reconstruct Task History",
-				"category": "Cline"
+				"category": "Enki AI"
 			},
 			{
 				"command": "cline.reviewComment.reply",
 				"title": "Reply",
-				"category": "Cline",
+				"category": "Enki AI",
 				"enablement": "!commentIsEmpty"
 			},
 			{
 				"command": "cline.reviewComment.addToChat",
 				"title": "Add to Cline Chat",
-				"category": "Cline",
+				"category": "Enki AI",
 				"icon": "$(link-external)"
 			}
 		],
@@ -372,7 +372,7 @@
 			]
 		},
 		"configuration": {
-			"title": "Cline",
+			"title": "Enki AI",
 			"properties": {}
 		}
 	},

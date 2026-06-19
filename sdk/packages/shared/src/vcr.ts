@@ -24,13 +24,13 @@
  *
  * Usage:
  *   # Record only inference requests
- *   CLINE_VCR=record CLINE_VCR_CASSETTE=./fixtures/my-test.json cline task "hello"
+ *   CLINE_VCR=record CLINE_VCR_CASSETTE=./fixtures/my-test.json enki task "hello"
  *
  *   # Replay: auth/S3/etc. requests go through normally, only inference is mocked
- *   CLINE_VCR=playback CLINE_VCR_CASSETTE=./fixtures/my-test.json cline task "hello"
+ *   CLINE_VCR=playback CLINE_VCR_CASSETTE=./fixtures/my-test.json enki task "hello"
  *
  *   # Record everything (no filter)
- *   CLINE_VCR=record CLINE_VCR_FILTER="" CLINE_VCR_CASSETTE=./fixtures/all.json cline task "hello"
+ *   CLINE_VCR=record CLINE_VCR_FILTER="" CLINE_VCR_CASSETTE=./fixtures/all.json enki task "hello"
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -210,7 +210,7 @@ const PATH_NORMALIZATION_PATTERNS: { pattern: RegExp; replacement: string }[] =
 			replacement: "tasks/usr-test/taskid/api_conversation_history",
 		},
 		// Prefixed entity IDs in path segments (org-XXX, usr-XXX, mbr-XXX, ses-XXX, etc.)
-		// Matches common Cline ID formats: prefix + ULID/UUID-like suffix
+		// Matches common Enki AI ID formats: prefix + ULID/UUID-like suffix
 		{
 			pattern:
 				/\/(org|usr|mbr|ses|gen|req|msg|tsk|sch|exe|srv|cli|wkr|evt|sub|tkn)-[A-Za-z0-9]{10,}(?=[/?#]|$)/g,

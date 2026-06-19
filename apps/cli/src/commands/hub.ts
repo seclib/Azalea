@@ -6,8 +6,8 @@ import {
 	resolveProductionHubOwnerContext,
 	resolveSharedHubOwnerContext,
 	stopLocalHubServerGracefully,
-} from "@cline/core";
-import { formatUptime, resolveClineBuildEnv } from "@cline/shared";
+} from "@enki/core";
+import { formatUptime, resolveEnki AIBuildEnv } from "@enki/shared";
 import { Command } from "commander";
 
 interface HubCommandIo {
@@ -48,7 +48,7 @@ function formatHubUptimeFromStartedAt(
 }
 
 function resolveCliHubOwnerContext() {
-	return resolveClineBuildEnv() === "production"
+	return resolveEnki AIBuildEnv() === "production"
 		? resolveProductionHubOwnerContext()
 		: resolveSharedHubOwnerContext();
 }

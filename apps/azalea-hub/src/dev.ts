@@ -30,7 +30,7 @@ function spawn(
 	children.push(child);
 	void child.exited.then((code) => {
 		if (!shuttingDown) {
-			console.error(`[cline-hub:dev] ${name} exited with code ${code}`);
+			console.error(`[enki-hub:dev] ${name} exited with code ${code}`);
 			shutdown(code === 0 ? 0 : 1);
 		}
 	});
@@ -53,8 +53,8 @@ function shutdown(exitCode = 0): void {
 process.on("SIGINT", () => shutdown(0));
 process.on("SIGTERM", () => shutdown(0));
 
-console.log(`[cline-hub:dev] Vite webview: ${webviewDevServerUrl}`);
-console.log("[cline-hub:dev] Hub dashboard: http://127.0.0.1:8787/");
+console.log(`[enki-hub:dev] Vite webview: ${webviewDevServerUrl}`);
+console.log("[enki-hub:dev] Hub dashboard: http://127.0.0.1:8787/");
 
 spawn(
 	"webview",

@@ -10,7 +10,7 @@ import {
 	type AgentToolContext,
 	getDefaultShell,
 	getShellArgs,
-} from "@cline/shared";
+} from "@enki/shared";
 import { TimeoutError } from "../helpers";
 import type { BashExecutor } from "../types";
 import { MAX_COMMAND_OUTPUT_CHARS } from "./output-limits";

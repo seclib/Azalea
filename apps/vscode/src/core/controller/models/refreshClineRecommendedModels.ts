@@ -5,34 +5,34 @@ import {
 import axios from "axios";
 import fs from "fs/promises";
 import path from "path";
-import { ClineEnv } from "@/config";
+import { Enki AIEnv } from "@/config";
 import { getAxiosSettings } from "@/shared/net";
 import { Logger } from "@/shared/services/Logger";
 
-export interface ClineRecommendedModelData {
+export interface Enki AIRecommendedModelData {
 	id: string;
 	name: string;
 	description: string;
 	tags: string[];
 }
 
-export interface ClineRecommendedModelsData {
-	recommended: ClineRecommendedModelData[];
-	free: ClineRecommendedModelData[];
-	clinePass: ClineRecommendedModelData[];
+export interface Enki AIRecommendedModelsData {
+	recommended: Enki AIRecommendedModelData[];
+	free: Enki AIRecommendedModelData[];
+	enkiPass: Enki AIRecommendedModelData[];
 }
 
 const RECOMMENDED_MODELS_CACHE_TTL_MS = 60 * 60 * 1000;
 
-let pendingRefresh: Promise<ClineRecommendedModelsData> | null = null;
+let pendingRefresh: Promise<Enki AIRecommendedModelsData> | null = null;
 let inMemoryCache: {
-	data: ClineRecommendedModelsData;
+	data: Enki AIRecommendedModelsData;
 	timestamp: number;
 } | null = null;
 
 function normalizeRecommendedModel(
 	raw: unknown,
-): ClineRecommendedModelData | null {
+): Enki AIRecommendedModelData | null {
 	if (!raw || typeof raw !== "object") {
 		return null;
 	}
@@ -57,7 +57,7 @@ function normalizeRecommendedModel(
 
 function normalizeRecommendedModelsResponse(
 	raw: unknown,
-): ClineRecommendedModelsData | null {
+): Enki AIRecommendedModelsData | null {
 	if (!raw || typeof raw !== "object") {
 		return null;
 	}
@@ -66,7 +66,7 @@ function normalizeRecommendedModelsResponse(
 	if (
 		(data.recommended !== undefined && !Array.isArray(data.recommended)) ||
 		(data.free !== undefined && !Array.isArray(data.free)) ||
-		(data.clinePass !== undefined && !Array.isArray(data.clinePass))
+		(data.enkiPass !== undefined && !Array.isArray(data.enkiPass))
 	) {
 		return null;
 	}
@@ -75,24 +75,24 @@ function normalizeRecommendedModelsResponse(
 		? data.recommended
 		: [];
 	const freeRaw = Array.isArray(data.free) ? data.free : [];
-	const clinePassRaw = Array.isArray(data.clinePass) ? data.clinePass : [];
+	const enkiPassRaw = Array.isArray(data.enkiPass) ? data.enkiPass : [];
 
 	const recommended = recommendedRaw
 		.map((model) => normalizeRecommendedModel(model))
-		.filter((model): model is ClineRecommendedModelData => model !== null);
+		.filter((model): model is Enki AIRecommendedModelData => model !== null);
 
 	const free = freeRaw
 		.map((model) => normalizeRecommendedModel(model))
-		.filter((model): model is ClineRecommendedModelData => model !== null);
+		.filter((model): model is Enki AIRecommendedModelData => model !== null);
 
-	const clinePass = clinePassRaw
+	const enkiPass = enkiPassRaw
 		.map((model) => normalizeRecommendedModel(model))
-		.filter((model): model is ClineRecommendedModelData => model !== null);
+		.filter((model): model is Enki AIRecommendedModelData => model !== null);
 
-	return { recommended, free, clinePass };
+	return { recommended, free, enkiPass };
 }
 
-export async function refreshClineRecommendedModels(): Promise<ClineRecommendedModelsData> {
+export async function refreshEnki AIRecommendedModels(): Promise<Enki AIRecommendedModelsData> {
 	if (
 		inMemoryCache &&
 		Date.now() - inMemoryCache.timestamp <= RECOMMENDED_MODELS_CACHE_TTL_MS
@@ -106,7 +106,7 @@ export async function refreshClineRecommendedModels(): Promise<ClineRecommendedM
 
 	pendingRefresh = (async () => {
 		try {
-			return await fetchAndCacheClineRecommendedModels();
+			return await fetchAndCacheEnki AIRecommendedModels();
 		} finally {
 			pendingRefresh = null;
 		}
@@ -115,49 +115,49 @@ export async function refreshClineRecommendedModels(): Promise<ClineRecommendedM
 	return pendingRefresh;
 }
 
-export function resetClineRecommendedModelsCacheForTests(): void {
+export function resetEnki AIRecommendedModelsCacheForTests(): void {
 	pendingRefresh = null;
 	inMemoryCache = null;
 }
 
-async function fetchAndCacheClineRecommendedModels(): Promise<ClineRecommendedModelsData> {
-	const clineRecommendedModelsFilePath = path.join(
+async function fetchAndCacheEnki AIRecommendedModels(): Promise<Enki AIRecommendedModelsData> {
+	const enkiRecommendedModelsFilePath = path.join(
 		await ensureCacheDirectoryExists(),
-		GlobalFileNames.clineRecommendedModels,
+		GlobalFileNames.enkiRecommendedModels,
 	);
-	let result: ClineRecommendedModelsData = {
+	let result: Enki AIRecommendedModelsData = {
 		recommended: [],
 		free: [],
-		clinePass: [],
+		enkiPass: [],
 	};
 
 	try {
-		const apiBaseUrl = ClineEnv.config().apiBaseUrl;
+		const apiBaseUrl = Enki AIEnv.config().apiBaseUrl;
 		const response = await axios.get(
-			`${apiBaseUrl}/api/v1/ai/cline/recommended-models`,
+			`${apiBaseUrl}/api/v1/ai/enki/recommended-models`,
 			getAxiosSettings(),
 		);
 		const normalized = normalizeRecommendedModelsResponse(response.data);
 		if (!normalized) {
 			throw new Error(
-				"Invalid response data when fetching Cline recommended models",
+				"Invalid response data when fetching Enki AI recommended models",
 			);
 		}
 
 		result = normalized;
-		await fs.writeFile(clineRecommendedModelsFilePath, JSON.stringify(result));
-		Logger.log("Cline recommended models fetched and saved");
+		await fs.writeFile(enkiRecommendedModelsFilePath, JSON.stringify(result));
+		Logger.log("Enki AI recommended models fetched and saved");
 	} catch (error) {
-		Logger.error("Error fetching Cline recommended models:", error);
+		Logger.error("Error fetching Enki AI recommended models:", error);
 
 		try {
 			const fileExists = await fs
-				.access(clineRecommendedModelsFilePath)
+				.access(enkiRecommendedModelsFilePath)
 				.then(() => true)
 				.catch(() => false);
 			if (fileExists) {
 				const fileContents = await fs.readFile(
-					clineRecommendedModelsFilePath,
+					enkiRecommendedModelsFilePath,
 					"utf8",
 				);
 				const parsed = JSON.parse(fileContents);
@@ -167,14 +167,14 @@ async function fetchAndCacheClineRecommendedModels(): Promise<ClineRecommendedMo
 							? parsed.recommended
 							: [],
 						free: Array.isArray(parsed.free) ? parsed.free : [],
-						clinePass: Array.isArray(parsed.clinePass) ? parsed.clinePass : [],
+						enkiPass: Array.isArray(parsed.enkiPass) ? parsed.enkiPass : [],
 					};
-					Logger.log("Loaded Cline recommended models from cache");
+					Logger.log("Loaded Enki AI recommended models from cache");
 				}
 			}
 		} catch (cacheError) {
 			Logger.error(
-				"Error reading Cline recommended models from cache:",
+				"Error reading Enki AI recommended models from cache:",
 				cacheError,
 			);
 		}
@@ -184,7 +184,7 @@ async function fetchAndCacheClineRecommendedModels(): Promise<ClineRecommendedMo
 	if (
 		result.recommended.length > 0 ||
 		result.free.length > 0 ||
-		result.clinePass.length > 0
+		result.enkiPass.length > 0
 	) {
 		inMemoryCache = { data: result, timestamp: Date.now() };
 	}

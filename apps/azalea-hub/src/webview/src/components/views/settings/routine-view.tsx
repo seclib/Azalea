@@ -145,7 +145,7 @@ interface ProcessContext {
 }
 
 const FALLBACK_PROVIDER_MODELS: Record<string, string[]> = {
-	cline: ["anthropic/claude-sonnet-4.6"],
+	enki: ["anthropic/claude-sonnet-4.6"],
 	anthropic: ["claude-sonnet-4-6"],
 	"openai-native": ["gpt-5.3-codex"],
 	openrouter: ["anthropic/claude-sonnet-4.6"],
@@ -222,7 +222,7 @@ function getScheduleProviderModel(schedule: RoutineSchedule): {
 		provider:
 			schedule.modelSelection?.providerId?.trim() ||
 			schedule.provider?.trim() ||
-			"cline",
+			"enki",
 		model:
 			schedule.modelSelection?.modelId?.trim() ||
 			schedule.model?.trim() ||
@@ -381,7 +381,7 @@ export function RoutineSchedulesContent() {
 		scheduleMinute: "0",
 		scheduleDays: ["MON", "TUE", "WED", "THU", "FRI"],
 		prompt: "Review PRs opened yesterday and summarize issues.",
-		provider: "cline",
+		provider: "enki",
 		model: "openai/gpt-5.3-codex",
 		mode: "act",
 		workspaceRoot: "",
@@ -685,7 +685,7 @@ export function RoutineSchedulesContent() {
 		const preferredProvider =
 			rememberedProvider && availableProviders.includes(rememberedProvider)
 				? rememberedProvider
-				: (availableProviders[0] ?? "cline");
+				: (availableProviders[0] ?? "enki");
 		const modelsForProvider = visibleProviderModels[preferredProvider] ?? [];
 		const rememberedModel =
 			lastModelSelection.lastModelByProvider[preferredProvider] ??
@@ -791,7 +791,7 @@ export function RoutineSchedulesContent() {
 			const provider =
 				normalizeProviderId(createForm.provider) ||
 				availableProviders[0] ||
-				"cline";
+				"enki";
 			const model =
 				createForm.model.trim() ||
 				(visibleProviderModels[provider] ?? [])[0] ||
@@ -880,7 +880,7 @@ export function RoutineSchedulesContent() {
 			<PageHeader
 				description="Scheduled jobs are run through the hub."
 				title="Schedules"
-				meta={<CommandBadge>cline schedule</CommandBadge>}
+				meta={<CommandBadge>enki schedule</CommandBadge>}
 				actions={
 					<>
 						<Button

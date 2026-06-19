@@ -1,16 +1,16 @@
-import { EmptyRequest } from "@shared/proto/cline/common"
-import { ClineRecommendedModel, ClineRecommendedModelsResponse } from "@shared/proto/cline/models"
+import { EmptyRequest } from "@shared/proto/enki/common"
+import { Enki AIRecommendedModel, Enki AIRecommendedModelsResponse } from "@shared/proto/enki/models"
 import type { Controller } from "../index"
-import { refreshClineRecommendedModels } from "./refreshClineRecommendedModels"
+import { refreshEnki AIRecommendedModels } from "./refreshEnki AIRecommendedModels"
 
-export async function refreshClineRecommendedModelsRpc(
+export async function refreshEnki AIRecommendedModelsRpc(
 	_controller: Controller,
 	_request: EmptyRequest,
-): Promise<ClineRecommendedModelsResponse> {
-	const models = await refreshClineRecommendedModels()
-	return ClineRecommendedModelsResponse.create({
+): Promise<Enki AIRecommendedModelsResponse> {
+	const models = await refreshEnki AIRecommendedModels()
+	return Enki AIRecommendedModelsResponse.create({
 		recommended: models.recommended.map((model) =>
-			ClineRecommendedModel.create({
+			Enki AIRecommendedModel.create({
 				id: model.id,
 				name: model.name,
 				description: model.description,
@@ -18,15 +18,15 @@ export async function refreshClineRecommendedModelsRpc(
 			}),
 		),
 		free: models.free.map((model) =>
-			ClineRecommendedModel.create({
+			Enki AIRecommendedModel.create({
 				id: model.id,
 				name: model.name,
 				description: model.description,
 				tags: model.tags,
 			}),
 		),
-		clinePass: models.clinePass.map((model) =>
-			ClineRecommendedModel.create({
+		enkiPass: models.enkiPass.map((model) =>
+			Enki AIRecommendedModel.create({
 				id: model.id,
 				name: model.name,
 				description: model.description,

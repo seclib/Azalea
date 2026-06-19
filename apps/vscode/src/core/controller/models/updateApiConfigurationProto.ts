@@ -1,5 +1,5 @@
-import { Empty } from "@shared/proto/cline/common";
-import type { UpdateApiConfigurationRequest } from "@shared/proto/cline/models";
+import { Empty } from "@shared/proto/enki/common";
+import type { UpdateApiConfigurationRequest } from "@shared/proto/enki/models";
 import { convertProtoToApiProvider } from "@shared/proto-conversions/models/api-configuration-conversion";
 import {
 	fromProtobufLiteLLMModelInfo,
@@ -11,7 +11,7 @@ import type { OpenaiReasoningEffort } from "@shared/storage/types";
 import { buildApiHandler } from "@/core/api";
 import { Logger } from "@/shared/services/Logger";
 import type { Controller } from "../index";
-import { clearOrganizationForClinePassProviderSelection } from "./handleClinePassProviderSelection";
+import { clearOrganizationForEnki AIPassProviderSelection } from "./handleEnki AIPassProviderSelection";
 
 /**
  * Updates API configuration
@@ -55,13 +55,13 @@ export async function updateApiConfigurationProto(
 							protoApiConfiguration.planModeOpenRouterModelInfo,
 						)
 					: undefined,
-			planModeClineModelInfo: protoApiConfiguration.planModeClineModelInfo
-				? fromProtobufModelInfo(protoApiConfiguration.planModeClineModelInfo)
+			planModeEnki AIModelInfo: protoApiConfiguration.planModeEnki AIModelInfo
+				? fromProtobufModelInfo(protoApiConfiguration.planModeEnki AIModelInfo)
 				: undefined,
-			planModeClinePassModelInfo:
-				protoApiConfiguration.planModeClinePassModelInfo
+			planModeEnki AIPassModelInfo:
+				protoApiConfiguration.planModeEnki AIPassModelInfo
 					? fromProtobufModelInfo(
-							protoApiConfiguration.planModeClinePassModelInfo,
+							protoApiConfiguration.planModeEnki AIPassModelInfo,
 						)
 					: undefined,
 			planModeOpenAiModelInfo: protoApiConfiguration.planModeOpenAiModelInfo
@@ -117,11 +117,11 @@ export async function updateApiConfigurationProto(
 							protoApiConfiguration.actModeOpenRouterModelInfo,
 						)
 					: undefined,
-			actModeClineModelInfo: protoApiConfiguration.actModeClineModelInfo
-				? fromProtobufModelInfo(protoApiConfiguration.actModeClineModelInfo)
+			actModeEnki AIModelInfo: protoApiConfiguration.actModeEnki AIModelInfo
+				? fromProtobufModelInfo(protoApiConfiguration.actModeEnki AIModelInfo)
 				: undefined,
-			actModeClinePassModelInfo: protoApiConfiguration.actModeClinePassModelInfo
-				? fromProtobufModelInfo(protoApiConfiguration.actModeClinePassModelInfo)
+			actModeEnki AIPassModelInfo: protoApiConfiguration.actModeEnki AIPassModelInfo
+				? fromProtobufModelInfo(protoApiConfiguration.actModeEnki AIPassModelInfo)
 				: undefined,
 			actModeOpenAiModelInfo: protoApiConfiguration.actModeOpenAiModelInfo
 				? fromProtobufOpenAiCompatibleModelInfo(
@@ -184,7 +184,7 @@ export async function updateApiConfigurationProto(
 		controller.stateManager.setApiConfiguration(
 			convertedApiConfigurationFromProto,
 		);
-		await clearOrganizationForClinePassProviderSelection(
+		await clearOrganizationForEnki AIPassProviderSelection(
 			controller,
 			convertedApiConfigurationFromProto,
 		);

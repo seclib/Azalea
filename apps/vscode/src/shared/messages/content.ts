@@ -1,11 +1,11 @@
 import type { Anthropic } from "@anthropic-ai/sdk";
-import type { ClineMessageMetricsInfo, ClineMessageModelInfo } from "./metrics";
+import type { Enki AIMessageMetricsInfo, Enki AIMessageModelInfo } from "./metrics";
 
-export type ClinePromptInputContent = string;
+export type Enki AIPromptInputContent = string;
 
-export type ClineMessageRole = "user" | "assistant";
+export type Enki AIMessageRole = "user" | "assistant";
 
-export interface ClineReasoningDetailParam {
+export interface Enki AIReasoningDetailParam {
 	type: "reasoning.text" | string;
 	text: string;
 	signature: string;
@@ -13,107 +13,107 @@ export interface ClineReasoningDetailParam {
 	index: number;
 }
 
-interface ClineSharedMessageParam {
+interface Enki AISharedMessageParam {
 	// The id of the response that the block belongs to
 	call_id?: string;
 }
 
-export const REASONING_DETAILS_PROVIDERS = ["cline", "openrouter"];
+export const REASONING_DETAILS_PROVIDERS = ["enki", "openrouter"];
 
 /**
- * An extension of Anthropic.MessageParam that includes Cline-specific fields: reasoning_details.
+ * An extension of Anthropic.MessageParam that includes Enki AI-specific fields: reasoning_details.
  * This ensures backward compatibility where the messages were stored in Anthropic format with additional
  * fields unknown to Anthropic SDK.
  */
-export interface ClineTextContentBlock
+export interface Enki AITextContentBlock
 	extends Anthropic.TextBlockParam,
-		ClineSharedMessageParam {
+		Enki AISharedMessageParam {
 	// reasoning_details only exists for providers listed in REASONING_DETAILS_PROVIDERS
-	reasoning_details?: ClineReasoningDetailParam[];
+	reasoning_details?: Enki AIReasoningDetailParam[];
 	// Thought Signature associates with Gemini
 	signature?: string;
 }
 
-export interface ClineImageContentBlock
+export interface Enki AIImageContentBlock
 	extends Anthropic.ImageBlockParam,
-		ClineSharedMessageParam {}
+		Enki AISharedMessageParam {}
 
-export interface ClineDocumentContentBlock
+export interface Enki AIDocumentContentBlock
 	extends Anthropic.DocumentBlockParam,
-		ClineSharedMessageParam {}
+		Enki AISharedMessageParam {}
 
-export interface ClineUserToolResultContentBlock
+export interface Enki AIUserToolResultContentBlock
 	extends Anthropic.ToolResultBlockParam,
-		ClineSharedMessageParam {}
+		Enki AISharedMessageParam {}
 
 /**
  * Assistant only content types
  */
-export interface ClineAssistantToolUseBlock
+export interface Enki AIAssistantToolUseBlock
 	extends Anthropic.ToolUseBlockParam,
-		ClineSharedMessageParam {
+		Enki AISharedMessageParam {
 	// reasoning_details only exists for providers listed in REASONING_DETAILS_PROVIDERS
-	reasoning_details?: unknown[] | ClineReasoningDetailParam[];
+	reasoning_details?: unknown[] | Enki AIReasoningDetailParam[];
 	// Thought Signature associates with Gemini
 	signature?: string;
 }
 
-export interface ClineAssistantThinkingBlock
+export interface Enki AIAssistantThinkingBlock
 	extends Anthropic.ThinkingBlock,
-		ClineSharedMessageParam {
+		Enki AISharedMessageParam {
 	// The summary items returned by OpenAI response API
 	// The reasoning details that will be moved to the text block when finalized
-	summary?: unknown[] | ClineReasoningDetailParam[];
+	summary?: unknown[] | Enki AIReasoningDetailParam[];
 }
 
-export interface ClineAssistantRedactedThinkingBlock
+export interface Enki AIAssistantRedactedThinkingBlock
 	extends Anthropic.RedactedThinkingBlockParam,
-		ClineSharedMessageParam {}
+		Enki AISharedMessageParam {}
 
-export type ClineToolResponseContent =
-	| ClinePromptInputContent
-	| Array<ClineTextContentBlock | ClineImageContentBlock>;
+export type Enki AIToolResponseContent =
+	| Enki AIPromptInputContent
+	| Array<Enki AITextContentBlock | Enki AIImageContentBlock>;
 
-export type ClineUserContent =
-	| ClineTextContentBlock
-	| ClineImageContentBlock
-	| ClineDocumentContentBlock
-	| ClineUserToolResultContentBlock;
+export type Enki AIUserContent =
+	| Enki AITextContentBlock
+	| Enki AIImageContentBlock
+	| Enki AIDocumentContentBlock
+	| Enki AIUserToolResultContentBlock;
 
-export type ClineAssistantContent =
-	| ClineTextContentBlock
-	| ClineImageContentBlock
-	| ClineDocumentContentBlock
-	| ClineAssistantToolUseBlock
-	| ClineAssistantThinkingBlock
-	| ClineAssistantRedactedThinkingBlock;
+export type Enki AIAssistantContent =
+	| Enki AITextContentBlock
+	| Enki AIImageContentBlock
+	| Enki AIDocumentContentBlock
+	| Enki AIAssistantToolUseBlock
+	| Enki AIAssistantThinkingBlock
+	| Enki AIAssistantRedactedThinkingBlock;
 
-export type ClineContent = ClineUserContent | ClineAssistantContent;
+export type Enki AIContent = Enki AIUserContent | Enki AIAssistantContent;
 
 /**
- * An extension of Anthropic.MessageParam that includes Cline-specific fields.
+ * An extension of Anthropic.MessageParam that includes Enki AI-specific fields.
  * This ensures backward compatibility where the messages were stored in Anthropic format,
- * while allowing for additional metadata specific to Cline to avoid unknown fields in Anthropic SDK
+ * while allowing for additional metadata specific to Enki AI to avoid unknown fields in Anthropic SDK
  * added by ignoring the type checking for those fields.
  */
-export interface ClineStorageMessage extends Anthropic.MessageParam {
+export interface Enki AIStorageMessage extends Anthropic.MessageParam {
 	/**
 	 * Response ID associated with this message
 	 */
 	id?: string;
-	role: ClineMessageRole;
-	content: ClinePromptInputContent | ClineContent[];
+	role: Enki AIMessageRole;
+	content: Enki AIPromptInputContent | Enki AIContent[];
 	/**
 	 * NOTE: model information used when generating this message.
 	 * Internal use for message conversion only.
 	 * MUST be removed before sending message to any LLM provider.
 	 */
-	modelInfo?: ClineMessageModelInfo;
+	modelInfo?: Enki AIMessageModelInfo;
 	/**
 	 * LLM operational and performance metrics for this message
 	 * Includes token counts, costs.
 	 */
-	metrics?: ClineMessageMetricsInfo;
+	metrics?: Enki AIMessageMetricsInfo;
 	/**
 	 * Timestamp of when the message was created
 	 */
@@ -121,14 +121,14 @@ export interface ClineStorageMessage extends Anthropic.MessageParam {
 }
 
 /**
- * Converts ClineStorageMessage to Anthropic.MessageParam by removing Cline-specific fields
- * Cline-specific fields (like modelInfo, reasoning_details) are properly omitted.
+ * Converts Enki AIStorageMessage to Anthropic.MessageParam by removing Enki AI-specific fields
+ * Enki AI-specific fields (like modelInfo, reasoning_details) are properly omitted.
  */
-export function convertClineStorageToAnthropicMessage(
-	clineMessage: ClineStorageMessage,
+export function convertEnki AIStorageToAnthropicMessage(
+	enkiMessage: Enki AIStorageMessage,
 	provider = "anthropic",
 ): Anthropic.MessageParam {
-	const { role, content } = clineMessage;
+	const { role, content } = enkiMessage;
 
 	// Handle string content - fast path
 	if (typeof content === "string") {
@@ -140,7 +140,7 @@ export function convertClineStorageToAnthropicMessage(
 		(b) => b.type !== "thinking" || !!b.signature,
 	);
 
-	// Handle array content - strip Cline-specific fields for non-reasoning_details providers
+	// Handle array content - strip Enki AI-specific fields for non-reasoning_details providers
 	const shouldCleanContent = !REASONING_DETAILS_PROVIDERS.includes(provider);
 	const cleanedContent = shouldCleanContent
 		? filteredContent.map(cleanContentBlock)
@@ -150,9 +150,9 @@ export function convertClineStorageToAnthropicMessage(
 }
 
 /**
- * Cline stores images as base64, so an image block's source is always a base64 source.
+ * Enki AI stores images as base64, so an image block's source is always a base64 source.
  * The Anthropic SDK types the source as a Base64ImageSource | URLImageSource union, so this
- * narrows to the base64 variant for the transform layer. URL sources are not produced by Cline,
+ * narrows to the base64 variant for the transform layer. URL sources are not produced by Enki AI,
  * so they degrade to empty values rather than throwing.
  */
 export function getBase64ImageSource(
@@ -175,21 +175,21 @@ export function getImageDataUrl(
 }
 
 /**
- * Clean a content block by removing Cline-specific fields and returning only Anthropic-compatible fields
+ * Clean a content block by removing Enki AI-specific fields and returning only Anthropic-compatible fields
  */
-export function cleanContentBlock(block: ClineContent): Anthropic.ContentBlock {
-	// Fast path: if no Cline-specific fields exist, return as-is
-	const hasClineFields =
+export function cleanContentBlock(block: Enki AIContent): Anthropic.ContentBlock {
+	// Fast path: if no Enki AI-specific fields exist, return as-is
+	const hasEnki AIFields =
 		"reasoning_details" in block ||
 		"call_id" in block ||
 		"summary" in block ||
 		(block.type !== "thinking" && "signature" in block);
 
-	if (!hasClineFields) {
+	if (!hasEnki AIFields) {
 		return block as Anthropic.ContentBlock;
 	}
 
-	// Removes Cline-specific fields & the signature field that's added for Gemini.
+	// Removes Enki AI-specific fields & the signature field that's added for Gemini.
 	const { reasoning_details, call_id, summary, ...rest } = block as any;
 
 	// Remove signature from non-thinking blocks that were added for Gemini

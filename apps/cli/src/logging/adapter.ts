@@ -7,9 +7,9 @@ import {
 	truncateSync,
 } from "node:fs";
 import { dirname, join } from "node:path";
-import type { BasicLogger, RuntimeLoggerConfig } from "@cline/core";
-import { resolveClineDataDir } from "@cline/core";
-import { registerDisposable } from "@cline/shared";
+import type { BasicLogger, RuntimeLoggerConfig } from "@enki/core";
+import { resolveEnki AIDataDir } from "@enki/core";
+import { registerDisposable } from "@enki/shared";
 import pino, {
 	type DestinationStream,
 	type LevelWithSilent,
@@ -61,7 +61,7 @@ function normalizeRuntimeConfig(input: {
 }): Required<RuntimeLoggerConfig> {
 	const base = input.runtimeConfig;
 	const defaultDestination = join(
-		resolveClineDataDir(),
+		resolveEnki AIDataDir(),
 		"logs",
 		`${getCliBuildInfo().name}.log`,
 	);

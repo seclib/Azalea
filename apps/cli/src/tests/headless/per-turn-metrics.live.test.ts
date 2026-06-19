@@ -24,7 +24,7 @@ import {
 	EXIT_CODE_SUCCESS,
 	TERMINAL_WIDE,
 } from "../helpers/constants.js";
-import { clineEnv } from "../helpers/env.js";
+import { enkiEnv } from "../helpers/env.js";
 import { expectExitCode, expectVisible } from "../helpers/terminal.js";
 
 function findMessagesArtifacts(root: string): string[] {
@@ -49,14 +49,14 @@ function findMessagesArtifacts(root: string): string[] {
 }
 
 test.describe("per-turn metrics in messages.json — multi-iteration @live", () => {
-	const sessionDataDir = mkdtempSync(join(tmpdir(), "cline-per-turn-metrics-"));
+	const sessionDataDir = mkdtempSync(join(tmpdir(), "enki-per-turn-metrics-"));
 	test.use({
 		program: {
 			file: CLINE_BIN,
 			args: ["--json", "run echo hello then summarize"],
 		},
 		...TERMINAL_WIDE,
-		env: clineEnv("default", {
+		env: enkiEnv("default", {
 			CLINE_VCR_CASSETTE: "./fixtures/per-turn-metrics.json",
 			CLINE_SESSION_DATA_DIR: sessionDataDir,
 		}),

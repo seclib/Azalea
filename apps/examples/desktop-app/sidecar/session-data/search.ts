@@ -1,4 +1,4 @@
-import { getFileIndex } from "@cline/core";
+import { getFileIndex } from "@enki/core";
 import type { SidecarContext } from "../types";
 
 export function searchWorkspaceFiles(

@@ -90,7 +90,7 @@ export function testVariantMatching() {
 				} as unknown as McpHub,
 				focusChainSettings: {
 					enabled: true,
-					remindClineInterval: 6,
+					remindEnki AIInterval: 6,
 				},
 				browserSettings: {
 					viewport: {
@@ -98,8 +98,8 @@ export function testVariantMatching() {
 						height: 720,
 					},
 				},
-				globalClineRulesFileInstructions: "Follow global rules",
-				localClineRulesFileInstructions: "Follow local rules",
+				globalEnki AIRulesFileInstructions: "Follow global rules",
+				localEnki AIRulesFileInstructions: "Follow local rules",
 				preferredLanguageInstructions: "Prefer TypeScript",
 				isTesting: true,
 				enableNativeToolCalls: false,

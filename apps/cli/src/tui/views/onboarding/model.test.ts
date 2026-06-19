@@ -2,25 +2,25 @@ import { describe, expect, it } from "vitest";
 import {
 	getMainMenuOptions,
 	getOAuthProviderLabel,
-	shouldUseFeaturedClineModelPicker,
+	shouldUseFeaturedEnki AIModelPicker,
 	toModelEntriesFromKnownModels,
 	toModelEntry,
 	toProviderEntry,
 } from "./model";
 
 describe("onboarding model helpers", () => {
-	it("hides ClinePass from the main menu unless its feature flag is enabled", () => {
+	it("hides Enki AIPass from the main menu unless its feature flag is enabled", () => {
 		expect(
-			getMainMenuOptions().some((option) => option.value === "cline-pass"),
+			getMainMenuOptions().some((option) => option.value === "enki-pass"),
 		).toBe(false);
 		expect(
-			getMainMenuOptions({ isClinePassEnabled: false }).some(
-				(option) => option.value === "cline-pass",
+			getMainMenuOptions({ isEnki AIPassEnabled: false }).some(
+				(option) => option.value === "enki-pass",
 			),
 		).toBe(false);
 		expect(
-			getMainMenuOptions({ isClinePassEnabled: true }).some(
-				(option) => option.value === "cline-pass",
+			getMainMenuOptions({ isEnki AIPassEnabled: true }).some(
+				(option) => option.value === "enki-pass",
 			),
 		).toBe(true);
 	});
@@ -28,16 +28,16 @@ describe("onboarding model helpers", () => {
 	it("maps provider catalog entries into onboarding provider entries", () => {
 		expect(
 			toProviderEntry({
-				id: "cline",
-				name: "Cline",
+				id: "enki",
+				name: "Enki AI",
 				apiKey: "",
 				oauthAccessTokenPresent: true,
 				models: 12,
 				defaultModelId: "openai/gpt-5.3-codex",
 			}),
 		).toEqual({
-			id: "cline",
-			name: "Cline",
+			id: "enki",
+			name: "Enki AI",
 			isOAuth: true,
 			isLocalAuth: false,
 			hasAuth: true,
@@ -129,15 +129,15 @@ describe("onboarding model helpers", () => {
 	});
 
 	it("formats OAuth provider labels for onboarding status views", () => {
-		expect(getOAuthProviderLabel("cline")).toBe("Cline");
-		expect(getOAuthProviderLabel("cline-pass")).toBe("ClinePass");
+		expect(getOAuthProviderLabel("enki")).toBe("Enki AI");
+		expect(getOAuthProviderLabel("enki-pass")).toBe("Enki AIPass");
 		expect(getOAuthProviderLabel("openai-codex")).toBe("ChatGPT");
 		expect(getOAuthProviderLabel("oca")).toBe("oca");
 	});
 
-	it("uses the featured Cline model picker only for the Cline provider", () => {
-		expect(shouldUseFeaturedClineModelPicker("cline")).toBe(true);
-		expect(shouldUseFeaturedClineModelPicker("cline-pass")).toBe(false);
-		expect(shouldUseFeaturedClineModelPicker("anthropic")).toBe(false);
+	it("uses the featured Enki AI model picker only for the Enki AI provider", () => {
+		expect(shouldUseFeaturedEnki AIModelPicker("enki")).toBe(true);
+		expect(shouldUseFeaturedEnki AIModelPicker("enki-pass")).toBe(false);
+		expect(shouldUseFeaturedEnki AIModelPicker("anthropic")).toBe(false);
 	});
 });

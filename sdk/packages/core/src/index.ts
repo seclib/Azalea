@@ -1,17 +1,17 @@
 /**
- * @cline/core
+ * @enki/core
  *
  * Core contracts, shared state utilities, and Node runtime services.
  */
 
-export * as Llms from "@cline/llms";
+export * as Llms from "@enki/llms";
 export {
-	ClineNotSubscribedError,
-	getClineNotSubscribedMessage,
-	getClinePassSubscriptionUrl,
-	isClineNotSubscribedError,
-	isClineNotSubscribedMessage,
-} from "@cline/llms";
+	Enki AINotSubscribedError,
+	getEnki AINotSubscribedMessage,
+	getEnki AIPassSubscriptionUrl,
+	isEnki AINotSubscribedError,
+	isEnki AINotSubscribedMessage,
+} from "@enki/llms";
 // Shared contracts and path helpers re-exported for app consumers.
 export type {
 	AddProviderActionRequest,
@@ -37,7 +37,7 @@ export type {
 	ChatStartSessionArtifacts,
 	ChatStartSessionRequest,
 	ChatTurnResult,
-	ClineAccountActionRequest,
+	Enki AIAccountActionRequest,
 	ConnectorHookEvent,
 	ContentBlock,
 	FeatureFlag,
@@ -84,14 +84,14 @@ export type {
 	WorkspaceInfoSchema,
 	WorkspaceManifest,
 	WorkspaceManifestSchema,
-} from "@cline/shared";
+} from "@enki/shared";
 export {
-	buildClineSystemPrompt as getClineDefaultSystemPrompt,
+	buildEnki AISystemPrompt as getEnki AIDefaultSystemPrompt,
 	buildSdkErrorProperties,
 	ContributionRegistry,
 	captureSdkError,
-	createClineTelemetryServiceConfig,
-	createClineTelemetryServiceMetadata,
+	createEnki AITelemetryServiceConfig,
+	createEnki AITelemetryServiceMetadata,
 	createContributionRegistry,
 	createTool,
 	emptyWorkspaceManifest,
@@ -104,25 +104,25 @@ export {
 	parseUserCommandEnvelope,
 	registerDisposable,
 	SDK_ERROR_TELEMETRY_EVENT,
-} from "@cline/shared";
-export * from "@cline/shared/storage";
+} from "@enki/shared";
+export * from "@enki/shared/storage";
 export {
-	type ClineAccountBalance,
-	type ClineAccountOperations,
-	type ClineAccountOrganization,
-	type ClineAccountOrganizationBalance,
-	type ClineAccountOrganizationUsageTransaction,
-	type ClineAccountPaymentTransaction,
-	ClineAccountService,
-	type ClineAccountServiceOptions,
-	type ClineAccountUsageTransaction,
-	type ClineAccountUser,
-	type ClineOrganization,
-	executeClineAccountAction,
+	type Enki AIAccountBalance,
+	type Enki AIAccountOperations,
+	type Enki AIAccountOrganization,
+	type Enki AIAccountOrganizationBalance,
+	type Enki AIAccountOrganizationUsageTransaction,
+	type Enki AIAccountPaymentTransaction,
+	Enki AIAccountService,
+	type Enki AIAccountServiceOptions,
+	type Enki AIAccountUsageTransaction,
+	type Enki AIAccountUser,
+	type Enki AIOrganization,
+	executeEnki AIAccountAction,
 	type FeaturebaseTokenResponse,
-	isClineAccountActionRequest,
+	isEnki AIAccountActionRequest,
 	type ProviderActionExecutor,
-	RpcClineAccountService,
+	RpcEnki AIAccountService,
 	type UserRemoteConfigOrganization,
 	type UserRemoteConfigResponse,
 } from "./account";
@@ -131,12 +131,12 @@ export {
 	type OAuthClientCallbacksOptions,
 } from "./auth/client";
 export {
-	completeClineDeviceAuth,
-	getValidClineCredentials,
-	loginClineOAuth,
-	refreshClineToken,
-	startClineDeviceAuth,
-} from "./auth/cline";
+	completeEnki AIDeviceAuth,
+	getValidEnki AICredentials,
+	loginEnki AIOAuth,
+	refreshEnki AIToken,
+	startEnki AIDeviceAuth,
+} from "./auth/enki";
 export {
 	getValidOpenAICodexCredentials,
 	loginOpenAICodex,
@@ -183,29 +183,29 @@ export type {
 	OcaOAuthProviderOptions,
 	OcaTokenResolution,
 } from "./auth/types";
-export { ClineCore } from "./ClineCore";
+export { Enki AICore } from "./Enki AICore";
 export type {
-	ClineAutomationEventIngressResult,
-	ClineAutomationEventLog,
-	ClineAutomationEventSuppression,
-	ClineAutomationListEventsOptions,
-	ClineAutomationListRunsOptions,
-	ClineAutomationListSpecsOptions,
-	ClineAutomationRun,
-	ClineAutomationRunStatus,
-	ClineAutomationSpec,
-	ClineCoreAutomationApi,
-	ClineCoreAutomationOptions,
-	ClineCoreListHistoryOptions,
-	ClineCoreOptions,
-	ClineCoreSettingsApi,
-	ClineCoreStartInput,
+	Enki AIAutomationEventIngressResult,
+	Enki AIAutomationEventLog,
+	Enki AIAutomationEventSuppression,
+	Enki AIAutomationListEventsOptions,
+	Enki AIAutomationListRunsOptions,
+	Enki AIAutomationListSpecsOptions,
+	Enki AIAutomationRun,
+	Enki AIAutomationRunStatus,
+	Enki AIAutomationSpec,
+	Enki AICoreAutomationApi,
+	Enki AICoreAutomationOptions,
+	Enki AICoreListHistoryOptions,
+	Enki AICoreOptions,
+	Enki AICoreSettingsApi,
+	Enki AICoreStartInput,
 	HubOptions,
 	RemoteOptions,
 	RestoreInput,
 	RestoreOptions,
 	RestoreResult,
-} from "./cline-core/types";
+} from "./enki-core/types";
 export type {
 	LoadAgentPluginFromPathOptions,
 	PluginInitializationFailure,
@@ -510,7 +510,7 @@ export {
 	loginLocalProvider,
 	normalizeOAuthProvider,
 	refreshProviderModelsFromSource,
-	resolveLocalClineAuthToken,
+	resolveLocalEnki AIAuthToken,
 	saveLocalProviderOAuthCredentials,
 	saveLocalProviderSettings,
 	type UpdateLocalProviderRequest,
@@ -684,7 +684,7 @@ export { CORE_BUILD_VERSION } from "./version";
 export async function loadOpenTelemetryAdapter() {
 	return import("./services/telemetry/index.js");
 }
-export { Agent, createAgentRuntime } from "@cline/agents";
+export { Agent, createAgentRuntime } from "@enki/agents";
 export { createContextCompactionPrepareTurn } from "./extensions/context/compaction";
 export {
 	ALL_DEFAULT_TOOL_NAMES,
@@ -714,12 +714,12 @@ export {
 	ToolPresets,
 } from "./extensions/tools";
 export {
-	type ClineRecommendedModel,
-	type ClineRecommendedModelsData,
+	type Enki AIRecommendedModel,
+	type Enki AIRecommendedModelsData,
 	FALLBACK_CLINE_RECOMMENDED_MODELS,
-	type FetchClineRecommendedModelsOptions,
-	fetchClineRecommendedModels,
-} from "./services/llms/cline-recommended-models";
+	type FetchEnki AIRecommendedModelsOptions,
+	fetchEnki AIRecommendedModels,
+} from "./services/llms/enki-recommended-models";
 export {
 	clearLiveModelsCatalogCache,
 	clearPrivateModelsCatalogCache,

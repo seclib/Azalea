@@ -1,7 +1,7 @@
 import net from "node:net";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { ClineOAuthCredentials } from "./cline";
-import { getValidClineCredentials, loginClineOAuth } from "./cline";
+import type { Enki AIOAuthCredentials } from "./enki";
+import { getValidEnki AICredentials, loginEnki AIOAuth } from "./enki";
 
 const PROVIDER_OPTIONS = {
 	apiBaseUrl: "https://auth.example.com",
@@ -24,8 +24,8 @@ const socketBindingSupported = await (async () => {
 })();
 
 function createCredentials(
-	overrides: Partial<ClineOAuthCredentials> = {},
-): ClineOAuthCredentials {
+	overrides: Partial<Enki AIOAuthCredentials> = {},
+): Enki AIOAuthCredentials {
 	return {
 		access: "access-old",
 		refresh: "refresh-old",
@@ -37,7 +37,7 @@ function createCredentials(
 	};
 }
 
-describe("auth/cline getValidClineCredentials", () => {
+describe("auth/enki getValidEnki AICredentials", () => {
 	afterEach(() => {
 		vi.restoreAllMocks();
 		globalThis.fetch = ORIGINAL_FETCH;
@@ -49,7 +49,7 @@ describe("auth/cline getValidClineCredentials", () => {
 		const fetchMock = vi.fn();
 		globalThis.fetch = fetchMock as unknown as typeof fetch;
 
-		const result = await getValidClineCredentials(current, PROVIDER_OPTIONS);
+		const result = await getValidEnki AICredentials(current, PROVIDER_OPTIONS);
 		expect(result).toBe(current);
 		expect(fetchMock).not.toHaveBeenCalled();
 		nowSpy.mockRestore();
@@ -72,7 +72,7 @@ describe("auth/cline getValidClineCredentials", () => {
 								subject: "sub-1",
 								email: "new@example.com",
 								name: "New User",
-								clineUserId: "acct-2",
+								enkiUserId: "acct-2",
 								accounts: [],
 							},
 						},
@@ -82,7 +82,7 @@ describe("auth/cline getValidClineCredentials", () => {
 		);
 		globalThis.fetch = fetchMock as unknown as typeof fetch;
 
-		const result = await getValidClineCredentials(current, PROVIDER_OPTIONS);
+		const result = await getValidEnki AICredentials(current, PROVIDER_OPTIONS);
 		expect(result).toMatchObject({
 			access: "access-new",
 			refresh: "refresh-new",
@@ -109,7 +109,7 @@ describe("auth/cline getValidClineCredentials", () => {
 				),
 		) as unknown as typeof fetch;
 
-		const result = await getValidClineCredentials(current, PROVIDER_OPTIONS);
+		const result = await getValidEnki AICredentials(current, PROVIDER_OPTIONS);
 		expect(result).toBeNull();
 		nowSpy.mockRestore();
 	});
@@ -131,7 +131,7 @@ describe("auth/cline getValidClineCredentials", () => {
 				),
 		) as unknown as typeof fetch;
 
-		const result = await getValidClineCredentials(current, PROVIDER_OPTIONS, {
+		const result = await getValidEnki AICredentials(current, PROVIDER_OPTIONS, {
 			refreshBufferMs: 60_000,
 			retryableTokenGraceMs: 30_000,
 		});
@@ -140,7 +140,7 @@ describe("auth/cline getValidClineCredentials", () => {
 	});
 });
 
-describe("auth/cline loginClineOAuth", () => {
+describe("auth/enki loginEnki AIOAuth", () => {
 	afterEach(() => {
 		vi.restoreAllMocks();
 		globalThis.fetch = ORIGINAL_FETCH;
@@ -179,15 +179,15 @@ describe("auth/cline loginClineOAuth", () => {
 					JSON.stringify({
 						success: true,
 						data: {
-							accessToken: "cline-access",
-							refreshToken: "cline-refresh",
+							accessToken: "enki-access",
+							refreshToken: "enki-refresh",
 							tokenType: "Bearer",
 							expiresAt: "2030-01-01T00:00:00.000Z",
 							userInfo: {
 								subject: "sub-1",
 								email: "user@example.com",
 								name: "User",
-								clineUserId: "acct-1",
+								enkiUserId: "acct-1",
 								accounts: ["acct-1"],
 							},
 						},
@@ -198,8 +198,8 @@ describe("auth/cline loginClineOAuth", () => {
 		globalThis.fetch = fetchMock as unknown as typeof fetch;
 
 		const onAuth = vi.fn();
-		const credentials = await loginClineOAuth({
-			apiBaseUrl: "https://api.cline.bot",
+		const credentials = await loginEnki AIOAuth({
+			apiBaseUrl: "https://api.enki.bot",
 			useWorkOSDeviceAuth: true,
 			callbacks: {
 				onAuth,
@@ -212,8 +212,8 @@ describe("auth/cline loginClineOAuth", () => {
 			url: "https://example.com/device?user_code=ABCD-EFGH",
 		});
 		expect(credentials).toMatchObject({
-			access: "cline-access",
-			refresh: "cline-refresh",
+			access: "enki-access",
+			refresh: "enki-refresh",
 			accountId: "acct-1",
 			email: "user@example.com",
 		});

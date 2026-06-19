@@ -409,13 +409,13 @@ export function McpServersContent() {
 			<PageHeader
 				description={
 					hasSettingsFile
-						? "Editing this list updates cline_mcp_settings.json."
+						? "Editing this list updates enki_mcp_settings.json."
 						: "No MCP settings file found yet. Add a server to create it."
 				}
 				title="MCP Servers"
 				meta={
 					<>
-						<CommandBadge>cline config mcp</CommandBadge>
+						<CommandBadge>enki config mcp</CommandBadge>
 						<span className="rounded-md border border-border bg-background px-2 py-0.5 text-xs text-muted-foreground">
 							From settings file
 						</span>
@@ -581,7 +581,7 @@ export function McpServersContent() {
 						<DialogDescription>
 							Update the MCP server stored in{" "}
 							<code className="font-mono">
-								{settingsPath || "cline_mcp_settings.json"}
+								{settingsPath || "enki_mcp_settings.json"}
 							</code>
 							.
 						</DialogDescription>

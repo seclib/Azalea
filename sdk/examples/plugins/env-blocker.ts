@@ -1,7 +1,7 @@
 /**
  * Env Blocker Plugin Example
  *
- * A rule in AGENTS.md / .clinerules ("never read .env files") is a suggestion the
+ * A rule in AGENTS.md / .enkirules ("never read .env files") is a suggestion the
  * model can ignore. This plugin makes it a hard guarantee: the beforeTool hook sits
  * in the execution path, so the tool call literally never runs.
  *
@@ -12,12 +12,12 @@
  * Template files (.env.example, .env.sample, .env.template) stay readable.
  *
  * CLI usage:
- *   cline plugin install https://github.com/cline/cline/blob/main/sdk/examples/plugins/env-blocker.ts
- *   cline -i "Read the .env file and tell me the API keys"
+ *   enki plugin install https://github.com/enki/enki/blob/main/sdk/examples/plugins/env-blocker.ts
+ *   enki -i "Read the .env file and tell me the API keys"
  */
 
 import { basename } from "node:path";
-import type { AgentPlugin } from "@cline/core";
+import type { AgentPlugin } from "@enki/core";
 
 // .env.example / .env.sample / .env.template hold placeholders, not secrets.
 const TEMPLATE = /\.env\.(example|sample|template)$/i;

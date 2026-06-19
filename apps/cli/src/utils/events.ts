@@ -1,4 +1,4 @@
-import type { AgentEvent, TeamEvent } from "@cline/core";
+import type { AgentEvent, TeamEvent } from "@enki/core";
 import { formatToolInput, formatToolOutput, truncate } from "./helpers";
 import {
 	c,

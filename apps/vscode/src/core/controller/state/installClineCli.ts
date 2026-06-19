@@ -1,4 +1,4 @@
-import { Empty, EmptyRequest } from "@shared/proto/cline/common"
+import { Empty, EmptyRequest } from "@shared/proto/enki/common"
 import { ShowMessageType } from "@shared/proto/host/window"
 import { ExecuteCommandInTerminalRequest } from "@shared/proto/host/workspace"
 import { HostProvider } from "@/hosts/host-provider"
@@ -6,13 +6,13 @@ import { Logger } from "@/shared/services/Logger"
 import { Controller } from ".."
 
 /**
- * Handles the installation of the Cline CLI tool
+ * Handles the installation of the Enki AI CLI tool
  * @param controller The controller instance
  * @param _request The empty request
  * @returns Empty response
  */
-export async function installClineCli(_controller: Controller, _request: EmptyRequest): Promise<Empty> {
-	const installCommand = "npm install -g cline"
+export async function installEnki AICli(_controller: Controller, _request: EmptyRequest): Promise<Empty> {
+	const installCommand = "npm install -g enki"
 
 	try {
 		// Use the HostProvider to execute the command in a terminal

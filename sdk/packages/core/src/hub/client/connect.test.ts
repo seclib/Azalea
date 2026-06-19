@@ -48,7 +48,7 @@ describe("resolveHubUrl", () => {
 
 	it("uses the shared discovery owner in development builds", async () => {
 		delete process.env.CLINE_HUB_DISCOVERY_PATH;
-		process.env.CLINE_DATA_DIR = "/tmp/cline-connect-test-data";
+		process.env.CLINE_DATA_DIR = "/tmp/enki-connect-test-data";
 		process.env.CLINE_BUILD_ENV = "development";
 		const readHubDiscovery = vi
 			.spyOn(await import("../discovery"), "readHubDiscovery")
@@ -71,7 +71,7 @@ describe("resolveHubUrl", () => {
 		);
 		expect(discoveryPath).toContain("/locks/hub/owners/");
 		expect(discoveryPath).not.toBe(
-			"/tmp/cline-connect-test-data/locks/hub/production.json",
+			"/tmp/enki-connect-test-data/locks/hub/production.json",
 		);
 	});
 

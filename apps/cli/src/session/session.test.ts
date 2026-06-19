@@ -15,12 +15,12 @@ const listSessionHistoryFromBackend = vi.fn();
 const featureFlagsPoll = vi.fn(async () => {});
 const featureFlagsDispose = vi.fn(async () => {});
 
-vi.mock("@cline/core", async () => {
+vi.mock("@enki/core", async () => {
 	const actual =
-		await vi.importActual<typeof import("@cline/core")>("@cline/core");
+		await vi.importActual<typeof import("@enki/core")>("@enki/core");
 	return {
 		...actual,
-		ClineCore: {
+		Enki AICore: {
 			create: createCore,
 		},
 		resolveSessionBackend,
@@ -94,7 +94,7 @@ describe("createCliCore", () => {
 			expect.objectContaining({
 				hub: expect.objectContaining({
 					clientType: "cli",
-					displayName: "Cline CLI",
+					displayName: "Enki AI CLI",
 				}),
 			}),
 		);
@@ -107,7 +107,7 @@ describe("createCliCore", () => {
 			expect.objectContaining({
 				hub: expect.objectContaining({
 					clientType: "cli",
-					displayName: "Cline CLI",
+					displayName: "Enki AI CLI",
 				}),
 			}),
 		);
@@ -137,7 +137,7 @@ describe("createCliCore", () => {
 				backendMode: "hub",
 				hub: expect.objectContaining({
 					clientType: "cli",
-					displayName: "Cline CLI",
+					displayName: "Enki AI CLI",
 				}),
 			}),
 		);
@@ -176,7 +176,7 @@ describe("createCliCore", () => {
 				}),
 				hub: expect.objectContaining({
 					clientType: "cli",
-					displayName: "Cline CLI",
+					displayName: "Enki AI CLI",
 				}),
 			}),
 		);

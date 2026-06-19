@@ -112,7 +112,7 @@ async function actionCreate(client: HubScheduleClient): Promise<void> {
 	}
 
 	const prompt = await p.text({
-		message: "What should Cline do?",
+		message: "What should Enki AI do?",
 		placeholder: "Review open PRs and post summaries",
 		validate: (v) => {
 			if (!v?.trim()) return "Prompt is required";
@@ -213,7 +213,7 @@ async function actionCreate(client: HubScheduleClient): Promise<void> {
 		name: (name as string).trim(),
 		cronPattern,
 		prompt: (prompt as string).trim(),
-		provider: provider ?? "cline",
+		provider: provider ?? "enki",
 		model: model ?? "openai/gpt-5.3-codex",
 		mode: (mode as string) === "plan" ? "plan" : "act",
 		workspaceRoot: (workspace as string).trim(),
@@ -401,7 +401,7 @@ export async function runScheduleWizard(): Promise<number> {
 	if (!ensured.ok) {
 		s.stop("Failed to connect to hub server");
 		p.log.error(
-			"Schedules require the hub server. Start it with: cline hub start",
+			"Schedules require the hub server. Start it with: enki hub start",
 		);
 		p.outro("Failed");
 		return 1;

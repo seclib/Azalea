@@ -15,16 +15,16 @@ const {
 	mockReadHubDiscovery: vi.fn(),
 	mockResolveProductionHubOwnerContext: vi.fn(() => ({
 		ownerId: "hub-production",
-		discoveryPath: "/tmp/cline-data/locks/hub/production.json",
+		discoveryPath: "/tmp/enki-data/locks/hub/production.json",
 	})),
 	mockResolveSharedHubOwnerContext: vi.fn(() => ({
 		ownerId: "hub-owner",
-		discoveryPath: "/tmp/cline-data/locks/hub/owners/hub-owner.json",
+		discoveryPath: "/tmp/enki-data/locks/hub/owners/hub-owner.json",
 	})),
 	mockStopLocalHubServerGracefully: vi.fn(),
 }));
 
-vi.mock("@cline/core", () => ({
+vi.mock("@enki/core", () => ({
 	clearHubDiscovery: mockClearHubDiscovery,
 	ensureDetachedHubServer: mockEnsureDetachedHubServer,
 	probeHubServer: mockProbeHubServer,
@@ -119,7 +119,7 @@ describe("createHubCommand", () => {
 		expect(exitCode).toBe(0);
 		expect(mockStopLocalHubServerGracefully).toHaveBeenCalledWith({
 			ownerId: "hub-owner",
-			discoveryPath: "/tmp/cline-data/locks/hub/owners/hub-owner.json",
+			discoveryPath: "/tmp/enki-data/locks/hub/owners/hub-owner.json",
 		});
 		expect(JSON.parse(output[0] || "")).toEqual({ stopped: true });
 	});

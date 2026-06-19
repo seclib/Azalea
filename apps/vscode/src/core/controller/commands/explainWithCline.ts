@@ -1,12 +1,12 @@
 import { getFileMentionFromPath } from "@/core/mentions"
 import { HostProvider } from "@/hosts/host-provider"
 import { telemetryService } from "@/services/telemetry"
-import { CommandContext, Empty } from "@/shared/proto/index.cline"
+import { CommandContext, Empty } from "@/shared/proto/index.enki"
 import { ShowMessageType } from "@/shared/proto/index.host"
 import { Logger } from "@/shared/services/Logger"
 import { Controller } from "../index"
 
-export async function explainWithCline(
+export async function explainWithEnki AI(
 	controller: Controller,
 	request: CommandContext,
 	notebookContext?: string,
@@ -26,7 +26,7 @@ export async function explainWithCline(
 
 	// Add notebook context if provided (includes cell JSON)
 	if (notebookContext) {
-		Logger.log("Adding notebook context to explainWithCline task")
+		Logger.log("Adding notebook context to explainWithEnki AI task")
 		prompt += notebookContext
 	}
 

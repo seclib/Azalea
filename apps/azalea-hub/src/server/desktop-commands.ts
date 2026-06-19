@@ -1,14 +1,14 @@
 import {
 	addLocalProvider,
-	type ClineAccountActionRequest,
-	ClineAccountService,
+	type Enki AIAccountActionRequest,
+	Enki AIAccountService,
 	ensureCustomProvidersLoaded,
-	executeClineAccountAction,
+	executeEnki AIAccountAction,
 	formatProviderOAuthApiKey,
 	getLocalProviderModels,
 	getPersistedProviderApiKey,
 	getProviderOAuthCredentialsFromSettings,
-	getValidClineCredentials,
+	getValidEnki AICredentials,
 	listLocalProviders,
 	loginAndSaveLocalProviderOAuthCredentials,
 	normalizeOAuthProvider,
@@ -24,8 +24,8 @@ import {
 	setDisabledTools,
 	setTelemetryOptOutGlobally,
 	toggleDisabledTool,
-} from "@cline/core";
-import { getClineEnvironmentConfig } from "@cline/shared";
+} from "@enki/core";
+import { getEnki AIEnvironmentConfig } from "@enki/shared";
 import {
 	connectorChannelsPayload,
 	startConnectorChannel,
@@ -63,37 +63,37 @@ const ROUTINE_SCHEDULE_COMMANDS = new Set([
 	"delete_routine_schedule",
 ]);
 
-async function resolveHubClineAccountAuthToken(input: {
+async function resolveHubEnki AIAccountAuthToken(input: {
 	settings?: ProviderSettings;
 	apiBaseUrl: string;
 }): Promise<string | undefined> {
 	const credentials = input.settings
-		? getProviderOAuthCredentialsFromSettings("cline", input.settings)
+		? getProviderOAuthCredentialsFromSettings("enki", input.settings)
 		: null;
 	if (!credentials || !input.settings) {
-		return getPersistedProviderApiKey("cline", input.settings);
+		return getPersistedProviderApiKey("enki", input.settings);
 	}
 
-	const nextCredentials = await getValidClineCredentials(credentials, {
+	const nextCredentials = await getValidEnki AICredentials(credentials, {
 		apiBaseUrl: input.apiBaseUrl,
 	});
 	if (!nextCredentials) {
 		throw new Error(
-			"Cline account requires re-authentication. Run cline auth cline.",
+			"Enki AI account requires re-authentication. Run enki auth enki.",
 		);
 	}
 
 	if (nextCredentials !== credentials) {
 		saveLocalProviderOAuthCredentials(
 			providerSettingsManager,
-			"cline",
+			"enki",
 			input.settings,
 			nextCredentials,
 			{ setLastUsed: false },
 		);
 	}
 
-	return formatProviderOAuthApiKey("cline", nextCredentials);
+	return formatProviderOAuthApiKey("enki", nextCredentials);
 }
 
 export async function handleDesktopCommand(
@@ -170,23 +170,23 @@ export async function handleDesktopCommand(
 			accessToken: saved.auth?.accessToken ?? saved.apiKey ?? "",
 		};
 	}
-	if (command === "cline_account") {
-		const settings = providerSettingsManager.getProviderSettings("cline");
+	if (command === "enki_account") {
+		const settings = providerSettingsManager.getProviderSettings("enki");
 		const apiBaseUrl =
-			settings?.baseUrl?.trim() || getClineEnvironmentConfig().apiBaseUrl;
-		const authToken = await resolveHubClineAccountAuthToken({
+			settings?.baseUrl?.trim() || getEnki AIEnvironmentConfig().apiBaseUrl;
+		const authToken = await resolveHubEnki AIAccountAuthToken({
 			settings,
 			apiBaseUrl,
 		});
 		if (!authToken) {
-			throw new Error("No Cline account auth token found");
+			throw new Error("No Enki AI account auth token found");
 		}
-		const accountService = new ClineAccountService({
+		const accountService = new Enki AIAccountService({
 			apiBaseUrl,
 			getAuthToken: async () => authToken,
 		});
-		return await executeClineAccountAction(
-			args as ClineAccountActionRequest,
+		return await executeEnki AIAccountAction(
+			args as Enki AIAccountActionRequest,
 			accountService,
 		);
 	}

@@ -13,7 +13,7 @@ import type {
 	Message,
 	PluginSetupContext,
 	WorkspaceInfo,
-} from "@cline/shared";
+} from "@enki/shared";
 import { SubprocessSandbox } from "../../runtime/tools/subprocess-sandbox";
 import type { PluginLoadDiagnostics } from "./plugin-load-report";
 import type { PluginTargeting } from "./plugin-targeting";
@@ -59,7 +59,7 @@ type AgentExtension = NonNullable<AgentConfig["extensions"]>[number];
 type AgentExtensionApi = Parameters<NonNullable<AgentExtension["setup"]>>[0];
 type SandboxedAgentExtension = AgentExtension & {
 	/** Internal metadata used by settings surfaces that need source paths. */
-	__clinePluginPath?: string;
+	__enkiPluginPath?: string;
 };
 
 type SandboxedContributionDescriptor = {
@@ -134,7 +134,7 @@ function isUnknownPluginIdError(error: unknown): boolean {
 
 function getPlatformPackageName(): string {
 	const platform = process.platform === "win32" ? "windows" : process.platform;
-	return `@cline/cli-${platform}-${process.arch}`;
+	return `@enki/cli-${platform}-${process.arch}`;
 }
 
 function resolveBootstrapFromWrapper(): string | undefined {
@@ -313,7 +313,7 @@ export async function loadSandboxedPlugins(
 		(descriptor) => {
 			const extension: SandboxedAgentExtension = {
 				name: descriptor.name,
-				__clinePluginPath: descriptor.pluginPath,
+				__enkiPluginPath: descriptor.pluginPath,
 				manifest: descriptor.manifest,
 				setup: (api: AgentExtensionApi) => {
 					registerTools(

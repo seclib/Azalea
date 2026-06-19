@@ -348,9 +348,9 @@ export function ChannelsContent() {
 	return (
 		<PageFrame>
 			<PageHeader
-				description={`${activeConnectors.length} connected. Start and manage connector channels for Cline Hub.`}
+				description={`${activeConnectors.length} connected. Start and manage connector channels for Enki AI Hub.`}
 				title="Channels"
-				meta={<CommandBadge>cline connect</CommandBadge>}
+				meta={<CommandBadge>enki connect</CommandBadge>}
 				actions={
 					<>
 						<Button
@@ -454,7 +454,7 @@ export function ChannelsContent() {
 					<DialogHeader>
 						<DialogTitle>Add Channel</DialogTitle>
 						<DialogDescription>
-							Start a connector channel for Cline Hub.
+							Start a connector channel for Enki AI Hub.
 						</DialogDescription>
 					</DialogHeader>
 					<div className="grid gap-4 py-2">

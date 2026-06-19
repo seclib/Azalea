@@ -2,11 +2,11 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import {
-	resolveClineDir,
-	resolveDocumentsClineDirectoryPath,
-	setClineDir,
+	resolveEnki AIDir,
+	resolveDocumentsEnki AIDirectoryPath,
+	setEnki AIDir,
 	setHomeDir,
-} from "@cline/shared/storage";
+} from "@enki/shared/storage";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
 	createHookAuditHooks,
@@ -64,7 +64,7 @@ async function createWorkspaceWithHook(
 	body: string,
 ): Promise<{ workspace: string; hookPath: string }> {
 	const workspace = await mkdtemp(join(tmpdir(), "hooks-workspace-"));
-	const hooksDir = join(workspace, ".clinerules", "hooks");
+	const hooksDir = join(workspace, ".enkirules", "hooks");
 	await mkdir(hooksDir, { recursive: true });
 	const hookPath = join(hooksDir, fileName);
 	await writeFile(hookPath, body, "utf8");
@@ -119,24 +119,24 @@ function afterToolContext(input: unknown = { path: "README.md" }) {
 
 describe("createHookConfigFileHooks", () => {
 	const originalHomeDir = dirname(
-		dirname(resolveDocumentsClineDirectoryPath()),
+		dirname(resolveDocumentsEnki AIDirectoryPath()),
 	);
-	const originalClineDir = resolveClineDir();
+	const originalEnki AIDir = resolveEnki AIDir();
 	let isolatedRoot = "";
 
 	beforeAll(async () => {
 		isolatedRoot = await mkdtemp(join(tmpdir(), "hooks-home-"));
 		const isolatedHomeDir = join(isolatedRoot, "home");
-		const isolatedClineDir = join(isolatedRoot, "cline");
+		const isolatedEnki AIDir = join(isolatedRoot, "enki");
 		await mkdir(isolatedHomeDir, { recursive: true });
-		await mkdir(isolatedClineDir, { recursive: true });
+		await mkdir(isolatedEnki AIDir, { recursive: true });
 		setHomeDir(isolatedHomeDir);
-		setClineDir(isolatedClineDir);
+		setEnki AIDir(isolatedEnki AIDir);
 	});
 
 	afterAll(async () => {
 		setHomeDir(originalHomeDir);
-		setClineDir(originalClineDir);
+		setEnki AIDir(originalEnki AIDir);
 		if (isolatedRoot) {
 			await rm(isolatedRoot, { recursive: true, force: true });
 		}
@@ -498,7 +498,7 @@ describe("createHookConfigFileHooks", () => {
 		);
 		try {
 			await writeFile(
-				join(workspace, ".clinerules", "hooks", "UserPromptSubmit.js"),
+				join(workspace, ".enkirules", "hooks", "UserPromptSubmit.js"),
 				`let data='';process.stdin.on('data',c=>data+=c);process.stdin.on('end',()=>{require('node:fs').appendFileSync(${JSON.stringify(outputPath)}, data.trim()+"\\n");});\n`,
 				"utf8",
 			);

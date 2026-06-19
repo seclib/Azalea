@@ -4,15 +4,15 @@ import { homedir } from "node:os";
 import { dirname } from "node:path";
 import {
 	type AgentToolContext,
-	ClineCore,
+	Enki AICore,
 	type CoreSessionEvent,
 	NodeHubClient,
 	type RuntimeCapabilities,
 	setHomeDirIfUnset,
 	type ToolApprovalRequest,
 	type ToolApprovalResult,
-} from "@cline/core";
-import type { AgentEvent } from "@cline/shared";
+} from "@enki/core";
+import type { AgentEvent } from "@enki/shared";
 import { sessionLogPath } from "./paths";
 import type {
 	LiveSession,
@@ -682,7 +682,7 @@ export async function initializeSessionManager(
 	ctx: SidecarContext,
 ): Promise<void> {
 	setHomeDirIfUnset(homedir());
-	const sessionManager = await ClineCore.create({
+	const sessionManager = await Enki AICore.create({
 		backendMode: "hub",
 		capabilities: createSidecarRuntimeCapabilities(ctx),
 		hub: {

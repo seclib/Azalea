@@ -1,14 +1,14 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http"
 import type { Socket } from "node:net"
 import { v4 as uuidv4 } from "uuid"
-import type { BalanceResponse, OrganizationBalanceResponse, UserResponse } from "../../../../shared/ClineAccount"
+import type { BalanceResponse, OrganizationBalanceResponse, UserResponse } from "../../../../shared/Enki AIAccount"
 import {
 	E2E_MOCK_API_RESPONSES,
 	E2E_MOCK_CLINE_MODELS,
 	E2E_MOCK_CLINE_RECOMMENDED_MODELS,
 	E2E_REGISTERED_MOCK_ENDPOINTS,
 } from "./api"
-import { ClineDataMock } from "./data"
+import { Enki AIDataMock } from "./data"
 
 const E2E_API_SERVER_PORT = 7777
 
@@ -17,12 +17,12 @@ export const MOCK_CLINE_API_SERVER_URL = `http://localhost:${E2E_API_SERVER_PORT
 const useVerboseLogging = process.env.CLINE_E2E_TESTS_VERBOSE === "true"
 function log(...args: unknown[]) {
 	if (useVerboseLogging) {
-		console.log("[ClineApiServerMock]", ...args)
+		console.log("[Enki AIApiServerMock]", ...args)
 	}
 }
 
-export class ClineApiServerMock {
-	static globalSharedServer: ClineApiServerMock | null = null
+export class Enki AIApiServerMock {
+	static globalSharedServer: Enki AIApiServerMock | null = null
 	static globalSockets: Set<Socket> = new Set()
 
 	private currentUser: UserResponse | null = null
@@ -32,7 +32,7 @@ export class ClineApiServerMock {
 	private spendLimitExceeded = false
 	public generationCounter = 0
 
-	public readonly API_USER = new ClineDataMock("personal")
+	public readonly API_USER = new Enki AIDataMock("personal")
 
 	constructor(public readonly server: Server) {}
 
@@ -127,11 +127,11 @@ export class ClineApiServerMock {
 	}
 
 	// Starts the global shared server
-	public static async startGlobalServer(): Promise<ClineApiServerMock> {
+	public static async startGlobalServer(): Promise<Enki AIApiServerMock> {
 		log("=== SERVER FIXTURE CALLED ===")
-		if (ClineApiServerMock.globalSharedServer) {
+		if (Enki AIApiServerMock.globalSharedServer) {
 			log("Using existing global server")
-			return ClineApiServerMock.globalSharedServer
+			return Enki AIApiServerMock.globalSharedServer
 		}
 
 		log("Starting global server...")
@@ -173,8 +173,8 @@ export class ClineApiServerMock {
 			const authHeader = req.headers.authorization
 			const isPublicApiRoute =
 				path === "/api/v1/auth/token" ||
-				path === "/api/v1/ai/cline/models" ||
-				path === "/api/v1/ai/cline/recommended-models"
+				path === "/api/v1/ai/enki/models" ||
+				path === "/api/v1/ai/enki/recommended-models"
 			const isAuthRequired = !path.startsWith("/.test/") && path !== "/health" && !isPublicApiRoute
 
 			if (isAuthRequired && (!authHeader || !authHeader.startsWith("Bearer "))) {
@@ -186,11 +186,11 @@ export class ClineApiServerMock {
 			// Authenticate the token and set current user
 			if (isAuthRequired && authToken) {
 				log(`Authenticating token: ${authToken}`)
-				const user = ClineApiServerMock.globalSharedServer!.API_USER.getUserByToken(authToken)
+				const user = Enki AIApiServerMock.globalSharedServer!.API_USER.getUserByToken(authToken)
 				if (!user) {
 					return sendApiError("Invalid token", 401)
 				}
-				ClineApiServerMock.globalSharedServer!.setCurrentUser(user)
+				Enki AIApiServerMock.globalSharedServer!.setCurrentUser(user)
 			}
 
 			log("=== MOCK SERVER REQUEST ===")
@@ -203,14 +203,14 @@ export class ClineApiServerMock {
 			// Route handling
 			const handleRequest = async () => {
 				// Try to match the route using registered endpoints
-				const routeMatch = ClineApiServerMock.matchRoute(path, method)
+				const routeMatch = Enki AIApiServerMock.matchRoute(path, method)
 
 				if (!routeMatch.matched) {
 					return sendJson({ error: "Not found" }, 404)
 				}
 
 				const { baseRoute, endpoint, params = {} } = routeMatch
-				const controller = ClineApiServerMock.globalSharedServer!
+				const controller = Enki AIApiServerMock.globalSharedServer!
 
 				// Health check endpoints
 				if (baseRoute === "/health") {
@@ -224,11 +224,11 @@ export class ClineApiServerMock {
 
 				// API v1 endpoints
 				if (baseRoute === "/api/v1") {
-					if (endpoint === "/ai/cline/recommended-models" && method === "GET") {
+					if (endpoint === "/ai/enki/recommended-models" && method === "GET") {
 						return sendJson(E2E_MOCK_CLINE_RECOMMENDED_MODELS)
 					}
 
-					if (endpoint === "/ai/cline/models" && method === "GET") {
+					if (endpoint === "/ai/enki/models" && method === "GET") {
 						return sendJson({ data: E2E_MOCK_CLINE_MODELS })
 					}
 
@@ -347,7 +347,7 @@ export class ClineApiServerMock {
 							return sendApiError("Invalid or expired authorization code", 400)
 						}
 
-						// Return format matching ClineAuthProvider expectations
+						// Return format matching Enki AIAuthProvider expectations
 						return sendApiResponse({
 							accessToken: code + "_access",
 							refreshToken: code + "_refresh",
@@ -357,7 +357,7 @@ export class ClineApiServerMock {
 								subject: user.id,
 								email: user.email,
 								name: user.displayName,
-								clineUserId: user.id,
+								enkiUserId: user.id,
 								accounts: null,
 								organizations: user.organizations,
 							},
@@ -381,7 +381,7 @@ export class ClineApiServerMock {
 							return sendApiError("Invalid or expired refresh token", 400)
 						}
 
-						// Return format matching ClineAuthProvider expectations
+						// Return format matching Enki AIAuthProvider expectations
 						return sendApiResponse({
 							accessToken: originalToken + "_access_refreshed",
 							refreshToken: refreshToken, // Keep same refresh token
@@ -391,7 +391,7 @@ export class ClineApiServerMock {
 								subject: user.id,
 								email: user.email,
 								name: user.displayName,
-								clineUserId: user.id,
+								enkiUserId: user.id,
 								accounts: null,
 							},
 						})
@@ -447,7 +447,7 @@ export class ClineApiServerMock {
 						if (body.includes("edit_request")) {
 							responseText = E2E_MOCK_API_RESPONSES.EDIT_REQUEST
 						}
-						if (body.includes("[diff.test.ts] Hello, Cline!")) {
+						if (body.includes("[diff.test.ts] Hello, Enki AI!")) {
 							// The playwright test in diff.test.ts needs the "API Request..." text
 							// to be on the screen long enough to detect it.  This worked at 100ms
 							// too, but setting to 500ms to cover slower CI boxes.
@@ -529,7 +529,7 @@ export class ClineApiServerMock {
 									index: 0,
 									message: {
 										role: "assistant",
-										content: "Hello! I'm a mock Cline API response.",
+										content: "Hello! I'm a mock Enki AI API response.",
 									},
 									finish_reason: "stop",
 								},
@@ -616,14 +616,14 @@ export class ClineApiServerMock {
 		})
 
 		// Initialize the controller after the server is created
-		const controller = new ClineApiServerMock(server)
-		ClineApiServerMock.globalSharedServer = controller
+		const controller = new Enki AIApiServerMock(server)
+		Enki AIApiServerMock.globalSharedServer = controller
 
 		// Track connections for proper cleanup
 		server.on("connection", (socket) => {
-			ClineApiServerMock.globalSockets.add(socket)
+			Enki AIApiServerMock.globalSockets.add(socket)
 			socket.on("close", () => {
-				ClineApiServerMock.globalSockets.delete(socket)
+				Enki AIApiServerMock.globalSockets.delete(socket)
 			})
 		})
 
@@ -633,7 +633,7 @@ export class ClineApiServerMock {
 					console.error(`Failed to start server on port ${E2E_API_SERVER_PORT}:`, error)
 					reject(error)
 				} else {
-					log(`ClineApiServerMock listening on port ${E2E_API_SERVER_PORT}`)
+					log(`Enki AIApiServerMock listening on port ${E2E_API_SERVER_PORT}`)
 					resolve()
 				}
 			})
@@ -644,15 +644,15 @@ export class ClineApiServerMock {
 
 	// Stops the global shared server
 	public static async stopGlobalServer(): Promise<void> {
-		if (!ClineApiServerMock.globalSharedServer) {
+		if (!Enki AIApiServerMock.globalSharedServer) {
 			return
 		}
 
-		const server = ClineApiServerMock.globalSharedServer.server
+		const server = Enki AIApiServerMock.globalSharedServer.server
 
 		// Clean shutdown - destroy all socket connections first
-		ClineApiServerMock.globalSockets.forEach((socket) => socket.destroy())
-		ClineApiServerMock.globalSockets.clear()
+		Enki AIApiServerMock.globalSockets.forEach((socket) => socket.destroy())
+		Enki AIApiServerMock.globalSockets.clear()
 
 		await new Promise<void>((resolve, reject) => {
 			server.close((err) => {
@@ -665,6 +665,6 @@ export class ClineApiServerMock {
 			})
 		})
 
-		ClineApiServerMock.globalSharedServer = null
+		Enki AIApiServerMock.globalSharedServer = null
 	}
 }

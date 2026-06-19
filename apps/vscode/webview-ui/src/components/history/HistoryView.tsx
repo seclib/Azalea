@@ -1,5 +1,5 @@
-import { BooleanRequest, EmptyRequest, StringArrayRequest } from "@shared/proto/cline/common"
-import { GetTaskHistoryRequest, TaskFavoriteRequest } from "@shared/proto/cline/task"
+import { BooleanRequest, EmptyRequest, StringArrayRequest } from "@shared/proto/enki/common"
+import { GetTaskHistoryRequest, TaskFavoriteRequest } from "@shared/proto/enki/task"
 import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import Fuse, { FuseResult } from "fuse.js"
 import { FunnelIcon } from "lucide-react"

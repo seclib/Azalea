@@ -14,7 +14,7 @@
  *  - `canStartRun` / `shutdown` guards enforce the lifecycle rules.
  */
 
-import type { AgentRuntime, AgentRuntimeConfig } from "@cline/agents";
+import type { AgentRuntime, AgentRuntimeConfig } from "@enki/agents";
 import type {
 	AgentConfig,
 	AgentEvent,
@@ -25,7 +25,7 @@ import type {
 	AgentRuntimeEvent,
 	AgentTool,
 	AgentToolContext,
-} from "@cline/shared";
+} from "@enki/shared";
 import { describe, expect, it, vi } from "vitest";
 import { CLINE_INTERNAL_TELEMETRY_METADATA_KEY } from "../../services/telemetry/tool-context";
 import {
@@ -390,7 +390,7 @@ describe("SessionRuntime.getExtensionRegistry", () => {
 				extensions: [extension],
 				extensionContext: {
 					session: { sessionId: "sess_plugin_context" },
-					client: { name: "cline-sdk", version: "1.2.3" },
+					client: { name: "enki-sdk", version: "1.2.3" },
 					user: { distinctId: "user-1" },
 					workspace: { rootPath: "/tmp/workspace" },
 					automation: { ingestEvent },
@@ -405,7 +405,7 @@ describe("SessionRuntime.getExtensionRegistry", () => {
 
 		expect(observed?.session?.sessionId).toBe("sess_plugin_context");
 		expect(observed?.client).toEqual({
-			name: "cline-sdk",
+			name: "enki-sdk",
 			version: "1.2.3",
 		});
 		expect(observed?.user?.distinctId).toBe("user-1");
@@ -784,7 +784,7 @@ it("derives tool image support metadata from resolved provider model catalog", a
 	} as unknown as AgentConfig["telemetry"];
 	const session = new SessionRuntime(
 		makeAgentConfig({
-			providerId: "cline",
+			providerId: "enki",
 			modelId: "anthropic/claude-sonnet-4.6",
 			telemetry,
 			tools: [

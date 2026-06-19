@@ -9,8 +9,8 @@ import {
 	nowIso,
 	type SqliteDb,
 	toBoolInt,
-} from "@cline/shared/db";
-import { resolveDbDataDir } from "@cline/shared/storage";
+} from "@enki/shared/db";
+import { resolveDbDataDir } from "@enki/shared/storage";
 import {
 	isNonTerminalSessionStatus,
 	type SessionStatus,

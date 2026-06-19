@@ -3,14 +3,14 @@ import {
 	type ProviderSettings,
 	ProviderSettingsManager,
 	type UserInstructionConfigService,
-} from "@cline/core";
+} from "@enki/core";
 import type { CliMigrationNotice } from "../kanban-migration/notice";
 import { logCliError } from "../logging/errors";
 import {
-	loadClineAccountSnapshot,
+	loadEnki AIAccountSnapshot,
 	onProviderChange,
-	switchClineAccount,
-} from "../tui/cline-account";
+	switchEnki AIAccount,
+} from "../tui/enki-account";
 import type {
 	InteractiveConfigItem,
 	LoadInteractiveConfigDataOptions,
@@ -18,7 +18,7 @@ import type {
 import {
 	type InteractiveSlashCommand,
 	listInteractiveSlashCommands,
-	resolveClineWelcomeLine,
+	resolveEnki AIWelcomeLine,
 } from "../tui/interactive-welcome";
 import { disableOpenTuiGraphicsProbe } from "../tui/opentui-env";
 import type { QueuedPromptItem } from "../tui/types";
@@ -57,8 +57,8 @@ export async function runInteractive(
 	userInstructionService?: UserInstructionConfigService,
 	resumeSessionId?: string,
 	options?: {
-		clineApiBaseUrl?: string;
-		clineProviderSettings?: ProviderSettings;
+		enkiApiBaseUrl?: string;
+		enkiProviderSettings?: ProviderSettings;
 		initialView?: "chat" | "config";
 		initialPrompt?: string;
 		initialNotice?: CliMigrationNotice;
@@ -394,21 +394,21 @@ export async function runInteractive(
 		workflowSlashCommands,
 		loadAdditionalSlashCommands,
 		loadWelcomeLine: async () =>
-			await resolveClineWelcomeLine({
+			await resolveEnki AIWelcomeLine({
 				config,
-				clineApiBaseUrl: options?.clineApiBaseUrl,
-				clineProviderSettings: options?.clineProviderSettings,
+				enkiApiBaseUrl: options?.enkiApiBaseUrl,
+				enkiProviderSettings: options?.enkiProviderSettings,
 			}),
-		loadClineAccount: async () =>
-			await loadClineAccountSnapshot({
+		loadEnki AIAccount: async () =>
+			await loadEnki AIAccountSnapshot({
 				config,
-				clineApiBaseUrl: options?.clineApiBaseUrl,
+				enkiApiBaseUrl: options?.enkiApiBaseUrl,
 			}),
-		switchClineAccount: async (organizationId) =>
-			await switchClineAccount({
+		switchEnki AIAccount: async (organizationId) =>
+			await switchEnki AIAccount({
 				config,
 				organizationId,
-				clineApiBaseUrl: options?.clineApiBaseUrl,
+				enkiApiBaseUrl: options?.enkiApiBaseUrl,
 			}),
 		loadConfigData: configDataLoader.loadConfigData,
 		onToggleConfigItem,
@@ -638,13 +638,13 @@ export async function runInteractive(
 		},
 		onAccountChange: async () => {
 			await sessionRuntime.ensureReady();
-			await loadClineAccountSnapshot({
+			await loadEnki AIAccountSnapshot({
 				config,
-				clineApiBaseUrl: options?.clineApiBaseUrl,
+				enkiApiBaseUrl: options?.enkiApiBaseUrl,
 			}).catch((error) => {
 				logCliError(
 					config.logger,
-					"Cline account refresh after account change failed",
+					"Enki AI account refresh after account change failed",
 					{ error },
 				);
 			});

@@ -1,11 +1,11 @@
 import * as assert from "assert"
 import { afterEach, beforeEach, describe, it } from "mocha"
 import sinon from "sinon"
-import { ClineAccountService } from "@/services/account/ClineAccountService"
+import { Enki AIAccountService } from "@/services/account/Enki AIAccountService"
 import { AuthService } from "@/services/auth/AuthService"
 
-describe("ClineAccountService.fetchUserRemoteConfig", () => {
-	let service: ClineAccountService
+describe("Enki AIAccountService.fetchUserRemoteConfig", () => {
+	let service: Enki AIAccountService
 	let sandbox: sinon.SinonSandbox
 	let authStub: { getAuthToken: sinon.SinonStub }
 
@@ -13,7 +13,7 @@ describe("ClineAccountService.fetchUserRemoteConfig", () => {
 		sandbox = sinon.createSandbox()
 		authStub = { getAuthToken: sandbox.stub().resolves("token") }
 		sandbox.stub(AuthService, "getInstance").returns(authStub as unknown as AuthService)
-		service = new ClineAccountService()
+		service = new Enki AIAccountService()
 	})
 
 	afterEach(() => {
@@ -81,14 +81,14 @@ describe("ClineAccountService.fetchUserRemoteConfig", () => {
 	})
 })
 
-describe("ClineAccountService.fetchFeaturebaseToken", () => {
-	let service: ClineAccountService
+describe("Enki AIAccountService.fetchFeaturebaseToken", () => {
+	let service: Enki AIAccountService
 	let sandbox: sinon.SinonSandbox
 
 	beforeEach(() => {
 		sandbox = sinon.createSandbox()
 		sandbox.stub(AuthService, "getInstance").returns({} as AuthService)
-		service = new ClineAccountService()
+		service = new Enki AIAccountService()
 	})
 
 	afterEach(() => {
@@ -119,7 +119,7 @@ describe("ClineAccountService.fetchFeaturebaseToken", () => {
 	it("returns undefined when the request throws due to missing auth token", async () => {
 		sandbox
 			.stub(service as unknown as { authenticatedRequest: () => unknown }, "authenticatedRequest")
-			.rejects(new Error("No Cline account auth token found"))
+			.rejects(new Error("No Enki AI account auth token found"))
 
 		const result = await service.fetchFeaturebaseToken()
 

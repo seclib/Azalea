@@ -1,7 +1,7 @@
 import { strict as assert } from "node:assert"
 import * as NotificationHook from "@core/hooks/notification-hook"
 import { Task } from "@core/task"
-import type { ClineMessage } from "@shared/ExtensionMessage"
+import type { Enki AIMessage } from "@shared/ExtensionMessage"
 import { describe, it } from "mocha"
 import sinon from "sinon"
 
@@ -19,7 +19,7 @@ function createFakeTask(taskState: {
 	askResponseFiles: string[] | undefined
 	lastMessageTs: number | undefined
 }) {
-	const clineMessages: ClineMessage[] = []
+	const enkiMessages: Enki AIMessage[] = []
 
 	const fakeTask = {
 		taskState,
@@ -30,15 +30,15 @@ function createFakeTask(taskState: {
 		},
 		taskId: "task-1",
 		messageStateHandler: {
-			addToClineMessages: async (message: ClineMessage) => {
-				clineMessages.push(message)
+			addToEnki AIMessages: async (message: Enki AIMessage) => {
+				enkiMessages.push(message)
 			},
-			getClineMessages: () => clineMessages,
+			getEnki AIMessages: () => enkiMessages,
 		},
 		postStateToWebview: async () => undefined,
 	}
 
-	return { clineMessages, fakeTask }
+	return { enkiMessages, fakeTask }
 }
 
 describe("Task.ask", () => {
@@ -59,7 +59,7 @@ describe("Task.ask", () => {
 			askResponseFiles: undefined,
 			lastMessageTs: undefined,
 		}
-		const { clineMessages, fakeTask } = createFakeTask(taskState)
+		const { enkiMessages, fakeTask } = createFakeTask(taskState)
 
 		try {
 			const askPromise = (
@@ -79,8 +79,8 @@ describe("Task.ask", () => {
 			)
 
 			await flushMicrotasks()
-			assert.equal(clineMessages.length, 1)
-			assert.equal(clineMessages[0].ask, "resume_task")
+			assert.equal(enkiMessages.length, 1)
+			assert.equal(enkiMessages[0].ask, "resume_task")
 			assert.notEqual(taskState.lastMessageTs, undefined)
 
 			await clock.tickAsync(1_000)
@@ -117,7 +117,7 @@ describe("Task.ask", () => {
 			askResponseFiles: undefined,
 			lastMessageTs: undefined,
 		}
-		const { clineMessages, fakeTask } = createFakeTask(taskState)
+		const { enkiMessages, fakeTask } = createFakeTask(taskState)
 
 		try {
 			const askPromise = (
@@ -137,8 +137,8 @@ describe("Task.ask", () => {
 			)
 
 			await flushMicrotasks()
-			assert.equal(clineMessages.length, 1)
-			assert.equal(clineMessages[0].ask, "resume_completed_task")
+			assert.equal(enkiMessages.length, 1)
+			assert.equal(enkiMessages[0].ask, "resume_completed_task")
 			assert.notEqual(taskState.lastMessageTs, undefined)
 
 			await clock.tickAsync(1_000)
@@ -175,7 +175,7 @@ describe("Task.ask", () => {
 			askResponseFiles: undefined,
 			lastMessageTs: undefined,
 		}
-		const { clineMessages, fakeTask } = createFakeTask(taskState)
+		const { enkiMessages, fakeTask } = createFakeTask(taskState)
 
 		try {
 			const askPromise = (
@@ -185,10 +185,10 @@ describe("Task.ask", () => {
 			).ask.call(fakeTask, "completion_result")
 
 			await flushMicrotasks()
-			assert.equal(clineMessages.length, 1)
-			assert.equal(clineMessages[0].ask, "completion_result")
+			assert.equal(enkiMessages.length, 1)
+			assert.equal(enkiMessages[0].ask, "completion_result")
 
-			const rejectionPromise = assert.rejects(askPromise, /Cline instance aborted/)
+			const rejectionPromise = assert.rejects(askPromise, /Enki AI instance aborted/)
 			taskState.abort = true
 
 			await clock.tickAsync(100)

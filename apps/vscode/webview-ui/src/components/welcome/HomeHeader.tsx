@@ -1,7 +1,7 @@
-import { EmptyRequest } from "@shared/proto/cline/common"
-import ClineLogoSanta from "@/assets/ClineLogoSanta"
-import ClineLogoTired from "@/assets/ClineLogoTired"
-import ClineLogoVariable from "@/assets/ClineLogoVariable"
+import { EmptyRequest } from "@shared/proto/enki/common"
+import Enki AILogoSanta from "@/assets/Enki AILogoSanta"
+import Enki AILogoTired from "@/assets/Enki AILogoTired"
+import Enki AILogoVariable from "@/assets/Enki AILogoVariable"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { UiServiceClient } from "@/services/grpc-client"
 
@@ -22,7 +22,7 @@ const HomeHeader = ({ shouldShowQuickWins = false }: HomeHeaderProps) => {
 
 	// Lazy Teammate Mode takes priority, then December festive logo, then default
 	const isDecember = new Date().getMonth() === 11 // 11 = December (0-indexed)
-	const LogoComponent = lazyTeammateModeEnabled ? ClineLogoTired : isDecember ? ClineLogoSanta : ClineLogoVariable
+	const LogoComponent = lazyTeammateModeEnabled ? Enki AILogoTired : isDecember ? Enki AILogoSanta : Enki AILogoVariable
 	const headingText = lazyTeammateModeEnabled ? "I guess I'm here to help" : "What can I do for you?"
 
 	return (

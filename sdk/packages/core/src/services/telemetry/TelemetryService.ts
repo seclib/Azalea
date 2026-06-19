@@ -3,7 +3,7 @@ import type {
 	ITelemetryService,
 	TelemetryMetadata,
 	TelemetryProperties,
-} from "@cline/shared";
+} from "@enki/shared";
 import type { ITelemetryAdapter } from "./ITelemetryAdapter";
 import { TelemetryLoggerSink } from "./TelemetryLoggerSink";
 

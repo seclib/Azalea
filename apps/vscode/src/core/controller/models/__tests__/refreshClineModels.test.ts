@@ -5,15 +5,15 @@ import { expect } from "chai"
 import fs from "fs/promises"
 import { afterEach, beforeEach, describe, it } from "mocha"
 import sinon from "sinon"
-import { ClineEnv, Environment } from "@/config"
+import { Enki AIEnv, Environment } from "@/config"
 import type { Controller } from "@/core/controller"
 import { StateManager } from "@/core/storage/StateManager"
 import { getFeatureFlagsService } from "@/services/feature-flags"
 import { FeatureFlag } from "@/shared/services/feature-flags/feature-flags"
 import { Logger } from "@/shared/services/Logger"
-import { refreshClineModels } from "../refreshClineModels"
+import { refreshEnki AIModels } from "../refreshEnki AIModels"
 
-describe("refreshClineModels", () => {
+describe("refreshEnki AIModels", () => {
 	let sandbox: sinon.SinonSandbox
 
 	beforeEach(() => {
@@ -26,15 +26,15 @@ describe("refreshClineModels", () => {
 		sandbox.restore()
 	})
 
-	it("marks Qwen 3.7 Max as prompt-cache capable when Cline model pricing includes cache reads", async () => {
+	it("marks Qwen 3.7 Max as prompt-cache capable when Enki AI model pricing includes cache reads", async () => {
 		sandbox.stub(getFeatureFlagsService(), "getBooleanFlagEnabled").callsFake((flag) => {
 			return flag === FeatureFlag.EXTENSION_CLINE_MODELS_ENDPOINT
 		})
-		sandbox.stub(ClineEnv, "config").returns({
+		sandbox.stub(Enki AIEnv, "config").returns({
 			environment: Environment.production,
-			appBaseUrl: "https://app.cline-mock.bot",
-			apiBaseUrl: "https://api.cline-mock.bot",
-			mcpBaseUrl: "https://api.cline-mock.bot/v1/mcp",
+			appBaseUrl: "https://app.enki-mock.bot",
+			apiBaseUrl: "https://api.enki-mock.bot",
+			mcpBaseUrl: "https://api.enki-mock.bot/v1/mcp",
 		})
 		sandbox.stub(StateManager, "get").returns({
 			getModelsCache: () => null,
@@ -69,7 +69,7 @@ describe("refreshClineModels", () => {
 			},
 		})
 
-		const models = await refreshClineModels({} as Controller)
+		const models = await refreshEnki AIModels({} as Controller)
 		const qwen37 = models["qwen/qwen3.7-max"]
 
 		expect(qwen37.supportsPromptCache).to.equal(true)
@@ -77,15 +77,15 @@ describe("refreshClineModels", () => {
 		expect(qwen37.cacheWritesPrice).to.equal(undefined)
 	})
 
-	it("adds Claude Fable 5 context variants to the Cline model list", async () => {
+	it("adds Claude Fable 5 context variants to the Enki AI model list", async () => {
 		sandbox.stub(getFeatureFlagsService(), "getBooleanFlagEnabled").callsFake((flag) => {
 			return flag === FeatureFlag.EXTENSION_CLINE_MODELS_ENDPOINT
 		})
-		sandbox.stub(ClineEnv, "config").returns({
+		sandbox.stub(Enki AIEnv, "config").returns({
 			environment: Environment.production,
-			appBaseUrl: "https://app.cline-mock.bot",
-			apiBaseUrl: "https://api.cline-mock.bot",
-			mcpBaseUrl: "https://api.cline-mock.bot/v1/mcp",
+			appBaseUrl: "https://app.enki-mock.bot",
+			apiBaseUrl: "https://api.enki-mock.bot",
+			mcpBaseUrl: "https://api.enki-mock.bot/v1/mcp",
 		})
 		sandbox.stub(StateManager, "get").returns({
 			getModelsCache: () => null,
@@ -121,7 +121,7 @@ describe("refreshClineModels", () => {
 			},
 		})
 
-		const models = await refreshClineModels({} as Controller)
+		const models = await refreshEnki AIModels({} as Controller)
 		const fable = models["anthropic/claude-fable-5"]
 		const fable1m = models[openRouterClaudeFable51mModelId]
 

@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { resolveClineDataDir } from "@cline/core";
+import { resolveEnki AIDataDir } from "@enki/core";
 
 function isProcessRunning(pid: number): boolean {
 	if (!Number.isInteger(pid) || pid <= 0) {
@@ -32,7 +32,7 @@ export type ActiveConnectorRecord = {
 function listConnectorStatePaths(
 	type: ActiveConnectorRecord["type"],
 ): string[] {
-	const dir = join(resolveClineDataDir(), "connectors", type);
+	const dir = join(resolveEnki AIDataDir(), "connectors", type);
 	if (!existsSync(dir)) {
 		return [];
 	}

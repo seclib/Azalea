@@ -1,11 +1,11 @@
 import {
-	fetchClineRecommendedModels,
+	fetchEnki AIRecommendedModels,
 	getProviderConfigFields,
 	Llms,
 	ProviderSettingsManager,
 	refreshProviderModelsFromSource,
 	resolveProviderConfig,
-} from "@cline/core";
+} from "@enki/core";
 import type { ChoiceContext } from "@opentui-ui/dialog";
 import type { DialogActions } from "@opentui-ui/dialog/react";
 import { useCallback } from "react";
@@ -25,11 +25,11 @@ import {
 	ProviderPickerContent,
 	UseExistingOrReconfigureContent,
 } from "../components/dialogs/provider-picker";
-import { buildClineModelEntries } from "../components/model-selector/cline-model-picker";
+import { buildEnki AIModelEntries } from "../components/model-selector/enki-model-picker";
 import {
 	BROWSE_ALL_ACTION,
-	ClineModelSelectorDialogContent,
-} from "../components/model-selector/cline-model-selector";
+	Enki AIModelSelectorDialogContent,
+} from "../components/model-selector/enki-model-selector";
 import {
 	buildModelOptions,
 	CHANGE_PROVIDER_ACTION,
@@ -291,30 +291,30 @@ export function useModelSelector(opts: {
 					continue;
 				}
 
-				if (config.providerId === "cline") {
-					const clineResult = await dialog.choice<string>({
+				if (config.providerId === "enki") {
+					const enkiResult = await dialog.choice<string>({
 						style: { maxHeight: termHeight - 2 },
 						content: (ctx: ChoiceContext<string>) => (
-							<ClineModelSelectorDialogContent
+							<Enki AIModelSelectorDialogContent
 								{...ctx}
 								currentModel={config.modelId}
 								currentProviderName={providerDisplayName}
 								knownModels={config.knownModels as Record<string, unknown>}
 								loadEntries={async () =>
-									buildClineModelEntries(await fetchClineRecommendedModels())
+									buildEnki AIModelEntries(await fetchEnki AIRecommendedModels())
 								}
 							/>
 						),
 					});
-					if (!clineResult) {
+					if (!enkiResult) {
 						await handleCancel();
 						return;
 					}
-					if (clineResult === CHANGE_PROVIDER_ACTION) {
+					if (enkiResult === CHANGE_PROVIDER_ACTION) {
 						await changeProvider();
 						continue;
 					}
-					if (clineResult === BROWSE_ALL_ACTION) {
+					if (enkiResult === BROWSE_ALL_ACTION) {
 						const browseResult = await dialog.choice<string>({
 							style: { maxHeight: termHeight - 2 },
 							content: (ctx: ChoiceContext<string>) => (
@@ -323,7 +323,7 @@ export function useModelSelector(opts: {
 									currentModel={config.modelId}
 									currentProviderName={providerDisplayName}
 									models={modelOptions}
-									showCustomModelId={config.providerId !== "cline-pass"}
+									showCustomModelId={config.providerId !== "enki-pass"}
 								/>
 							),
 						});
@@ -369,9 +369,9 @@ export function useModelSelector(opts: {
 						continue;
 					}
 
-					config.modelId = clineResult;
+					config.modelId = enkiResult;
 					const selectedModel = modelOptions.find(
-						(m: ModelOption) => m.key === clineResult,
+						(m: ModelOption) => m.key === enkiResult,
 					);
 					if (selectedModel?.supportsReasoning) {
 						const currentLevel: ThinkingLevel = config.reasoningEffort
@@ -414,7 +414,7 @@ export function useModelSelector(opts: {
 							currentModel={config.modelId}
 							currentProviderName={providerDisplayName}
 							models={modelOptions}
-							showCustomModelId={config.providerId !== "cline-pass"}
+							showCustomModelId={config.providerId !== "enki-pass"}
 						/>
 					),
 				});

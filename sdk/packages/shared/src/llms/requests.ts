@@ -1,8 +1,8 @@
 export const DEFAULT_REQUEST_HEADERS: Record<string, string> = {
-	"HTTP-Referer": "https://cline.bot",
-	"X-Title": "Cline",
+	"HTTP-Referer": "https://enki.bot",
+	"X-Title": "Enki AI",
 	"X-IS-MULTIROOT": "false",
-	"X-CLIENT-TYPE": "cline-sdk",
+	"X-CLIENT-TYPE": "enki-sdk",
 };
 
 export function serializeAbortReason(reason: unknown): unknown {

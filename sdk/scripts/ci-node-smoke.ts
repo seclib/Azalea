@@ -73,10 +73,10 @@ async function packWorkspace(
 }
 
 async function main(): Promise<void> {
-	const packDir = await mkdtemp(join(tmpdir(), "cline-node-smoke-packs-"));
-	const smokeDir = await mkdtemp(join(tmpdir(), "cline-node-smoke-"));
-	const sessionsDir = await mkdtemp(join(tmpdir(), "cline-node-sessions-"));
-	const npmCacheDir = await mkdtemp(join(tmpdir(), "cline-node-npm-cache-"));
+	const packDir = await mkdtemp(join(tmpdir(), "enki-node-smoke-packs-"));
+	const smokeDir = await mkdtemp(join(tmpdir(), "enki-node-smoke-"));
+	const sessionsDir = await mkdtemp(join(tmpdir(), "enki-node-sessions-"));
+	const npmCacheDir = await mkdtemp(join(tmpdir(), "enki-node-npm-cache-"));
 	const npmEnv = { npm_config_cache: npmCacheDir };
 
 	try {
@@ -92,14 +92,14 @@ async function main(): Promise<void> {
 			join(smokeDir, "package.json"),
 			`${JSON.stringify(
 				{
-					name: "cline-node-smoke",
+					name: "enki-node-smoke",
 					private: true,
 					type: "module",
 					dependencies: {
-						"@cline/core": `file:${tarballs.core}`,
-						"@cline/agents": `file:${tarballs.agents}`,
-						"@cline/llms": `file:${tarballs.llms}`,
-						"@cline/shared": `file:${tarballs.shared}`,
+						"@enki/core": `file:${tarballs.core}`,
+						"@enki/agents": `file:${tarballs.agents}`,
+						"@enki/llms": `file:${tarballs.llms}`,
+						"@enki/shared": `file:${tarballs.shared}`,
 					},
 				},
 				null,
@@ -118,7 +118,7 @@ async function main(): Promise<void> {
 		const smokeSource =
 			nodeMajor >= 24
 				? `
-					const { SqliteSessionStore } = await import("@cline/core");
+					const { SqliteSessionStore } = await import("@enki/core");
 					const store = new SqliteSessionStore({ sessionsDir: process.env.CLINE_DATA_DIR });
 					try {
 						store.init();
@@ -128,7 +128,7 @@ async function main(): Promise<void> {
 					}
 				`
 				: `
-					const { resolveSessionBackend } = await import("@cline/core");
+					const { resolveSessionBackend } = await import("@enki/core");
 					await resolveSessionBackend({ backendMode: "local" });
 					console.log("Node compatibility smoke test passed");
 				`;

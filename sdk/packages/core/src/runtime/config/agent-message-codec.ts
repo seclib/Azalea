@@ -12,8 +12,8 @@ import type {
 	ThinkingContent,
 	ToolResultContent,
 	ToolUseContent,
-} from "@cline/shared";
-import { EMPTY_CONTENT_TEXT } from "@cline/shared";
+} from "@enki/shared";
+import { EMPTY_CONTENT_TEXT } from "@enki/shared";
 
 export function messageToAgentMessages(
 	message: MessageWithMetadata,

@@ -1,9 +1,9 @@
-import type { ChatStartSessionRequest } from "@cline/core";
+import type { ChatStartSessionRequest } from "@enki/core";
 import {
 	createUserInstructionConfigService,
 	HubSessionClient,
-} from "@cline/core";
-import type { ConnectLinearOptions, LinearConnectorState } from "@cline/shared";
+} from "@enki/core";
+import type { ConnectLinearOptions, LinearConnectorState } from "@enki/shared";
 import { type Adapter, Chat, ConsoleLogger, type Thread } from "chat";
 import type { Command } from "commander";
 import type { CliLoggerAdapter } from "../../logging/adapter";
@@ -506,7 +506,7 @@ class LinearConnector extends ConnectorBase<
 				formatBackgroundStartMessage: (pid) =>
 					`[linear] starting background connector pid=${pid} user=${options.userName}`,
 				foregroundHint:
-					"[linear] use `cline connect linear -i ...` to run in the foreground",
+					"[linear] use `enki connect linear -i ...` to run in the foreground",
 				launchFailureMessage: "failed to launch Linear connector in background",
 			})
 		) {

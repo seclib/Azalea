@@ -5,18 +5,18 @@ import {
 	prewarmFileIndex,
 	SessionSource,
 	type UserInstructionConfigService,
-} from "@cline/core";
-import type { ConsecutiveMistakeLimitContext } from "@cline/shared";
-import { createSessionId } from "@cline/shared";
+} from "@enki/core";
+import type { ConsecutiveMistakeLimitContext } from "@enki/shared";
+import { createSessionId } from "@enki/shared";
 import { logCliError } from "../logging/errors";
 import { createCliCore } from "../session/session";
-import { resolveClineWelcomeLine } from "../tui/interactive-welcome";
+import { resolveEnki AIWelcomeLine } from "../tui/interactive-welcome";
 import {
 	askQuestionInTerminal,
 	requestToolApproval,
 	submitAndExitInTerminal,
 } from "../utils/approval";
-import { formatCliErrorMessage } from "../utils/cline-pass-errors";
+import { formatCliErrorMessage } from "../utils/enki-pass-errors";
 import { handleEvent, handleTeamEvent } from "../utils/events";
 import { createRuntimeHooks } from "../utils/hooks";
 import {
@@ -131,8 +131,8 @@ export async function runAgent(
 	config: Config,
 	userInstructionService?: UserInstructionConfigService,
 	options?: {
-		clineApiBaseUrl?: string;
-		clineProviderSettings?: ProviderSettings;
+		enkiApiBaseUrl?: string;
+		enkiProviderSettings?: ProviderSettings;
 	},
 ): Promise<void> {
 	// A clean one-shot run should not inherit a stale nonzero process exit code
@@ -140,13 +140,13 @@ export async function runAgent(
 	process.exitCode = 0;
 
 	if (config.verbose) {
-		const clineWelcomeLine = await resolveClineWelcomeLine({
+		const enkiWelcomeLine = await resolveEnki AIWelcomeLine({
 			config,
-			clineApiBaseUrl: options?.clineApiBaseUrl,
-			clineProviderSettings: options?.clineProviderSettings,
+			enkiApiBaseUrl: options?.enkiApiBaseUrl,
+			enkiProviderSettings: options?.enkiProviderSettings,
 		});
-		if (clineWelcomeLine && config.outputMode !== "json") {
-			writeln(clineWelcomeLine);
+		if (enkiWelcomeLine && config.outputMode !== "json") {
+			writeln(enkiWelcomeLine);
 		}
 	}
 

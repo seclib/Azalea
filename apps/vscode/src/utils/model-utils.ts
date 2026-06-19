@@ -9,8 +9,8 @@ export const GEMINI_FLASH_MAX_OUTPUT_TOKENS = 8_192
 export function isNextGenModelProvider(providerInfo: ApiProviderInfo): boolean {
 	const providerId = normalize(providerInfo.providerId)
 	return [
-		"cline",
-		"cline-pass",
+		"enki",
+		"enki-pass",
 		"anthropic",
 		"bedrock",
 		"gemini",

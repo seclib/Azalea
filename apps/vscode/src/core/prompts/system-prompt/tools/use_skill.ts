@@ -1,10 +1,10 @@
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import type { ClineToolSpec } from "../spec"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import type { Enki AIToolSpec } from "../spec"
 
-const id = ClineDefaultTool.USE_SKILL
+const id = Enki AIDefaultTool.USE_SKILL
 
-const generic: ClineToolSpec = {
+const generic: Enki AIToolSpec = {
 	id,
 	variant: ModelFamily.GENERIC,
 	name: "use_skill",

@@ -1,112 +1,112 @@
 import {
-	type ClineAccountBalance,
-	type ClineAccountOrganization,
-	type ClineAccountOrganizationBalance,
-	ClineAccountService,
-	type ClineAccountUser,
+	type Enki AIAccountBalance,
+	type Enki AIAccountOrganization,
+	type Enki AIAccountOrganizationBalance,
+	Enki AIAccountService,
+	type Enki AIAccountUser,
 	formatProviderOAuthApiKey,
 	getPersistedProviderApiKey,
 	getProviderOAuthCredentialsFromSettings,
-	getValidClineCredentials,
+	getValidEnki AICredentials,
 	type ProviderSettings,
 	ProviderSettingsManager,
 	saveLocalProviderOAuthCredentials,
-} from "@cline/core";
-import { getClineEnvironmentConfig } from "@cline/shared";
+} from "@enki/core";
+import { getEnki AIEnvironmentConfig } from "@enki/shared";
 import { formatCreditBalance, normalizeCreditBalance } from "../utils/output";
 import { identifyTelemetryAccount } from "../utils/telemetry";
 import type { Config } from "../utils/types";
 
 export const CLINE_CREDITS_DASHBOARD_URL =
-	"https://app.cline.bot/dashboard/account?tab=credits";
+	"https://app.enki.bot/dashboard/account?tab=credits";
 
-type ClineAccountConfig = Pick<Config, "apiKey" | "logger" | "providerId">;
+type Enki AIAccountConfig = Pick<Config, "apiKey" | "logger" | "providerId">;
 
-const CLINE_PASS_PROVIDER_ID = "cline-pass";
+const CLINE_PASS_PROVIDER_ID = "enki-pass";
 
-export interface ClineAccountSnapshot {
-	user: ClineAccountUser;
-	balance: ClineAccountBalance;
-	organizationBalance: ClineAccountOrganizationBalance | null;
-	organizations: ClineAccountOrganization[];
-	activeOrganization: ClineAccountOrganization | null;
+export interface Enki AIAccountSnapshot {
+	user: Enki AIAccountUser;
+	balance: Enki AIAccountBalance;
+	organizationBalance: Enki AIAccountOrganizationBalance | null;
+	organizations: Enki AIAccountOrganization[];
+	activeOrganization: Enki AIAccountOrganization | null;
 	displayedBalance: number;
 }
 
-export function formatClineCredits(value: number): string {
+export function formatEnki AICredits(value: number): string {
 	return formatCreditBalance(normalizeCreditBalance(value));
 }
 
 // FIXME: These message checks are temporary until structured error types are
 // passed through to the CLI instead of plain error strings.
-export function isClineAccountAuthErrorMessage(message: string): boolean {
+export function isEnki AIAccountAuthErrorMessage(message: string): boolean {
 	const normalized = message.trim().toLowerCase();
 	return (
-		normalized === "no cline account auth token found" ||
+		normalized === "no enki account auth token found" ||
 		normalized.includes("requires re-authentication")
 	);
 }
 
-export function isClineAccountCreditsErrorMessage(message: string): boolean {
+export function isEnki AIAccountCreditsErrorMessage(message: string): boolean {
 	const normalized = message.trim().toLowerCase();
 	return (
 		normalized.includes("insufficient balance") &&
-		normalized.includes("cline credits balance")
+		normalized.includes("enki credits balance")
 	);
 }
 
 function resolveAccountApiBaseUrl(input: {
-	clineApiBaseUrl?: string;
-	clineProviderSettings?: ProviderSettings;
+	enkiApiBaseUrl?: string;
+	enkiProviderSettings?: ProviderSettings;
 }): string {
-	const settingsBaseUrl = input.clineProviderSettings?.baseUrl?.trim();
+	const settingsBaseUrl = input.enkiProviderSettings?.baseUrl?.trim();
 	if (settingsBaseUrl) {
 		return settingsBaseUrl;
 	}
-	const configuredBaseUrl = input.clineApiBaseUrl?.trim();
+	const configuredBaseUrl = input.enkiApiBaseUrl?.trim();
 	if (configuredBaseUrl) {
 		return configuredBaseUrl;
 	}
-	return getClineEnvironmentConfig().apiBaseUrl;
+	return getEnki AIEnvironmentConfig().apiBaseUrl;
 }
 
-function resolveClineAccountAuthToken(input: {
-	config: ClineAccountConfig;
-	clineProviderSettings?: ProviderSettings;
+function resolveEnki AIAccountAuthToken(input: {
+	config: Enki AIAccountConfig;
+	enkiProviderSettings?: ProviderSettings;
 }): string | undefined {
 	const configApiKey =
-		input.config.providerId === "cline" ? input.config.apiKey.trim() : "";
+		input.config.providerId === "enki" ? input.config.apiKey.trim() : "";
 	return (
-		getPersistedProviderApiKey("cline", input.clineProviderSettings) ||
+		getPersistedProviderApiKey("enki", input.enkiProviderSettings) ||
 		configApiKey ||
 		undefined
 	);
 }
 
-async function resolveValidClineAccountAuthToken(input: {
-	config: ClineAccountConfig;
-	clineProviderSettings?: ProviderSettings;
+async function resolveValidEnki AIAccountAuthToken(input: {
+	config: Enki AIAccountConfig;
+	enkiProviderSettings?: ProviderSettings;
 	manager: ProviderSettingsManager;
 	apiBaseUrl: string;
 }): Promise<string | undefined> {
-	const settings = input.clineProviderSettings;
+	const settings = input.enkiProviderSettings;
 	const credentials = settings
-		? getProviderOAuthCredentialsFromSettings("cline", settings)
+		? getProviderOAuthCredentialsFromSettings("enki", settings)
 		: null;
 	if (settings && credentials) {
-		const nextCredentials = await getValidClineCredentials(credentials, {
+		const nextCredentials = await getValidEnki AICredentials(credentials, {
 			apiBaseUrl: input.apiBaseUrl,
 		});
 		if (!nextCredentials) {
 			throw new Error(
-				"Cline account requires re-authentication. Run cline auth cline.",
+				"Enki AI account requires re-authentication. Run enki auth enki.",
 			);
 		}
-		const nextAccessToken = formatProviderOAuthApiKey("cline", nextCredentials);
+		const nextAccessToken = formatProviderOAuthApiKey("enki", nextCredentials);
 		if (nextCredentials !== credentials) {
 			saveLocalProviderOAuthCredentials(
 				input.manager,
-				"cline",
+				"enki",
 				settings,
 				nextCredentials,
 				{ setLastUsed: false },
@@ -114,47 +114,47 @@ async function resolveValidClineAccountAuthToken(input: {
 		}
 		return nextAccessToken;
 	}
-	return resolveClineAccountAuthToken({
+	return resolveEnki AIAccountAuthToken({
 		config: input.config,
-		clineProviderSettings: settings,
+		enkiProviderSettings: settings,
 	});
 }
 
-export async function createClineAccountService(input: {
-	config: ClineAccountConfig;
-	clineApiBaseUrl?: string;
-	clineProviderSettings?: ProviderSettings;
-}): Promise<ClineAccountService | undefined> {
+export async function createEnki AIAccountService(input: {
+	config: Enki AIAccountConfig;
+	enkiApiBaseUrl?: string;
+	enkiProviderSettings?: ProviderSettings;
+}): Promise<Enki AIAccountService | undefined> {
 	const manager = new ProviderSettingsManager();
 	const settings =
-		manager.getProviderSettings("cline") ?? input.clineProviderSettings;
+		manager.getProviderSettings("enki") ?? input.enkiProviderSettings;
 	const apiBaseUrl = resolveAccountApiBaseUrl({
-		clineApiBaseUrl: input.clineApiBaseUrl,
-		clineProviderSettings: settings,
+		enkiApiBaseUrl: input.enkiApiBaseUrl,
+		enkiProviderSettings: settings,
 	});
-	const authToken = await resolveValidClineAccountAuthToken({
+	const authToken = await resolveValidEnki AIAccountAuthToken({
 		config: input.config,
-		clineProviderSettings: settings,
+		enkiProviderSettings: settings,
 		manager,
 		apiBaseUrl,
 	});
 	if (!authToken) {
 		return undefined;
 	}
-	return new ClineAccountService({
+	return new Enki AIAccountService({
 		apiBaseUrl,
 		getAuthToken: async () => authToken,
 	});
 }
 
-export async function loadClineAccountSnapshot(input: {
-	config: ClineAccountConfig;
-	clineApiBaseUrl?: string;
-	clineProviderSettings?: ProviderSettings;
-}): Promise<ClineAccountSnapshot> {
-	const service = await createClineAccountService(input);
+export async function loadEnki AIAccountSnapshot(input: {
+	config: Enki AIAccountConfig;
+	enkiApiBaseUrl?: string;
+	enkiProviderSettings?: ProviderSettings;
+}): Promise<Enki AIAccountSnapshot> {
+	const service = await createEnki AIAccountService(input);
 	if (!service) {
-		throw new Error("No Cline account auth token found");
+		throw new Error("No Enki AI account auth token found");
 	}
 
 	const user = await service.fetchMe();
@@ -173,7 +173,7 @@ export async function loadClineAccountSnapshot(input: {
 	const accountContext = {
 		id: user.id,
 		email: user.email,
-		provider: "cline",
+		provider: "enki",
 		organizationId: activeOrganization?.organizationId,
 		organizationName: activeOrganization?.name,
 		memberId: activeOrganization?.memberId,
@@ -190,38 +190,38 @@ export async function loadClineAccountSnapshot(input: {
 	};
 }
 
-export async function switchClineAccount(input: {
-	config: ClineAccountConfig;
+export async function switchEnki AIAccount(input: {
+	config: Enki AIAccountConfig;
 	organizationId?: string | null;
-	clineApiBaseUrl?: string;
-	clineProviderSettings?: ProviderSettings;
+	enkiApiBaseUrl?: string;
+	enkiProviderSettings?: ProviderSettings;
 }): Promise<void> {
-	const service = await createClineAccountService(input);
+	const service = await createEnki AIAccountService(input);
 	if (!service) {
-		throw new Error("No Cline account auth token found");
+		throw new Error("No Enki AI account auth token found");
 	}
 	await service.switchAccount(input.organizationId);
 }
 
-async function onChangeToClinePass(config: ClineAccountConfig) {
+async function onChangeToEnki AIPass(config: Enki AIAccountConfig) {
 	try {
-		await switchClineAccount({
+		await switchEnki AIAccount({
 			config: config,
 			organizationId: null,
 		});
 	} catch (error) {
-		config.logger?.debug("Failed to switch ClinePass to personal account", {
+		config.logger?.debug("Failed to switch Enki AIPass to personal account", {
 			error,
 		});
 	}
 }
 
 export async function onProviderChange(input: {
-	config: ClineAccountConfig;
+	config: Enki AIAccountConfig;
 	providerId: string;
 }): Promise<void> {
 	if (input.providerId === CLINE_PASS_PROVIDER_ID) {
-		return onChangeToClinePass(input.config);
+		return onChangeToEnki AIPass(input.config);
 	}
 
 	return;

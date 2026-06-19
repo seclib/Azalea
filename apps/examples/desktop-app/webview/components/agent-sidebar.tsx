@@ -770,11 +770,11 @@ export function AgentSidebar({
 		};
 
 		window.addEventListener(
-			"cline:session-title-updated",
+			"enki:session-title-updated",
 			handleTitleUpdated as EventListener,
 		);
 		window.addEventListener(
-			"cline:session-deleted",
+			"enki:session-deleted",
 			handleSessionDeleted as EventListener,
 		);
 		const unsubscribeTransportDelete = desktopClient.subscribe(
@@ -791,7 +791,7 @@ export function AgentSidebar({
 					return;
 				}
 				handleSessionDeleted(
-					new CustomEvent("cline:session-deleted", {
+					new CustomEvent("enki:session-deleted", {
 						detail: { sessionId },
 					}),
 				);
@@ -854,11 +854,11 @@ export function AgentSidebar({
 		);
 		return () => {
 			window.removeEventListener(
-				"cline:session-title-updated",
+				"enki:session-title-updated",
 				handleTitleUpdated as EventListener,
 			);
 			window.removeEventListener(
-				"cline:session-deleted",
+				"enki:session-deleted",
 				handleSessionDeleted as EventListener,
 			);
 			unsubscribeTransportDelete();

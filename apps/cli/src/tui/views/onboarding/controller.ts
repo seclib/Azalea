@@ -8,8 +8,8 @@ import {
 	refreshProviderModelsFromSource,
 	resolveProviderConfig,
 	saveLocalProviderSettings,
-} from "@cline/core";
-import { isClineProvider } from "@cline/shared";
+} from "@enki/core";
+import { isEnki AIProvider } from "@enki/shared";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
 	type CodexCliStatus,
@@ -21,10 +21,10 @@ import { getPersistedProviderApiKey } from "../../../utils/provider-auth";
 import { listLocalProviders } from "../../../utils/provider-catalog";
 import { getCliTelemetryService } from "../../../utils/telemetry";
 import {
-	buildClineModelEntries,
-	type ClineModelPickerEntry,
-	useClineRecommendedModels,
-} from "../../components/model-selector/cline-model-picker";
+	buildEnki AIModelEntries,
+	type Enki AIModelPickerEntry,
+	useEnki AIRecommendedModels,
+} from "../../components/model-selector/enki-model-picker";
 import {
 	type SearchableItem,
 	useSearchableList,
@@ -54,7 +54,7 @@ import {
 	type OnboardingStep,
 	type ProviderEntry,
 	type ReasoningEffort,
-	shouldUseFeaturedClineModelPicker,
+	shouldUseFeaturedEnki AIModelPicker,
 	type ThinkingLevel,
 	toModelEntriesFromKnownModels,
 	toModelEntry,
@@ -78,8 +78,8 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 	const menuOptions = useMemo(
 		() =>
 			getMainMenuOptions({
-				isClinePassEnabled:
-					getCliFeatureFlagsService().getBooleanFlagEnabled("ext-cline-pass"),
+				isEnki AIPassEnabled:
+					getCliFeatureFlagsService().getBooleanFlagEnabled("ext-enki-pass"),
 			}),
 		[],
 	);
@@ -165,7 +165,7 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 
 	const createCustomModelItem = useCallback(
 		(_search: string, filteredItems: SearchableItem[]) => {
-			if (activeProviderId === "cline-pass") {
+			if (activeProviderId === "enki-pass") {
 				return undefined;
 			}
 			if (filteredItems.some((item) => item.key === CUSTOM_MODEL_ID_ACTION)) {
@@ -183,33 +183,33 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 
 	const modelList = useSearchableList(modelItems, createCustomModelItem);
 
-	// Cline featured model picker
-	const recommended = useClineRecommendedModels();
-	const clineEntries: ClineModelPickerEntry[] = useMemo(
-		() => (recommended.data ? buildClineModelEntries(recommended.data) : []),
+	// Enki AI featured model picker
+	const recommended = useEnki AIRecommendedModels();
+	const enkiEntries: Enki AIModelPickerEntry[] = useMemo(
+		() => (recommended.data ? buildEnki AIModelEntries(recommended.data) : []),
 		[recommended.data],
 	);
-	const [clineModelSelected, setClineModelSelected] = useState(0);
-	const [clineModelReasoningIds, setClineModelReasoningIds] = useState<
+	const [enkiModelSelected, setEnki AIModelSelected] = useState(0);
+	const [enkiModelReasoningIds, setEnki AIModelReasoningIds] = useState<
 		Set<string>
 	>(new Set());
-	const [clineKnownModels, setClineKnownModels] = useState<
+	const [enkiKnownModels, setEnki AIKnownModels] = useState<
 		Record<string, unknown> | undefined
 	>(undefined);
 
 	useEffect(() => {
-		getLocalProviderModels("cline")
+		getLocalProviderModels("enki")
 			.then(({ models }) => {
 				const ids = new Set<string>();
 				for (const m of models) {
 					if (m.supportsReasoning) ids.add(m.id);
 				}
-				setClineModelReasoningIds(ids);
+				setEnki AIModelReasoningIds(ids);
 			})
 			.catch(() => {});
-		resolveProviderConfig("cline")
+		resolveProviderConfig("enki")
 			.then((resolved) => {
-				if (resolved?.knownModels) setClineKnownModels(resolved.knownModels);
+				if (resolved?.knownModels) setEnki AIKnownModels(resolved.knownModels);
 			})
 			.catch(() => {});
 	}, []);
@@ -271,9 +271,9 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 			const provider = providers.find((p) => p.id === providerId);
 			setActiveProviderName(provider?.name ?? providerId);
 			setModelsDefaultId(provider?.defaultModelId ?? "");
-			if (shouldUseFeaturedClineModelPicker(providerId)) {
-				setClineModelSelected(0);
-				setStep("cline_model");
+			if (shouldUseFeaturedEnki AIModelPicker(providerId)) {
+				setEnki AIModelSelected(0);
+				setStep("enki_model");
 			} else if (providerId === "openai-compatible") {
 				const existing =
 					providerSettingsManager.getProviderSettings(providerId);
@@ -322,7 +322,7 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 
 	const startOAuthFlow = useCallback(
 		(providerId: OnboardingOAuthProviderId) => {
-			if (isClineProvider(providerId)) {
+			if (isEnki AIProvider(providerId)) {
 				startDeviceCodeFlow(providerId);
 				return;
 			}
@@ -550,7 +550,7 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 		completeModelSelection(modelId);
 	}, [customModelId, completeModelSelection]);
 
-	const saveClineModelSelection = useCallback(
+	const saveEnki AIModelSelection = useCallback(
 		(modelId: string, modelName: string) => {
 			const existing =
 				providerSettingsManager.getProviderSettings(activeProviderId);
@@ -562,7 +562,7 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 				{ setLastUsed: true },
 			);
 			setSelectedModelId(modelId);
-			if (clineModelReasoningIds.has(modelId)) {
+			if (enkiModelReasoningIds.has(modelId)) {
 				setSelectedModelName(modelName);
 				setThinkingSelected(0);
 				setStep("thinking_level");
@@ -570,7 +570,7 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 				setStep("done");
 			}
 		},
-		[activeProviderId, clineModelReasoningIds, providerSettingsManager],
+		[activeProviderId, enkiModelReasoningIds, providerSettingsManager],
 	);
 
 	const saveThinkingLevel = useCallback(
@@ -630,8 +630,8 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 		menuSelected,
 		providerList,
 		modelList,
-		clineEntries,
-		clineModelSelected,
+		enkiEntries,
+		enkiModelSelected,
 		thinkingSelected,
 		setStep,
 		setMenuSelected,
@@ -647,7 +647,7 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 		setDeviceVerifyUrl,
 		setDeviceError,
 		setDeviceStatus,
-		setClineModelSelected,
+		setEnki AIModelSelected,
 		setThinkingSelected,
 		abortOAuth: () => {
 			authAbortRef.current = true;
@@ -661,7 +661,7 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 		startDeviceCodeFlow,
 		selectProvider,
 		loadModelsForProvider,
-		saveClineModelSelection,
+		saveEnki AIModelSelection,
 		saveCodexCliConfig,
 		saveByoConfig,
 		saveModelSelection,
@@ -679,9 +679,9 @@ export function useOnboardingController(props: OnboardingControllerProps) {
 		byoValues,
 		codexCliChecking,
 		codexCliStatus,
-		clineEntries,
-		clineKnownModels,
-		clineModelSelected,
+		enkiEntries,
+		enkiKnownModels,
+		enkiModelSelected,
 		deviceError,
 		deviceStatus,
 		deviceUserCode,

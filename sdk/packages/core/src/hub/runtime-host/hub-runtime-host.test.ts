@@ -1,4 +1,4 @@
-import type { AgentToolContext, HubEventEnvelope } from "@cline/shared";
+import type { AgentToolContext, HubEventEnvelope } from "@enki/shared";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SessionSource } from "../../types/common";
 
@@ -39,7 +39,7 @@ vi.mock("../client", () => ({
 
 function createConfig() {
 	return {
-		providerId: "cline",
+		providerId: "enki",
 		modelId: "anthropic/claude-haiku-4.5",
 		cwd: "/tmp/project",
 		workspaceRoot: "/tmp/project",
@@ -112,7 +112,7 @@ describe("HubRuntimeHost", () => {
 			workspaceRoot: "/tmp/project",
 			cwd: "/tmp/project",
 			sessionConfig: expect.objectContaining({
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "anthropic/claude-haiku-4.5",
 				cwd: "/tmp/project",
 				workspaceRoot: "/tmp/project",
@@ -196,7 +196,7 @@ describe("HubRuntimeHost", () => {
 			finishReason: "completed",
 			model: {
 				id: "anthropic/claude-haiku-4.5",
-				provider: "cline",
+				provider: "enki",
 				info: {},
 			},
 			startedAt: new Date("2026-04-21T00:00:00.000Z"),
@@ -251,7 +251,7 @@ describe("HubRuntimeHost", () => {
 			interactive: true,
 			workspace: { cwd: "/tmp/project", root: "/tmp/project" },
 			model: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "anthropic/claude-haiku-4.5",
 			},
 			capabilities: {
@@ -291,7 +291,7 @@ describe("HubRuntimeHost", () => {
 		expect(started.sessionId).toBe("sess-snapshot");
 		expect(started.manifest).toMatchObject({
 			session_id: "sess-snapshot",
-			provider: "cline",
+			provider: "enki",
 			model: "anthropic/claude-haiku-4.5",
 			interactive: true,
 			prompt: "Hey",
@@ -326,7 +326,7 @@ describe("HubRuntimeHost", () => {
 		commandMock.mockResolvedValueOnce({ ok: true, payload: { snapshot } });
 		await expect(host.getSession("sess-snapshot")).resolves.toMatchObject({
 			sessionId: "sess-snapshot",
-			provider: "cline",
+			provider: "enki",
 			model: "anthropic/claude-haiku-4.5",
 			agentId: "agent-1",
 			conversationId: "conversation-1",

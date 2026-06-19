@@ -9,8 +9,8 @@ export enum BUILT_IN_PROVIDER {
 	// First-party
 	ANTHROPIC = "anthropic",
 	CLAUDE_CODE = "claude-code",
-	CLINE = "cline",
-	CLINE_PASS = "cline-pass",
+	CLINE = "enki",
+	CLINE_PASS = "enki-pass",
 	// OpenAI variants
 	OPENAI_COMPATIBLE = "openai-compatible",
 	OPENAI_NATIVE = "openai-native",

@@ -1,9 +1,9 @@
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import type { ClineToolSpec } from "../spec"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import type { Enki AIToolSpec } from "../spec"
 import { SystemPromptContext, TASK_PROGRESS_PARAMETER } from "../types"
 
-const id = ClineDefaultTool.FILE_EDIT
+const id = Enki AIDefaultTool.FILE_EDIT
 
 const getOpenOrVisibleTabPaths = (context: SystemPromptContext) => {
 	return [...(context.editorTabs?.open ?? []), ...(context.editorTabs?.visible ?? [])]
@@ -61,7 +61,7 @@ const diffInstruction = (context: SystemPromptContext) => {
 	return shouldIncludeNotebookInstructions(context) ? BASE_DIFF_INSTRUCTIONS + NOTEBOOK_INSTRUCTIONS : BASE_DIFF_INSTRUCTIONS
 }
 
-const generic: ClineToolSpec = {
+const generic: Enki AIToolSpec = {
 	variant: ModelFamily.GENERIC,
 	id,
 	name: "replace_in_file",
@@ -84,7 +84,7 @@ const generic: ClineToolSpec = {
 	],
 }
 
-const NATIVE_NEXT_GEN: ClineToolSpec = {
+const NATIVE_NEXT_GEN: Enki AIToolSpec = {
 	variant: ModelFamily.NATIVE_NEXT_GEN,
 	id,
 	name: "replace_in_file",
@@ -105,7 +105,7 @@ const NATIVE_NEXT_GEN: ClineToolSpec = {
 	],
 }
 
-const NATIVE_GPT_5: ClineToolSpec = {
+const NATIVE_GPT_5: Enki AIToolSpec = {
 	...NATIVE_NEXT_GEN,
 	variant: ModelFamily.NATIVE_GPT_5,
 }

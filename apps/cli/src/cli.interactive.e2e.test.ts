@@ -260,7 +260,7 @@ describe("cli interactive e2e", () => {
 		expect(result.status).toBe(0);
 	});
 
-	it("launches config view directly with `cline config`", () => {
+	it("launches config view directly with `enki config`", () => {
 		const result = runInteractiveCli(
 			[{ delaySeconds: INITIAL_RENDER_DELAY_SECONDS, input: "" }],
 			{

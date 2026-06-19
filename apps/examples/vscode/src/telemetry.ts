@@ -2,15 +2,15 @@ import * as os from "node:os";
 import {
 	type ConfiguredTelemetryHandle,
 	createConfiguredTelemetryHandle,
-} from "@cline/core";
+} from "@enki/core";
 import {
-	createClineTelemetryServiceConfig,
-	createClineTelemetryServiceMetadata,
-} from "@cline/shared";
+	createEnki AITelemetryServiceConfig,
+	createEnki AITelemetryServiceMetadata,
+} from "@enki/shared";
 
 export interface VscodeTelemetryOptions {
 	extensionVersion: string;
-	clineType: string;
+	enkiType: string;
 	platform: string;
 	platformVersion: string;
 	osType?: string;
@@ -36,10 +36,10 @@ export type VscodeTelemetryHandle = ConfiguredTelemetryHandle;
 export function createVscodeTelemetry(
 	options: VscodeTelemetryOptions,
 ): VscodeTelemetryHandle {
-	const config = createClineTelemetryServiceConfig({
-		metadata: createClineTelemetryServiceMetadata({
+	const config = createEnki AITelemetryServiceConfig({
+		metadata: createEnki AITelemetryServiceMetadata({
 			extension_version: options.extensionVersion,
-			cline_type: options.clineType,
+			enki_type: options.enkiType,
 			platform: options.platform,
 			platform_version: options.platformVersion,
 			os_type: options.osType ?? os.platform(),

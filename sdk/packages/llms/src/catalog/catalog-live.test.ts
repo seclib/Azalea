@@ -3,7 +3,7 @@ import {
 	getGeneratedModelsForProvider,
 	getGeneratedProviderModels,
 } from "./catalog.generated-access";
-import { normalizeClineRecommendedProviderModels } from "./catalog-cline-recommended";
+import { normalizeEnki AIRecommendedProviderModels } from "./catalog-enki-recommended";
 import {
 	fetchModelsDevProviderModels,
 	type ModelsDevPayload,
@@ -12,14 +12,14 @@ import {
 } from "./catalog-live";
 
 describe("models-dev-catalog", () => {
-	it("normalizes Cline recommended clinePass models as a generated provider source", () => {
-		const result = normalizeClineRecommendedProviderModels(
+	it("normalizes Enki AI recommended enkiPass models as a generated provider source", () => {
+		const result = normalizeEnki AIRecommendedProviderModels(
 			{
-				clinePass: [
+				enkiPass: [
 					{
 						id: "base-model",
-						name: "ClinePass Base Model",
-						description: "Included in ClinePass",
+						name: "Enki AIPass Base Model",
+						description: "Included in Enki AIPass",
 					},
 					{
 						id: "custom-model",
@@ -43,11 +43,11 @@ describe("models-dev-catalog", () => {
 			},
 		);
 
-		expect(result["cline-pass"]).toEqual({
+		expect(result["enki-pass"]).toEqual({
 			"base-model": {
 				id: "base-model",
 				name: "OpenRouter Base Model",
-				description: "Included in ClinePass",
+				description: "Included in Enki AIPass",
 				contextWindow: 200_000,
 				maxInputTokens: 180_000,
 				maxTokens: 16_384,
@@ -69,12 +69,12 @@ describe("models-dev-catalog", () => {
 		});
 	});
 
-	it("matches Cline recommended clinePass models against OpenRouter model names", () => {
-		const result = normalizeClineRecommendedProviderModels(
+	it("matches Enki AI recommended enkiPass models against OpenRouter model names", () => {
+		const result = normalizeEnki AIRecommendedProviderModels(
 			{
-				clinePass: [
+				enkiPass: [
 					{
-						id: "cline-pass/cline-pass/glm-5.1",
+						id: "enki-pass/enki-pass/glm-5.1",
 						name: "zai/glm-5.1",
 					},
 				],
@@ -93,9 +93,9 @@ describe("models-dev-catalog", () => {
 		);
 
 		expect(
-			result["cline-pass"]?.["cline-pass/cline-pass/glm-5.1"],
+			result["enki-pass"]?.["enki-pass/enki-pass/glm-5.1"],
 		).toMatchObject({
-			id: "cline-pass/cline-pass/glm-5.1",
+			id: "enki-pass/enki-pass/glm-5.1",
 			name: "GLM 5.1",
 			contextWindow: 256_000,
 			maxInputTokens: 200_000,
@@ -104,10 +104,10 @@ describe("models-dev-catalog", () => {
 		});
 	});
 
-	it("returns no ClinePass models when clinePass is empty or missing", () => {
-		expect(normalizeClineRecommendedProviderModels({}, {})).toEqual({});
+	it("returns no Enki AIPass models when enkiPass is empty or missing", () => {
+		expect(normalizeEnki AIRecommendedProviderModels({}, {})).toEqual({});
 		expect(
-			normalizeClineRecommendedProviderModels({ clinePass: [] }, {}),
+			normalizeEnki AIRecommendedProviderModels({ enkiPass: [] }, {}),
 		).toEqual({});
 	});
 

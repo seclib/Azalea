@@ -29,12 +29,12 @@ import {
 	resolveMcpServerRegistrations,
 	syncPluginMcpServersToSettings,
 	uninstallPlugin,
-} from "@cline/core";
+} from "@enki/core";
 import {
 	isPluginModulePath,
-	resolveClineDir,
+	resolveEnki AIDir,
 	resolvePluginModuleEntries,
-} from "@cline/shared/storage";
+} from "@enki/shared/storage";
 
 export interface PluginInstallOptions {
 	source: string;
@@ -106,7 +106,7 @@ type ParsedPluginSource =
 type PluginInstallSourceType = "npm" | "git" | "local" | "remote";
 
 interface PluginPackageManifest {
-	cline?: {
+	enki?: {
 		plugins?: Array<{ paths?: string[] } | string>;
 	};
 	dependencies?: Record<string, string>;
@@ -118,10 +118,10 @@ interface PluginPackageManifest {
 
 const INSTALLS_DIRECTORY_NAME = "_installed";
 const PACKAGE_DIRECTORY_NAME = "package";
-const OFFICIAL_PLUGINS_REPO = "https://github.com/cline/plugins.git";
+const OFFICIAL_PLUGINS_REPO = "https://github.com/enki/plugins.git";
 const REMOTE_PLUGIN_FETCH_TIMEOUT_MS = 30_000;
 const REMOTE_PLUGIN_MAX_BYTES = 10 * 1024 * 1024;
-const HOST_PROVIDED_SDK_PREFIX = "@cline/";
+const HOST_PROVIDED_SDK_PREFIX = "@enki/";
 const DEPENDENCY_FIELDS = [
 	"dependencies",
 	"devDependencies",
@@ -129,9 +129,9 @@ const DEPENDENCY_FIELDS = [
 	"peerDependencies",
 ] as const;
 const WRAPPER_PACKAGE_JSON = {
-	name: "cline-installed-plugin",
+	name: "enki-installed-plugin",
 	private: true,
-	cline: {
+	enki: {
 		plugins: [] as Array<{ paths: string[] }>,
 	},
 };
@@ -434,8 +434,8 @@ export function parsePluginSource(
 
 function getPluginRoot(cwd: string | undefined): string {
 	return cwd
-		? join(cwd, ".cline", "plugins")
-		: join(resolveClineDir(), "plugins");
+		? join(cwd, ".enki", "plugins")
+		: join(resolveEnki AIDir(), "plugins");
 }
 
 function getInstallPath(
@@ -573,7 +573,7 @@ function readPackageManifest(
 }
 
 function getManifestPaths(manifest: PluginPackageManifest | null): string[] {
-	const entries = manifest?.cline?.plugins;
+	const entries = manifest?.enki?.plugins;
 	if (!Array.isArray(entries)) {
 		return [];
 	}
@@ -637,16 +637,16 @@ function removeInstalledHostProvidedSdkDependencies(
 	packageRoot: string,
 	preservePackageName?: string,
 ): void {
-	const clineScopeDir = join(packageRoot, "node_modules", "@cline");
-	if (!existsSync(clineScopeDir)) {
+	const enkiScopeDir = join(packageRoot, "node_modules", "@enki");
+	if (!existsSync(enkiScopeDir)) {
 		return;
 	}
-	for (const entry of statSafeReadDir(clineScopeDir)) {
-		const packageName = `@cline/${entry.name}`;
+	for (const entry of statSafeReadDir(enkiScopeDir)) {
+		const packageName = `@enki/${entry.name}`;
 		if (packageName === preservePackageName) {
 			continue;
 		}
-		rmSync(join(clineScopeDir, entry.name), {
+		rmSync(join(enkiScopeDir, entry.name), {
 			recursive: true,
 			force: true,
 		});
@@ -730,7 +730,7 @@ async function writeWrapperManifest(
 			{
 				...WRAPPER_PACKAGE_JSON,
 				name: packageName,
-				cline: {
+				enki: {
 					plugins: [{ paths: entryPaths }],
 				},
 			},
@@ -751,7 +751,7 @@ async function installNpmPackage(
 	await mkdir(packageRoot, { recursive: true });
 	await writeFile(
 		join(packageRoot, "package.json"),
-		JSON.stringify({ name: "cline-plugin-install", private: true }, null, 2),
+		JSON.stringify({ name: "enki-plugin-install", private: true }, null, 2),
 		"utf8",
 	);
 	await runCommand(npmCommand, [
@@ -842,7 +842,7 @@ async function installOfficialPlugin(
 	const sourceRoot = join(repoRoot, "plugins", parsed.slug);
 	if (!existsSync(sourceRoot) || !statSync(sourceRoot).isDirectory()) {
 		throw new Error(
-			`Official Cline plugin "${parsed.slug}" was not found at plugins/${parsed.slug} in ${officialPluginsRepo}`,
+			`Official Enki AI plugin "${parsed.slug}" was not found at plugins/${parsed.slug} in ${officialPluginsRepo}`,
 		);
 	}
 
@@ -1287,7 +1287,7 @@ async function runPluginMcpOAuthFollowup(
 			);
 		}
 		options.io?.writeln(
-			'Run "cline mcp" and choose "Authorize OAuth" to authorize them.',
+			'Run "enki mcp" and choose "Authorize OAuth" to authorize them.',
 		);
 		return;
 	}
@@ -1303,7 +1303,7 @@ async function runPluginMcpOAuthFollowup(
 		} catch (error) {
 			const message = error instanceof Error ? error.message : String(error);
 			options.io?.writeErr(
-				`Warning: failed to authorize MCP server ${candidate.name}: ${message}. Run "cline mcp" and choose "Authorize OAuth" to retry.`,
+				`Warning: failed to authorize MCP server ${candidate.name}: ${message}. Run "enki mcp" and choose "Authorize OAuth" to retry.`,
 			);
 		}
 	}

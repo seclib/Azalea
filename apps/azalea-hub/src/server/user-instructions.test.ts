@@ -30,13 +30,13 @@ describe("listUserInstructionConfigs", () => {
 	});
 
 	it("uses the package name for package-backed plugin entries", async () => {
-		const tempRoot = await mkdtemp(join(tmpdir(), "cline-hub-config-"));
+		const tempRoot = await mkdtemp(join(tmpdir(), "enki-hub-config-"));
 		tempRoots.push(tempRoot);
 		process.env.CLINE_GLOBAL_SETTINGS_PATH = join(tempRoot, "settings.json");
 		process.env.CLINE_MCP_SETTINGS_PATH = join(tempRoot, "mcp.json");
 		const packageDir = join(
 			tempRoot,
-			".cline",
+			".enki",
 			"plugins",
 			"_installed",
 			"git",
@@ -50,8 +50,8 @@ describe("listUserInstructionConfigs", () => {
 			join(packageDir, "package.json"),
 			JSON.stringify(
 				{
-					name: "cline-sdk-portable-agents",
-					cline: {
+					name: "enki-sdk-portable-agents",
+					enki: {
 						plugins: [{ paths: ["./index.ts"] }],
 					},
 				},
@@ -65,6 +65,6 @@ describe("listUserInstructionConfigs", () => {
 		const plugins = data.plugins as Array<{ name: string; path: string }>;
 		const plugin = plugins.find((item) => item.path === pluginPath);
 
-		expect(plugin?.name).toBe("cline-sdk-portable-agents");
+		expect(plugin?.name).toBe("enki-sdk-portable-agents");
 	});
 });

@@ -1,9 +1,9 @@
 #!/usr/bin/env npx tsx
 
 /**
- * Simple Cline gRPC Server
+ * Simple Enki AI gRPC Server
  *
- * This script provides a minimal way to run the Cline core gRPC service
+ * This script provides a minimal way to run the Enki AI core gRPC service
  * without requiring the full installation, while automatically mocking all external services. Simply run:
  *
  *   # One-time setup (generates protobuf files)
@@ -12,13 +12,13 @@
  *
  * The following components are started automatically:
  *   1. HostBridge test server
- *   2. ClineApiServerMock (mock implementation of the Cline API)
+ *   2. Enki AIApiServerMock (mock implementation of the Enki AI API)
  *   3. AuthServiceMock (activated if E2E_TEST="true")
  *
  * Environment Variables for Customization:
  *   PROJECT_ROOT - Override project root directory (default: parent of scripts dir)
  *   CLINE_DIST_DIR - Override distribution directory (default: PROJECT_ROOT/dist-standalone)
- *   CLINE_CORE_FILE - Override core file name (default: cline-core.js)
+ *   CLINE_CORE_FILE - Override core file name (default: enki-core.js)
  *   PROTOBUS_PORT - gRPC server port (default: 26040)
  *   HOSTBRIDGE_PORT - HostBridge server port (default: 26041)
  *   WORKSPACE_DIR - Working directory (default: current directory)
@@ -33,7 +33,7 @@ import { mkdtempSync, rmSync } from "node:fs"
 import * as os from "node:os"
 import { ChildProcess, execSync, spawn } from "child_process"
 import * as path from "path"
-import { ClineApiServerMock } from "../src/test/e2e/fixtures/server/index"
+import { Enki AIApiServerMock } from "../src/test/e2e/fixtures/server/index"
 
 const PROTOBUS_PORT = process.env.PROTOBUS_PORT || "26040"
 const HOSTBRIDGE_PORT = process.env.HOSTBRIDGE_PORT || "26041"
@@ -45,13 +45,13 @@ const USE_C8 = process.env.USE_C8 === "true"
 // Locate the standalone build directory and core file with flexible path resolution
 const projectRoot = process.env.PROJECT_ROOT || path.resolve(__dirname, "..")
 const distDir = process.env.CLINE_DIST_DIR || path.join(projectRoot, "dist-standalone")
-const clineCoreFile = process.env.CLINE_CORE_FILE || "cline-core.js"
-const coreFile = path.join(distDir, clineCoreFile)
+const enkiCoreFile = process.env.CLINE_CORE_FILE || "enki-core.js"
+const coreFile = path.join(distDir, enkiCoreFile)
 
 const childProcesses: ChildProcess[] = []
 
 async function main(): Promise<void> {
-	console.log("Starting Simple Cline gRPC Server...")
+	console.log("Starting Simple Enki AI gRPC Server...")
 	console.log(`Project Root: ${projectRoot}`)
 	console.log(`Workspace: ${WORKSPACE_DIR}`)
 	console.log(`ProtoBus Port: ${PROTOBUS_PORT}`)
@@ -71,23 +71,23 @@ async function main(): Promise<void> {
 	}
 
 	try {
-		await ClineApiServerMock.startGlobalServer()
-		console.log("Cline API Server started in-process")
+		await Enki AIApiServerMock.startGlobalServer()
+		console.log("Enki AI API Server started in-process")
 	} catch (error) {
-		console.error("Failed to start Cline API Server:", error)
+		console.error("Failed to start Enki AI API Server:", error)
 		process.exit(1)
 	}
 
 	const extensionsDir = path.join(distDir, "vsce-extension")
 	const userDataDir = mkdtempSync(path.join(os.tmpdir(), "vsce"))
-	const clineTestWorkspace = mkdtempSync(path.join(os.tmpdir(), "cline-test-workspace-"))
+	const enkiTestWorkspace = mkdtempSync(path.join(os.tmpdir(), "enki-test-workspace-"))
 
 	console.log("Starting HostBridge test server...")
 	const hostbridge: ChildProcess = spawn("npx", ["tsx", path.join(__dirname, "test-hostbridge-server.ts")], {
 		stdio: "pipe",
 		env: {
 			...process.env,
-			TEST_HOSTBRIDGE_WORKSPACE_DIR: clineTestWorkspace,
+			TEST_HOSTBRIDGE_WORKSPACE_DIR: enkiTestWorkspace,
 			HOST_BRIDGE_ADDRESS: `127.0.0.1:${HOSTBRIDGE_PORT}`,
 		},
 	})
@@ -115,11 +115,11 @@ async function main(): Promise<void> {
 
 	const covDir = path.join(projectRoot, `coverage/coverage-core-${PROTOBUS_PORT}`)
 
-	const baseArgs = ["--enable-source-maps", path.join(distDir, "cline-core.js")]
+	const baseArgs = ["--enable-source-maps", path.join(distDir, "enki-core.js")]
 
 	const spawnArgs = USE_C8 ? ["c8", "--report-dir", covDir, "node", ...baseArgs] : ["node", ...baseArgs]
 
-	console.log(`Starting Cline Core Service... (useC8=${USE_C8})`)
+	console.log(`Starting Enki AI Core Service... (useC8=${USE_C8})`)
 
 	const coreService: ChildProcess = spawn("npx", spawnArgs, {
 		cwd: projectRoot,
@@ -146,11 +146,11 @@ async function main(): Promise<void> {
 			if (child && !child.killed) child.kill("SIGINT")
 		}
 
-		await ClineApiServerMock.stopGlobalServer()
+		await Enki AIApiServerMock.stopGlobalServer()
 
 		try {
 			rmSync(userDataDir, { recursive: true, force: true })
-			rmSync(clineTestWorkspace, { recursive: true, force: true })
+			rmSync(enkiTestWorkspace, { recursive: true, force: true })
 			console.log("Cleaned up temporary directories")
 		} catch (err) {
 			console.warn("Failed to cleanup temp directories:", err)
@@ -171,13 +171,13 @@ async function main(): Promise<void> {
 		shutdown()
 	})
 
-	console.log(`Cline gRPC Server is running on 127.0.0.1:${PROTOBUS_PORT}`)
+	console.log(`Enki AI gRPC Server is running on 127.0.0.1:${PROTOBUS_PORT}`)
 	console.log("Press Ctrl+C to stop")
 }
 
 if (require.main === module) {
 	main().catch((err) => {
-		console.error("Failed to start simple Cline server:", err)
+		console.error("Failed to start simple Enki AI server:", err)
 		process.exit(1)
 	})
 }

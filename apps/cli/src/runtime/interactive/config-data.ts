@@ -6,7 +6,7 @@ import {
 	syncPluginMcpServersToSettings,
 	type UserInstructionConfigService,
 	uninstallPlugin,
-} from "@cline/core";
+} from "@enki/core";
 import {
 	type InteractiveConfigData,
 	type InteractiveConfigItem,

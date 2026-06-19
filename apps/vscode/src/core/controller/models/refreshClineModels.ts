@@ -6,7 +6,7 @@ import axios from "axios"
 import cloneDeep from "clone-deep"
 import fs from "fs/promises"
 import path from "path"
-import { ClineEnv } from "@/config"
+import { Enki AIEnv } from "@/config"
 import { StateManager } from "@/core/storage/StateManager"
 import { featureFlagsService } from "@/services/feature-flags"
 import {
@@ -28,7 +28,7 @@ import { Logger } from "@/shared/services/Logger"
 import type { Controller } from ".."
 import { refreshOpenRouterModels } from "./refreshOpenRouterModels"
 
-type ClineSupportedParams =
+type Enki AISupportedParams =
 	| "frequency_penalty"
 	| "include_reasoning"
 	| "logit_bias"
@@ -49,9 +49,9 @@ type ClineSupportedParams =
 	| "top_p"
 
 /**
- * The raw model information returned by the Cline API to list models
+ * The raw model information returned by the Enki AI API to list models
  */
-interface ClineRawModelInfo {
+interface Enki AIRawModelInfo {
 	id: string
 	name: string
 	description: string | null
@@ -81,37 +81,37 @@ interface ClineRawModelInfo {
 	} | null
 	supports_global_endpoint?: boolean | null
 	tiers?: ModelInfo["tiers"] | null
-	supported_parameters?: ClineSupportedParams[] | null
+	supported_parameters?: Enki AISupportedParams[] | null
 }
 
 // Track pending refresh promise to prevent duplicate concurrent fetches
 let pendingRefresh: Promise<Record<string, ModelInfo>> | null = null
 
-async function fetchRawClineModels(): Promise<ClineRawModelInfo[]> {
-	const apiBaseUrl = ClineEnv.config().apiBaseUrl
-	const response = await axios.get(`${apiBaseUrl}/api/v1/ai/cline/models`, getAxiosSettings())
+async function fetchRawEnki AIModels(): Promise<Enki AIRawModelInfo[]> {
+	const apiBaseUrl = Enki AIEnv.config().apiBaseUrl
+	const response = await axios.get(`${apiBaseUrl}/api/v1/ai/enki/models`, getAxiosSettings())
 
 	if (!Array.isArray(response.data?.data)) {
-		throw new Error("Invalid response data when fetching Cline models")
+		throw new Error("Invalid response data when fetching Enki AI models")
 	}
 
-	Logger.log("Cline models source: Cline API")
-	return response.data.data as ClineRawModelInfo[]
+	Logger.log("Enki AI models source: Enki AI API")
+	return response.data.data as Enki AIRawModelInfo[]
 }
 
 /**
- * Core function: Refreshes the Cline models and returns application types
+ * Core function: Refreshes the Enki AI models and returns application types
  * @param controller The controller instance
  * @returns Record of model ID to ModelInfo (application types)
  */
-export async function refreshClineModels(controller: Controller): Promise<Record<string, ModelInfo>> {
-	const shouldUseClineEndpointSource = featureFlagsService.getBooleanFlagEnabled(FeatureFlag.EXTENSION_CLINE_MODELS_ENDPOINT)
-	if (!shouldUseClineEndpointSource) {
+export async function refreshEnki AIModels(controller: Controller): Promise<Record<string, ModelInfo>> {
+	const shouldUseEnki AIEndpointSource = featureFlagsService.getBooleanFlagEnabled(FeatureFlag.EXTENSION_CLINE_MODELS_ENDPOINT)
+	if (!shouldUseEnki AIEndpointSource) {
 		return refreshOpenRouterModels(controller)
 	}
 
 	// Check in-memory cache first
-	const cache = StateManager.get().getModelsCache("cline")
+	const cache = StateManager.get().getModelsCache("enki")
 	if (cache) {
 		return cache
 	}
@@ -124,7 +124,7 @@ export async function refreshClineModels(controller: Controller): Promise<Record
 	// Start new fetch and track the promise
 	pendingRefresh = (async () => {
 		try {
-			return await fetchAndCacheClineModels()
+			return await fetchAndCacheEnki AIModels()
 		} finally {
 			// Clear pending promise when done (success or error)
 			pendingRefresh = null
@@ -134,12 +134,12 @@ export async function refreshClineModels(controller: Controller): Promise<Record
 	return pendingRefresh
 }
 
-async function fetchAndCacheClineModels(): Promise<Record<string, ModelInfo>> {
-	const clineModelsFilePath = path.join(await ensureCacheDirectoryExists(), GlobalFileNames.clineModels)
+async function fetchAndCacheEnki AIModels(): Promise<Record<string, ModelInfo>> {
+	const enkiModelsFilePath = path.join(await ensureCacheDirectoryExists(), GlobalFileNames.enkiModels)
 
 	let models: Record<string, ModelInfo> = {}
 	try {
-		const rawModels = await fetchRawClineModels()
+		const rawModels = await fetchRawEnki AIModels()
 		const parsePrice = (price: unknown) => {
 			if (price === undefined || price === null || price === "") {
 				return undefined
@@ -317,49 +317,49 @@ async function fetchAndCacheClineModels(): Promise<Record<string, ModelInfo>> {
 			}
 		}
 		if (Object.keys(models).length === 0) {
-			throw new Error("No Cline models returned from API")
+			throw new Error("No Enki AI models returned from API")
 		}
 		// Save models and cache them in memory
-		await fs.writeFile(clineModelsFilePath, JSON.stringify(models))
-		Logger.log("Cline models fetched and saved")
+		await fs.writeFile(enkiModelsFilePath, JSON.stringify(models))
+		Logger.log("Enki AI models fetched and saved")
 	} catch (error) {
-		Logger.error("Error fetching Cline models:", error)
+		Logger.error("Error fetching Enki AI models:", error)
 
 		// If we failed to fetch models, try to read cached models from disk
 		try {
-			const fileExists = await fileExistsAtPath(clineModelsFilePath)
+			const fileExists = await fileExistsAtPath(enkiModelsFilePath)
 			if (fileExists) {
-				const fileContents = await fs.readFile(clineModelsFilePath, "utf8")
+				const fileContents = await fs.readFile(enkiModelsFilePath, "utf8")
 				models = JSON.parse(fileContents)
-				Logger.log("Loaded Cline models from cache")
+				Logger.log("Loaded Enki AI models from cache")
 			}
 		} catch (cacheError) {
-			Logger.error("Error reading Cline models from cache:", cacheError)
+			Logger.error("Error reading Enki AI models from cache:", cacheError)
 		}
 	}
 
 	// Avoid poisoning in-memory cache with an empty model map after transient failures.
 	if (Object.keys(models).length > 0) {
-		StateManager.get().setModelsCache("cline", models)
+		StateManager.get().setModelsCache("enki", models)
 	}
 
 	return models
 }
 
 /**
- * Read cached Cline models from disk
+ * Read cached Enki AI models from disk
  * @returns The cached models or undefined if not found
  */
-export async function readClineModelsFromCache(): Promise<Record<string, ModelInfo> | undefined> {
+export async function readEnki AIModelsFromCache(): Promise<Record<string, ModelInfo> | undefined> {
 	try {
-		const clineModelsFilePath = path.join(await ensureCacheDirectoryExists(), GlobalFileNames.clineModels)
-		const fileExists = await fileExistsAtPath(clineModelsFilePath)
+		const enkiModelsFilePath = path.join(await ensureCacheDirectoryExists(), GlobalFileNames.enkiModels)
+		const fileExists = await fileExistsAtPath(enkiModelsFilePath)
 		if (fileExists) {
-			const fileContents = await fs.readFile(clineModelsFilePath, "utf8")
+			const fileContents = await fs.readFile(enkiModelsFilePath, "utf8")
 			return JSON.parse(fileContents)
 		}
 	} catch (error) {
-		Logger.error("Error reading Cline models from cache:", error)
+		Logger.error("Error reading Enki AI models from cache:", error)
 	}
 	return undefined
 }

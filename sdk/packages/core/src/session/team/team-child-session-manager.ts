@@ -1,9 +1,9 @@
 import { appendFileSync } from "node:fs";
 import { join } from "node:path";
-import type * as LlmsProviders from "@cline/llms";
-import type { AgentResult } from "@cline/shared";
-import { resolveRootSessionId } from "@cline/shared";
-import { ensureHookLogDir } from "@cline/shared/storage";
+import type * as LlmsProviders from "@enki/llms";
+import type { AgentResult } from "@enki/shared";
+import { resolveRootSessionId } from "@enki/shared";
+import { ensureHookLogDir } from "@enki/shared/storage";
 import { z } from "zod";
 import type {
 	SubAgentEndContext,

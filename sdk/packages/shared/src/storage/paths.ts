@@ -11,8 +11,8 @@ import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import type { PluginManifest } from "..";
 
-const DEPRECATED_CONFIG_DIR = ".clinerules";
-const CLINE_CONFIG_DIR = ".cline";
+const DEPRECATED_CONFIG_DIR = ".enkirules";
+const CLINE_CONFIG_DIR = ".enki";
 const LEGACY_AGENT_SKILLS_CONFIG_DIR = ".agents";
 
 export const AGENT_CONFIG_DIRECTORY_NAME = "agents";
@@ -23,7 +23,7 @@ export const WORKFLOWS_CONFIG_DIRECTORY_NAME = "workflows";
 export const PLUGINS_DIRECTORY_NAME = "plugins";
 export const AGENTS_RULES_FILE_NAME = "AGENTS.md";
 
-export const CLINE_MCP_SETTINGS_FILE_NAME = "cline_mcp_settings.json";
+export const CLINE_MCP_SETTINGS_FILE_NAME = "enki_mcp_settings.json";
 
 function resolveDefaultHomeDir(): string {
 	const envHome = process?.env?.HOME?.trim();
@@ -72,7 +72,7 @@ export function setHomeDirIfUnset(dir: string) {
 let CLINE_DIR: string | undefined;
 let CLINE_DIR_SET_EXPLICITLY = false;
 
-export function setClineDir(dir: string): void {
+export function setEnki AIDir(dir: string): void {
 	const trimmed = dir.trim();
 	if (!trimmed) {
 		return;
@@ -81,7 +81,7 @@ export function setClineDir(dir: string): void {
 	CLINE_DIR_SET_EXPLICITLY = true;
 }
 
-export function setClineDirIfUnset(dir: string): void {
+export function setEnki AIDirIfUnset(dir: string): void {
 	if (CLINE_DIR_SET_EXPLICITLY) {
 		return;
 	}
@@ -92,7 +92,7 @@ export function setClineDirIfUnset(dir: string): void {
 	CLINE_DIR = trimmed;
 }
 
-export function resolveClineDir(): string {
+export function resolveEnki AIDir(): string {
 	if (CLINE_DIR) {
 		return CLINE_DIR;
 	}
@@ -100,11 +100,11 @@ export function resolveClineDir(): string {
 	if (envDir) {
 		return envDir;
 	}
-	return join(HOME_DIR, ".cline");
+	return join(HOME_DIR, ".enki");
 }
 
-export function resolveDocumentsClineDirectoryPath(): string {
-	return join(HOME_DIR, "Documents", "Cline");
+export function resolveDocumentsEnki AIDirectoryPath(): string {
+	return join(HOME_DIR, "Documents", "Enki AI");
 }
 
 type DocumentsExtensionName =
@@ -117,15 +117,15 @@ type DocumentsExtensionName =
 export function resolveDocumentsExtensionPath(
 	name: DocumentsExtensionName,
 ): string {
-	return join(resolveDocumentsClineDirectoryPath(), name);
+	return join(resolveDocumentsEnki AIDirectoryPath(), name);
 }
 
-export function resolveClineDataDir(): string {
+export function resolveEnki AIDataDir(): string {
 	const explicitDir = process.env.CLINE_DATA_DIR?.trim();
 	if (explicitDir) {
 		return explicitDir;
 	}
-	return join(resolveClineDir(), "data");
+	return join(resolveEnki AIDir(), "data");
 }
 
 export function resolveSessionDataDir(): string {
@@ -133,7 +133,7 @@ export function resolveSessionDataDir(): string {
 	if (explicitDir) {
 		return explicitDir;
 	}
-	return join(resolveClineDataDir(), "sessions");
+	return join(resolveEnki AIDataDir(), "sessions");
 }
 
 export function resolveTeamDataDir(): string {
@@ -141,7 +141,7 @@ export function resolveTeamDataDir(): string {
 	if (explicitDir) {
 		return explicitDir;
 	}
-	return join(resolveClineDataDir(), "teams");
+	return join(resolveEnki AIDataDir(), "teams");
 }
 
 export function resolveDbDataDir(): string {
@@ -149,7 +149,7 @@ export function resolveDbDataDir(): string {
 	if (explicitDir) {
 		return explicitDir;
 	}
-	return join(resolveClineDataDir(), "db");
+	return join(resolveEnki AIDataDir(), "db");
 }
 
 /**
@@ -173,7 +173,7 @@ export interface ResolveCronSpecsDirOptions {
 	 * to provide their own merged/global/workspace cron source root.
 	 */
 	cronSpecsDir?: string;
-	/** Defaults to `global`, i.e. `~/.cline/cron`. */
+	/** Defaults to `global`, i.e. `~/.enki/cron`. */
 	scope?: CronSpecsScope;
 	/** Required when `scope` is `workspace`. */
 	workspaceRoot?: string;
@@ -181,25 +181,25 @@ export interface ResolveCronSpecsDirOptions {
 
 /**
  * Global file-based cron spec authoring directory:
- *   `~/.cline/cron/`
+ *   `~/.enki/cron/`
  */
 export function resolveGlobalCronSpecsDir(): string {
-	return join(resolveClineDir(), "cron");
+	return join(resolveEnki AIDir(), "cron");
 }
 
 /**
  * Workspace file-based cron spec authoring directory reserved for future
  * workspace-scoped automation support:
- *   `${workspaceRoot}/.cline/cron/`
+ *   `${workspaceRoot}/.enki/cron/`
  */
 export function resolveWorkspaceCronSpecsDir(workspaceRoot: string): string {
-	return join(workspaceRoot, ".cline", "cron");
+	return join(workspaceRoot, ".enki", "cron");
 }
 
 /**
  * Directory containing file-based cron spec authoring.
  *
- * Default: global `~/.cline/cron/`.
+ * Default: global `~/.enki/cron/`.
  * One-off: `*.md`
  * Recurring: `*.cron.md`
  * Event-driven: `events/*.event.md`
@@ -264,7 +264,7 @@ export function resolveProviderSettingsPath(): string {
 	if (explicitPath) {
 		return explicitPath;
 	}
-	return join(resolveClineDataDir(), "settings", "providers.json");
+	return join(resolveEnki AIDataDir(), "settings", "providers.json");
 }
 
 export function resolveGlobalSettingsPath(): string {
@@ -272,7 +272,7 @@ export function resolveGlobalSettingsPath(): string {
 	if (explicitPath) {
 		return explicitPath;
 	}
-	return join(resolveClineDataDir(), "settings", "global-settings.json");
+	return join(resolveEnki AIDataDir(), "settings", "global-settings.json");
 }
 
 export function resolveMcpSettingsPath(): string {
@@ -280,7 +280,7 @@ export function resolveMcpSettingsPath(): string {
 	if (explicitPath) {
 		return explicitPath;
 	}
-	return join(resolveClineDataDir(), "settings", CLINE_MCP_SETTINGS_FILE_NAME);
+	return join(resolveEnki AIDataDir(), "settings", CLINE_MCP_SETTINGS_FILE_NAME);
 }
 
 function dedupePaths(paths: ReadonlyArray<string>): string[] {
@@ -308,7 +308,7 @@ function getWorkspaceSkillDirectories(workspacePath?: string): string[] {
 }
 
 export function resolveAgentsConfigDirPath(): string {
-	return join(resolveClineDir(), AGENT_CONFIG_DIRECTORY_NAME);
+	return join(resolveEnki AIDir(), AGENT_CONFIG_DIRECTORY_NAME);
 }
 
 export function resolveAgentConfigSearchPaths(
@@ -327,7 +327,7 @@ export function resolveHooksConfigSearchPaths(
 ): string[] {
 	const hooks = [
 		resolveDocumentsExtensionPath("Hooks"),
-		join(resolveClineDir(), HOOKS_CONFIG_DIRECTORY_NAME),
+		join(resolveEnki AIDir(), HOOKS_CONFIG_DIRECTORY_NAME),
 	];
 	if (workspacePath) {
 		hooks.push(
@@ -343,7 +343,7 @@ export function resolveSkillsConfigSearchPaths(
 ): string[] {
 	return dedupePaths([
 		...getWorkspaceSkillDirectories(workspacePath),
-		join(resolveClineDir(), SKILLS_CONFIG_DIRECTORY_NAME),
+		join(resolveEnki AIDir(), SKILLS_CONFIG_DIRECTORY_NAME),
 		join(
 			HOME_DIR,
 			LEGACY_AGENT_SKILLS_CONFIG_DIR,
@@ -372,7 +372,7 @@ export function resolveRulesConfigSearchPaths(
 		...workspaceAgentsFile,
 		...wsPaths,
 		resolveGlobalAgentsRulesPath(),
-		join(resolveClineDir(), RULES_CONFIG_DIRECTORY_NAME),
+		join(resolveEnki AIDir(), RULES_CONFIG_DIRECTORY_NAME),
 		resolveDocumentsExtensionPath("Rules"),
 	]);
 }
@@ -382,12 +382,12 @@ export function resolveWorkflowsConfigSearchPaths(
 ): string[] {
 	return dedupePaths([
 		workspacePath
-			? join(workspacePath, ".clinerules", WORKFLOWS_CONFIG_DIRECTORY_NAME)
+			? join(workspacePath, ".enkirules", WORKFLOWS_CONFIG_DIRECTORY_NAME)
 			: "",
 		resolveDocumentsExtensionPath("Workflows"),
-		join(resolveClineDir(), WORKFLOWS_CONFIG_DIRECTORY_NAME),
+		join(resolveEnki AIDir(), WORKFLOWS_CONFIG_DIRECTORY_NAME),
 		workspacePath
-			? join(workspacePath, ".cline", WORKFLOWS_CONFIG_DIRECTORY_NAME)
+			? join(workspacePath, ".enki", WORKFLOWS_CONFIG_DIRECTORY_NAME)
 			: "",
 	]);
 }
@@ -396,8 +396,8 @@ export function resolvePluginConfigSearchPaths(
 	workspacePath?: string,
 ): string[] {
 	return dedupePaths([
-		workspacePath ? join(workspacePath, ".cline", PLUGINS_DIRECTORY_NAME) : "",
-		join(resolveClineDir(), PLUGINS_DIRECTORY_NAME),
+		workspacePath ? join(workspacePath, ".enki", PLUGINS_DIRECTORY_NAME) : "",
+		join(resolveEnki AIDir(), PLUGINS_DIRECTORY_NAME),
 		resolveDocumentsExtensionPath("Plugins"),
 	]);
 }
@@ -423,12 +423,12 @@ function readPluginPackageManifest(
 ): PluginPackageManifest | null {
 	try {
 		const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8")) as {
-			cline?: PluginPackageManifest;
+			enki?: PluginPackageManifest;
 		};
-		if (!packageJson.cline || typeof packageJson.cline !== "object") {
+		if (!packageJson.enki || typeof packageJson.enki !== "object") {
 			return null;
 		}
-		return packageJson.cline;
+		return packageJson.enki;
 	} catch {
 		return null;
 	}
@@ -580,7 +580,7 @@ export function ensureHookLogDir(filePath?: string): string {
 		ensureParentDir(filePath);
 		return dirname(filePath);
 	}
-	const dir = join(resolveClineDataDir(), "logs");
+	const dir = join(resolveEnki AIDataDir(), "logs");
 	if (!existsSync(dir)) {
 		mkdirSync(dir, { recursive: true });
 	}

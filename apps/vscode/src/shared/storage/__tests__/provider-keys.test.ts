@@ -18,13 +18,13 @@ describe("Provider key mapping", () => {
 		expect(getProviderModelIdKey("openrouter", "plan")).to.equal("planModeOpenRouterModelId")
 	})
 
-	it("uses provider-specific model key behavior for Cline", () => {
-		expect(getProviderModelIdKey("cline", "act")).to.equal("actModeClineModelId")
-		expect(getProviderModelIdKey("cline", "plan")).to.equal("planModeClineModelId")
+	it("uses provider-specific model key behavior for Enki AI", () => {
+		expect(getProviderModelIdKey("enki", "act")).to.equal("actModeEnki AIModelId")
+		expect(getProviderModelIdKey("enki", "plan")).to.equal("planModeEnki AIModelId")
 	})
 
-	it("uses separate model keys for Cline Pass", () => {
-		expect(getProviderModelIdKey("cline-pass", "act")).to.equal("actModeClinePassModelId")
-		expect(getProviderModelIdKey("cline-pass", "plan")).to.equal("planModeClinePassModelId")
+	it("uses separate model keys for Enki AI Pass", () => {
+		expect(getProviderModelIdKey("enki-pass", "act")).to.equal("actModeEnki AIPassModelId")
+		expect(getProviderModelIdKey("enki-pass", "plan")).to.equal("planModeEnki AIPassModelId")
 	})
 })

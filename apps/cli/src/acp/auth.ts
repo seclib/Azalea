@@ -1,5 +1,5 @@
-import type { ProviderSettingsManager } from "@cline/core";
-import { loginAndSaveProviderOAuthCredentials } from "@cline/core";
+import type { ProviderSettingsManager } from "@enki/core";
+import { loginAndSaveProviderOAuthCredentials } from "@enki/core";
 import { getPersistedProviderApiKey } from "../commands/auth";
 import { writeDiagnostic } from "../utils/output";
 
@@ -7,7 +7,7 @@ import { writeDiagnostic } from "../utils/output";
  * Supported ACP OAuth provider IDs.
  */
 export const ACP_AUTH_METHODS = [
-	{ id: "cline", name: "Sign in with Cline" },
+	{ id: "enki", name: "Sign in with Enki AI" },
 	{ id: "openai-codex", name: "Sign in with ChatGPT Subscription" },
 ] as const;
 
@@ -30,7 +30,7 @@ async function performOAuthLogin(input: {
 	providerSettingsManager: ProviderSettingsManager;
 }): Promise<string> {
 	const [{ createOAuthClientCallbacks }, { default: open }] = await Promise.all(
-		[import("@cline/core"), import("open")],
+		[import("@enki/core"), import("open")],
 	);
 
 	const callbacks = createOAuthClientCallbacks({

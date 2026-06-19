@@ -2,12 +2,12 @@ import { fireEvent, render, screen } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import EntitlementError from "./EntitlementError"
 
-const mockAuth: { clineUser: { appBaseUrl?: string } | null } = {
-	clineUser: null,
+const mockAuth: { enkiUser: { appBaseUrl?: string } | null } = {
+	enkiUser: null,
 }
 
-vi.mock("@/context/ClineAuthContext", () => ({
-	useClineAuth: () => mockAuth,
+vi.mock("@/context/Enki AIAuthContext", () => ({
+	useEnki AIAuth: () => mockAuth,
 }))
 
 const askResponseMock = vi.fn()
@@ -17,18 +17,18 @@ vi.mock("@/services/grpc-client", () => ({
 	},
 }))
 
-const getSubscribeHref = () => screen.getByRole("link", { name: /get clinepass/i }).getAttribute("href")
-const querySubscribeLink = () => screen.queryByRole("link", { name: /get clinepass/i })
+const getSubscribeHref = () => screen.getByRole("link", { name: /get enkipass/i }).getAttribute("href")
+const querySubscribeLink = () => screen.queryByRole("link", { name: /get enkipass/i })
 
 describe("EntitlementError", () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
-		mockAuth.clineUser = null
+		mockAuth.enkiUser = null
 	})
 
 	it("shows friendly copy with the backend detail as muted support text", () => {
 		render(<EntitlementError message="Error 403: the user is not subscribed to required model plan" />)
-		expect(screen.getByText("This model requires a ClinePass subscription.")).toBeInTheDocument()
+		expect(screen.getByText("This model requires a Enki AIPass subscription.")).toBeInTheDocument()
 		expect(screen.getByText("Error 403: the user is not subscribed to required model plan")).toBeInTheDocument()
 	})
 
@@ -36,26 +36,26 @@ describe("EntitlementError", () => {
 		render(<EntitlementError />)
 		expect(querySubscribeLink()).toBeNull()
 
-		mockAuth.clineUser = {}
+		mockAuth.enkiUser = {}
 		render(<EntitlementError />)
 		expect(querySubscribeLink()).toBeNull()
 
-		mockAuth.clineUser = { appBaseUrl: "not a valid url" }
+		mockAuth.enkiUser = { appBaseUrl: "not a valid url" }
 		render(<EntitlementError />)
 		expect(querySubscribeLink()).toBeNull()
 	})
 
 	it("builds the subscribe link from the authenticated user's app base URL", () => {
-		mockAuth.clineUser = { appBaseUrl: "https://staging-app.cline.bot" }
+		mockAuth.enkiUser = { appBaseUrl: "https://staging-app.enki.bot" }
 		const { unmount } = render(<EntitlementError />)
-		expect(getSubscribeHref()).toBe("https://staging-app.cline.bot/dashboard/subscription")
+		expect(getSubscribeHref()).toBe("https://staging-app.enki.bot/dashboard/subscription")
 		unmount()
 
-		mockAuth.clineUser = {
-			appBaseUrl: "https://proxy.enterprise.com/cline/app",
+		mockAuth.enkiUser = {
+			appBaseUrl: "https://proxy.enterprise.com/enki/app",
 		}
 		render(<EntitlementError />)
-		expect(getSubscribeHref()).toBe("https://proxy.enterprise.com/cline/app/dashboard/subscription")
+		expect(getSubscribeHref()).toBe("https://proxy.enterprise.com/enki/app/dashboard/subscription")
 	})
 
 	it("sends a yesButtonClicked askResponse when Retry Request is clicked", () => {

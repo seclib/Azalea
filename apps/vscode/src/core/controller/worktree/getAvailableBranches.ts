@@ -1,5 +1,5 @@
-import { EmptyRequest } from "@shared/proto/cline/common"
-import { BranchList } from "@shared/proto/cline/worktree"
+import { EmptyRequest } from "@shared/proto/enki/common"
+import { BranchList } from "@shared/proto/enki/worktree"
 import { getAvailableBranches as getAvailableBranchesUtil } from "@utils/git-worktree"
 import { getWorkspacePath } from "@utils/path"
 import { Logger } from "@/shared/services/Logger"

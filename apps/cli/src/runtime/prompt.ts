@@ -5,8 +5,8 @@ import {
 	buildWorkspaceMetadata,
 	mergeRulesForSystemPrompt,
 	type UserInstructionConfigService,
-} from "@cline/core";
-import { type AgentMode, buildClineSystemPrompt } from "@cline/shared";
+} from "@enki/core";
+import { type AgentMode, buildEnki AISystemPrompt } from "@enki/shared";
 import { isImagePath, loadImageAsDataUrl } from "../utils/image-attachments";
 
 const PLAN_MODE_INSTRUCTIONS = `# Plan Mode
@@ -36,7 +36,7 @@ export async function resolveSystemPrompt(input: {
 			? `${rules}\n\n${PLAN_MODE_INSTRUCTIONS}`
 			: PLAN_MODE_INSTRUCTIONS;
 	}
-	return buildClineSystemPrompt({
+	return buildEnki AISystemPrompt({
 		ide: "Terminal Shell",
 		workspaceRoot: input.cwd,
 		workspaceName: basename(input.cwd),

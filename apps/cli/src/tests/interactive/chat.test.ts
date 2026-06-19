@@ -2,7 +2,7 @@
 // CLI Interactive use cases - main chat view
 //
 // Covers:
-//   - `cline` launches interactive view (authed / unauthed)
+//   - `enki` launches interactive view (authed / unauthed)
 //   - /settings navigation and tab verification
 //   - /models view
 //   - /history view
@@ -19,18 +19,18 @@
 
 import { test } from "@microsoft/tui-test";
 import { CLINE_BIN, TERMINAL_WIDE } from "../helpers/constants.js";
-import { clineEnv } from "../helpers/env.js";
+import { enkiEnv } from "../helpers/env.js";
 import {
 	toggleAutoApproveAll,
 	waitForChatReady,
 } from "../helpers/page-objects/chat.js";
 import { expectVisible } from "../helpers/terminal.js";
 
-test.describe("cline (authenticated) - shows chat view", () => {
+test.describe("enki (authenticated) - shows chat view", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: [] },
 		...TERMINAL_WIDE,
-		env: clineEnv("default"),
+		env: enkiEnv("default"),
 	});
 
 	test("shows interactive chat view", async ({ terminal }) => {
@@ -42,7 +42,7 @@ test.describe("Auto-approve all - Shift+Tab toggle", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: [] },
 		...TERMINAL_WIDE,
-		env: clineEnv("default"),
+		env: enkiEnv("default"),
 	});
 
 	test("Shift+Tab toggles auto-approve-all setting", async ({ terminal }) => {

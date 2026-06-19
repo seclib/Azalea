@@ -1,4 +1,4 @@
-export interface ClineAPI {
+export interface Enki AIAPI {
 	/**
 	 * Starts a new task with an optional initial message and images.
 	 * @param task Optional initial task message.

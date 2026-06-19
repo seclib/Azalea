@@ -3,7 +3,7 @@ import { basename, join } from "node:path";
 import {
 	type BasicLogger,
 	buildWorkspaceMetadata,
-	ClineCore,
+	Enki AICore,
 	captureExtensionActivated,
 	createConfiguredTelemetryService,
 	createLocalHubScheduleRuntimeHandlers,
@@ -19,13 +19,13 @@ import {
 	rememberRecoverableLocalHubUrl,
 	resolveSharedHubOwnerContext,
 	type ToolPolicy,
-} from "@cline/core";
+} from "@enki/core";
 import {
 	type AgentTool,
-	buildClineSystemPrompt,
-	createClineTelemetryServiceConfig,
-	createClineTelemetryServiceMetadata,
-} from "@cline/shared";
+	buildEnki AISystemPrompt,
+	createEnki AITelemetryServiceConfig,
+	createEnki AITelemetryServiceMetadata,
+} from "@enki/shared";
 import * as vscode from "vscode";
 import { displayName, version } from "../package.json";
 import { createVsCodeRuntimeCapabilities } from "./runtime-capabilities";
@@ -60,15 +60,15 @@ let extensionTelemetryHandle:
 	| undefined;
 
 export function activate(context: vscode.ExtensionContext): void {
-	const outputChannel = vscode.window.createOutputChannel("Cline");
+	const outputChannel = vscode.window.createOutputChannel("Enki AI");
 	extensionTelemetryHandle = createVscodeTelemetry({
 		extensionVersion: version,
-		clineType: displayName,
+		enkiType: displayName,
 		platform: vscode.env.appName,
 		platformVersion: vscode.version,
 	});
 	captureExtensionActivated(extensionTelemetryHandle.telemetry);
-	const sidebarProvider = new ClineChatViewProvider(
+	const sidebarProvider = new Enki AIChatViewProvider(
 		context.extensionUri,
 		outputChannel,
 		extensionTelemetryHandle.telemetry,
@@ -76,14 +76,14 @@ export function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(
 		outputChannel,
 		vscode.window.registerWebviewViewProvider(
-			"clineVscode.chatView",
+			"enkiVscode.chatView",
 			sidebarProvider,
 			{ webviewOptions: { retainContextWhenHidden: true } },
 		),
-		vscode.commands.registerCommand("clineVscode.openChat", () => {
+		vscode.commands.registerCommand("enkiVscode.openChat", () => {
 			const panel = vscode.window.createWebviewPanel(
-				"clineChat",
-				"Cline Chat",
+				"enkiChat",
+				"Enki AI Chat",
 				vscode.ViewColumn.One,
 				{
 					enableScripts: true,
@@ -112,7 +112,7 @@ export function deactivate(): Promise<void> {
 	return handle.flush().finally(() => handle.dispose());
 }
 
-class ClineChatViewProvider implements vscode.WebviewViewProvider {
+class Enki AIChatViewProvider implements vscode.WebviewViewProvider {
 	constructor(
 		private readonly extensionUri: vscode.Uri,
 		private readonly outputChannel: vscode.OutputChannel,
@@ -156,7 +156,7 @@ type StartConfig = {
 	apiKey: string;
 	autoApproveTools?: boolean;
 	logger: BasicLogger;
-	extensionContext?: import("@cline/shared").ExtensionContext;
+	extensionContext?: import("@enki/shared").ExtensionContext;
 	extraTools?: AgentTool[];
 };
 
@@ -317,7 +317,7 @@ function createVsCodeTerminalTool(defaultCwd: string): AgentTool {
 				throw new Error("command is required.");
 			}
 			const terminal = vscode.window.createTerminal({
-				name: "Cline",
+				name: "Enki AI",
 				cwd: cwd || defaultCwd,
 			});
 			terminal.show(true);
@@ -544,7 +544,7 @@ class CoreChatWebviewController implements vscode.Disposable {
 	private readonly disposables: vscode.Disposable[] = [];
 	private readonly providerSettingsManager = new ProviderSettingsManager();
 	private readonly telemetry: ITelemetryService;
-	private host: ClineCore | undefined;
+	private host: Enki AICore | undefined;
 	private hubClient: NodeHubClient | undefined;
 	private stopHostSubscription: (() => void) | undefined;
 	private stopSessionRefreshInterval: (() => void) | undefined;
@@ -576,10 +576,10 @@ class CoreChatWebviewController implements vscode.Disposable {
 			this.telemetry = sharedTelemetry;
 		} else {
 			const { telemetry } = createConfiguredTelemetryService(
-				createClineTelemetryServiceConfig({
-					metadata: createClineTelemetryServiceMetadata({
+				createEnki AITelemetryServiceConfig({
+					metadata: createEnki AITelemetryServiceMetadata({
 						extension_version: version,
-						cline_type: displayName,
+						enki_type: displayName,
 						platform: vscode.env.appName,
 						platform_version: vscode.version,
 						os_type: os.platform(),
@@ -646,7 +646,7 @@ class CoreChatWebviewController implements vscode.Disposable {
 		try {
 			await this.ensureHub();
 			await this.getSessionHost();
-			await this.post({ type: "status", text: "Cline is Ready" });
+			await this.post({ type: "status", text: "Enki AI is Ready" });
 			const defaults = this.resolveWorkspaceDefaults();
 			await this.post({ type: "defaults", defaults });
 			await this.loadProviders(defaults.provider);
@@ -1044,7 +1044,7 @@ class CoreChatWebviewController implements vscode.Disposable {
 
 	private buildExtensionContext(workspaceRoot: string, cwd: string) {
 		return {
-			client: { name: "cline-vscode", version },
+			client: { name: "enki-vscode", version },
 			workspace: {
 				rootPath: workspaceRoot,
 				cwd,
@@ -1058,7 +1058,7 @@ class CoreChatWebviewController implements vscode.Disposable {
 	}
 
 	private async buildStartConfigFromSession(
-		session: NonNullable<Awaited<ReturnType<ClineCore["get"]>>>,
+		session: NonNullable<Awaited<ReturnType<Enki AICore["get"]>>>,
 	): Promise<StartConfig> {
 		const mode: "act" | "plan" =
 			session.metadata?.mode === "plan" ? "plan" : "act";
@@ -1109,7 +1109,7 @@ class CoreChatWebviewController implements vscode.Disposable {
 	): Promise<StartConfig> {
 		const defaults = this.resolveWorkspaceDefaults();
 		const providerId = Llms.normalizeProviderId(
-			config?.provider?.trim() || "cline",
+			config?.provider?.trim() || "enki",
 		);
 		const modelId = config?.model?.trim() || "openai/gpt-5.5";
 		const mode: "act" | "plan" = config?.mode === "plan" ? "plan" : "act";
@@ -1206,7 +1206,7 @@ class CoreChatWebviewController implements vscode.Disposable {
 		mode: "act" | "plan" | "yolo" = "act",
 	): Promise<string> {
 		const metadata = await buildWorkspaceMetadata(cwd);
-		return buildClineSystemPrompt({
+		return buildEnki AISystemPrompt({
 			overridePrompt: explicitSystemPrompt,
 			ide: "VS Code",
 			mode,
@@ -1273,7 +1273,7 @@ class CoreChatWebviewController implements vscode.Disposable {
 				interactive: true,
 				config: forkStartConfig,
 				toolPolicies: createToolPolicies(forkStartConfig),
-				initialMessages: rawMessages as import("@cline/llms").Message[],
+				initialMessages: rawMessages as import("@enki/llms").Message[],
 				sessionMetadata: forkMetadata,
 			});
 			const newSessionId = response.sessionId.trim();
@@ -1318,11 +1318,11 @@ class CoreChatWebviewController implements vscode.Disposable {
 		this.stopSessionSubscription = undefined;
 	}
 
-	private async getSessionHost(): Promise<ClineCore> {
+	private async getSessionHost(): Promise<Enki AICore> {
 		if (!this.host) {
 			await this.ensureHub();
 			const defaults = this.resolveWorkspaceDefaults();
-			this.host = await ClineCore.create({
+			this.host = await Enki AICore.create({
 				backendMode: "hub",
 				capabilities: this.createRuntimeCapabilities(),
 				hub: {

@@ -19,11 +19,11 @@ const telemetryMocks = vi.hoisted(() => ({
 	identifyTelemetryAccount: vi.fn(),
 }));
 
-vi.mock("@cline/core", async (importOriginal) => {
-	const actual = await importOriginal<typeof import("@cline/core")>();
+vi.mock("@enki/core", async (importOriginal) => {
+	const actual = await importOriginal<typeof import("@enki/core")>();
 	return {
 		...actual,
-		ClineAccountService: class {
+		Enki AIAccountService: class {
 			constructor(options: {
 				apiBaseUrl: string;
 				getAuthToken: () => Promise<string | undefined | null>;
@@ -57,7 +57,7 @@ vi.mock("../utils/telemetry", () => ({
 
 function makeConfig(overrides: Partial<Config> = {}): Config {
 	return {
-		providerId: "cline",
+		providerId: "enki",
 		modelId: "anthropic/claude-sonnet-4.6",
 		apiKey: "",
 		verbose: false,
@@ -91,7 +91,7 @@ function mockFetchJson(body: unknown, status = 200): void {
 	);
 }
 
-describe("createClineAccountService", () => {
+describe("createEnki AIAccountService", () => {
 	beforeEach(() => {
 		vi.restoreAllMocks();
 		vi.unstubAllGlobals();
@@ -109,7 +109,7 @@ describe("createClineAccountService", () => {
 		vi.unstubAllGlobals();
 	});
 
-	it("refreshes persisted Cline OAuth credentials before creating the account service", async () => {
+	it("refreshes persisted Enki AI OAuth credentials before creating the account service", async () => {
 		vi.spyOn(Date, "now").mockReturnValue(100_000);
 		mockFetchJson({
 			success: true,
@@ -122,13 +122,13 @@ describe("createClineAccountService", () => {
 					subject: "sub-new",
 					email: "new@example.com",
 					name: "New User",
-					clineUserId: "acct-new",
+					enkiUserId: "acct-new",
 					accounts: [],
 				},
 			},
 		});
 		coreMocks.getProviderSettings.mockReturnValue({
-			provider: "cline",
+			provider: "enki",
 			auth: {
 				accessToken: "workos:old-access",
 				refreshToken: "refresh-token",
@@ -137,14 +137,14 @@ describe("createClineAccountService", () => {
 			},
 		});
 
-		const { createClineAccountService } = await import("./cline-account");
-		const service = await createClineAccountService({ config: makeConfig() });
+		const { createEnki AIAccountService } = await import("./enki-account");
+		const service = await createEnki AIAccountService({ config: makeConfig() });
 
 		expect(service).toBeDefined();
 		expect(globalThis.fetch).toHaveBeenCalled();
 		expect(coreMocks.saveProviderSettings).toHaveBeenCalledWith(
 			expect.objectContaining({
-				provider: "cline",
+				provider: "enki",
 				auth: expect.objectContaining({
 					accessToken: "workos:new-access",
 					refreshToken: "new-refresh",
@@ -159,7 +159,7 @@ describe("createClineAccountService", () => {
 		);
 	});
 
-	it("asks the user to re-authenticate when Cline OAuth credentials cannot refresh", async () => {
+	it("asks the user to re-authenticate when Enki AI OAuth credentials cannot refresh", async () => {
 		vi.spyOn(Date, "now").mockReturnValue(100_000);
 		mockFetchJson(
 			{
@@ -169,7 +169,7 @@ describe("createClineAccountService", () => {
 			401,
 		);
 		coreMocks.getProviderSettings.mockReturnValue({
-			provider: "cline",
+			provider: "enki",
 			auth: {
 				accessToken: "workos:old-access",
 				refreshToken: "refresh-token",
@@ -177,17 +177,17 @@ describe("createClineAccountService", () => {
 			},
 		});
 
-		const { createClineAccountService } = await import("./cline-account");
+		const { createEnki AIAccountService } = await import("./enki-account");
 
 		await expect(
-			createClineAccountService({ config: makeConfig() }),
+			createEnki AIAccountService({ config: makeConfig() }),
 		).rejects.toThrow(
-			"Cline account requires re-authentication. Run cline auth cline.",
+			"Enki AI account requires re-authentication. Run enki auth enki.",
 		);
 	});
 });
 
-describe("loadClineAccountSnapshot", () => {
+describe("loadEnki AIAccountSnapshot", () => {
 	beforeEach(() => {
 		vi.restoreAllMocks();
 		vi.unstubAllGlobals();
@@ -205,12 +205,12 @@ describe("loadClineAccountSnapshot", () => {
 		vi.unstubAllGlobals();
 	});
 
-	it("identifies the loaded Cline account for telemetry and feature flags", async () => {
+	it("identifies the loaded Enki AI account for telemetry and feature flags", async () => {
 		coreMocks.getProviderSettings.mockReturnValue({
-			provider: "cline",
+			provider: "enki",
 			apiKey: "account-token",
 		});
-		const { loadClineAccountSnapshot } = await import("./cline-account");
+		const { loadEnki AIAccountSnapshot } = await import("./enki-account");
 		coreMocks.fetchMe.mockResolvedValue({
 			id: "user-1",
 			email: "user@example.com",
@@ -234,13 +234,13 @@ describe("loadClineAccountSnapshot", () => {
 			organizationId: "org-1",
 		});
 
-		await loadClineAccountSnapshot({ config: makeConfig() });
+		await loadEnki AIAccountSnapshot({ config: makeConfig() });
 
 		expect(telemetryMocks.identifyTelemetryAccount).toHaveBeenCalledWith(
 			{
 				id: "user-1",
 				email: "user@example.com",
-				provider: "cline",
+				provider: "enki",
 				organizationId: "org-1",
 				organizationName: "Acme",
 				memberId: "member-1",

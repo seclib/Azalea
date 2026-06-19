@@ -3,7 +3,7 @@ export {
 	type WorkspaceInfo,
 	type WorkspaceManifest,
 	WorkspaceManifestSchema,
-} from "@cline/shared";
+} from "@enki/shared";
 export type {
 	WorkspaceManager,
 	WorkspaceManagerEvent,

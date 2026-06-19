@@ -1,13 +1,13 @@
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { CronOneOffSpec, CronScheduleSpec } from "@cline/shared";
-import { loadSqliteDb } from "@cline/shared/db";
+import type { CronOneOffSpec, CronScheduleSpec } from "@enki/shared";
+import { loadSqliteDb } from "@enki/shared/db";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { SqliteCronStore } from "./sqlite-cron-store";
 
 function tempDbPath(): { dir: string; path: string } {
-	const dir = mkdtempSync(join(tmpdir(), "cline-cron-store-"));
+	const dir = mkdtempSync(join(tmpdir(), "enki-cron-store-"));
 	return { dir, path: join(dir, "cron.db") };
 }
 

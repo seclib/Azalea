@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, it } from "mocha"
 import * as should from "should"
 import * as sinon from "sinon"
-import { createClineAPI } from "@/exports"
+import { createEnki AIAPI } from "@/exports"
 import { Logger } from "@/shared/services/Logger"
-import type { ClineAPI } from "../exports/cline"
+import type { Enki AIAPI } from "../exports/enki"
 import { setVscodeHostProviderMock } from "./host-provider-test-utils"
 
-describe("ClineAPI Core Functionality", () => {
-	let api: ClineAPI
+describe("Enki AIAPI Core Functionality", () => {
+	let api: Enki AIAPI
 	let mockController: any
 	let mockLoggerError: sinon.SinonStub
 	let sandbox: sinon.SinonSandbox
@@ -20,7 +20,7 @@ describe("ClineAPI Core Functionality", () => {
 		mockLoggerError = sandbox.stub(Logger, "error")
 		setVscodeHostProviderMock({})
 
-		// Create a mock controller that matches what the real createClineAPI expects
+		// Create a mock controller that matches what the real createEnki AIAPI expects
 		// We don't import the real Controller to avoid the webview dependencies
 		mockController = {
 			id: "test-controller-id",
@@ -47,7 +47,7 @@ describe("ClineAPI Core Functionality", () => {
 		}
 
 		// Create API instance
-		api = createClineAPI(mockController)
+		api = createEnki AIAPI(mockController)
 	})
 
 	afterEach(() => {

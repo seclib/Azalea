@@ -3,7 +3,7 @@ import type { LanguageModelV3 } from "@ai-sdk/provider";
 import type {
 	GatewayProviderContext,
 	GatewayResolvedProviderConfig,
-} from "@cline/shared";
+} from "@enki/shared";
 import { wrapLanguageModel } from "ai";
 import { ensureFetch, resolveApiKey } from "../http";
 import { splitToolImagesMiddleware } from "../middleware/split-tool-images";
@@ -140,7 +140,7 @@ export async function createOpenAICompatibleProviderModule(
 		// middleware operates on the typed `LanguageModelV3Prompt` BEFORE
 		// the converter runs, so the converter sees only text-only tool
 		// messages with adjacent multimodal user messages — the wire
-		// pattern that classic Cline used in production for years (see
+		// pattern that classic Enki AI used in production for years (see
 		// `convertToOpenAiMessages` in `src/core/api/transform/openai-format.ts`
 		// on origin/main).
 		model: (modelId) =>

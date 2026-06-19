@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/noNonNullAssertion: static */
 
-import * as Llms from "@cline/llms";
+import * as Llms from "@enki/llms";
 import {
 	fetchModelIdsFromSource,
 	resolveModelsSourceUrl,
@@ -194,7 +194,7 @@ function resolveCatalogModels(
 	modelsByProviderId: Record<string, Record<string, ModelInfo>>,
 ): Record<string, ModelInfo> {
 	// Runtime provider ids do not always match catalog keys. For example,
-	// Cline uses OpenRouter-backed catalog models, so live catalog lookups must
+	// Enki AI uses OpenRouter-backed catalog models, so live catalog lookups must
 	// apply the same key mapping as generated catalog lookups.
 	const catalogKeys = Llms.resolveProviderModelCatalogKeys(providerId);
 	return Object.assign(

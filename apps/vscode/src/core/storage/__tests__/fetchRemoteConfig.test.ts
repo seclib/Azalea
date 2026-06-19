@@ -5,12 +5,12 @@ import * as assert from "assert";
 import { afterEach, beforeEach, describe, it } from "mocha";
 import sinon from "sinon";
 import type { Controller } from "@/core/controller";
-import { ClineAccountService } from "@/services/account/ClineAccountService";
+import { Enki AIAccountService } from "@/services/account/Enki AIAccountService";
 import { AuthService } from "@/services/auth/AuthService";
 
 describe("fetchRemoteConfig", () => {
 	let sandbox: sinon.SinonSandbox;
-	let accountService: ClineAccountService;
+	let accountService: Enki AIAccountService;
 	let authServiceStub: Partial<AuthService>;
 	let fetchUserRemoteConfigStub: sinon.SinonStub;
 	let isRemoteConfigEnabledStub: sinon.SinonStub;
@@ -20,8 +20,8 @@ describe("fetchRemoteConfig", () => {
 			accountService: { switchAccount: sandbox.stub().resolves() },
 			stateManager: {
 				getApiConfiguration: sandbox.stub().returns({
-					planModeApiProvider: "cline",
-					actModeApiProvider: "cline",
+					planModeApiProvider: "enki",
+					actModeApiProvider: "enki",
 				}),
 				getGlobalSettingsKey: sandbox.stub().withArgs("mode").returns("act"),
 				setSecret: sandbox.stub(),
@@ -38,8 +38,8 @@ describe("fetchRemoteConfig", () => {
 		sandbox
 			.stub(AuthService, "getInstance")
 			.returns(authServiceStub as AuthService);
-		accountService = new ClineAccountService();
-		sandbox.stub(ClineAccountService, "getInstance").returns(accountService);
+		accountService = new Enki AIAccountService();
+		sandbox.stub(Enki AIAccountService, "getInstance").returns(accountService);
 		fetchUserRemoteConfigStub = sandbox.stub(
 			accountService,
 			"fetchUserRemoteConfig",
@@ -60,12 +60,12 @@ describe("fetchRemoteConfig", () => {
 		sandbox.restore();
 	});
 
-	it("clears remote config and skips discovery when Cline Pass is selected", async () => {
+	it("clears remote config and skips discovery when Enki AI Pass is selected", async () => {
 		const controller = createController({
 			stateManager: {
 				getApiConfiguration: sandbox.stub().returns({
-					planModeApiProvider: "cline",
-					actModeApiProvider: "cline-pass",
+					planModeApiProvider: "enki",
+					actModeApiProvider: "enki-pass",
 				}),
 				getGlobalSettingsKey: sandbox.stub().withArgs("mode").returns("act"),
 				setSecret: sandbox.stub(),

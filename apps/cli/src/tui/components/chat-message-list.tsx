@@ -1,5 +1,5 @@
 import "opentui-spinner/react";
-import type { AgentMode } from "@cline/core";
+import type { AgentMode } from "@enki/core";
 import type { ScrollBoxRenderable } from "@opentui/core";
 import {
 	forwardRef,

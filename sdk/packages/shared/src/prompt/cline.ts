@@ -1,5 +1,5 @@
 import type { WorkspaceContext } from "../extensions/context";
-import { isClineProvider } from "../providers/utils";
+import { isEnki AIProvider } from "../providers/utils";
 import type { WorkspaceInfo } from "../session/workspace";
 import {
 	DEFAULT_CLINE_SYSTEM_PROMPT,
@@ -50,13 +50,13 @@ function buildWorkspaceMetadata(
 }
 
 /**
- * Options for building the Cline system prompt.
+ * Options for building the Enki AI system prompt.
  *
  * Extends WorkspaceContext so callers can spread an ExtensionContext.workspace
  * directly. `workspaceRoot` is accepted as an alias for `rootPath` to support
  * existing call sites that set it explicitly.
  */
-export interface ClineSystemPromptOptions
+export interface Enki AISystemPromptOptions
 	extends Omit<WorkspaceContext, "rootPath"> {
 	/**
 	 * Workspace root path. Accepts either `rootPath` (from WorkspaceContext/WorkspaceInfo)
@@ -67,12 +67,12 @@ export interface ClineSystemPromptOptions
 	workspaceRoot?: string;
 	/** Per-request system prompt override */
 	overridePrompt?: string;
-	/** Provider ID — used to gate Cline-specific metadata injection */
+	/** Provider ID — used to gate Enki AI-specific metadata injection */
 	providerId?: string;
 }
 
-export function buildClineSystemPrompt(
-	options: ClineSystemPromptOptions,
+export function buildEnki AISystemPrompt(
+	options: Enki AISystemPromptOptions,
 ): string {
 	const {
 		ide = "Terminal Shell",
@@ -85,12 +85,12 @@ export function buildClineSystemPrompt(
 		providerId,
 	} = options;
 	const workspaceRoot = options.workspaceRoot ?? options.rootPath ?? "";
-	const isCline = isClineProvider(providerId || "");
+	const isEnki AI = isEnki AIProvider(providerId || "");
 
 	if (overridePrompt?.trim()) {
 		const trimmed = overridePrompt.trim();
 		if (
-			isCline &&
+			isEnki AI &&
 			metadata?.trim() &&
 			!trimmed.includes(WORKSPACE_CONFIGURATION_MARKER)
 		) {
@@ -109,7 +109,7 @@ export function buildClineSystemPrompt(
 		.replace("{{IDE_NAME}}", ide)
 		.replace(
 			"{{CLINE_METADATA}}",
-			isCline
+			isEnki AI
 				? buildWorkspaceMetadata(workspaceRoot, workspaceName, metadata)
 				: "",
 		)

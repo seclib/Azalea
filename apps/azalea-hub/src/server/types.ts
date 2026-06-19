@@ -1,5 +1,5 @@
-import type { SaveProviderSettingsActionRequest } from "@cline/core";
-import type { ToolApprovalResult } from "@cline/shared";
+import type { SaveProviderSettingsActionRequest } from "@enki/core";
+import type { ToolApprovalResult } from "@enki/shared";
 import type {
 	WebviewInboundMessage,
 	WebviewReasonLevel,

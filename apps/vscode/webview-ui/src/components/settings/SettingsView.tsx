@@ -1,7 +1,7 @@
 import type { ExtensionMessage } from "@shared/ExtensionMessage";
-import { isClineInternalTester } from "@shared/internal/account";
-import { ResetStateRequest } from "@shared/proto/cline/state";
-import type { UserOrganization } from "@shared/proto/index.cline";
+import { isEnki AIInternalTester } from "@shared/internal/account";
+import { ResetStateRequest } from "@shared/proto/enki/state";
+import type { UserOrganization } from "@shared/proto/index.enki";
 import {
 	CheckCheck,
 	FlaskConical,
@@ -20,7 +20,7 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { type ClineUser, useClineAuth } from "@/context/ClineAuthContext";
+import { type Enki AIUser, useEnki AIAuth } from "@/context/Enki AIAuthContext";
 import { useExtensionState } from "@/context/ExtensionStateContext";
 import { cn } from "@/lib/utils";
 import { StateServiceClient } from "@/services/grpc-client";
@@ -56,7 +56,7 @@ interface SettingsTab {
 	headerText: string;
 	icon: LucideIcon;
 	hidden?: (params?: {
-		user: ClineUser | null;
+		user: Enki AIUser | null;
 		activeOrganization: UserOrganization | null;
 	}) => boolean;
 }
@@ -110,7 +110,7 @@ export const SETTINGS_TABS: SettingsTab[] = [
 	{
 		id: "about",
 		name: "About",
-		tooltipText: "About Cline",
+		tooltipText: "About Enki AI",
 		headerText: "About",
 		icon: Info,
 	},
@@ -122,7 +122,7 @@ export const SETTINGS_TABS: SettingsTab[] = [
 		headerText: "Debug",
 		icon: FlaskConical,
 		hidden: ({ user } = { user: null, activeOrganization: null }) =>
-			!IS_DEV && !isClineInternalTester(user?.email || ""),
+			!IS_DEV && !isEnki AIInternalTester(user?.email || ""),
 	},
 ];
 
@@ -165,7 +165,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 	); // Empty deps - these imports never change
 
 	const { version, environment, settingsInitialModelTab } = useExtensionState();
-	const { activeOrganization, clineUser } = useClineAuth();
+	const { activeOrganization, enkiUser } = useEnki AIAuth();
 
 	const [activeTab, setActiveTab] = useState<string>(
 		targetSection || SETTINGS_TABS[0].id,
@@ -302,7 +302,7 @@ const SettingsView = ({ onDone, targetSection }: SettingsViewProps) => {
 					value={activeTab}
 				>
 					{SETTINGS_TABS.filter(
-						(tab) => !tab.hidden?.({ user: clineUser, activeOrganization }),
+						(tab) => !tab.hidden?.({ user: enkiUser, activeOrganization }),
 					).map(renderTabItem)}
 				</TabList>
 

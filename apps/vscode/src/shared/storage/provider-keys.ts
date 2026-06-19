@@ -6,7 +6,7 @@ import {
 	anthropicDefaultModelId,
 	basetenDefaultModelId,
 	bedrockDefaultModelId,
-	clinePassDefaultModelId,
+	enkiPassDefaultModelId,
 	deepSeekDefaultModelId,
 	fireworksDefaultModelId,
 	geminiDefaultModelId,
@@ -28,8 +28,8 @@ import {
 
 const ProviderKeyMap: Partial<Record<ApiProvider, string>> = {
 	openrouter: "OpenRouterModelId",
-	cline: "ClineModelId",
-	"cline-pass": "ClinePassModelId",
+	enki: "Enki AIModelId",
+	"enki-pass": "Enki AIPassModelId",
 	openai: "OpenAiModelId",
 	ollama: "OllamaModelId",
 	lmstudio: "LmStudioModelId",
@@ -50,8 +50,8 @@ const ProviderKeyMap: Partial<Record<ApiProvider, string>> = {
 } as const
 
 export const ProviderToApiKeyMap: Partial<Record<ApiProvider, keyof Secrets | (keyof Secrets)[]>> = {
-	cline: ["clineApiKey", "clineAccountId"],
-	"cline-pass": ["clineApiKey", "clineAccountId"],
+	enki: ["enkiApiKey", "enkiAccountId"],
+	"enki-pass": ["enkiApiKey", "enkiAccountId"],
 	anthropic: "apiKey",
 	openrouter: "openRouterApiKey",
 	bedrock: ["awsAccessKey", "awsBedrockApiKey"],
@@ -93,8 +93,8 @@ export const ProviderToApiKeyMap: Partial<Record<ApiProvider, keyof Secrets | (k
 const ProviderDefaultModelMap: Partial<Record<ApiProvider, string>> = {
 	anthropic: anthropicDefaultModelId,
 	openrouter: openRouterDefaultModelId,
-	cline: openRouterDefaultModelId,
-	"cline-pass": clinePassDefaultModelId,
+	enki: openRouterDefaultModelId,
+	"enki-pass": enkiPassDefaultModelId,
 	openai: openAiNativeDefaultModelId,
 	ollama: "",
 	lmstudio: "",

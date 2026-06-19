@@ -1,4 +1,4 @@
-import type { ToolApprovalRequest, ToolApprovalResult } from "@cline/shared";
+import type { ToolApprovalRequest, ToolApprovalResult } from "@enki/shared";
 import type { Config } from "../../utils/types";
 import {
 	applyInteractiveAutoApproveOverride,

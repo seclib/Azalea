@@ -7,7 +7,7 @@ import {
 	loginAndSaveLocalProviderOAuthCredentials,
 	normalizeOAuthProvider,
 	saveLocalProviderSettings,
-} from "@cline/core";
+} from "@enki/core";
 import type {
 	WebviewInboundMessage,
 	WebviewProviderModel,

@@ -24,7 +24,7 @@ import JSON5 from "json5";
 import type OpenAI from "openai";
 import { buildExternalBasicHeaders } from "@/services/EnvUtils";
 import {
-	type ClineStorageMessage,
+	type Enki AIStorageMessage,
 	getBase64ImageSource,
 } from "@/shared/messages/content";
 import { getAxiosSettings } from "@/shared/net";
@@ -142,7 +142,7 @@ namespace Bedrock {
 	 * Used by both Anthropic and Nova models to avoid code duplication
 	 */
 	export function formatMessagesForConverseAPI(
-		messages: ClineStorageMessage[],
+		messages: Enki AIStorageMessage[],
 	): BedrockMessage[] {
 		return messages.map((message) => {
 			// Determine role (user or assistant)
@@ -351,7 +351,7 @@ namespace Gemini {
 	 */
 	export function prepareRequestPayload(
 		systemPrompt: string,
-		messages: ClineStorageMessage[],
+		messages: Enki AIStorageMessage[],
 		model: { id: SapAiCoreModelId; info: ModelInfo },
 	): any {
 		const contents = messages.map(convertAnthropicMessageToGemini);
@@ -494,7 +494,7 @@ export class SapAiCoreHandler implements ApiHandler {
 			Authorization: `Bearer ${token}`,
 			"AI-Resource-Group": this.options.sapAiResourceGroup || "default",
 			"Content-Type": "application/json",
-			"AI-Client-Type": "Cline",
+			"AI-Client-Type": "Enki AI",
 		};
 
 		const url = `${this.options.sapAiCoreBaseUrl}/v2/lm/deployments?$top=10000&$skip=0`;
@@ -554,7 +554,7 @@ export class SapAiCoreHandler implements ApiHandler {
 	@withRetry()
 	async *createMessage(
 		systemPrompt: string,
-		messages: ClineStorageMessage[],
+		messages: Enki AIStorageMessage[],
 	): ApiStream {
 		if (this.options.sapAiCoreUseOrchestrationMode) {
 			yield* this.createMessageWithOrchestration(systemPrompt, messages);
@@ -587,7 +587,7 @@ export class SapAiCoreHandler implements ApiHandler {
 
 	private async *createMessageWithOrchestration(
 		systemPrompt: string,
-		messages: ClineStorageMessage[],
+		messages: Enki AIStorageMessage[],
 	): ApiStream {
 		try {
 			await this.ensureAiCoreEnvSetup();
@@ -622,7 +622,7 @@ export class SapAiCoreHandler implements ApiHandler {
 			// messagesHistory: Contains the conversation context (user/assistant messages).
 			// Unlike the `messages` field that validates input, this does not validate
 			// template placeholders such as {{?userResponse}}, allowing content to be
-			// sent directly to the LLM with the Cline system prompt without validation errors.
+			// sent directly to the LLM with the Enki AI system prompt without validation errors.
 			const response = await orchestrationClient.stream({
 				messagesHistory: sapMessages,
 			});
@@ -647,7 +647,7 @@ export class SapAiCoreHandler implements ApiHandler {
 
 	private async *createMessageWithDeployments(
 		systemPrompt: string,
-		messages: ClineStorageMessage[],
+		messages: Enki AIStorageMessage[],
 	): ApiStream {
 		const token = await this.getToken();
 		const externalHeaders = buildExternalBasicHeaders();
@@ -656,7 +656,7 @@ export class SapAiCoreHandler implements ApiHandler {
 			Authorization: `Bearer ${token}`,
 			"AI-Resource-Group": this.options.sapAiResourceGroup || "default",
 			"Content-Type": "application/json",
-			"AI-Client-Type": "Cline",
+			"AI-Client-Type": "Enki AI",
 		};
 
 		const model = this.getModel();
@@ -1378,7 +1378,7 @@ export class SapAiCoreHandler implements ApiHandler {
 		};
 	}
 	private convertMessageParamToSAPMessages(
-		messages: ClineStorageMessage[],
+		messages: Enki AIStorageMessage[],
 	): ChatMessage[] {
 		// Use the existing OpenAI converter since the logic is identical
 		return convertToOpenAiMessages(messages) as ChatMessage[];

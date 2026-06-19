@@ -1,23 +1,23 @@
 import { Logger } from "../services/Logger"
 import { getStorageAdapter, type StorageAdapter } from "./adapters"
-import { ClineStorage } from "./ClineStorage"
+import { Enki AIStorage } from "./Enki AIStorage"
 import type { BlobStoreSettings } from "./types"
 
 export type { BlobStoreSettings } from "./types"
 
 /**
- * S3/R2/Azure blob storage implementation of ClineStorage.
+ * S3/R2/Azure blob storage implementation of Enki AIStorage.
  * Uses AWS S3, Cloudflare R2, or Azure Blob Storage as the backend storage.
  */
-export class ClineBlobStorage extends ClineStorage {
-	override name = "ClineBlobStorage"
+export class Enki AIBlobStorage extends Enki AIStorage {
+	override name = "Enki AIBlobStorage"
 
-	private static store: ClineBlobStorage | null = null
-	static get instance(): ClineBlobStorage {
-		if (!ClineBlobStorage.store) {
-			ClineBlobStorage.store = new ClineBlobStorage()
+	private static store: Enki AIBlobStorage | null = null
+	static get instance(): Enki AIBlobStorage {
+		if (!Enki AIBlobStorage.store) {
+			Enki AIBlobStorage.store = new Enki AIBlobStorage()
 		}
-		return ClineBlobStorage.store
+		return Enki AIBlobStorage.store
 	}
 
 	private adapter: StorageAdapter | undefined
@@ -48,7 +48,7 @@ export class ClineBlobStorage extends ClineStorage {
 		}
 
 		try {
-			if (!ClineBlobStorage.isConfigured(settings)) {
+			if (!Enki AIBlobStorage.isConfigured(settings)) {
 				// Not configured - this is expected and not an error
 				return
 			}
@@ -58,11 +58,11 @@ export class ClineBlobStorage extends ClineStorage {
 				this.adapter = adapter
 				this.settings = settings
 				this.initialized = true
-				Logger.log(`[ClineBlobStorage] Adapter created for ${settings.adapterType}`)
+				Logger.log(`[Enki AIBlobStorage] Adapter created for ${settings.adapterType}`)
 			}
 		} catch (error) {
 			// Log but don't throw - allow startup to continue
-			Logger.error("[ClineBlobStorage] initialization failed:", error)
+			Logger.error("[Enki AIBlobStorage] initialization failed:", error)
 		}
 	}
 
@@ -129,4 +129,4 @@ export class ClineBlobStorage extends ClineStorage {
  * Get the blob storage instance if S3/R2/Azure storage is configured.
  * Returns null if not configured.
  */
-export const blobStorage = ClineBlobStorage.instance
+export const blobStorage = Enki AIBlobStorage.instance

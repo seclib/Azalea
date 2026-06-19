@@ -1,9 +1,9 @@
 import { ModelFamily } from "@/shared/prompts"
 import { Logger } from "@/shared/services/Logger"
-import type { ClineTool } from "@/shared/tools"
-import { ClineToolSet } from ".."
+import type { Enki AITool } from "@/shared/tools"
+import { Enki AIToolSet } from ".."
 import { getSystemPromptComponents } from "../components"
-import { registerClineToolSets } from "../tools"
+import { registerEnki AIToolSets } from "../tools"
 import type { ComponentFunction, ComponentRegistry, PromptVariant, SystemPromptContext } from "../types"
 import { loadAllVariantConfigs } from "../variants"
 import { config as genericConfig } from "../variants/generic/config"
@@ -13,10 +13,10 @@ export class PromptRegistry {
 	private static instance: PromptRegistry
 	private variants: Map<string, PromptVariant> = new Map()
 	private components: ComponentRegistry = {}
-	public nativeTools: ClineTool[] | undefined = undefined
+	public nativeTools: Enki AITool[] | undefined = undefined
 
 	private constructor() {
-		registerClineToolSets()
+		registerEnki AIToolSets()
 		this.load()
 	}
 
@@ -87,7 +87,7 @@ export class PromptRegistry {
 		const variant = this.getVariant(context)
 
 		// Hacky way to get native tools for the current variant - it's bad and ugly
-		this.nativeTools = ClineToolSet.getNativeTools(variant, context)
+		this.nativeTools = Enki AIToolSet.getNativeTools(variant, context)
 
 		const builder = new PromptBuilder(variant, context, this.components)
 		return await builder.build()

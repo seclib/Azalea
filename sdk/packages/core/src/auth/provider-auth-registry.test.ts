@@ -9,13 +9,13 @@ import {
 	resolveProviderApiKeyFromSettings,
 } from "./provider-auth-registry";
 
-const { loginClineOAuth } = vi.hoisted(() => ({
-	loginClineOAuth: vi.fn(),
+const { loginEnki AIOAuth } = vi.hoisted(() => ({
+	loginEnki AIOAuth: vi.fn(),
 }));
 
-vi.mock("./cline", () => ({
-	getValidClineCredentials: vi.fn(),
-	loginClineOAuth,
+vi.mock("./enki", () => ({
+	getValidEnki AICredentials: vi.fn(),
+	loginEnki AIOAuth,
 }));
 
 vi.mock("./oca", () => ({
@@ -34,8 +34,8 @@ describe("provider auth registry", () => {
 	});
 
 	it("returns handlers for managed OAuth providers only", () => {
-		expect(getProviderAuthHandler("cline")?.providerId).toBe("cline");
-		expect(getProviderAuthHandler("cline-pass")?.providerId).toBe("cline-pass");
+		expect(getProviderAuthHandler("enki")?.providerId).toBe("enki");
+		expect(getProviderAuthHandler("enki-pass")?.providerId).toBe("enki-pass");
 		expect(getProviderAuthHandler("oca")?.providerId).toBe("oca");
 		expect(getProviderAuthHandler("openai-codex")?.providerId).toBe(
 			"openai-codex",
@@ -45,40 +45,40 @@ describe("provider auth registry", () => {
 	});
 
 	it("returns storage provider IDs from handlers", () => {
-		expect(getProviderAuthStorageId("cline")).toBe("cline");
-		expect(getProviderAuthStorageId("cline-pass")).toBe("cline");
+		expect(getProviderAuthStorageId("enki")).toBe("enki");
+		expect(getProviderAuthStorageId("enki-pass")).toBe("enki");
 		expect(getProviderAuthStorageId("oca")).toBe("oca");
 		expect(getProviderAuthStorageId("openai-codex")).toBe("openai-codex");
 		expect(getProviderAuthStorageId("openai-codex-cli")).toBeUndefined();
 	});
 
-	it("formats Cline WorkOS tokens without double-prefixing", () => {
-		expect(formatProviderOAuthApiKey("cline", { access: "abc" })).toBe(
+	it("formats Enki AI WorkOS tokens without double-prefixing", () => {
+		expect(formatProviderOAuthApiKey("enki", { access: "abc" })).toBe(
 			"workos:abc",
 		);
-		expect(formatProviderOAuthApiKey("cline-pass", { access: "abc" })).toBe(
+		expect(formatProviderOAuthApiKey("enki-pass", { access: "abc" })).toBe(
 			"workos:abc",
 		);
-		expect(formatProviderOAuthApiKey("cline", { access: "workos:abc" })).toBe(
+		expect(formatProviderOAuthApiKey("enki", { access: "workos:abc" })).toBe(
 			"workos:abc",
 		);
 		expect(
-			getPersistedProviderApiKey("cline-pass", {
-				provider: "cline",
+			getPersistedProviderApiKey("enki-pass", {
+				provider: "enki",
 				auth: { accessToken: "abc" },
 			}),
 		).toBe("workos:abc");
 	});
 
-	it("login/save for ClinePass stores credentials under Cline storage", async () => {
-		loginClineOAuth.mockResolvedValueOnce({
+	it("login/save for Enki AIPass stores credentials under Enki AI storage", async () => {
+		loginEnki AIOAuth.mockResolvedValueOnce({
 			access: "new-access",
 			refresh: "new-refresh",
 			expires: 4_000_000_000_000,
 			accountId: "acct-new",
 		});
 		const getProviderSettings = vi.fn().mockReturnValue({
-			provider: "cline",
+			provider: "enki",
 			apiKey: "manual-key",
 		});
 		const saveProviderSettings = vi.fn();
@@ -89,7 +89,7 @@ describe("provider auth registry", () => {
 
 		const saved = await loginAndSaveProviderOAuthCredentials(
 			manager,
-			"cline-pass",
+			"enki-pass",
 			{
 				callbacks: {
 					onAuth: vi.fn(),
@@ -98,9 +98,9 @@ describe("provider auth registry", () => {
 			},
 		);
 
-		expect(getProviderSettings).toHaveBeenCalledWith("cline");
+		expect(getProviderSettings).toHaveBeenCalledWith("enki");
 		expect(saved).toMatchObject({
-			provider: "cline",
+			provider: "enki",
 			apiKey: "manual-key",
 			auth: {
 				accessToken: "workos:new-access",
@@ -110,33 +110,33 @@ describe("provider auth registry", () => {
 			},
 		});
 		expect(saveProviderSettings).toHaveBeenCalledWith(
-			expect.objectContaining({ provider: "cline" }),
+			expect.objectContaining({ provider: "enki" }),
 			{ tokenSource: "oauth" },
 		);
 	});
 
-	it("ClinePass resolves API keys from Cline storage", () => {
+	it("Enki AIPass resolves API keys from Enki AI storage", () => {
 		const getProviderSettings = vi.fn().mockReturnValue({
-			provider: "cline",
+			provider: "enki",
 			auth: { accessToken: "abc" },
 		});
 		const manager = { getProviderSettings } as never;
 
-		expect(resolveProviderApiKeyFromSettings(manager, "cline-pass")).toBe(
+		expect(resolveProviderApiKeyFromSettings(manager, "enki-pass")).toBe(
 			"workos:abc",
 		);
-		expect(getProviderSettings).toHaveBeenCalledWith("cline");
+		expect(getProviderSettings).toHaveBeenCalledWith("enki");
 	});
 
 	it("login/save stores credentials under handler storageProviderId", async () => {
-		loginClineOAuth.mockResolvedValueOnce({
+		loginEnki AIOAuth.mockResolvedValueOnce({
 			access: "new-access",
 			refresh: "new-refresh",
 			expires: 4_000_000_000_000,
 			accountId: "acct-new",
 		});
 		const getProviderSettings = vi.fn().mockReturnValue({
-			provider: "cline",
+			provider: "enki",
 			apiKey: "manual-key",
 		});
 		const saveProviderSettings = vi.fn();
@@ -145,16 +145,16 @@ describe("provider auth registry", () => {
 			saveProviderSettings,
 		} as never;
 
-		const saved = await loginAndSaveProviderOAuthCredentials(manager, "cline", {
+		const saved = await loginAndSaveProviderOAuthCredentials(manager, "enki", {
 			callbacks: {
 				onAuth: vi.fn(),
 				onPrompt: vi.fn(async () => ""),
 			},
 		});
 
-		expect(getProviderSettings).toHaveBeenCalledWith("cline");
+		expect(getProviderSettings).toHaveBeenCalledWith("enki");
 		expect(saved).toMatchObject({
-			provider: "cline",
+			provider: "enki",
 			apiKey: "manual-key",
 			auth: {
 				accessToken: "workos:new-access",
@@ -164,7 +164,7 @@ describe("provider auth registry", () => {
 			},
 		});
 		expect(saveProviderSettings).toHaveBeenCalledWith(
-			expect.objectContaining({ provider: "cline" }),
+			expect.objectContaining({ provider: "enki" }),
 			{ tokenSource: "oauth" },
 		);
 	});

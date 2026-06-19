@@ -1,5 +1,5 @@
 import {
-	completeClineDeviceAuth,
+	completeEnki AIDeviceAuth,
 	getProviderConfigFields,
 	isOAuthProvider,
 	loginLocalProvider,
@@ -8,9 +8,9 @@ import {
 	ProviderSettingsManager,
 	saveLocalProviderOAuthCredentials,
 	saveLocalProviderSettings,
-	startClineDeviceAuth,
-} from "@cline/core";
-import { getClineEnvironmentConfig } from "@cline/shared";
+	startEnki AIDeviceAuth,
+} from "@enki/core";
+import { getEnki AIEnvironmentConfig } from "@enki/shared";
 import type { ChoiceContext } from "@opentui-ui/dialog";
 import { useDialogKeyboard } from "@opentui-ui/dialog/react";
 import open from "open";
@@ -636,7 +636,7 @@ export function OAuthLoginContent(
 ) {
 	const { resolve, dismiss, dialogId, providerId, providerName } = props;
 	const [mode, setMode] = useState<"browser" | "device">(
-		providerId === "cline" ? "device" : "browser",
+		providerId === "enki" ? "device" : "browser",
 	);
 	const [status, setStatus] = useState("Opening browser...");
 	const [authUrl, setAuthUrl] = useState("");
@@ -676,9 +676,9 @@ export function OAuthLoginContent(
 		const manager = new ProviderSettingsManager();
 		const existing = manager.getProviderSettings(providerId);
 		const apiBaseUrl =
-			existing?.baseUrl?.trim() || getClineEnvironmentConfig().apiBaseUrl;
+			existing?.baseUrl?.trim() || getEnki AIEnvironmentConfig().apiBaseUrl;
 
-		startClineDeviceAuth()
+		startEnki AIDeviceAuth()
 			.then((result) => {
 				if (!isActiveAuthAttempt(attempt)) return;
 				setDeviceUserCode(result.userCode);
@@ -686,7 +686,7 @@ export function OAuthLoginContent(
 					result.verificationUriComplete || result.verificationUri,
 				);
 
-				completeClineDeviceAuth({
+				completeEnki AIDeviceAuth({
 					deviceCode: result.deviceCode,
 					expiresInSeconds: result.expiresInSeconds,
 					pollIntervalSeconds: result.pollIntervalSeconds,
@@ -722,7 +722,7 @@ export function OAuthLoginContent(
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount
 	useEffect(() => {
-		if (providerId === "cline") {
+		if (providerId === "enki") {
 			startDeviceAuthCodeFlow();
 			return cancelAuthAttempt;
 		}

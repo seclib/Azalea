@@ -124,7 +124,7 @@ describe("mcp install command", () => {
 		expect(code).toBe(1);
 		expect(runWizard).not.toHaveBeenCalled();
 		expect(writeErr).toHaveBeenCalledWith(
-			"cline mcp install opens the MCP wizard and requires a TTY.",
+			"enki mcp install opens the MCP wizard and requires a TTY.",
 		);
 	});
 
@@ -139,7 +139,7 @@ describe("mcp install command", () => {
 
 		expect(code).toBe(1);
 		expect(writeErr).toHaveBeenCalledWith(
-			"cline mcp install opens the MCP wizard and requires a TTY.",
+			"enki mcp install opens the MCP wizard and requires a TTY.",
 		);
 	});
 });

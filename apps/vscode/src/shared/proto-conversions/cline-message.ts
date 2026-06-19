@@ -1,31 +1,31 @@
-import { ClineAsk as AppClineAsk, ClineMessage as AppClineMessage, ClineSay as AppClineSay } from "@shared/ExtensionMessage"
-import { ClineAsk, ClineMessageType, ClineSay, ClineMessage as ProtoClineMessage } from "@shared/proto/cline/ui"
+import { Enki AIAsk as AppEnki AIAsk, Enki AIMessage as AppEnki AIMessage, Enki AISay as AppEnki AISay } from "@shared/ExtensionMessage"
+import { Enki AIAsk, Enki AIMessageType, Enki AISay, Enki AIMessage as ProtoEnki AIMessage } from "@shared/proto/enki/ui"
 
-// Helper function to convert ClineAsk string to enum
-function convertClineAskToProtoEnum(ask: AppClineAsk | undefined): ClineAsk | undefined {
+// Helper function to convert Enki AIAsk string to enum
+function convertEnki AIAskToProtoEnum(ask: AppEnki AIAsk | undefined): Enki AIAsk | undefined {
 	if (!ask) {
 		return undefined
 	}
 
-	const mapping: Record<AppClineAsk, ClineAsk> = {
-		followup: ClineAsk.FOLLOWUP,
-		plan_mode_respond: ClineAsk.PLAN_MODE_RESPOND,
-		act_mode_respond: ClineAsk.ACT_MODE_RESPOND,
-		command: ClineAsk.COMMAND,
-		command_output: ClineAsk.COMMAND_OUTPUT,
-		completion_result: ClineAsk.COMPLETION_RESULT,
-		tool: ClineAsk.TOOL,
-		api_req_failed: ClineAsk.API_REQ_FAILED,
-		resume_task: ClineAsk.RESUME_TASK,
-		resume_completed_task: ClineAsk.RESUME_COMPLETED_TASK,
-		mistake_limit_reached: ClineAsk.MISTAKE_LIMIT_REACHED,
-		browser_action_launch: ClineAsk.BROWSER_ACTION_LAUNCH,
-		use_mcp_server: ClineAsk.USE_MCP_SERVER,
-		new_task: ClineAsk.NEW_TASK,
-		condense: ClineAsk.CONDENSE,
-		summarize_task: ClineAsk.SUMMARIZE_TASK,
-		report_bug: ClineAsk.REPORT_BUG,
-		use_subagents: ClineAsk.USE_SUBAGENTS,
+	const mapping: Record<AppEnki AIAsk, Enki AIAsk> = {
+		followup: Enki AIAsk.FOLLOWUP,
+		plan_mode_respond: Enki AIAsk.PLAN_MODE_RESPOND,
+		act_mode_respond: Enki AIAsk.ACT_MODE_RESPOND,
+		command: Enki AIAsk.COMMAND,
+		command_output: Enki AIAsk.COMMAND_OUTPUT,
+		completion_result: Enki AIAsk.COMPLETION_RESULT,
+		tool: Enki AIAsk.TOOL,
+		api_req_failed: Enki AIAsk.API_REQ_FAILED,
+		resume_task: Enki AIAsk.RESUME_TASK,
+		resume_completed_task: Enki AIAsk.RESUME_COMPLETED_TASK,
+		mistake_limit_reached: Enki AIAsk.MISTAKE_LIMIT_REACHED,
+		browser_action_launch: Enki AIAsk.BROWSER_ACTION_LAUNCH,
+		use_mcp_server: Enki AIAsk.USE_MCP_SERVER,
+		new_task: Enki AIAsk.NEW_TASK,
+		condense: Enki AIAsk.CONDENSE,
+		summarize_task: Enki AIAsk.SUMMARIZE_TASK,
+		report_bug: Enki AIAsk.REPORT_BUG,
+		use_subagents: Enki AIAsk.USE_SUBAGENTS,
 	}
 
 	const result = mapping[ask]
@@ -34,81 +34,81 @@ function convertClineAskToProtoEnum(ask: AppClineAsk | undefined): ClineAsk | un
 	return result
 }
 
-// Helper function to convert ClineAsk enum to string
-function convertProtoEnumToClineAsk(ask: ClineAsk): AppClineAsk | undefined {
-	if (ask === ClineAsk.UNRECOGNIZED) {
+// Helper function to convert Enki AIAsk enum to string
+function convertProtoEnumToEnki AIAsk(ask: Enki AIAsk): AppEnki AIAsk | undefined {
+	if (ask === Enki AIAsk.UNRECOGNIZED) {
 		return undefined
 	}
 
-	const mapping: Record<Exclude<ClineAsk, ClineAsk.UNRECOGNIZED>, AppClineAsk> = {
-		[ClineAsk.FOLLOWUP]: "followup",
-		[ClineAsk.PLAN_MODE_RESPOND]: "plan_mode_respond",
-		[ClineAsk.ACT_MODE_RESPOND]: "act_mode_respond",
-		[ClineAsk.COMMAND]: "command",
-		[ClineAsk.COMMAND_OUTPUT]: "command_output",
-		[ClineAsk.COMPLETION_RESULT]: "completion_result",
-		[ClineAsk.TOOL]: "tool",
-		[ClineAsk.API_REQ_FAILED]: "api_req_failed",
-		[ClineAsk.RESUME_TASK]: "resume_task",
-		[ClineAsk.RESUME_COMPLETED_TASK]: "resume_completed_task",
-		[ClineAsk.MISTAKE_LIMIT_REACHED]: "mistake_limit_reached",
-		[ClineAsk.BROWSER_ACTION_LAUNCH]: "browser_action_launch",
-		[ClineAsk.USE_MCP_SERVER]: "use_mcp_server",
-		[ClineAsk.NEW_TASK]: "new_task",
-		[ClineAsk.CONDENSE]: "condense",
-		[ClineAsk.SUMMARIZE_TASK]: "summarize_task",
-		[ClineAsk.REPORT_BUG]: "report_bug",
-		[ClineAsk.USE_SUBAGENTS]: "use_subagents",
+	const mapping: Record<Exclude<Enki AIAsk, Enki AIAsk.UNRECOGNIZED>, AppEnki AIAsk> = {
+		[Enki AIAsk.FOLLOWUP]: "followup",
+		[Enki AIAsk.PLAN_MODE_RESPOND]: "plan_mode_respond",
+		[Enki AIAsk.ACT_MODE_RESPOND]: "act_mode_respond",
+		[Enki AIAsk.COMMAND]: "command",
+		[Enki AIAsk.COMMAND_OUTPUT]: "command_output",
+		[Enki AIAsk.COMPLETION_RESULT]: "completion_result",
+		[Enki AIAsk.TOOL]: "tool",
+		[Enki AIAsk.API_REQ_FAILED]: "api_req_failed",
+		[Enki AIAsk.RESUME_TASK]: "resume_task",
+		[Enki AIAsk.RESUME_COMPLETED_TASK]: "resume_completed_task",
+		[Enki AIAsk.MISTAKE_LIMIT_REACHED]: "mistake_limit_reached",
+		[Enki AIAsk.BROWSER_ACTION_LAUNCH]: "browser_action_launch",
+		[Enki AIAsk.USE_MCP_SERVER]: "use_mcp_server",
+		[Enki AIAsk.NEW_TASK]: "new_task",
+		[Enki AIAsk.CONDENSE]: "condense",
+		[Enki AIAsk.SUMMARIZE_TASK]: "summarize_task",
+		[Enki AIAsk.REPORT_BUG]: "report_bug",
+		[Enki AIAsk.USE_SUBAGENTS]: "use_subagents",
 	}
 
 	return mapping[ask]
 }
 
-// Helper function to convert ClineSay string to enum
-function convertClineSayToProtoEnum(say: AppClineSay | undefined): ClineSay | undefined {
+// Helper function to convert Enki AISay string to enum
+function convertEnki AISayToProtoEnum(say: AppEnki AISay | undefined): Enki AISay | undefined {
 	if (!say) {
 		return undefined
 	}
 
-	const mapping: Record<AppClineSay, ClineSay> = {
-		task: ClineSay.TASK,
-		error: ClineSay.ERROR,
-		api_req_started: ClineSay.API_REQ_STARTED,
-		api_req_finished: ClineSay.API_REQ_FINISHED,
-		text: ClineSay.TEXT,
-		reasoning: ClineSay.REASONING,
-		completion_result: ClineSay.COMPLETION_RESULT_SAY,
-		user_feedback: ClineSay.USER_FEEDBACK,
-		user_feedback_diff: ClineSay.USER_FEEDBACK_DIFF,
-		api_req_retried: ClineSay.API_REQ_RETRIED,
-		command: ClineSay.COMMAND_SAY,
-		command_output: ClineSay.COMMAND_OUTPUT_SAY,
-		tool: ClineSay.TOOL_SAY,
-		shell_integration_warning: ClineSay.SHELL_INTEGRATION_WARNING,
-		shell_integration_warning_with_suggestion: ClineSay.SHELL_INTEGRATION_WARNING,
-		browser_action_launch: ClineSay.BROWSER_ACTION_LAUNCH_SAY,
-		browser_action: ClineSay.BROWSER_ACTION,
-		browser_action_result: ClineSay.BROWSER_ACTION_RESULT,
-		mcp_server_request_started: ClineSay.MCP_SERVER_REQUEST_STARTED,
-		mcp_server_response: ClineSay.MCP_SERVER_RESPONSE,
-		mcp_notification: ClineSay.MCP_NOTIFICATION,
-		use_mcp_server: ClineSay.USE_MCP_SERVER_SAY,
-		diff_error: ClineSay.DIFF_ERROR,
-		deleted_api_reqs: ClineSay.DELETED_API_REQS,
-		clineignore_error: ClineSay.CLINEIGNORE_ERROR,
-		command_permission_denied: ClineSay.COMMAND_PERMISSION_DENIED,
-		checkpoint_created: ClineSay.CHECKPOINT_CREATED,
-		load_mcp_documentation: ClineSay.LOAD_MCP_DOCUMENTATION,
-		info: ClineSay.INFO,
-		task_progress: ClineSay.TASK_PROGRESS,
-		error_retry: ClineSay.ERROR_RETRY,
-		hook_status: ClineSay.HOOK_STATUS,
-		hook_output_stream: ClineSay.HOOK_OUTPUT_STREAM,
-		conditional_rules_applied: ClineSay.CONDITIONAL_RULES_APPLIED,
-		subagent: ClineSay.SUBAGENT_STATUS,
-		use_subagents: ClineSay.USE_SUBAGENTS_SAY,
-		subagent_usage: ClineSay.SUBAGENT_USAGE,
-		generate_explanation: ClineSay.GENERATE_EXPLANATION,
+	const mapping: Record<AppEnki AISay, Enki AISay> = {
+		task: Enki AISay.TASK,
+		error: Enki AISay.ERROR,
+		api_req_started: Enki AISay.API_REQ_STARTED,
+		api_req_finished: Enki AISay.API_REQ_FINISHED,
+		text: Enki AISay.TEXT,
+		reasoning: Enki AISay.REASONING,
+		completion_result: Enki AISay.COMPLETION_RESULT_SAY,
+		user_feedback: Enki AISay.USER_FEEDBACK,
+		user_feedback_diff: Enki AISay.USER_FEEDBACK_DIFF,
+		api_req_retried: Enki AISay.API_REQ_RETRIED,
+		command: Enki AISay.COMMAND_SAY,
+		command_output: Enki AISay.COMMAND_OUTPUT_SAY,
+		tool: Enki AISay.TOOL_SAY,
+		shell_integration_warning: Enki AISay.SHELL_INTEGRATION_WARNING,
+		shell_integration_warning_with_suggestion: Enki AISay.SHELL_INTEGRATION_WARNING,
+		browser_action_launch: Enki AISay.BROWSER_ACTION_LAUNCH_SAY,
+		browser_action: Enki AISay.BROWSER_ACTION,
+		browser_action_result: Enki AISay.BROWSER_ACTION_RESULT,
+		mcp_server_request_started: Enki AISay.MCP_SERVER_REQUEST_STARTED,
+		mcp_server_response: Enki AISay.MCP_SERVER_RESPONSE,
+		mcp_notification: Enki AISay.MCP_NOTIFICATION,
+		use_mcp_server: Enki AISay.USE_MCP_SERVER_SAY,
+		diff_error: Enki AISay.DIFF_ERROR,
+		deleted_api_reqs: Enki AISay.DELETED_API_REQS,
+		enkiignore_error: Enki AISay.CLINEIGNORE_ERROR,
+		command_permission_denied: Enki AISay.COMMAND_PERMISSION_DENIED,
+		checkpoint_created: Enki AISay.CHECKPOINT_CREATED,
+		load_mcp_documentation: Enki AISay.LOAD_MCP_DOCUMENTATION,
+		info: Enki AISay.INFO,
+		task_progress: Enki AISay.TASK_PROGRESS,
+		error_retry: Enki AISay.ERROR_RETRY,
+		hook_status: Enki AISay.HOOK_STATUS,
+		hook_output_stream: Enki AISay.HOOK_OUTPUT_STREAM,
+		conditional_rules_applied: Enki AISay.CONDITIONAL_RULES_APPLIED,
+		subagent: Enki AISay.SUBAGENT_STATUS,
+		use_subagents: Enki AISay.USE_SUBAGENTS_SAY,
+		subagent_usage: Enki AISay.SUBAGENT_USAGE,
+		generate_explanation: Enki AISay.GENERATE_EXPLANATION,
 	}
 
 	const result = mapping[say]
@@ -116,76 +116,76 @@ function convertClineSayToProtoEnum(say: AppClineSay | undefined): ClineSay | un
 	return result
 }
 
-// Helper function to convert ClineSay enum to string
-function convertProtoEnumToClineSay(say: ClineSay): AppClineSay | undefined {
-	if (say === ClineSay.UNRECOGNIZED) {
+// Helper function to convert Enki AISay enum to string
+function convertProtoEnumToEnki AISay(say: Enki AISay): AppEnki AISay | undefined {
+	if (say === Enki AISay.UNRECOGNIZED) {
 		return undefined
 	}
 
-	const mapping: Record<Exclude<ClineSay, ClineSay.UNRECOGNIZED>, AppClineSay> = {
-		[ClineSay.TASK]: "task",
-		[ClineSay.ERROR]: "error",
-		[ClineSay.API_REQ_STARTED]: "api_req_started",
-		[ClineSay.API_REQ_FINISHED]: "api_req_finished",
-		[ClineSay.TEXT]: "text",
-		[ClineSay.REASONING]: "reasoning",
-		[ClineSay.COMPLETION_RESULT_SAY]: "completion_result",
-		[ClineSay.USER_FEEDBACK]: "user_feedback",
-		[ClineSay.USER_FEEDBACK_DIFF]: "user_feedback_diff",
-		[ClineSay.API_REQ_RETRIED]: "api_req_retried",
-		[ClineSay.COMMAND_SAY]: "command",
-		[ClineSay.COMMAND_OUTPUT_SAY]: "command_output",
-		[ClineSay.TOOL_SAY]: "tool",
-		[ClineSay.SHELL_INTEGRATION_WARNING]: "shell_integration_warning",
-		[ClineSay.BROWSER_ACTION_LAUNCH_SAY]: "browser_action_launch",
-		[ClineSay.BROWSER_ACTION]: "browser_action",
-		[ClineSay.BROWSER_ACTION_RESULT]: "browser_action_result",
-		[ClineSay.MCP_SERVER_REQUEST_STARTED]: "mcp_server_request_started",
-		[ClineSay.MCP_SERVER_RESPONSE]: "mcp_server_response",
-		[ClineSay.MCP_NOTIFICATION]: "mcp_notification",
-		[ClineSay.USE_MCP_SERVER_SAY]: "use_mcp_server",
-		[ClineSay.DIFF_ERROR]: "diff_error",
-		[ClineSay.DELETED_API_REQS]: "deleted_api_reqs",
-		[ClineSay.CLINEIGNORE_ERROR]: "clineignore_error",
-		[ClineSay.COMMAND_PERMISSION_DENIED]: "command_permission_denied",
-		[ClineSay.CHECKPOINT_CREATED]: "checkpoint_created",
-		[ClineSay.LOAD_MCP_DOCUMENTATION]: "load_mcp_documentation",
-		[ClineSay.INFO]: "info",
-		[ClineSay.TASK_PROGRESS]: "task_progress",
-		[ClineSay.ERROR_RETRY]: "error_retry",
-		[ClineSay.GENERATE_EXPLANATION]: "generate_explanation",
-		[ClineSay.HOOK_STATUS]: "hook_status",
-		[ClineSay.HOOK_OUTPUT_STREAM]: "hook_output_stream",
-		[ClineSay.CONDITIONAL_RULES_APPLIED]: "conditional_rules_applied",
-		[ClineSay.SUBAGENT_STATUS]: "subagent",
-		[ClineSay.USE_SUBAGENTS_SAY]: "use_subagents",
-		[ClineSay.SUBAGENT_USAGE]: "subagent_usage",
+	const mapping: Record<Exclude<Enki AISay, Enki AISay.UNRECOGNIZED>, AppEnki AISay> = {
+		[Enki AISay.TASK]: "task",
+		[Enki AISay.ERROR]: "error",
+		[Enki AISay.API_REQ_STARTED]: "api_req_started",
+		[Enki AISay.API_REQ_FINISHED]: "api_req_finished",
+		[Enki AISay.TEXT]: "text",
+		[Enki AISay.REASONING]: "reasoning",
+		[Enki AISay.COMPLETION_RESULT_SAY]: "completion_result",
+		[Enki AISay.USER_FEEDBACK]: "user_feedback",
+		[Enki AISay.USER_FEEDBACK_DIFF]: "user_feedback_diff",
+		[Enki AISay.API_REQ_RETRIED]: "api_req_retried",
+		[Enki AISay.COMMAND_SAY]: "command",
+		[Enki AISay.COMMAND_OUTPUT_SAY]: "command_output",
+		[Enki AISay.TOOL_SAY]: "tool",
+		[Enki AISay.SHELL_INTEGRATION_WARNING]: "shell_integration_warning",
+		[Enki AISay.BROWSER_ACTION_LAUNCH_SAY]: "browser_action_launch",
+		[Enki AISay.BROWSER_ACTION]: "browser_action",
+		[Enki AISay.BROWSER_ACTION_RESULT]: "browser_action_result",
+		[Enki AISay.MCP_SERVER_REQUEST_STARTED]: "mcp_server_request_started",
+		[Enki AISay.MCP_SERVER_RESPONSE]: "mcp_server_response",
+		[Enki AISay.MCP_NOTIFICATION]: "mcp_notification",
+		[Enki AISay.USE_MCP_SERVER_SAY]: "use_mcp_server",
+		[Enki AISay.DIFF_ERROR]: "diff_error",
+		[Enki AISay.DELETED_API_REQS]: "deleted_api_reqs",
+		[Enki AISay.CLINEIGNORE_ERROR]: "enkiignore_error",
+		[Enki AISay.COMMAND_PERMISSION_DENIED]: "command_permission_denied",
+		[Enki AISay.CHECKPOINT_CREATED]: "checkpoint_created",
+		[Enki AISay.LOAD_MCP_DOCUMENTATION]: "load_mcp_documentation",
+		[Enki AISay.INFO]: "info",
+		[Enki AISay.TASK_PROGRESS]: "task_progress",
+		[Enki AISay.ERROR_RETRY]: "error_retry",
+		[Enki AISay.GENERATE_EXPLANATION]: "generate_explanation",
+		[Enki AISay.HOOK_STATUS]: "hook_status",
+		[Enki AISay.HOOK_OUTPUT_STREAM]: "hook_output_stream",
+		[Enki AISay.CONDITIONAL_RULES_APPLIED]: "conditional_rules_applied",
+		[Enki AISay.SUBAGENT_STATUS]: "subagent",
+		[Enki AISay.USE_SUBAGENTS_SAY]: "use_subagents",
+		[Enki AISay.SUBAGENT_USAGE]: "subagent_usage",
 	}
 
 	return mapping[say]
 }
 
 /**
- * Convert application ClineMessage to proto ClineMessage
+ * Convert application Enki AIMessage to proto Enki AIMessage
  */
-export function convertClineMessageToProto(message: AppClineMessage): ProtoClineMessage {
+export function convertEnki AIMessageToProto(message: AppEnki AIMessage): ProtoEnki AIMessage {
 	// For sending messages, we need to provide values for required proto fields
-	const askEnum = message.ask ? convertClineAskToProtoEnum(message.ask) : undefined
-	const sayEnum = message.say ? convertClineSayToProtoEnum(message.say) : undefined
+	const askEnum = message.ask ? convertEnki AIAskToProtoEnum(message.ask) : undefined
+	const sayEnum = message.say ? convertEnki AISayToProtoEnum(message.say) : undefined
 
 	// Determine appropriate enum values based on message type
-	let finalAskEnum: ClineAsk = ClineAsk.FOLLOWUP // Proto default
-	let finalSayEnum: ClineSay = ClineSay.TEXT // Proto default
+	let finalAskEnum: Enki AIAsk = Enki AIAsk.FOLLOWUP // Proto default
+	let finalSayEnum: Enki AISay = Enki AISay.TEXT // Proto default
 
 	if (message.type === "ask") {
-		finalAskEnum = askEnum ?? ClineAsk.FOLLOWUP // Use FOLLOWUP as default for ask messages
+		finalAskEnum = askEnum ?? Enki AIAsk.FOLLOWUP // Use FOLLOWUP as default for ask messages
 	} else if (message.type === "say") {
-		finalSayEnum = sayEnum ?? ClineSay.TEXT // Use TEXT as default for say messages
+		finalSayEnum = sayEnum ?? Enki AISay.TEXT // Use TEXT as default for say messages
 	}
 
-	const protoMessage: ProtoClineMessage = {
+	const protoMessage: ProtoEnki AIMessage = {
 		ts: message.ts,
-		type: message.type === "ask" ? ClineMessageType.ASK : ClineMessageType.SAY,
+		type: message.type === "ask" ? Enki AIMessageType.ASK : Enki AIMessageType.SAY,
 		ask: finalAskEnum,
 		say: finalSayEnum,
 		text: message.text ?? "",
@@ -219,25 +219,25 @@ export function convertClineMessageToProto(message: AppClineMessage): ProtoCline
 }
 
 /**
- * Convert proto ClineMessage to application ClineMessage
+ * Convert proto Enki AIMessage to application Enki AIMessage
  */
-export function convertProtoToClineMessage(protoMessage: ProtoClineMessage): AppClineMessage {
-	const message: AppClineMessage = {
+export function convertProtoToEnki AIMessage(protoMessage: ProtoEnki AIMessage): AppEnki AIMessage {
+	const message: AppEnki AIMessage = {
 		ts: protoMessage.ts,
-		type: protoMessage.type === ClineMessageType.ASK ? "ask" : "say",
+		type: protoMessage.type === Enki AIMessageType.ASK ? "ask" : "say",
 	}
 
 	// Convert ask enum to string
-	if (protoMessage.type === ClineMessageType.ASK) {
-		const ask = convertProtoEnumToClineAsk(protoMessage.ask)
+	if (protoMessage.type === Enki AIMessageType.ASK) {
+		const ask = convertProtoEnumToEnki AIAsk(protoMessage.ask)
 		if (ask !== undefined) {
 			message.ask = ask
 		}
 	}
 
 	// Convert say enum to string
-	if (protoMessage.type === ClineMessageType.SAY) {
-		const say = convertProtoEnumToClineSay(protoMessage.say)
+	if (protoMessage.type === Enki AIMessageType.SAY) {
+		const say = convertProtoEnumToEnki AISay(protoMessage.say)
 		if (say !== undefined) {
 			message.say = say
 		}

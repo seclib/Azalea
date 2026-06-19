@@ -1,10 +1,10 @@
-import { ApiConfiguration, clinePassDefaultModelId, ModelInfo, QwenApiRegions, resolveClinePassModelInfo } from "@shared/api"
+import { ApiConfiguration, enkiPassDefaultModelId, ModelInfo, QwenApiRegions, resolveEnki AIPassModelInfo } from "@shared/api"
 import { Mode } from "@shared/storage/types"
 import { featureFlagsService } from "@/services/feature-flags"
-import { ClineStorageMessage } from "@/shared/messages/content"
+import { Enki AIStorageMessage } from "@/shared/messages/content"
 import { FeatureFlag } from "@/shared/services/feature-flags/feature-flags"
 import { Logger } from "@/shared/services/Logger"
-import { ClineTool } from "@/shared/tools"
+import { Enki AITool } from "@/shared/tools"
 import { AIhubmixHandler } from "./providers/aihubmix"
 import { AnthropicHandler } from "./providers/anthropic"
 import { AskSageHandler } from "./providers/asksage"
@@ -12,7 +12,7 @@ import { BasetenHandler } from "./providers/baseten"
 import { AwsBedrockHandler } from "./providers/bedrock"
 import { CerebrasHandler } from "./providers/cerebras"
 import { ClaudeCodeHandler } from "./providers/claude-code"
-import { ClineHandler } from "./providers/cline"
+import { Enki AIHandler } from "./providers/enki"
 import { DeepSeekHandler } from "./providers/deepseek"
 import { DifyHandler } from "./providers/dify"
 import { DoubaoHandler } from "./providers/doubao"
@@ -53,7 +53,7 @@ export type CommonApiHandlerOptions = {
 	onRetryAttempt?: ApiConfiguration["onRetryAttempt"]
 }
 export interface ApiHandler {
-	createMessage(systemPrompt: string, messages: ClineStorageMessage[], tools?: ClineTool[], useResponseApi?: boolean): ApiStream
+	createMessage(systemPrompt: string, messages: Enki AIStorageMessage[], tools?: Enki AITool[], useResponseApi?: boolean): ApiStream
 	getModel(): ApiHandlerModel
 	getApiStreamUsage?(): Promise<ApiStreamUsageChunk | undefined>
 	abort?(): void
@@ -81,7 +81,7 @@ function createHandlerForProvider(
 	mode: Mode,
 ): ApiHandler {
 	const effectiveApiProvider =
-		apiProvider === "cline-pass" && !featureFlagsService.getBooleanFlagEnabled(FeatureFlag.CLINE_PASS) ? "cline" : apiProvider
+		apiProvider === "enki-pass" && !featureFlagsService.getBooleanFlagEnabled(FeatureFlag.CLINE_PASS) ? "enki" : apiProvider
 
 	switch (effectiveApiProvider) {
 		case "anthropic":
@@ -262,48 +262,48 @@ function createHandlerForProvider(
 				vsCodeLmModelSelector:
 					mode === "plan" ? options.planModeVsCodeLmModelSelector : options.actModeVsCodeLmModelSelector,
 			})
-		case "cline": {
-			const configuredClineModelId = mode === "plan" ? options.planModeClineModelId : options.actModeClineModelId
-			const configuredClineModelInfo = mode === "plan" ? options.planModeClineModelInfo : options.actModeClineModelInfo
-			const clineModelId =
-				configuredClineModelId || (mode === "plan" ? options.planModeOpenRouterModelId : options.actModeOpenRouterModelId)
-			const clineModelInfo =
-				configuredClineModelInfo ||
+		case "enki": {
+			const configuredEnki AIModelId = mode === "plan" ? options.planModeEnki AIModelId : options.actModeEnki AIModelId
+			const configuredEnki AIModelInfo = mode === "plan" ? options.planModeEnki AIModelInfo : options.actModeEnki AIModelInfo
+			const enkiModelId =
+				configuredEnki AIModelId || (mode === "plan" ? options.planModeOpenRouterModelId : options.actModeOpenRouterModelId)
+			const enkiModelInfo =
+				configuredEnki AIModelInfo ||
 				(mode === "plan" ? options.planModeOpenRouterModelInfo : options.actModeOpenRouterModelInfo)
-			return new ClineHandler({
+			return new Enki AIHandler({
 				onRetryAttempt: options.onRetryAttempt,
-				clineAccountId: options.clineAccountId,
-				clineApiKey: options.clineApiKey,
+				enkiAccountId: options.enkiAccountId,
+				enkiApiKey: options.enkiApiKey,
 				ulid: options.ulid,
 				reasoningEffort: mode === "plan" ? options.planModeReasoningEffort : options.actModeReasoningEffort,
 				thinkingBudgetTokens:
 					mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
 				openRouterProviderSorting: options.openRouterProviderSorting,
-				openRouterModelId: clineModelId,
-				openRouterModelInfo: clineModelInfo,
+				openRouterModelId: enkiModelId,
+				openRouterModelInfo: enkiModelInfo,
 				enableParallelToolCalling: options.enableParallelToolCalling,
 			})
 		}
-		case "cline-pass": {
-			const configuredClinePassModelId =
-				mode === "plan" ? options.planModeClinePassModelId : options.actModeClinePassModelId
-			const configuredClinePassModelInfo =
-				mode === "plan" ? options.planModeClinePassModelInfo : options.actModeClinePassModelInfo
-			const clineModelId = configuredClinePassModelId?.startsWith("cline-pass/")
-				? configuredClinePassModelId
-				: clinePassDefaultModelId
-			const clineModelInfo = configuredClinePassModelInfo || resolveClinePassModelInfo(clineModelId)
-			return new ClineHandler({
+		case "enki-pass": {
+			const configuredEnki AIPassModelId =
+				mode === "plan" ? options.planModeEnki AIPassModelId : options.actModeEnki AIPassModelId
+			const configuredEnki AIPassModelInfo =
+				mode === "plan" ? options.planModeEnki AIPassModelInfo : options.actModeEnki AIPassModelInfo
+			const enkiModelId = configuredEnki AIPassModelId?.startsWith("enki-pass/")
+				? configuredEnki AIPassModelId
+				: enkiPassDefaultModelId
+			const enkiModelInfo = configuredEnki AIPassModelInfo || resolveEnki AIPassModelInfo(enkiModelId)
+			return new Enki AIHandler({
 				onRetryAttempt: options.onRetryAttempt,
-				clineAccountId: options.clineAccountId,
-				clineApiKey: options.clineApiKey,
+				enkiAccountId: options.enkiAccountId,
+				enkiApiKey: options.enkiApiKey,
 				ulid: options.ulid,
 				reasoningEffort: mode === "plan" ? options.planModeReasoningEffort : options.actModeReasoningEffort,
 				thinkingBudgetTokens:
 					mode === "plan" ? options.planModeThinkingBudgetTokens : options.actModeThinkingBudgetTokens,
 				openRouterProviderSorting: options.openRouterProviderSorting,
-				openRouterModelId: clineModelId,
-				openRouterModelInfo: clineModelInfo,
+				openRouterModelId: enkiModelId,
+				openRouterModelInfo: enkiModelInfo,
 				enableParallelToolCalling: options.enableParallelToolCalling,
 			})
 		}

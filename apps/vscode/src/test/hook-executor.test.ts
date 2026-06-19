@@ -10,7 +10,7 @@ import { executeHook } from "../core/hooks/hook-executor"
 import { StateManager } from "../core/storage/StateManager"
 import { MessageStateHandler } from "../core/task/message-state"
 import { TaskState } from "../core/task/TaskState"
-import { ClineMessage } from "../shared/ExtensionMessage"
+import { Enki AIMessage } from "../shared/ExtensionMessage"
 
 /**
  * Unit tests for the hook-executor module
@@ -22,7 +22,7 @@ describe("Hook Executor", () => {
 	let tempDir: string
 	let baseTempDir: string // Store base directory for cleanup
 	let testHandler: MessageStateHandler
-	let mockMessages: ClineMessage[]
+	let mockMessages: Enki AIMessage[]
 	let stateManagerStub: sinon.SinonStub
 
 	/**
@@ -71,14 +71,14 @@ setTimeout(() => {
 
 		// Create temporary directory for test hooks
 		baseTempDir = await fs.mkdtemp(path.join(os.tmpdir(), "hook-test-"))
-		// Create .clinerules/hooks subdirectory structure
-		tempDir = path.join(baseTempDir, ".clinerules", "hooks")
+		// Create .enkirules/hooks subdirectory structure
+		tempDir = path.join(baseTempDir, ".enkirules", "hooks")
 		await fs.mkdir(tempDir, { recursive: true })
 		testHandler = createTestHandler()
 		mockMessages = []
 
 		// Mock StateManager to return baseTempDir as workspace root
-		// This allows HookFactory to find hooks in baseTempDir/.clinerules/hooks/
+		// This allows HookFactory to find hooks in baseTempDir/.enkirules/hooks/
 		stateManagerStub = sinon.stub(StateManager, "get").returns({
 			getGlobalStateKey: (key: string) => {
 				if (key === "workspaceRoots") {
@@ -358,14 +358,14 @@ setTimeout(() => {
 
 			await createHookScript("TaskStart", {}, 1) // Exit with error
 
-			const messages: ClineMessage[] = []
+			const messages: Enki AIMessage[] = []
 			const mockHandler = {
 				...testHandler,
-				getClineMessages: () => messages,
-				addToClineMessages: async (msg: ClineMessage) => {
+				getEnki AIMessages: () => messages,
+				addToEnki AIMessages: async (msg: Enki AIMessage) => {
 					messages.push(msg)
 				},
-				updateClineMessage: async (index: number, updates: Partial<ClineMessage>) => {
+				updateEnki AIMessage: async (index: number, updates: Partial<Enki AIMessage>) => {
 					if (messages[index]) {
 						Object.assign(messages[index], updates)
 					}
@@ -385,7 +385,7 @@ setTimeout(() => {
 				},
 				isCancellable: true,
 				say: async (type: any, text?: string) => {
-					const msg: ClineMessage = {
+					const msg: Enki AIMessage = {
 						ts: Date.now(),
 						type: "say",
 						say: type,
@@ -412,7 +412,7 @@ setTimeout(() => {
 				cancel: false,
 			})
 
-			const messages: ClineMessage[] = []
+			const messages: Enki AIMessage[] = []
 
 			await executeHook({
 				hookName: "TaskStart",
@@ -427,7 +427,7 @@ setTimeout(() => {
 				},
 				isCancellable: true,
 				say: async (type: any, text?: string) => {
-					const msg: ClineMessage = {
+					const msg: Enki AIMessage = {
 						ts: Date.now(),
 						type: "say",
 						say: type,
@@ -454,11 +454,11 @@ setTimeout(() => {
 				cancel: false,
 			})
 
-			const messages: ClineMessage[] = []
+			const messages: Enki AIMessage[] = []
 			const mockHandler = {
 				...testHandler,
-				getClineMessages: () => messages,
-				updateClineMessage: async (index: number, updates: Partial<ClineMessage>) => {
+				getEnki AIMessages: () => messages,
+				updateEnki AIMessage: async (index: number, updates: Partial<Enki AIMessage>) => {
 					if (messages[index]) {
 						Object.assign(messages[index], updates)
 					}
@@ -478,7 +478,7 @@ setTimeout(() => {
 				},
 				isCancellable: true,
 				say: async (type: any, text?: string) => {
-					const msg: ClineMessage = {
+					const msg: Enki AIMessage = {
 						ts: Date.now(),
 						type: "say",
 						say: type,

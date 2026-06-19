@@ -1,4 +1,4 @@
-import type { ToolApprovalRequest, ToolApprovalResult } from "@cline/shared";
+import type { ToolApprovalRequest, ToolApprovalResult } from "@enki/shared";
 import type { WebviewInboundMessage } from "../webview-protocol";
 import type { HubContext } from "./state";
 import { broadcastHubState } from "./state-payloads";
@@ -52,7 +52,7 @@ export function rejectOrphanedApprovals(ctx: HubContext): void {
 		if (!ctx.hasSelectedPeer(pending.sessionId)) {
 			resolveToolApproval(ctx, approvalId, {
 				approved: false,
-				reason: "Cline Hub webview disconnected before approval was resolved.",
+				reason: "Enki AI Hub webview disconnected before approval was resolved.",
 			});
 		}
 	}
@@ -65,7 +65,7 @@ export function requestToolApprovalFromWebview(
 	if (!ctx.hasSelectedPeer(request.sessionId)) {
 		return Promise.resolve({
 			approved: false,
-			reason: "No Cline Hub webview is attached to this session.",
+			reason: "No Enki AI Hub webview is attached to this session.",
 		});
 	}
 
@@ -114,7 +114,7 @@ export function handleToolApprovalResponse(
 		approved: frame.approved,
 		reason:
 			frame.reason ??
-			(frame.approved ? "Approved in Cline Hub." : "Rejected in Cline Hub."),
+			(frame.approved ? "Approved in Enki AI Hub." : "Rejected in Enki AI Hub."),
 	});
 	if (!resolved) {
 		console.warn(`Ignoring unknown tool approval response: ${approvalId}`);

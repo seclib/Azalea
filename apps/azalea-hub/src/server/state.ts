@@ -1,8 +1,8 @@
 import {
-	type ClineCore,
+	type Enki AICore,
 	CORE_BUILD_VERSION,
 	type HubUIClient,
-} from "@cline/core";
+} from "@enki/core";
 import type { WebviewHubEvent } from "../webview-protocol";
 import type {
 	BrowserPeer,
@@ -13,7 +13,7 @@ import type {
 } from "./types";
 
 /**
- * Shared mutable runtime state for the Cline Hub server. A single instance is
+ * Shared mutable runtime state for the Enki AI Hub server. A single instance is
  * created in `server.ts` and threaded through the feature modules, replacing
  * what used to be a wall of module-level `let`s in the monolithic file.
  */
@@ -27,7 +27,7 @@ export class HubContext {
 	hubUrl = "";
 	hubAuthToken = "";
 	hubHealthy = false;
-	cline: ClineCore | undefined;
+	enki: Enki AICore | undefined;
 	uiClient: HubUIClient | undefined;
 	hubStartedAt: string | undefined;
 	coreVersion: string | undefined = CORE_BUILD_VERSION;

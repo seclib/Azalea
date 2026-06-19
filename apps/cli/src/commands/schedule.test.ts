@@ -7,7 +7,7 @@ import { createScheduleCommand } from "./schedule";
 const mockSendHubCommand = vi.hoisted(() => vi.fn());
 const mockEnsureCliHubServer = vi.hoisted(() => vi.fn());
 
-vi.mock("@cline/core", () => ({
+vi.mock("@enki/core", () => ({
 	sendHubCommand: mockSendHubCommand,
 }));
 
@@ -79,7 +79,7 @@ describe("runScheduleCommand list output", () => {
 		expect(mockSendHubCommand).toHaveBeenCalledWith(
 			{ host: "127.0.0.1", port: 25463, pathname: "/hub" },
 			{
-				clientId: "cline-schedule",
+				clientId: "enki-schedule",
 				command: "schedule.list",
 				payload: {
 					limit: 100,
@@ -173,7 +173,7 @@ describe("runScheduleCommand create delivery metadata", () => {
 		expect(mockSendHubCommand).toHaveBeenCalledWith(
 			{ host: "127.0.0.1", port: 25463, pathname: "/hub" },
 			{
-				clientId: "cline-schedule",
+				clientId: "enki-schedule",
 				command: "schedule.create",
 				payload: expect.objectContaining({
 					metadata: {
@@ -206,7 +206,7 @@ describe("runScheduleCommand import", () => {
 
 		const sourcePath = join(
 			tmpdir(),
-			`cline-schedule-import-${Date.now()}.json`,
+			`enki-schedule-import-${Date.now()}.json`,
 		);
 		await writeFile(
 			sourcePath,
@@ -243,7 +243,7 @@ describe("runScheduleCommand import", () => {
 		expect(mockSendHubCommand).toHaveBeenCalledWith(
 			{ host: "127.0.0.1", port: 25463, pathname: "/hub" },
 			{
-				clientId: "cline-schedule",
+				clientId: "enki-schedule",
 				command: "schedule.create",
 				payload: expect.objectContaining({
 					provider: "anthropic",
@@ -278,7 +278,7 @@ describe("runScheduleCommand export", () => {
 
 		const targetPath = join(
 			tmpdir(),
-			`cline-schedule-export-${Date.now()}-${Math.random()
+			`enki-schedule-export-${Date.now()}-${Math.random()
 				.toString(36)
 				.slice(2)}.json`,
 		);
@@ -314,7 +314,7 @@ describe("runScheduleCommand export", () => {
 			expect(mockSendHubCommand).toHaveBeenCalledWith(
 				{ host: "127.0.0.1", port: 25463, pathname: "/hub" },
 				{
-					clientId: "cline-schedule",
+					clientId: "enki-schedule",
 					command: "schedule.get",
 					payload: { scheduleId: "sched_abc" },
 				},
@@ -341,7 +341,7 @@ describe("runScheduleCommand export", () => {
 
 		const targetPath = join(
 			tmpdir(),
-			`cline-schedule-export-${Date.now()}-${Math.random()
+			`enki-schedule-export-${Date.now()}-${Math.random()
 				.toString(36)
 				.slice(2)}.yaml`,
 		);

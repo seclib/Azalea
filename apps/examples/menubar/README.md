@@ -1,6 +1,6 @@
 ### Preview
 
-![Cline Hub Monitor preview](./assets/hub-monitor-preview.jpg)
+![Enki AI Hub Monitor preview](./assets/hub-monitor-preview.jpg)
 
 ### Architecture Overview
 
@@ -9,7 +9,7 @@ Any Client (CLI, VS Code, agents)
     │
     │  ws://  ui.notify / ui.show_window commands
     ▼
-Hub WebSocket Server (@cline/core/hub/server.ts)
+Hub WebSocket Server (@enki/core/hub/server.ts)
     │
     │  broadcasts ui.notify / ui.show_window events to ALL subscribers
     ▼
@@ -30,7 +30,7 @@ Rust Tauri App (apps/examples/menubar/src-tauri/src/main.rs)
     │     ─────────────────
     │     5 notifications
     │     ─────────────────
-    │     Quit Cline Hub
+    │     Quit Enki AI Hub
     │
     └── Logs notifications to stderr (with severity)
 ```

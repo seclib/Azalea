@@ -1,4 +1,4 @@
-import { CORE_BUILD_VERSION } from "@cline/core";
+import { CORE_BUILD_VERSION } from "@enki/core";
 import { isNonLocalBindHost } from "./options";
 import {
 	handleToolApprovalResponse,
@@ -43,7 +43,7 @@ import { HubContext } from "./server/state";
 import { broadcastHubState, hubStatusPayload } from "./server/state-payloads";
 import type { BrowserFrame, BrowserPeer } from "./server/types";
 
-export interface ClineHubDashboardServer {
+export interface Enki AIHubDashboardServer {
 	listenUrl: string;
 	publicUrl: string;
 	inviteUrl: string;
@@ -53,7 +53,7 @@ export interface ClineHubDashboardServer {
 	stop: () => Promise<void>;
 }
 
-export async function startClineHubDashboardServer(): Promise<ClineHubDashboardServer> {
+export async function startEnki AIHubDashboardServer(): Promise<Enki AIHubDashboardServer> {
 	const ctx = new HubContext();
 	const assets = new WebviewAssets(webviewDistDir);
 	const syncClientsAndSessions = () => syncHubClientsAndSessions(ctx);
@@ -163,13 +163,13 @@ export async function startClineHubDashboardServer(): Promise<ClineHubDashboardS
 					} else if (frame.type === "deleteSession") {
 						await deleteSession(ctx, peer, frame.sessionId);
 					} else if (frame.type === "updateSessionMetadata") {
-						if (!ctx.cline) throw new Error("Hub is not connected.");
-						const session = await ctx.cline.get(frame.sessionId);
+						if (!ctx.enki) throw new Error("Hub is not connected.");
+						const session = await ctx.enki.get(frame.sessionId);
 						const metadata =
 							session?.metadata && typeof session.metadata === "object"
 								? (session.metadata as Record<string, unknown>)
 								: {};
-						await ctx.cline.update(frame.sessionId, {
+						await ctx.enki.update(frame.sessionId, {
 							metadata: { ...metadata, ...frame.metadata },
 						});
 						await syncHubClientsAndSessions(ctx);
@@ -248,14 +248,14 @@ export async function startClineHubDashboardServer(): Promise<ClineHubDashboardS
 	};
 }
 
-export function printClineHubDashboardServerInfo(
-	server: ClineHubDashboardServer,
+export function printEnki AIHubDashboardServerInfo(
+	server: Enki AIHubDashboardServer,
 ): void {
-	console.log(`Cline Hub dashboard listening: ${server.listenUrl}`);
-	console.log(`Cline Hub public URL: ${server.publicUrl}`);
+	console.log(`Enki AI Hub dashboard listening: ${server.listenUrl}`);
+	console.log(`Enki AI Hub public URL: ${server.publicUrl}`);
 	console.log(`hub endpoint: ${server.hubUrl}`);
 	if (server.inviteRequired) {
-		console.log(`Cline Hub invite URL: ${server.inviteUrl}`);
+		console.log(`Enki AI Hub invite URL: ${server.inviteUrl}`);
 	} else if (isNonLocalBindHost(server.bindHost)) {
 		console.warn("WARNING: non-local bind without ROOM_SECRET is not allowed.");
 	} else {
@@ -266,6 +266,6 @@ export function printClineHubDashboardServerInfo(
 }
 
 if (import.meta.main) {
-	const server = await startClineHubDashboardServer();
-	printClineHubDashboardServerInfo(server);
+	const server = await startEnki AIHubDashboardServer();
+	printEnki AIHubDashboardServerInfo(server);
 }

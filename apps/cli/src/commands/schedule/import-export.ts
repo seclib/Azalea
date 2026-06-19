@@ -33,7 +33,7 @@ function resolveImportedModelSelection(parsed: Record<string, unknown>): {
 		modelSelection?.providerId ??
 			parsed.providerId ??
 			parsed.provider ??
-			"cline",
+			"enki",
 	).trim();
 	const model = String(
 		modelSelection?.modelId ??

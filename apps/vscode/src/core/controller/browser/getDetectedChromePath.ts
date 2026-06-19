@@ -1,5 +1,5 @@
-import { ChromePath } from "@shared/proto/cline/browser"
-import { EmptyRequest } from "@shared/proto/cline/common"
+import { ChromePath } from "@shared/proto/enki/browser"
+import { EmptyRequest } from "@shared/proto/enki/common"
 import { Logger } from "@/shared/services/Logger"
 import { BrowserSession } from "../../../services/browser/BrowserSession"
 import { Controller } from "../index"

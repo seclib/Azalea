@@ -4,11 +4,11 @@ import {
 	type GatewayProviderManifest,
 	type GatewayProviderMetadata,
 	type GatewayProviderSettings,
-	getClineEnvironmentConfig,
+	getEnki AIEnvironmentConfig,
 	type JsonValue,
 	type ProviderCapability,
 	type ProviderConfigField,
-} from "@cline/shared";
+} from "@enki/shared";
 import { getGeneratedModelsForProvider } from "../catalog/catalog.generated-access";
 import type {
 	ModelCollection,
@@ -16,7 +16,7 @@ import type {
 	ProviderClient,
 	ProviderProtocol,
 } from "../catalog/types";
-import { ClineNotSubscribedError, isClineNotSubscribedMessage } from "./errors";
+import { Enki AINotSubscribedError, isEnki AINotSubscribedMessage } from "./errors";
 import { filterOpenAICodexModels } from "./openai-codex-models";
 import {
 	ANTHROPIC_AND_QWEN_CACHE_ROUTING_METADATA,
@@ -31,7 +31,7 @@ export const DEFAULT_INTERNAL_OCA_BASE_URL =
 export const DEFAULT_EXTERNAL_OCA_BASE_URL =
 	"https://code.aiservice.us-chicago-1.oci.oraclecloud.com/20250206/app/litellm";
 const CLINE_DEFAULT_MODEL_ID = "anthropic/claude-sonnet-4.6";
-const CLINE_PASS_PROVIDER_ID = "cline-pass";
+const CLINE_PASS_PROVIDER_ID = "enki-pass";
 const OPENAI_CODEX_DEFAULT_MODEL_ID = "gpt-5.4";
 
 export type ProviderFamily =
@@ -440,7 +440,7 @@ function inferClient(spec: BuiltinSpec): ProviderClient {
 	}
 }
 
-function createClineLikeSpec(
+function createEnki AILikeSpec(
 	input: Pick<BuiltinSpec, "id" | "name" | "defaultModelId"> &
 		Partial<
 			Pick<
@@ -457,7 +457,7 @@ function createClineLikeSpec(
 	return {
 		id: input.id,
 		name: input.name,
-		description: input.description ?? "Cline API endpoint",
+		description: input.description ?? "Enki AI API endpoint",
 		family: "openai-compatible",
 		popular: input.popular,
 		capabilities: ["reasoning", "prompt-cache", "tools", "oauth"],
@@ -467,7 +467,7 @@ function createClineLikeSpec(
 		apiKeyEnv: ["CLINE_API_KEY"],
 		defaults: {
 			get baseUrl(): string {
-				return `${getClineEnvironmentConfig().apiBaseUrl}/api/v1`;
+				return `${getEnki AIEnvironmentConfig().apiBaseUrl}/api/v1`;
 			},
 			...input.defaults,
 		},
@@ -478,19 +478,19 @@ function createClineLikeSpec(
 	};
 }
 
-const cline = createClineLikeSpec({
-	id: "cline",
-	name: "Cline",
+const enki = createEnki AILikeSpec({
+	id: "enki",
+	name: "Enki AI",
 	popular: 1,
 	modelsProviderId: "openrouter",
 	defaultModelId: CLINE_DEFAULT_MODEL_ID,
 });
 
-const clinePass = createClineLikeSpec({
+const enkiPass = createEnki AILikeSpec({
 	id: CLINE_PASS_PROVIDER_ID,
-	name: "ClinePass",
+	name: "Enki AIPass",
 	popular: 2,
-	description: "Cline API endpoint with ClinePass models",
+	description: "Enki AI API endpoint with Enki AIPass models",
 	modelsProviderId: CLINE_PASS_PROVIDER_ID,
 	defaultModelId: firstGeneratedModelId(CLINE_PASS_PROVIDER_ID),
 	metadata: { usageCostDisplay: "hide" },
@@ -505,8 +505,8 @@ const clinePass = createClineLikeSpec({
 					.text()
 					.catch(() => "");
 
-				if (isClineNotSubscribedMessage(body)) {
-					throw new ClineNotSubscribedError(CLINE_PASS_PROVIDER_ID);
+				if (isEnki AINotSubscribedMessage(body)) {
+					throw new Enki AINotSubscribedError(CLINE_PASS_PROVIDER_ID);
 				}
 
 				return undefined;
@@ -527,8 +527,8 @@ const OPENAI_COMPATIBLE_SPECS: BuiltinSpec[] = [
 		apiKeyEnv: ["OPENAI_API_KEY"],
 		defaults: { baseUrl: "https://api.openai.com/v1" },
 	},
-	cline,
-	clinePass,
+	enki,
+	enkiPass,
 	{
 		id: "deepseek",
 		name: "DeepSeek",

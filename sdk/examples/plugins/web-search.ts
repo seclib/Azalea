@@ -4,15 +4,15 @@
  * Registers a `web_search` tool backed by Exa.
  *
  * CLI usage:
- *   cline plugin install https://github.com/cline/cline/blob/main/sdk/examples/plugins/web-search.ts --cwd .
- *   EXA_API_KEY=... cline "Search the web for recent TypeScript 6 updates"
+ *   enki plugin install https://github.com/enki/enki/blob/main/sdk/examples/plugins/web-search.ts --cwd .
+ *   EXA_API_KEY=... enki "Search the web for recent TypeScript 6 updates"
  *
  * Provider key:
  *   EXA_API_KEY              Enables Exa search. A separate model provider key
  *                            is still required for CLI inference.
  */
 
-import { type AgentPlugin, createTool } from "@cline/core";
+import { type AgentPlugin, createTool } from "@enki/core";
 
 export interface WebSearchInput {
 	query: string;

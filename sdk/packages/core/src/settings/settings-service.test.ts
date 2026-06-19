@@ -87,7 +87,7 @@ Use this skill.`,
 	it("uses cwd as the workspace root when listing instruction settings", async () => {
 		const tempRoot = await mkdtemp(join(tmpdir(), "core-settings-"));
 		tempRoots.push(tempRoot);
-		const skillDir = join(tempRoot, ".cline", "skills", "skill-one");
+		const skillDir = join(tempRoot, ".enki", "skills", "skill-one");
 		await mkdir(skillDir, { recursive: true });
 		await writeFile(join(skillDir, "SKILL.md"), "Use this skill.");
 
@@ -108,7 +108,7 @@ Use this skill.`,
 	it("lists and toggles MCP server disabled state", async () => {
 		const tempRoot = await mkdtemp(join(tmpdir(), "core-settings-"));
 		tempRoots.push(tempRoot);
-		const settingsPath = join(tempRoot, "cline_mcp_settings.json");
+		const settingsPath = join(tempRoot, "enki_mcp_settings.json");
 		process.env.CLINE_MCP_SETTINGS_PATH = settingsPath;
 		await writeFile(
 			settingsPath,

@@ -1,5 +1,5 @@
-import type { CoreSessionEvent } from "@cline/core";
-import type { AgentEvent } from "@cline/shared";
+import type { CoreSessionEvent } from "@enki/core";
+import type { AgentEvent } from "@enki/shared";
 import type { WebviewToolEvent } from "../webview-protocol";
 import { rejectPendingApprovalsForSession } from "./approvals";
 import type { HubContext } from "./state";

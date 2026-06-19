@@ -1,20 +1,20 @@
 // Core content types
 export type {
-	ClineAssistantContent,
-	ClineAssistantRedactedThinkingBlock,
-	ClineAssistantThinkingBlock,
-	ClineAssistantToolUseBlock,
-	ClineContent,
-	ClineDocumentContentBlock,
-	ClineImageContentBlock,
-	ClineMessageRole,
-	ClinePromptInputContent,
-	ClineReasoningDetailParam,
-	ClineStorageMessage,
-	ClineTextContentBlock,
-	ClineToolResponseContent,
-	ClineUserContent,
-	ClineUserToolResultContentBlock,
+	Enki AIAssistantContent,
+	Enki AIAssistantRedactedThinkingBlock,
+	Enki AIAssistantThinkingBlock,
+	Enki AIAssistantToolUseBlock,
+	Enki AIContent,
+	Enki AIDocumentContentBlock,
+	Enki AIImageContentBlock,
+	Enki AIMessageRole,
+	Enki AIPromptInputContent,
+	Enki AIReasoningDetailParam,
+	Enki AIStorageMessage,
+	Enki AITextContentBlock,
+	Enki AIToolResponseContent,
+	Enki AIUserContent,
+	Enki AIUserToolResultContentBlock,
 } from "./content"
-export { cleanContentBlock, convertClineStorageToAnthropicMessage, REASONING_DETAILS_PROVIDERS } from "./content"
-export type { ClineMessageMetricsInfo, ClineMessageModelInfo } from "./metrics"
+export { cleanContentBlock, convertEnki AIStorageToAnthropicMessage, REASONING_DETAILS_PROVIDERS } from "./content"
+export type { Enki AIMessageMetricsInfo, Enki AIMessageModelInfo } from "./metrics"

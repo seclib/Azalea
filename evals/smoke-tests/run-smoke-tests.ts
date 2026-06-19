@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 /**
- * Smoke Test Runner for Cline
+ * Smoke Test Runner for Enki AI
  *
  * Runs curated smoke tests against configured providers to verify:
  * - Basic tool execution works
@@ -25,25 +25,25 @@ import { MetricsCalculator } from "../analysis/src/metrics"
 
 // Default provider and model for smoke tests
 // These ensure deterministic behavior regardless of local config
-const DEFAULT_PROVIDER = "cline"
+const DEFAULT_PROVIDER = "enki"
 const DEFAULT_MODEL = "anthropic/claude-sonnet-4.5"
 
 // Models to test - can be overridden with --model flag
 const MODELS: string[] = [DEFAULT_MODEL]
 
-// Check if cline CLI is available
-function checkClineCli(): boolean {
+// Check if enki CLI is available
+function checkEnki AICli(): boolean {
 	try {
-		execSync("which cline", { encoding: "utf-8", timeout: 5000 })
+		execSync("which enki", { encoding: "utf-8", timeout: 5000 })
 		return true
 	} catch {
 		return false
 	}
 }
 
-// Use user's existing Cline config (already has auth configured)
+// Use user's existing Enki AI config (already has auth configured)
 // For CI, this would be set up by the auth step before tests run
-const CLINE_CONFIG_DIR = path.join(process.env.HOME || "", ".cline")
+const CLINE_CONFIG_DIR = path.join(process.env.HOME || "", ".enki")
 const configuredAuthCache = new Set<string>()
 
 function configureAuth(options: { provider: string; apiKey: string; modelId: string; baseUrl?: string }): {
@@ -55,7 +55,7 @@ function configureAuth(options: { provider: string; apiKey: string; modelId: str
 
 	try {
 		// Run quick auth setup (non-interactive when all flags provided)
-		const args = [`cline auth --config "${CLINE_CONFIG_DIR}"`, `-p "${options.provider}"`, `-k "${options.apiKey}"`, `-m "${options.modelId}"`]
+		const args = [`enki auth --config "${CLINE_CONFIG_DIR}"`, `-p "${options.provider}"`, `-k "${options.apiKey}"`, `-m "${options.modelId}"`]
 		if (options.baseUrl) {
 			args.push(`-b "${options.baseUrl}"`)
 		}
@@ -157,7 +157,7 @@ function ensureScenarioAuth(scenario: SmokeScenario, modelId: string): { ok: boo
 		return result
 	}
 
-	// For default provider, local developers can rely on existing ~/.cline auth.
+	// For default provider, local developers can rely on existing ~/.enki auth.
 	if (provider === DEFAULT_PROVIDER) {
 		return { ok: true }
 	}
@@ -200,7 +200,7 @@ async function runTrial(scenario: SmokeScenario, modelId: string, trialWorkdir: 
 	}
 
 	// Build CLI command with explicit model setting for determinism
-	// Provider is configured via `cline auth` before running tests
+	// Provider is configured via `enki auth` before running tests
 	const args = [
 		"--config",
 		CLINE_CONFIG_DIR, // Use shared config directory for auth
@@ -213,8 +213,8 @@ async function runTrial(scenario: SmokeScenario, modelId: string, trialWorkdir: 
 	]
 
 	try {
-		// Run cline CLI
-		const result = await runClineWithTimeout(args, trialWorkdir, scenario.timeout * 1000)
+		// Run enki CLI
+		const result = await runEnki AIWithTimeout(args, trialWorkdir, scenario.timeout * 1000)
 
 		if (!result.success) {
 			return {
@@ -285,20 +285,20 @@ async function runTrial(scenario: SmokeScenario, modelId: string, trialWorkdir: 
 	}
 }
 
-// Run cline CLI with timeout
-interface ClineResult {
+// Run enki CLI with timeout
+interface Enki AIResult {
 	success: boolean
 	error?: string
 	stdout: string
 	stderr: string
 }
 
-function runClineWithTimeout(args: string[], cwd: string, timeoutMs: number): Promise<ClineResult> {
+function runEnki AIWithTimeout(args: string[], cwd: string, timeoutMs: number): Promise<Enki AIResult> {
 	return new Promise((resolve) => {
 		let stdout = ""
 		let stderr = ""
 
-		const proc = spawn("cline", args, {
+		const proc = spawn("enki", args, {
 			cwd,
 			env: { ...process.env },
 			stdio: ["ignore", "pipe", "pipe"], // stdin: ignore, stdout/stderr: pipe
@@ -414,15 +414,15 @@ async function main() {
 		}
 	}
 
-	// Check cline CLI is available
-	if (!checkClineCli()) {
-		console.error("ERROR: cline CLI not found in PATH")
+	// Check enki CLI is available
+	if (!checkEnki AICli()) {
+		console.error("ERROR: enki CLI not found in PATH")
 		console.error("")
 		console.error("For local development:")
-		console.error("  Install cline from npm or link the SDK CLI from apps/cli")
+		console.error("  Install enki from npm or link the SDK CLI from apps/cli")
 		console.error("")
 		console.error("For CI:")
-		console.error("  Ensure a cline binary is available on PATH")
+		console.error("  Ensure a enki binary is available on PATH")
 		process.exit(1)
 	}
 

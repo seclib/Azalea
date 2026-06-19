@@ -2,17 +2,17 @@ import { ApiHandler } from "@core/api"
 import { FileContextTracker } from "@core/context/context-tracking/FileContextTracker"
 import { getHookModelContext } from "@core/hooks/hook-model-context"
 import { getHooksEnabledSafe } from "@core/hooks/hooks-utils"
-import { ClineIgnoreController } from "@core/ignore/ClineIgnoreController"
+import { Enki AIIgnoreController } from "@core/ignore/Enki AIIgnoreController"
 import { CommandPermissionController } from "@core/permissions"
 import { DiffViewProvider } from "@integrations/editor/DiffViewProvider"
 import type { CommandExecutionOptions } from "@integrations/terminal"
 import { BrowserSession } from "@services/browser/BrowserSession"
 import { UrlContentFetcher } from "@services/browser/UrlContentFetcher"
 import { McpHub } from "@services/mcp/McpHub"
-import { ClineAsk, ClineSay } from "@shared/ExtensionMessage"
-import { ClineContent } from "@shared/messages/content"
-import { ClineDefaultTool, toolUseNames } from "@shared/tools"
-import { ClineAskResponse } from "@shared/WebviewMessage"
+import { Enki AIAsk, Enki AISay } from "@shared/ExtensionMessage"
+import { Enki AIContent } from "@shared/messages/content"
+import { Enki AIDefaultTool, toolUseNames } from "@shared/tools"
+import { Enki AIAskResponse } from "@shared/WebviewMessage"
 import { isParallelToolCallingEnabled, modelDoesntSupportWebp } from "@/utils/model-utils"
 import { ToolUse } from "../assistant-message"
 import { ContextManager } from "../context/context-management/ContextManager"
@@ -32,7 +32,7 @@ import { ToolDisplayUtils } from "./tools/utils/ToolDisplayUtils"
 import { ToolResultUtils } from "./tools/utils/ToolResultUtils"
 
 export function canonicalizeAttemptCompletionParams(block: ToolUse): boolean {
-	if (block.name === ClineDefaultTool.ATTEMPT && !block.params?.result && typeof block.params?.response === "string") {
+	if (block.name === Enki AIDefaultTool.ATTEMPT && !block.params?.result && typeof block.params?.response === "string") {
 		block.params.result = block.params.response
 		return true
 	}
@@ -45,12 +45,12 @@ export class ToolExecutor {
 	private coordinator: ToolExecutorCoordinator
 
 	// Auto-approval methods using the AutoApprove class
-	private shouldAutoApproveTool(toolName: ClineDefaultTool): boolean | [boolean, boolean] {
+	private shouldAutoApproveTool(toolName: Enki AIDefaultTool): boolean | [boolean, boolean] {
 		return this.autoApprover.shouldAutoApproveTool(toolName)
 	}
 
 	private async shouldAutoApproveToolWithPath(
-		blockname: ClineDefaultTool,
+		blockname: Enki AIDefaultTool,
 		autoApproveActionpath: string | undefined,
 	): Promise<boolean> {
 		return this.autoApprover.shouldAutoApproveToolWithPath(blockname, autoApproveActionpath)
@@ -66,7 +66,7 @@ export class ToolExecutor {
 		private diffViewProvider: DiffViewProvider,
 		private mcpHub: McpHub,
 		private fileContextTracker: FileContextTracker,
-		private clineIgnoreController: ClineIgnoreController,
+		private enkiIgnoreController: Enki AIIgnoreController,
 		private commandPermissionController: CommandPermissionController,
 		private contextManager: ContextManager,
 		private stateManager: StateManager,
@@ -84,25 +84,25 @@ export class ToolExecutor {
 
 		// Callbacks to the Task (Entity)
 		private say: (
-			type: ClineSay,
+			type: Enki AISay,
 			text?: string,
 			images?: string[],
 			files?: string[],
 			partial?: boolean,
 		) => Promise<number | undefined>,
 		private ask: (
-			type: ClineAsk,
+			type: Enki AIAsk,
 			text?: string,
 			partial?: boolean,
 		) => Promise<{
-			response: ClineAskResponse
+			response: Enki AIAskResponse
 			text?: string
 			images?: string[]
 			files?: string[]
 		}>,
 		private saveCheckpoint: (isAttemptCompletionMessage?: boolean, completionMessageTs?: number) => Promise<void>,
-		private sayAndCreateMissingParamError: (toolName: ClineDefaultTool, paramName: string, relPath?: string) => Promise<any>,
-		private removeLastPartialMessageIfExistsWithType: (type: "ask" | "say", askOrSay: ClineAsk | ClineSay) => Promise<void>,
+		private sayAndCreateMissingParamError: (toolName: Enki AIDefaultTool, paramName: string, relPath?: string) => Promise<any>,
+		private removeLastPartialMessageIfExistsWithType: (type: "ask" | "say", askOrSay: Enki AIAsk | Enki AISay) => Promise<void>,
 		private executeCommandTool: (
 			command: string,
 			timeoutSeconds: number | undefined,
@@ -119,7 +119,7 @@ export class ToolExecutor {
 		private clearActiveHookExecution: () => Promise<void>,
 		private getActiveHookExecution: () => Promise<typeof taskState.activeHookExecution>,
 		private runUserPromptSubmitHook: (
-			userContent: ClineContent[],
+			userContent: Enki AIContent[],
 			context: "initial_task" | "resume" | "feedback",
 		) => Promise<{ cancel?: boolean; wasCancelled?: boolean; contextModification?: string; errorMessage?: string }>,
 	) {
@@ -159,7 +159,7 @@ export class ToolExecutor {
 				urlContentFetcher: this.urlContentFetcher,
 				diffViewProvider: this.diffViewProvider,
 				fileContextTracker: this.fileContextTracker,
-				clineIgnoreController: this.clineIgnoreController,
+				enkiIgnoreController: this.enkiIgnoreController,
 				commandPermissionController: this.commandPermissionController,
 				contextManager: this.contextManager,
 				stateManager: this.stateManager,
@@ -199,7 +199,7 @@ export class ToolExecutor {
 	 * Register all tool handlers with the coordinator
 	 */
 	private registerToolHandlers(): void {
-		const validator = new ToolValidator(this.clineIgnoreController)
+		const validator = new ToolValidator(this.enkiIgnoreController)
 		// Register all tools via toolUseNames
 		for (const tool of toolUseNames) {
 			this.coordinator.registerByName(tool, validator)
@@ -288,11 +288,11 @@ export class ToolExecutor {
 	/**
 	 * Tools that are restricted in plan mode and can only be used in act mode
 	 */
-	private static readonly PLAN_MODE_RESTRICTED_TOOLS: ClineDefaultTool[] = [
-		ClineDefaultTool.FILE_NEW,
-		ClineDefaultTool.FILE_EDIT,
-		ClineDefaultTool.NEW_RULE,
-		ClineDefaultTool.APPLY_PATCH,
+	private static readonly PLAN_MODE_RESTRICTED_TOOLS: Enki AIDefaultTool[] = [
+		Enki AIDefaultTool.FILE_NEW,
+		Enki AIDefaultTool.FILE_EDIT,
+		Enki AIDefaultTool.NEW_RULE,
+		Enki AIDefaultTool.APPLY_PATCH,
 	]
 
 	/**
@@ -385,7 +385,7 @@ export class ToolExecutor {
 	 * @param toolName The name of the tool to check
 	 * @returns true if the tool is restricted in plan mode, false otherwise
 	 */
-	private isPlanModeToolRestricted(toolName: ClineDefaultTool): boolean {
+	private isPlanModeToolRestricted(toolName: Enki AIDefaultTool): boolean {
 		return ToolExecutor.PLAN_MODE_RESTRICTED_TOOLS.includes(toolName)
 	}
 

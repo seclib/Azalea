@@ -1,15 +1,15 @@
 import type { Message } from "ollama";
 import {
-	type ClineAssistantToolUseBlock,
-	type ClineImageContentBlock,
-	type ClineStorageMessage,
-	type ClineTextContentBlock,
-	type ClineUserToolResultContentBlock,
+	type Enki AIAssistantToolUseBlock,
+	type Enki AIImageContentBlock,
+	type Enki AIStorageMessage,
+	type Enki AITextContentBlock,
+	type Enki AIUserToolResultContentBlock,
 	getImageDataUrl,
 } from "@/shared/messages/content";
 
 export function convertToOllamaMessages(
-	anthropicMessages: Omit<ClineStorageMessage, "modelInfo">[],
+	anthropicMessages: Omit<Enki AIStorageMessage, "modelInfo">[],
 ): Message[] {
 	const ollamaMessages: Message[] = [];
 
@@ -23,8 +23,8 @@ export function convertToOllamaMessages(
 			if (anthropicMessage.role === "user") {
 				const { nonToolMessages, toolMessages } =
 					anthropicMessage.content.reduce<{
-						nonToolMessages: (ClineTextContentBlock | ClineImageContentBlock)[];
-						toolMessages: ClineUserToolResultContentBlock[];
+						nonToolMessages: (Enki AITextContentBlock | Enki AIImageContentBlock)[];
+						toolMessages: Enki AIUserToolResultContentBlock[];
 					}>(
 						(acc, part) => {
 							if (part.type === "tool_result") {
@@ -81,8 +81,8 @@ export function convertToOllamaMessages(
 			} else if (anthropicMessage.role === "assistant") {
 				const { nonToolMessages, toolMessages } =
 					anthropicMessage.content.reduce<{
-						nonToolMessages: (ClineTextContentBlock | ClineImageContentBlock)[];
-						toolMessages: ClineAssistantToolUseBlock[];
+						nonToolMessages: (Enki AITextContentBlock | Enki AIImageContentBlock)[];
+						toolMessages: Enki AIAssistantToolUseBlock[];
 					}>(
 						(acc, part) => {
 							if (part.type === "tool_use") {

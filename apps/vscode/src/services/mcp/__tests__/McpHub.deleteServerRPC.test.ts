@@ -44,12 +44,12 @@ describe("McpHub.deleteServerRPC", () => {
 		sandbox = sinon.createSandbox()
 		tempDir = path.join(os.tmpdir(), `mcp-delete-test-${Date.now()}-${Math.random().toString(36).slice(2)}`)
 		await fs.mkdir(tempDir, { recursive: true })
-		settingsPath = path.join(tempDir, "cline_mcp_settings.json")
+		settingsPath = path.join(tempDir, "enki_mcp_settings.json")
 		sandbox.stub(diskModule, "getMcpSettingsFilePath").resolves(settingsPath)
 
 		hub = Object.create(McpHub.prototype) as McpHub
 		;(hub as any).getSettingsDirectoryPath = async () => tempDir
-		;(hub as any).isUpdatingClineSettings = false
+		;(hub as any).isUpdatingEnki AISettings = false
 		;(hub as any).connections = [makeConnection("alpha"), makeConnection("beta")]
 		// clearOAuthForConnection touches the OAuth manager; stub it out.
 		sandbox.stub(hub as any, "clearOAuthForConnection").resolves()
@@ -91,7 +91,7 @@ describe("McpHub.deleteServerRPC", () => {
 		Object.keys(persisted.mcpServers).should.deepEqual(["beta"])
 	})
 
-	it("guards the write with isUpdatingClineSettings so the watcher skips its own event", async () => {
+	it("guards the write with isUpdatingEnki AISettings so the watcher skips its own event", async () => {
 		const clock = sandbox.useFakeTimers()
 		await writeSettings({ alpha: { type: "stdio", command: "a" }, beta: { type: "stdio", command: "b" } })
 
@@ -99,7 +99,7 @@ describe("McpHub.deleteServerRPC", () => {
 		let flagDuringWrite: boolean | undefined
 		const realWriteFile = fs.writeFile.bind(fs)
 		sandbox.stub(fs, "writeFile").callsFake((...args: unknown[]) => {
-			flagDuringWrite = (hub as any).isUpdatingClineSettings
+			flagDuringWrite = (hub as any).isUpdatingEnki AISettings
 			return (realWriteFile as (...a: unknown[]) => Promise<void>)(...args)
 		})
 
@@ -107,11 +107,11 @@ describe("McpHub.deleteServerRPC", () => {
 
 		// True during the write and still true immediately after (cleared on a timer).
 		flagDuringWrite!.should.be.true()
-		;(hub as any).isUpdatingClineSettings.should.be.true()
+		;(hub as any).isUpdatingEnki AISettings.should.be.true()
 
 		// The flag is cleared on a 300ms timer so external edits resume.
 		clock.tick(300)
-		;(hub as any).isUpdatingClineSettings.should.be.false()
+		;(hub as any).isUpdatingEnki AISettings.should.be.false()
 	})
 
 	it("throws and still clears the guard when the server is not found", async () => {
@@ -128,6 +128,6 @@ describe("McpHub.deleteServerRPC", () => {
 		threw!.message.should.match(/not found in MCP configuration/)
 
 		clock.tick(300)
-		;(hub as any).isUpdatingClineSettings.should.be.false()
+		;(hub as any).isUpdatingEnki AISettings.should.be.false()
 	})
 })

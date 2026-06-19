@@ -43,7 +43,7 @@ export interface CaptureSdkErrorInput {
 
 export interface TelemetryMetadata {
 	extension_version: string;
-	cline_type: string;
+	enki_type: string;
 	platform: string;
 	platform_version: string;
 	os_type: string;

@@ -14,7 +14,7 @@ const {
 	probeHubServer,
 	requestHubShutdown,
 	readHubDiscovery,
-	resolveClineDataDir,
+	resolveEnki AIDataDir,
 	resolveHubBuildId,
 	writeHubDiscovery,
 	CLINE_RUN_AS_HUB_DAEMON_ENV,
@@ -39,7 +39,7 @@ const {
 	probeHubServer: vi.fn(),
 	requestHubShutdown: vi.fn(async () => true),
 	readHubDiscovery: vi.fn(),
-	resolveClineDataDir: vi.fn(() => "/tmp/cline-data"),
+	resolveEnki AIDataDir: vi.fn(() => "/tmp/enki-data"),
 	resolveHubBuildId: vi.fn(() => "current-build"),
 	writeHubDiscovery: vi.fn(),
 	CLINE_RUN_AS_HUB_DAEMON_ENV: "CLINE_RUN_AS_HUB_DAEMON",
@@ -57,7 +57,7 @@ vi.mock("node:fs", () => ({
 	openSync,
 }));
 
-vi.mock("@cline/shared", () => ({
+vi.mock("@enki/shared", () => ({
 	CLINE_RUN_AS_HUB_DAEMON_ENV,
 	CLINE_HUB_PORT: 25463,
 	CLINE_HUB_DEV_PORT: 25466,
@@ -66,8 +66,8 @@ vi.mock("@cline/shared", () => ({
 	}),
 	isHubDaemonProcess: (env: NodeJS.ProcessEnv = process.env) =>
 		env[CLINE_RUN_AS_HUB_DAEMON_ENV] === "1",
-	resolveClineBuildEnv: () => "production",
-	withResolvedClineBuildEnv: (env: NodeJS.ProcessEnv) => env,
+	resolveEnki AIBuildEnv: () => "production",
+	withResolvedEnki AIBuildEnv: (env: NodeJS.ProcessEnv) => env,
 }));
 
 vi.mock("../client", () => ({
@@ -86,7 +86,7 @@ vi.mock("../discovery", () => ({
 	createHubServerUrl,
 	probeHubServer,
 	readHubDiscovery,
-	resolveClineDataDir,
+	resolveEnki AIDataDir,
 	resolveHubBuildId,
 	writeHubDiscovery,
 }));
@@ -163,7 +163,7 @@ describe("ensureDetachedHubServer", () => {
 		try {
 			const textFileBusy = Object.assign(
 				new Error(
-					"ETXTBSY: text file is busy, posix_spawn '/usr/local/bin/cline'",
+					"ETXTBSY: text file is busy, posix_spawn '/usr/local/bin/enki'",
 				),
 				{ code: "ETXTBSY" },
 			);
@@ -245,7 +245,7 @@ describe("ensureDetachedHubServer", () => {
 		try {
 			const textFileBusy = Object.assign(
 				new Error(
-					"ETXTBSY: text file is busy, posix_spawn '/usr/local/bin/cline'",
+					"ETXTBSY: text file is busy, posix_spawn '/usr/local/bin/enki'",
 				),
 				{ code: "ETXTBSY" },
 			);
@@ -393,7 +393,7 @@ describe("ensureDetachedHubServer", () => {
 			const pending = expect(
 				ensureDetachedHubServer("/workspace"),
 			).rejects.toThrow(
-				"An incompatible Cline Hub is already running at ws://127.0.0.1:25463/hub and could not be retired automatically.",
+				"An incompatible Enki AI Hub is already running at ws://127.0.0.1:25463/hub and could not be retired automatically.",
 			);
 			await vi.runAllTimersAsync();
 
@@ -462,7 +462,7 @@ describe("ensureDetachedHubServer", () => {
 
 		const { ensureDetachedHubServer } = await import(".");
 		await expect(ensureDetachedHubServer("/workspace")).rejects.toThrow(
-			"A compatible Cline Hub is already running at ws://127.0.0.1:25463/hub, but its discovery record is missing or unreadable.",
+			"A compatible Enki AI Hub is already running at ws://127.0.0.1:25463/hub, but its discovery record is missing or unreadable.",
 		);
 		expect(spawn).not.toHaveBeenCalled();
 	});

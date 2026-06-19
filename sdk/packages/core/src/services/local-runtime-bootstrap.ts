@@ -9,8 +9,8 @@ import type {
 	ToolApprovalRequest,
 	ToolApprovalResult,
 	WorkspaceInfo,
-} from "@cline/shared";
-import { hasRuntimeConfigExtension } from "@cline/shared";
+} from "@enki/shared";
+import { hasRuntimeConfigExtension } from "@enki/shared";
 import { decodeJwtPayload } from "../auth/utils";
 import {
 	resolveAndLoadAgentPlugins,
@@ -142,9 +142,9 @@ function buildOpenAICodexHeaders(input: {
 	};
 	const resolvedAccountId =
 		input.accountId?.trim() || deriveOpenAICodexAccountId(input.accessToken);
-	headers.originator = "cline";
+	headers.originator = "enki";
 	headers.session_id = input.sessionId;
-	headers["User-Agent"] = `Cline/${process.env.npm_package_version || "1.0.0"}`;
+	headers["User-Agent"] = `Enki AI/${process.env.npm_package_version || "1.0.0"}`;
 	if (resolvedAccountId) {
 		headers["ChatGPT-Account-Id"] = resolvedAccountId;
 	}

@@ -1,27 +1,27 @@
 import axios from "axios"
 import { type JwtPayload } from "jwt-decode"
-import { ClineEnv, EnvironmentConfig } from "@/config"
+import { Enki AIEnv, EnvironmentConfig } from "@/config"
 import { Controller } from "@/core/controller"
 import { HostProvider } from "@/hosts/host-provider"
-import { buildBasicClineHeaders } from "@/services/EnvUtils"
-import { AuthInvalidTokenError, AuthNetworkError } from "@/services/error/ClineError"
+import { buildBasicEnki AIHeaders } from "@/services/EnvUtils"
+import { AuthInvalidTokenError, AuthNetworkError } from "@/services/error/Enki AIError"
 import { telemetryService } from "@/services/telemetry"
-import { CLINE_API_ENDPOINT } from "@/shared/cline/api"
+import { CLINE_API_ENDPOINT } from "@/shared/enki/api"
 import { fetch, getAxiosSettings } from "@/shared/net"
 import { Logger } from "@/shared/services/Logger"
-import { type ClineAccountUserInfo, type ClineAuthInfo } from "../AuthService"
+import { type Enki AIAccountUserInfo, type Enki AIAuthInfo } from "../AuthService"
 import { parseJwtPayload } from "../oca/utils/utils"
 
-interface ClineAuthApiUser {
+interface Enki AIAuthApiUser {
 	subject: string | null
 	email: string
 	name: string
-	clineUserId: string | null
+	enkiUserId: string | null
 	accounts: string[] | null
 }
 
 // Unified API response data shape for token exchange/refresh
-interface ClineAuthResponseData {
+interface Enki AIAuthResponseData {
 	/**
 	 * Auth token to be used for authenticated requests
 	 */
@@ -43,7 +43,7 @@ interface ClineAuthResponseData {
 	/**
 	 * User information associated with the token
 	 */
-	userInfo: ClineAuthApiUser
+	userInfo: Enki AIAuthApiUser
 }
 
 type TokenData = JwtPayload & {
@@ -51,25 +51,25 @@ type TokenData = JwtPayload & {
 	external_id?: string
 }
 
-export interface ClineAuthApiTokenExchangeResponse {
+export interface Enki AIAuthApiTokenExchangeResponse {
 	success: boolean
-	data: ClineAuthResponseData
+	data: Enki AIAuthResponseData
 }
 
-export interface ClineAuthApiTokenRefreshResponse {
+export interface Enki AIAuthApiTokenRefreshResponse {
 	success: boolean
-	data: ClineAuthResponseData
+	data: Enki AIAuthResponseData
 }
 
-export class ClineAuthProvider {
-	readonly name = "cline"
+export class Enki AIAuthProvider {
+	readonly name = "enki"
 	private refreshRetryCount = 0
 	private lastRefreshAttempt = 0
 	private readonly MAX_REFRESH_RETRIES = 3
 	private readonly RETRY_DELAY_MS = 30000 // 30 seconds
 
 	get config(): EnvironmentConfig {
-		return ClineEnv.config()
+		return Enki AIEnv.config()
 	}
 
 	/**
@@ -108,7 +108,7 @@ export class ClineAuthProvider {
 		return expirationTime - currentTime
 	}
 
-	private clearSession(controller: Controller, reason: string, storedAuthData?: ClineAuthInfo) {
+	private clearSession(controller: Controller, reason: string, storedAuthData?: Enki AIAuthInfo) {
 		Logger.error(reason)
 
 		const startedAt = storedAuthData?.startedAt
@@ -125,13 +125,13 @@ export class ClineAuthProvider {
 			},
 		})
 
-		controller.stateManager.setSecret("cline:clineAccountId", undefined)
+		controller.stateManager.setSecret("enki:enkiAccountId", undefined)
 		this.refreshRetryCount = 0
 		this.lastRefreshAttempt = 0
 		return null
 	}
 
-	private logFailedRefreshAttempt(response: Response, storedAuthData?: ClineAuthInfo) {
+	private logFailedRefreshAttempt(response: Response, storedAuthData?: Enki AIAuthInfo) {
 		const startedAt = storedAuthData?.startedAt
 		const timeSinceStarted = Date.now() - (startedAt || 0)
 
@@ -157,14 +157,14 @@ export class ClineAuthProvider {
 	}
 
 	/**
-	 * Retrieves Cline auth info using the stored access token.
+	 * Retrieves Enki AI auth info using the stored access token.
 	 * @param controller - The controller instance to access stored secrets.
-	 * @returns {Promise<ClineAuthInfo | null>} A promise that resolves with the auth info or null.
+	 * @returns {Promise<Enki AIAuthInfo | null>} A promise that resolves with the auth info or null.
 	 */
-	async retrieveClineAuthInfo(controller: Controller): Promise<ClineAuthInfo | null> {
+	async retrieveEnki AIAuthInfo(controller: Controller): Promise<Enki AIAuthInfo | null> {
 		try {
 			// Get the stored auth data from secure storage
-			const storedAuthDataString = controller.stateManager.getSecretKey("cline:clineAccountId")
+			const storedAuthDataString = controller.stateManager.getSecretKey("enki:enkiAccountId")
 
 			if (!storedAuthDataString) {
 				Logger.debug("No stored authentication data found")
@@ -175,7 +175,7 @@ export class ClineAuthProvider {
 			}
 
 			// Parse the stored auth data
-			let storedAuthData: ClineAuthInfo
+			let storedAuthData: Enki AIAuthInfo
 			try {
 				storedAuthData = JSON.parse(storedAuthDataString)
 			} catch (e) {
@@ -226,8 +226,8 @@ export class ClineAuthProvider {
 					const authInfo = await this.refreshToken(storedAuthData.refreshToken, storedAuthData)
 					const newAuthInfoString = JSON.stringify(authInfo)
 					if (newAuthInfoString !== storedAuthDataString) {
-						controller.stateManager.setSecret("clineAccountId", undefined) // cleanup old key
-						controller.stateManager.setSecret("cline:clineAccountId", newAuthInfoString)
+						controller.stateManager.setSecret("enkiAccountId", undefined) // cleanup old key
+						controller.stateManager.setSecret("enki:enkiAccountId", newAuthInfoString)
 					}
 					// Reset retry count on success
 					this.refreshRetryCount = 0
@@ -248,7 +248,7 @@ export class ClineAuthProvider {
 					}
 
 					// For network errors, return stored data - let the API request fail later
-					// when the user actually tries to use Cline, not at startup
+					// when the user actually tries to use Enki AI, not at startup
 					return storedAuthData
 				}
 			}
@@ -288,9 +288,9 @@ export class ClineAuthProvider {
 	/**
 	 * Refreshes an access token using a refresh token.
 	 * @param refreshToken - The refresh token.
-	 * @returns {Promise<ClineAuthInfo>} The new access token and user info.
+	 * @returns {Promise<Enki AIAuthInfo>} The new access token and user info.
 	 */
-	async refreshToken(refreshToken: string, storedData: ClineAuthInfo): Promise<ClineAuthInfo> {
+	async refreshToken(refreshToken: string, storedData: Enki AIAuthInfo): Promise<Enki AIAuthInfo> {
 		try {
 			const endpoint = new URL(CLINE_API_ENDPOINT.REFRESH_TOKEN, this.config.apiBaseUrl)
 			const response = await fetch(endpoint.toString(), {
@@ -316,7 +316,7 @@ export class ClineAuthProvider {
 				throw new AuthNetworkError(`status: ${response.status}`, errorData)
 			}
 
-			const data: ClineAuthApiTokenExchangeResponse = await response.json()
+			const data: Enki AIAuthApiTokenExchangeResponse = await response.json()
 
 			if (!data.success || !data.data.refreshToken || !data.data.accessToken) {
 				throw new Error("Failed to exchange authorization code for access token")
@@ -384,7 +384,7 @@ export class ClineAuthProvider {
 		}
 	}
 
-	async signIn(controller: Controller, authorizationCode: string, provider: string): Promise<ClineAuthInfo | null> {
+	async signIn(controller: Controller, authorizationCode: string, provider: string): Promise<Enki AIAuthInfo | null> {
 		try {
 			// Get the callback URL that was used during the initial auth request
 			const callbackUrl = await HostProvider.get().getCallbackUrl("/auth")
@@ -410,7 +410,7 @@ export class ClineAuthProvider {
 			}
 
 			const responseJSON = await response.json()
-			const responseType: ClineAuthApiTokenExchangeResponse = responseJSON
+			const responseType: Enki AIAuthApiTokenExchangeResponse = responseJSON
 			const tokenData = responseType.data
 
 			if (!tokenData.accessToken || !tokenData.refreshToken || !tokenData.userInfo) {
@@ -420,7 +420,7 @@ export class ClineAuthProvider {
 			const userInfo = await this.fetchRemoteUserInfo(tokenData)
 
 			// Store the tokens and user info
-			const clineAuthInfo = {
+			const enkiAuthInfo = {
 				idToken: tokenData.accessToken,
 				refreshToken: tokenData.refreshToken,
 				userInfo,
@@ -429,18 +429,18 @@ export class ClineAuthProvider {
 				startedAt: Date.now(),
 			}
 
-			controller.stateManager.setSecret("cline:clineAccountId", JSON.stringify(clineAuthInfo))
+			controller.stateManager.setSecret("enki:enkiAccountId", JSON.stringify(enkiAuthInfo))
 
-			return clineAuthInfo
+			return enkiAuthInfo
 		} catch (error) {
 			Logger.error("Error handling auth callback:", error)
 			throw error
 		}
 	}
 
-	private async fetchRemoteUserInfo(tokenData: ClineAuthApiTokenExchangeResponse["data"]): Promise<ClineAccountUserInfo> {
+	private async fetchRemoteUserInfo(tokenData: Enki AIAuthApiTokenExchangeResponse["data"]): Promise<Enki AIAccountUserInfo> {
 		try {
-			const userResponse = await axios.get(`${ClineEnv.config().apiBaseUrl}/api/v1/users/me`, {
+			const userResponse = await axios.get(`${Enki AIEnv.config().apiBaseUrl}/api/v1/users/me`, {
 				headers: {
 					Authorization: `Bearer workos:${tokenData.accessToken}`,
 					...(await this.headers()),
@@ -454,7 +454,7 @@ export class ClineAuthProvider {
 
 			// If fetching user info fail for whatever reason, fallback to the token data and refetch on token expiry (10 minutes)
 			return {
-				id: tokenData.userInfo.clineUserId || "",
+				id: tokenData.userInfo.enkiUserId || "",
 				email: tokenData.userInfo.email || "",
 				displayName: tokenData.userInfo.name || "",
 				createdAt: new Date().toISOString(),
@@ -467,7 +467,7 @@ export class ClineAuthProvider {
 		return {
 			Accept: "application/json",
 			"Content-Type": "application/json",
-			...(await buildBasicClineHeaders()),
+			...(await buildBasicEnki AIHeaders()),
 		}
 	}
 }

@@ -1,5 +1,5 @@
-import { CheckpointRestoreRequest } from "@shared/proto/cline/checkpoints"
-import { ClineCheckpointRestore } from "@shared/WebviewMessage"
+import { CheckpointRestoreRequest } from "@shared/proto/enki/checkpoints"
+import { Enki AICheckpointRestore } from "@shared/WebviewMessage"
 import React, { forwardRef, useMemo, useRef, useState } from "react"
 import DynamicTextArea from "react-textarea-autosize"
 import Thumbnails from "@/components/common/Thumbnails"
@@ -40,7 +40,7 @@ const UserMessage: React.FC<UserMessageProps> = ({ text, images, files, messageT
 		}
 	}, [isEditing])
 
-	const handleRestoreWorkspace = async (type: ClineCheckpointRestore) => {
+	const handleRestoreWorkspace = async (type: Enki AICheckpointRestore) => {
 		const delay = type === "task" ? 500 : 1000 // Delay for task and workspace restore
 		setIsEditing(false)
 
@@ -158,10 +158,10 @@ const UserMessage: React.FC<UserMessageProps> = ({ text, images, files, messageT
 
 // Reusable button component for restore actions
 interface RestoreButtonProps {
-	type: ClineCheckpointRestore
+	type: Enki AICheckpointRestore
 	label: string
 	isPrimary: boolean
-	onClick: (type: ClineCheckpointRestore) => void
+	onClick: (type: Enki AICheckpointRestore) => void
 	title?: string
 }
 

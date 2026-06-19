@@ -1,10 +1,10 @@
-import { normalizeProviderId } from "@cline/llms";
+import { normalizeProviderId } from "@enki/llms";
 import type {
 	ChatRunTurnRequest,
 	ChatStartSessionRequest,
 	ChatTurnResult,
 	ITelemetryService,
-} from "@cline/shared";
+} from "@enki/shared";
 import type {
 	HubScheduleRuntimeHandlers,
 	HubScheduleServiceOptions,

@@ -1,14 +1,14 @@
 "use client";
 
 import type {
-	ClineAccountBalance,
-	ClineAccountOrganization,
-	ClineAccountOrganizationBalance,
-	ClineAccountOrganizationUsageTransaction,
-	ClineAccountPaymentTransaction,
-	ClineAccountUsageTransaction,
-	ClineAccountUser,
-} from "@cline/core";
+	Enki AIAccountBalance,
+	Enki AIAccountOrganization,
+	Enki AIAccountOrganizationBalance,
+	Enki AIAccountOrganizationUsageTransaction,
+	Enki AIAccountPaymentTransaction,
+	Enki AIAccountUsageTransaction,
+	Enki AIAccountUser,
+} from "@enki/core";
 import {
 	AlertCircle,
 	Building,
@@ -30,7 +30,7 @@ import { PageFrame, PageHeader } from "../page-layout";
 
 function normalizeAccountViewError(error: unknown): Error {
 	const message = error instanceof Error ? error.message : String(error);
-	if (message.includes("unsupported desktop command: cline_account")) {
+	if (message.includes("unsupported desktop command: enki_account")) {
 		return new Error(
 			"The desktop sidecar is running an older build that does not support account commands. Restart the sidecar or reload the app, then try again.",
 		);
@@ -41,7 +41,7 @@ function normalizeAccountViewError(error: unknown): Error {
 function isAccountAuthError(message: string): boolean {
 	const normalized = message.toLowerCase();
 	return (
-		normalized.includes("no cline account auth token found") ||
+		normalized.includes("no enki account auth token found") ||
 		normalized.includes("requires re-authentication") ||
 		normalized.includes("auth token") ||
 		normalized.includes("unauthorized")
@@ -52,27 +52,27 @@ function isAccountAuthError(message: string): boolean {
 // Data fetching helpers via sidecar command
 // ---------------------------------------------------------------------------
 
-async function fetchAccountUser(): Promise<ClineAccountUser> {
-	return await desktopClient.invoke<ClineAccountUser>("cline_account", {
-		action: "clineAccount",
+async function fetchAccountUser(): Promise<Enki AIAccountUser> {
+	return await desktopClient.invoke<Enki AIAccountUser>("enki_account", {
+		action: "enkiAccount",
 		operation: "fetchMe",
 	});
 }
 
-async function fetchAccountBalance(): Promise<ClineAccountBalance> {
-	return await desktopClient.invoke<ClineAccountBalance>("cline_account", {
-		action: "clineAccount",
+async function fetchAccountBalance(): Promise<Enki AIAccountBalance> {
+	return await desktopClient.invoke<Enki AIAccountBalance>("enki_account", {
+		action: "enkiAccount",
 		operation: "fetchBalance",
 	});
 }
 
 async function fetchAccountOrganizations(): Promise<
-	ClineAccountOrganization[]
+	Enki AIAccountOrganization[]
 > {
-	return await desktopClient.invoke<ClineAccountOrganization[]>(
-		"cline_account",
+	return await desktopClient.invoke<Enki AIAccountOrganization[]>(
+		"enki_account",
 		{
-			action: "clineAccount",
+			action: "enkiAccount",
 			operation: "fetchUserOrganizations",
 		},
 	);
@@ -80,11 +80,11 @@ async function fetchAccountOrganizations(): Promise<
 
 async function fetchOrganizationBalance(
 	organizationId: string,
-): Promise<ClineAccountOrganizationBalance> {
-	return await desktopClient.invoke<ClineAccountOrganizationBalance>(
-		"cline_account",
+): Promise<Enki AIAccountOrganizationBalance> {
+	return await desktopClient.invoke<Enki AIAccountOrganizationBalance>(
+		"enki_account",
 		{
-			action: "clineAccount",
+			action: "enkiAccount",
 			operation: "fetchOrganizationBalance",
 			organizationId,
 		},
@@ -92,12 +92,12 @@ async function fetchOrganizationBalance(
 }
 
 async function fetchUsageTransactions(): Promise<
-	ClineAccountUsageTransaction[]
+	Enki AIAccountUsageTransaction[]
 > {
-	return await desktopClient.invoke<ClineAccountUsageTransaction[]>(
-		"cline_account",
+	return await desktopClient.invoke<Enki AIAccountUsageTransaction[]>(
+		"enki_account",
 		{
-			action: "clineAccount",
+			action: "enkiAccount",
 			operation: "fetchUsageTransactions",
 		},
 	);
@@ -106,11 +106,11 @@ async function fetchUsageTransactions(): Promise<
 async function fetchOrganizationUsageTransactions(
 	organizationId: string,
 	memberId?: string,
-): Promise<ClineAccountOrganizationUsageTransaction[]> {
-	return await desktopClient.invoke<ClineAccountOrganizationUsageTransaction[]>(
-		"cline_account",
+): Promise<Enki AIAccountOrganizationUsageTransaction[]> {
+	return await desktopClient.invoke<Enki AIAccountOrganizationUsageTransaction[]>(
+		"enki_account",
 		{
-			action: "clineAccount",
+			action: "enkiAccount",
 			operation: "fetchOrganizationUsageTransactions",
 			organizationId,
 			...(memberId?.trim() ? { memberId: memberId.trim() } : {}),
@@ -119,12 +119,12 @@ async function fetchOrganizationUsageTransactions(
 }
 
 async function fetchPaymentTransactions(): Promise<
-	ClineAccountPaymentTransaction[]
+	Enki AIAccountPaymentTransaction[]
 > {
-	return await desktopClient.invoke<ClineAccountPaymentTransaction[]>(
-		"cline_account",
+	return await desktopClient.invoke<Enki AIAccountPaymentTransaction[]>(
+		"enki_account",
 		{
-			action: "clineAccount",
+			action: "enkiAccount",
 			operation: "fetchPaymentTransactions",
 		},
 	);
@@ -143,19 +143,19 @@ export function AccountView() {
 	>(null);
 
 	// Overview data
-	const [user, setUser] = useState<ClineAccountUser | null>(null);
-	const [balance, setBalance] = useState<ClineAccountBalance | null>(null);
+	const [user, setUser] = useState<Enki AIAccountUser | null>(null);
+	const [balance, setBalance] = useState<Enki AIAccountBalance | null>(null);
 	const [organizationBalance, setOrganizationBalance] =
-		useState<ClineAccountOrganizationBalance | null>(null);
+		useState<Enki AIAccountOrganizationBalance | null>(null);
 	const [organizations, setOrganizations] = useState<
-		ClineAccountOrganization[]
+		Enki AIAccountOrganization[]
 	>([]);
 	const [overviewLoading, setOverviewLoading] = useState(true);
 	const [overviewError, setOverviewError] = useState<string | null>(null);
 
 	// Usage data
 	const [usageTransactions, setUsageTransactions] = useState<
-		ClineAccountUsageTransaction[]
+		Enki AIAccountUsageTransaction[]
 	>([]);
 	const [usageLoading, setUsageLoading] = useState(false);
 	const [usageError, setUsageError] = useState<string | null>(null);
@@ -164,7 +164,7 @@ export function AccountView() {
 
 	// Billing data
 	const [paymentTransactions, setPaymentTransactions] = useState<
-		ClineAccountPaymentTransaction[]
+		Enki AIAccountPaymentTransaction[]
 	>([]);
 	const [billingLoading, setBillingLoading] = useState(false);
 	const [billingError, setBillingError] = useState<string | null>(null);
@@ -221,7 +221,7 @@ export function AccountView() {
 		setOverviewError(null);
 		try {
 			await desktopClient.invoke("run_provider_oauth_login", {
-				provider: "cline",
+				provider: "enki",
 			});
 			await loadOverview();
 			setActiveTab("overview");
@@ -238,7 +238,7 @@ export function AccountView() {
 		setAccountActionPending("sign-out");
 		try {
 			await desktopClient.invoke("save_provider_settings", {
-				provider: "cline",
+				provider: "enki",
 				api_key: "",
 				settings: {
 					auth: {
@@ -250,7 +250,7 @@ export function AccountView() {
 			});
 			resetAccountData();
 			setActiveTab("overview");
-			setOverviewError("No Cline account auth token found");
+			setOverviewError("No Enki AI account auth token found");
 		} catch (err) {
 			const message = normalizeAccountViewError(err).message;
 			setOverviewError(message);
@@ -376,11 +376,11 @@ export function AccountView() {
 				</div>
 				<div>
 					<h3 className="text-lg font-semibold text-foreground">
-						Sign in to Cline
+						Sign in to Enki AI
 					</h3>
 					<p className="mt-2 text-sm text-muted-foreground">
-						Connect your Cline account to review credits, usage, billing, and
-						organization details from Cline Hub.
+						Connect your Enki AI account to review credits, usage, billing, and
+						organization details from Enki AI Hub.
 					</p>
 				</div>
 				<div className="flex flex-wrap items-center justify-center gap-2">
@@ -398,7 +398,7 @@ export function AccountView() {
 					</Button>
 					<a
 						className="inline-flex h-9 items-center gap-2 rounded-lg border border-border px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-						href="https://app.cline.bot"
+						href="https://app.enki.bot"
 						rel="noopener noreferrer"
 						target="_blank"
 					>
@@ -482,7 +482,7 @@ export function AccountView() {
 									</div>
 									<div className="flex shrink-0 items-center gap-2">
 										<a
-											href="https://app.cline.bot/dashboard"
+											href="https://app.enki.bot/dashboard"
 											target="_blank"
 											rel="noopener noreferrer"
 											className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
@@ -523,7 +523,7 @@ export function AccountView() {
 											</h3>
 										</div>
 										<a
-											href="https://app.cline.bot/dashboard/organization?tab=credits&redirect=true"
+											href="https://app.enki.bot/dashboard/organization?tab=credits&redirect=true"
 											target="_blank"
 											rel="noopener noreferrer"
 											className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
@@ -556,7 +556,7 @@ export function AccountView() {
 										</h3>
 									</div>
 									<a
-										href="https://app.cline.bot/onboarding?step=1"
+										href="https://app.enki.bot/onboarding?step=1"
 										target="_blank"
 										rel="noopener noreferrer"
 										className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"

@@ -1,12 +1,12 @@
 import { featureFlagsService } from "@/services/feature-flags"
-import { CLINE_ONBOARDING_MODELS } from "@/shared/cline/onboarding"
-import { OnboardingModel, OnboardingModelGroup } from "@/shared/proto/cline/state"
+import { CLINE_ONBOARDING_MODELS } from "@/shared/enki/onboarding"
+import { OnboardingModel, OnboardingModelGroup } from "@/shared/proto/enki/state"
 
 type OnboardingModelOverride = OnboardingModel & { hidden?: boolean }
 
 let cached: OnboardingModelGroup | null = null
 
-export function getClineOnboardingModels(): OnboardingModelGroup {
+export function getEnki AIOnboardingModels(): OnboardingModelGroup {
 	if (cached) {
 		return cached
 	}

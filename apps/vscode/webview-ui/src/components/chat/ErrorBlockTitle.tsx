@@ -1,5 +1,5 @@
 import React from "react"
-import { ClineError, ClineErrorType } from "../../../../src/services/error/ClineError"
+import { Enki AIError, Enki AIErrorType } from "../../../../src/services/error/Enki AIError"
 import { ProgressIndicator } from "./ChatRow"
 
 interface ErrorBlockTitleProps {
@@ -57,10 +57,10 @@ export const ErrorBlockTitle = ({
 			details.classNames.push("text-(--vscode-foreground)")
 		} else if (apiRequestFailedMessage) {
 			// Handle failed request
-			const clineError = ClineError.parse(apiRequestFailedMessage)
-			const titleText = clineError?.isErrorType(ClineErrorType.Balance)
+			const enkiError = Enki AIError.parse(apiRequestFailedMessage)
+			const titleText = enkiError?.isErrorType(Enki AIErrorType.Balance)
 				? "Credit Limit Reached"
-				: clineError?.isErrorType(ClineErrorType.SpendLimit)
+				: enkiError?.isErrorType(Enki AIErrorType.SpendLimit)
 					? "Spend Limit Reached"
 					: "API Request Failed"
 			details.title = titleText

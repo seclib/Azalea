@@ -1,34 +1,34 @@
 import {
-	getClinePassSubscriptionUrl,
-	isClineNotSubscribedError,
-	isClineNotSubscribedMessage,
-} from "@cline/core";
+	getEnki AIPassSubscriptionUrl,
+	isEnki AINotSubscribedError,
+	isEnki AINotSubscribedMessage,
+} from "@enki/core";
 
-export { getClinePassSubscriptionUrl };
+export { getEnki AIPassSubscriptionUrl };
 
-function isFormattedClinePassSubscriptionMessage(message: string): boolean {
+function isFormattedEnki AIPassSubscriptionMessage(message: string): boolean {
 	const normalized = message.trim().toLowerCase();
 	return (
-		normalized.includes("no access to clinepass subscription models yet") &&
-		normalized.includes("subscribe to clinepass")
+		normalized.includes("no access to enkipass subscription models yet") &&
+		normalized.includes("subscribe to enkipass")
 	);
 }
 
-export function isClinePassSubscriptionError(error: unknown): boolean {
-	if (isClineNotSubscribedError(error)) {
+export function isEnki AIPassSubscriptionError(error: unknown): boolean {
+	if (isEnki AINotSubscribedError(error)) {
 		return true;
 	}
 	if (error instanceof Error) {
 		return (
-			error.name === "ClineNotSubscribedError" ||
-			isClineNotSubscribedMessage(error.message) ||
-			isFormattedClinePassSubscriptionMessage(error.message)
+			error.name === "Enki AINotSubscribedError" ||
+			isEnki AINotSubscribedMessage(error.message) ||
+			isFormattedEnki AIPassSubscriptionMessage(error.message)
 		);
 	}
 	return (
 		typeof error === "string" &&
-		(isClineNotSubscribedMessage(error) ||
-			isFormattedClinePassSubscriptionMessage(error))
+		(isEnki AINotSubscribedMessage(error) ||
+			isFormattedEnki AIPassSubscriptionMessage(error))
 	);
 }
 

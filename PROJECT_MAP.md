@@ -1,8 +1,8 @@
-# Cline - Cartographie Complète du Projet
+# Enki AI - Cartographie Complète du Projet
 
 ## Vue d'ensemble
 
-**Cline** est une plateforme d'agents IA open-source pour le développement logiciel, disponible sous forme d'extension VSCode, d'application CLI, et de plugin JetBrains. Le projet est structuré comme un monorepo utilisant **Bun** comme gestionnaire de paquets et **TypeScript** comme langage principal.
+**Enki AI** est une plateforme d'agents IA open-source pour le développement logiciel, disponible sous forme d'extension VSCode, d'application CLI, et de plugin JetBrains. Le projet est structuré comme un monorepo utilisant **Bun** comme gestionnaire de paquets et **TypeScript** comme langage principal.
 
 **Stack technique** :
 - Runtime : Bun 1.3.13 / Node.js >= 22
@@ -18,14 +18,14 @@
 ## Structure du Monorepo
 
 ```
-cline/
+enki/
 ├── apps/                          # Applications
 │   ├── vscode/                    # Extension VSCode (monorepo exclu du workspace root)
 │   ├── cli/                       # Application CLI (Bun)
-│   ├── cline-hub/                 # Hub web pour MCP marketplace
+│   ├── enki-hub/                 # Hub web pour MCP marketplace
 │   └── examples/                  # Exemples d'intégration
 │       ├── cli-agent/
-│       ├── cline-core-cli-agent/
+│       ├── enki-core-cli-agent/
 │       ├── code-review-bot/
 │       ├── desktop-app/
 │       ├── menubar/
@@ -35,7 +35,7 @@ cline/
 ├── sdk/                           # SDK partagé
 │   ├── packages/
 │   │   ├── agents/                # Framework d'agents
-│   │   ├── core/                  # Cœur du runtime (ClineCore)
+│   │   ├── core/                  # Cœur du runtime (Enki AICore)
 │   │   ├── llms/                  # Abstractions LLM
 │   │   ├── sdk/                   # SDK public
 │   │   └── shared/                # Types et utilitaires partagés
@@ -45,7 +45,7 @@ cline/
 ├── evals/                         # Framework d'évaluation
 ├── docs/                          # Documentation
 ├── proto/                         # Fichiers Protobuf (dans apps/vscode/proto/)
-├── .clinerules/                   # Règles et conventions du projet
+├── .enkirules/                   # Règles et conventions du projet
 └── package.json                   # Workspace root (Bun)
 ```
 
@@ -81,7 +81,7 @@ apps/vscode/
 │   │   │   ├── task/               # Gestion des tâches
 │   │   │   └── ...
 │   │   ├── hooks/                  # Système de hooks (lifecycle)
-│   │   ├── ignore/                 # Contrôleur .clineignore
+│   │   ├── ignore/                 # Contrôleur .enkiignore
 │   │   ├── locks/                  # Verrous de tâches
 │   │   ├── mentions/               # Système de mentions (@)
 │   │   ├── permissions/            # Permissions de commandes
@@ -96,7 +96,7 @@ apps/vscode/
 │   │   └── workspace/              # Gestion multi-workspace
 │   ├── services/                   # Services externes
 │   │   ├── mcp/                    # MCP Hub (connexions MCP)
-│   │   ├── auth/                   # Authentification (Cline, OCA, WorkOS)
+│   │   ├── auth/                   # Authentification (Enki AI, OCA, WorkOS)
 │   │   ├── account/                # Gestion de compte
 │   │   ├── browser/                # Automatisation navigateur (Puppeteer)
 │   │   ├── telemetry/              # Télémétrie (PostHog)
@@ -126,7 +126,7 @@ apps/vscode/
 │   │   │   ├── state-keys.ts       # Clés d'état (GlobalState, Settings)
 │   │   │   ├── storage-context.ts  # Contexte de stockage
 │   │   │   └── StateManager.ts      # Cache + persistance
-│   │   ├── tools.ts                # Définitions des outils (ClineDefaultTool)
+│   │   ├── tools.ts                # Définitions des outils (Enki AIDefaultTool)
 │   │   └── ...
 │   ├── utils/                      # Utilitaires
 │   └── dev/                        # Outils de développement
@@ -150,7 +150,7 @@ apps/vscode/
 │       ├── utils/                  # Utilitaires webview
 │       └── config/                 # Configuration webview
 ├── proto/                          # Fichiers .proto (gRPC)
-│   └── cline/
+│   └── enki/
 │       ├── task.proto
 │       ├── ui.proto
 │       ├── state.proto
@@ -199,7 +199,7 @@ WebviewProvider → Controller → Task → API Providers
 3. Parse assistantMessageContent (content blocks)
 4. presentAssistantMessage() → streaming UI
 5. Wait for tool execution (userMessageContentReady)
-6. recursivelyMakeClineRequests() → boucle
+6. recursivelyMakeEnki AIRequests() → boucle
 ```
 
 #### WebviewProvider (`src/core/webview/index.ts`)
@@ -238,7 +238,7 @@ apps/cli/
 
 **Technologies** :
 - TUI : Bibliothèque terminal UI (probablement Ink ou similaire)
-- Runtime : Basé sur SDK Cline Core
+- Runtime : Basé sur SDK Enki AI Core
 - Mode : Interactif (TUI) ou headless (CI/CD)
 
 ---
@@ -254,9 +254,9 @@ sdk/packages/
 │       ├── agent.ts               # Classe Agent de base
 │       ├── runner.ts              # Exécuteur d'agents
 │       └── ...
-├── core/                          # Runtime ClineCore
+├── core/                          # Runtime Enki AICore
 │   └── src/
-│       ├── cline-core.ts          # Cœur du système
+│       ├── enki-core.ts          # Cœur du système
 │       ├── cron/                  # Planificateur de tâches
 │       ├── task/                  # Gestion de tâches
 │       └── ...
@@ -275,7 +275,7 @@ sdk/packages/
         └── ...
 ```
 
-**Usage** : Le SDK permet d'intégrer Cline dans des applications tierces (ex: `cline-core-cli-agent`, `multi-agent`).
+**Usage** : Le SDK permet d'intégrer Enki AI dans des applications tierces (ex: `enki-core-cli-agent`, `multi-agent`).
 
 ---
 
@@ -306,7 +306,7 @@ sdk/packages/
 | Fireworks | `fireworks.ts` | Direct API |
 | xAI | `xai.ts` | Direct API |
 | VSCode LM | `vscode-lm.ts` | Intégré VSCode |
-| Cline | `cline.ts` | Service Cline |
+| Enki AI | `enki.ts` | Service Enki AI |
 | LiteLLM | `litellm.ts` | Proxy |
 | Moonshot | `moonshot.ts` | Direct API |
 | Nebius | `nebius.ts` | Direct API |
@@ -342,7 +342,7 @@ sdk/packages/
 system-prompt/
 ├── components/                    # Sections réutilisables
 │   ├── rules.ts                   # Règles de base
-│   ├── capabilities.ts            # Capacités de Cline
+│   ├── capabilities.ts            # Capacités de Enki AI
 │   ├── editing_files.ts           # Édition de fichiers
 │   ├── tools/                     # Définitions d'outils
 │   └── ...
@@ -404,31 +404,31 @@ system-prompt/
 
 | Outil | Enum | Description |
 |-------|------|-------------|
-| `read_file` | `ClineDefaultTool.ReadFile` | Lire un fichier |
-| `write_to_file` | `ClineDefaultTool.WriteToFile` | Écrire un fichier |
-| `replace_in_file` | `ClineDefaultTool.ReplaceInFile` | Modifier un fichier |
-| `execute_command` | `ClineDefaultTool.ExecuteCommand` | Exécuter une commande |
-| `browser_action` | `ClineDefaultTool.BrowserAction` | Actions navigateur |
-| `use_mcp_tool` | `ClineDefaultTool.UseMcpTool` | Appeler un outil MCP |
-| `access_mcp_resource` | `ClineDefaultTool.AccessMcpResource` | Accéder à une ressource MCP |
-| `ask_followup_question` | `ClineDefaultTool.AskFollowupQuestion` | Poser une question |
-| `attempt_completion` | `ClineDefaultTool.AttemptCompletion` | Terminer une tâche |
-| `plan_mode_respond` | `ClineDefaultTool.PlanModeRespond` | Répondre en mode Plan |
-| `act_mode_respond` | `ClineDefaultTool.ActModeRespond` | Répondre en mode Act |
-| `search_files` | `ClineDefaultTool.SearchFiles` | Rechercher dans fichiers |
-| `list_files` | `ClineDefaultTool.ListFiles` | Lister fichiers/dossiers |
-| `list_code_definition_names` | `ClineDefaultTool.ListCodeDefinitionNames` | Lister définitions code |
-| `web_fetch` | `ClineDefaultTool.WebFetch` | Récupérer une URL |
-| `web_search` | `ClineDefaultTool.WebSearch` | Recherche web |
-| `apply_patch` | `ClineDefaultTool.ApplyPatch` | Appliquer un patch |
-| `generate_explanation` | `ClineDefaultTool.GenerateExplanation` | Générer explication |
-| `focus_chain` | `ClineDefaultTool.FocusChain` | Gestion focus chain |
-| `subagent` | `ClineDefaultTool.Subagent` | Sous-agent |
-| `use_skill` | `ClineDefaultTool.UseSkill` | Utiliser une skill |
-| `load_mcp_documentation` | `ClineDefaultTool.LoadMcpDocumentation` | Charger doc MCP |
-| `new_task` | `ClineDefaultTool.NewTask` | Nouvelle tâche |
+| `read_file` | `Enki AIDefaultTool.ReadFile` | Lire un fichier |
+| `write_to_file` | `Enki AIDefaultTool.WriteToFile` | Écrire un fichier |
+| `replace_in_file` | `Enki AIDefaultTool.ReplaceInFile` | Modifier un fichier |
+| `execute_command` | `Enki AIDefaultTool.ExecuteCommand` | Exécuter une commande |
+| `browser_action` | `Enki AIDefaultTool.BrowserAction` | Actions navigateur |
+| `use_mcp_tool` | `Enki AIDefaultTool.UseMcpTool` | Appeler un outil MCP |
+| `access_mcp_resource` | `Enki AIDefaultTool.AccessMcpResource` | Accéder à une ressource MCP |
+| `ask_followup_question` | `Enki AIDefaultTool.AskFollowupQuestion` | Poser une question |
+| `attempt_completion` | `Enki AIDefaultTool.AttemptCompletion` | Terminer une tâche |
+| `plan_mode_respond` | `Enki AIDefaultTool.PlanModeRespond` | Répondre en mode Plan |
+| `act_mode_respond` | `Enki AIDefaultTool.ActModeRespond` | Répondre en mode Act |
+| `search_files` | `Enki AIDefaultTool.SearchFiles` | Rechercher dans fichiers |
+| `list_files` | `Enki AIDefaultTool.ListFiles` | Lister fichiers/dossiers |
+| `list_code_definition_names` | `Enki AIDefaultTool.ListCodeDefinitionNames` | Lister définitions code |
+| `web_fetch` | `Enki AIDefaultTool.WebFetch` | Récupérer une URL |
+| `web_search` | `Enki AIDefaultTool.WebSearch` | Recherche web |
+| `apply_patch` | `Enki AIDefaultTool.ApplyPatch` | Appliquer un patch |
+| `generate_explanation` | `Enki AIDefaultTool.GenerateExplanation` | Générer explication |
+| `focus_chain` | `Enki AIDefaultTool.FocusChain` | Gestion focus chain |
+| `subagent` | `Enki AIDefaultTool.Subagent` | Sous-agent |
+| `use_skill` | `Enki AIDefaultTool.UseSkill` | Utiliser une skill |
+| `load_mcp_documentation` | `Enki AIDefaultTool.LoadMcpDocumentation` | Charger doc MCP |
+| `new_task` | `Enki AIDefaultTool.NewTask` | Nouvelle tâche |
 
-**Définition** : `src/shared/tools.ts` (enum `ClineDefaultTool`)
+**Définition** : `src/shared/tools.ts` (enum `Enki AIDefaultTool`)
 
 ---
 
@@ -464,7 +464,7 @@ apps/vscode/src/services/mcp/
 - **SSE** : Server-Sent Events (HTTP)
 - **Streamable HTTP** : HTTP avec streaming
 
-**Fichier de configuration** : `~/.cline/settings/mcp_settings.json`
+**Fichier de configuration** : `~/.enki/settings/mcp_settings.json`
 
 ### 7.3 Intégration dans les Outils
 
@@ -500,7 +500,7 @@ webview-ui/src/
 │   ├── account/                   # Authentification
 │   ├── onboarding/                # Onboarding
 │   ├── welcome/                   # Vue d'accueil
-│   ├── cline-rules/               # Gestion des règles
+│   ├── enki-rules/               # Gestion des règles
 │   ├── worktrees/                 # Gestion worktrees Git
 │   └── ui/                        # Composants génériques
 ├── context/
@@ -516,10 +516,10 @@ webview-ui/src/
 **Protocole** : gRPC/Protobuf via `postMessage`
 
 **Fichiers Proto** :
-- `proto/cline/task.proto` : Opérations de tâches
-- `proto/cline/ui.proto` : Événements UI
-- `proto/cline/state.proto` : Mises à jour d'état
-- `proto/cline/models.proto` : Modèles IA
+- `proto/enki/task.proto` : Opérations de tâches
+- `proto/enki/ui.proto` : Événements UI
+- `proto/enki/state.proto` : Mises à jour d'état
+- `proto/enki/models.proto` : Modèles IA
 
 **Génération** : `npm run protos` → `src/generated/`
 
@@ -530,7 +530,7 @@ webview-ui/src/
 ### 9.1 Architecture
 
 ```
-~/.cline/
+~/.enki/
 └── data/
     ├── globalState.json           # État global (tous workspaces)
     ├── secrets.json               # Secrets (mode 0o600)
@@ -544,7 +544,7 @@ webview-ui/src/
 ### 9.2 Abstractions
 
 - **StorageContext** : Entrée point (`createStorageContext()`)
-- **ClineFileStorage** : Stockage JSON synchrone (atomic writes)
+- **Enki AIFileStorage** : Stockage JSON synchrone (atomic writes)
 - **StateManager** : Cache mémoire + flush debounced vers disque
 
 **Règle** : Ne jamais utiliser `context.globalState` VSCode directement (migration vers fichiers).
@@ -662,9 +662,9 @@ webview-ui/src/
 
 ### 15.1 Services
 
-- **AuthService** : Authentification Cline (WorkOS Device Auth)
+- **AuthService** : Authentification Enki AI (WorkOS Device Auth)
 - **OcaAuthService** : Authentification OCA
-- **ClineAccountService** : Gestion de compte
+- **Enki AIAccountService** : Gestion de compte
 
 ### 15.2 Sécurité
 
@@ -672,7 +672,7 @@ webview-ui/src/
 - **RBAC** : Contrôle d'accès (futur)
 - **Audit logs** : Journaux d'audit
 - **Secrets** : Stockage chiffré (mode 0o600)
-- **ClineIgnore** : Exclusion de fichiers sensibles
+- **Enki AIIgnore** : Exclusion de fichiers sensibles
 
 ---
 
@@ -707,7 +707,7 @@ webview-ui/src/
 
 - `apps/vscode/package.json` : Extension VSCode
 - `apps/cli/package.json` : CLI
-- `apps/cline-hub/package.json` : Hub web
+- `apps/enki-hub/package.json` : Hub web
 
 ### 17.3 SDK
 
@@ -795,7 +795,7 @@ Utilisateur (Terminal)
     ↓
 TUI (Interface)
     ↓
-Runtime (ClineCore)
+Runtime (Enki AICore)
     ↓
 Task Execution
     ↓
@@ -820,14 +820,14 @@ Session (persistance)
 
 ### 21.2 Ajout d'un Outil
 
-1. `src/shared/tools.ts` : Ajouter à `ClineDefaultTool` enum
+1. `src/shared/tools.ts` : Ajouter à `Enki AIDefaultTool` enum
 2. `src/core/prompts/system-prompt/tools/[tool].ts` : Définir variants
 3. `src/core/prompts/system-prompt/tools/init.ts` : Enregistrer
 4. `src/core/prompts/system-prompt/variants/*/config.ts` : Ajouter aux configs
 5. `src/core/task/tools/handlers/[tool].ts` : Implémenter handler
 6. `src/core/task/ToolExecutor.ts` : Wire up si nécessaire
 7. `src/core/assistant-message/index.ts` : Ajouter parsing si besoin
-8. (Optionnel) `proto/cline/task.proto` : Ajouter `ClineSay` enum
+8. (Optionnel) `proto/enki/task.proto` : Ajouter `Enki AISay` enum
 9. (Optionnel) `webview-ui/src/components/chat/ChatRow.tsx` : UI feedback
 
 ---

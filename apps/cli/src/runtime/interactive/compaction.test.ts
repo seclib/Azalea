@@ -4,7 +4,7 @@ import { join } from "node:path";
 import {
 	type CoreCompactionContext,
 	ProviderSettingsManager,
-} from "@cline/core";
+} from "@enki/core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Config } from "../../utils/types";
 import {
@@ -38,7 +38,7 @@ function createConfig(): Config {
 const providerSettingsTempDirs: string[] = [];
 
 function createProviderSettingsManager(): ProviderSettingsManager {
-	const tempDir = mkdtempSync(join(tmpdir(), "cline-cli-compact-"));
+	const tempDir = mkdtempSync(join(tmpdir(), "enki-cli-compact-"));
 	providerSettingsTempDirs.push(tempDir);
 	return new ProviderSettingsManager({
 		filePath: join(tempDir, "providers.json"),

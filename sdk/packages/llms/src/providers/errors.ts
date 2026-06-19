@@ -1,35 +1,35 @@
-import { getClineEnvironmentConfig } from "@cline/shared";
+import { getEnki AIEnvironmentConfig } from "@enki/shared";
 
 export const CLINE_NOT_SUBSCRIBED_RESPONSE_MESSAGE =
 	"the user is not subscribed to required model plan";
 
-export function getClinePassSubscriptionUrl(): string {
+export function getEnki AIPassSubscriptionUrl(): string {
 	return `${new URL(
 		"/dashboard/subscription",
-		getClineEnvironmentConfig().appBaseUrl,
+		getEnki AIEnvironmentConfig().appBaseUrl,
 	).toString()}/`;
 }
 
-export function getClineNotSubscribedMessage(): string {
-	return `No access to ClinePass subscription models yet. Subscribe to ClinePass, the low cost open weights model coding plan: ${getClinePassSubscriptionUrl()}`;
+export function getEnki AINotSubscribedMessage(): string {
+	return `No access to Enki AIPass subscription models yet. Subscribe to Enki AIPass, the low cost open weights model coding plan: ${getEnki AIPassSubscriptionUrl()}`;
 }
 
-export class ClineNotSubscribedError extends Error {
+export class Enki AINotSubscribedError extends Error {
 	public readonly providerId?: string;
 
 	constructor(providerId?: string) {
-		super(getClineNotSubscribedMessage());
-		this.name = "ClineNotSubscribedError";
+		super(getEnki AINotSubscribedMessage());
+		this.name = "Enki AINotSubscribedError";
 		this.providerId = providerId;
 	}
 }
 
-export function isClineNotSubscribedError(
+export function isEnki AINotSubscribedError(
 	error: unknown,
-): error is ClineNotSubscribedError {
-	return error instanceof ClineNotSubscribedError;
+): error is Enki AINotSubscribedError {
+	return error instanceof Enki AINotSubscribedError;
 }
 
-export function isClineNotSubscribedMessage(text: string): boolean {
+export function isEnki AINotSubscribedMessage(text: string): boolean {
 	return text.toLowerCase().includes(CLINE_NOT_SUBSCRIBED_RESPONSE_MESSAGE);
 }

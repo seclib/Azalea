@@ -1,4 +1,4 @@
-import { createTool } from "@cline/shared";
+import { createTool } from "@enki/shared";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Config } from "../../utils/types";
 import { resolveSystemPrompt } from "../prompt";
@@ -13,7 +13,7 @@ vi.mock("../prompt", () => ({
 function makeConfig(): Config {
 	return {
 		apiKey: "",
-		providerId: "cline",
+		providerId: "enki",
 		modelId: "openai/gpt-5.3-codex",
 		verbose: false,
 		sandbox: false,

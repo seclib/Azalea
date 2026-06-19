@@ -1,13 +1,13 @@
 import { createGoogleChatAdapter } from "@chat-adapter/gchat";
-import type { ChatStartSessionRequest } from "@cline/core";
+import type { ChatStartSessionRequest } from "@enki/core";
 import {
 	createUserInstructionConfigService,
 	HubSessionClient,
-} from "@cline/core";
+} from "@enki/core";
 import type {
 	ConnectGoogleChatOptions,
 	GoogleChatConnectorState,
-} from "@cline/shared";
+} from "@enki/shared";
 import { Chat, ConsoleLogger, type Thread } from "chat";
 import type { Command } from "commander";
 import type { CliLoggerAdapter } from "../../logging/adapter";
@@ -307,7 +307,7 @@ class GoogleChatConnector extends ConnectorBase<
 			userName:
 				opts.userName?.trim() ||
 				process.env.GOOGLE_CHAT_BOT_USERNAME?.trim() ||
-				"cline-gchat",
+				"enki-gchat",
 			cwd: opts.cwd || process.cwd(),
 			model: opts.model,
 			provider: opts.provider,
@@ -438,7 +438,7 @@ class GoogleChatConnector extends ConnectorBase<
 				formatBackgroundStartMessage: (pid) =>
 					`[gchat] starting background connector pid=${pid} user=${options.userName}`,
 				foregroundHint:
-					"[gchat] use `cline connect gchat -i ...` to run in the foreground",
+					"[gchat] use `enki connect gchat -i ...` to run in the foreground",
 				launchFailureMessage:
 					"failed to launch Google Chat connector in background",
 			})

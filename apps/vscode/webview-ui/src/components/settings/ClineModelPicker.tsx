@@ -1,7 +1,7 @@
 import { type ApiConfiguration, buildModelInfoNameMap, CLAUDE_SONNET_1M_SUFFIX, type ModelInfo } from "@shared/api"
-import { CLINE_RECOMMENDED_MODELS_FALLBACK } from "@shared/cline/recommended-models"
-import { EmptyRequest, StringRequest } from "@shared/proto/cline/common"
-import { type ClineRecommendedModel, ClineRecommendedModelsResponse } from "@shared/proto/cline/models"
+import { CLINE_RECOMMENDED_MODELS_FALLBACK } from "@shared/enki/recommended-models"
+import { EmptyRequest, StringRequest } from "@shared/proto/enki/common"
+import { type Enki AIRecommendedModel, Enki AIRecommendedModelsResponse } from "@shared/proto/enki/models"
 import type { Mode } from "@shared/storage/types"
 import { isClaudeOpusAdaptiveThinkingModel, resolveClaudeOpusAdaptiveThinking } from "@shared/utils/reasoning-support"
 import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
@@ -47,7 +47,7 @@ const StarIcon = ({ isFavorite, onClick }: { isFavorite: boolean; onClick: (e: R
 	)
 }
 
-export interface ClineModelPickerProps {
+export interface Enki AIModelPickerProps {
 	isPopup?: boolean
 	currentMode: Mode
 	showProviderRouting?: boolean
@@ -56,7 +56,7 @@ export interface ClineModelPickerProps {
 	modelIdFieldPair?: { plan: keyof ApiConfiguration; act: keyof ApiConfiguration }
 	modelInfoFieldPair?: { plan: keyof ApiConfiguration; act: keyof ApiConfiguration }
 	models?: Record<string, ModelInfo>
-	isClinePassEnabled?: boolean
+	isEnki AIPassEnabled?: boolean
 	showFeaturedModels?: boolean
 }
 
@@ -73,7 +73,7 @@ function normalizeModelId(modelId: string): string {
 }
 
 function toFeaturedModelCardEntry(
-	model: Pick<ClineRecommendedModel, "id" | "description" | "tags">,
+	model: Pick<Enki AIRecommendedModel, "id" | "description" | "tags">,
 	fallbackLabel: string,
 ): FeaturedModelCardEntry | null {
 	if (!model.id) {
@@ -98,30 +98,30 @@ const FREE_MODELS_FALLBACK: FeaturedModelCardEntry[] = CLINE_RECOMMENDED_MODELS_
 	.map((model) => toFeaturedModelCardEntry(model, "FREE"))
 	.filter((model): model is FeaturedModelCardEntry => model !== null)
 
-const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
+const Enki AIModelPicker: React.FC<Enki AIModelPickerProps> = ({
 	isPopup,
 	currentMode,
 	showProviderRouting,
 	initialTab,
 	defaultModelId,
-	modelIdFieldPair = { plan: "planModeClineModelId", act: "actModeClineModelId" },
-	modelInfoFieldPair = { plan: "planModeClineModelInfo", act: "actModeClineModelInfo" },
+	modelIdFieldPair = { plan: "planModeEnki AIModelId", act: "actModeEnki AIModelId" },
+	modelInfoFieldPair = { plan: "planModeEnki AIModelInfo", act: "actModeEnki AIModelInfo" },
 	models,
-	isClinePassEnabled = true,
+	isEnki AIPassEnabled = true,
 	showFeaturedModels = true,
 }) => {
 	const { handleModeFieldsChange, handleFieldChange } = useApiConfigurationHandlers()
-	const { apiConfiguration, favoritedModelIds, clineModels, openRouterModels, refreshClineModels } = useExtensionState()
+	const { apiConfiguration, favoritedModelIds, enkiModels, openRouterModels, refreshEnki AIModels } = useExtensionState()
 	const modeFields = getModeSpecificFields(apiConfiguration, currentMode)
-	const resolvedModels = models ?? clineModels
+	const resolvedModels = models ?? enkiModels
 	const openRouterModelsByName = useMemo(() => buildModelInfoNameMap(openRouterModels), [openRouterModels])
 	const normalizedSelection = useMemo(
 		() =>
 			normalizeApiConfiguration(apiConfiguration, currentMode, {
-				isClinePassEnabled,
-				clinePassModelInfoByName: openRouterModelsByName,
+				isEnki AIPassEnabled,
+				enkiPassModelInfoByName: openRouterModelsByName,
 			}),
-		[apiConfiguration, currentMode, isClinePassEnabled, openRouterModelsByName],
+		[apiConfiguration, currentMode, isEnki AIPassEnabled, openRouterModelsByName],
 	)
 	const configuredModelId = apiConfiguration?.[modelIdFieldPair[currentMode]] as string | undefined
 	const selectedOrDefaultModelId = defaultModelId ?? normalizedSelection.selectedModelId
@@ -138,34 +138,34 @@ const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
 	const [searchTerm, setSearchTerm] = useState(resolveModelId(configuredModelId))
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false)
 	const [selectedIndex, setSelectedIndex] = useState(-1)
-	const [clineRecommendedModels, setClineRecommendedModels] = useState<FeaturedModelCardEntry[]>([])
-	const [clineFreeModels, setClineFreeModels] = useState<FeaturedModelCardEntry[]>([])
-	const freeClineModelIds = useMemo(() => {
+	const [enkiRecommendedModels, setEnki AIRecommendedModels] = useState<FeaturedModelCardEntry[]>([])
+	const [enkiFreeModels, setEnki AIFreeModels] = useState<FeaturedModelCardEntry[]>([])
+	const freeEnki AIModelIds = useMemo(() => {
 		const freeModelIds =
-			clineFreeModels.length > 0 ? clineFreeModels.map((model) => model.id) : FREE_MODELS_FALLBACK.map((model) => model.id)
+			enkiFreeModels.length > 0 ? enkiFreeModels.map((model) => model.id) : FREE_MODELS_FALLBACK.map((model) => model.id)
 		return [...new Set(freeModelIds)]
-	}, [clineFreeModels])
-	const freeClineModelIdSet = useMemo(
-		() => new Set(freeClineModelIds.map((modelId) => normalizeModelId(modelId))),
-		[freeClineModelIds],
+	}, [enkiFreeModels])
+	const freeEnki AIModelIdSet = useMemo(
+		() => new Set(freeEnki AIModelIds.map((modelId) => normalizeModelId(modelId))),
+		[freeEnki AIModelIds],
 	)
 	const [activeTab, setActiveTab] = useState<"recommended" | "free">(initialTab ?? "recommended")
 	const recommendedModels = useMemo(
-		() => (clineRecommendedModels.length > 0 ? clineRecommendedModels : RECOMMENDED_MODELS_FALLBACK),
-		[clineRecommendedModels],
+		() => (enkiRecommendedModels.length > 0 ? enkiRecommendedModels : RECOMMENDED_MODELS_FALLBACK),
+		[enkiRecommendedModels],
 	)
-	const freeModels = useMemo(() => (clineFreeModels.length > 0 ? clineFreeModels : FREE_MODELS_FALLBACK), [clineFreeModels])
-	const hasSuccessfulClineRecommendedModelsFetchRef = useRef(false)
-	const isFetchingClineRecommendedModelsRef = useRef(false)
-	const clineRecommendedModelsRetryTimeoutRef = useRef<number | null>(null)
+	const freeModels = useMemo(() => (enkiFreeModels.length > 0 ? enkiFreeModels : FREE_MODELS_FALLBACK), [enkiFreeModels])
+	const hasSuccessfulEnki AIRecommendedModelsFetchRef = useRef(false)
+	const isFetchingEnki AIRecommendedModelsRef = useRef(false)
+	const enkiRecommendedModelsRetryTimeoutRef = useRef<number | null>(null)
 
-	const refreshClineRecommendedModels = useCallback(async (): Promise<boolean> => {
+	const refreshEnki AIRecommendedModels = useCallback(async (): Promise<boolean> => {
 		try {
 			const response = await ModelsServiceClient.makeUnaryRequest(
-				"refreshClineRecommendedModelsRpc",
+				"refreshEnki AIRecommendedModelsRpc",
 				EmptyRequest.create({}),
 				EmptyRequest.toJSON,
-				ClineRecommendedModelsResponse.fromJSON,
+				Enki AIRecommendedModelsResponse.fromJSON,
 			)
 			const recommended = (response.recommended ?? [])
 				.map((model) => toFeaturedModelCardEntry(model, "RECOMMENDED"))
@@ -173,49 +173,49 @@ const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
 			const free = (response.free ?? [])
 				.map((model) => toFeaturedModelCardEntry(model, "FREE"))
 				.filter((model): model is FeaturedModelCardEntry => model !== null)
-			setClineRecommendedModels(recommended)
-			setClineFreeModels(free)
+			setEnki AIRecommendedModels(recommended)
+			setEnki AIFreeModels(free)
 			return true
 		} catch (error) {
-			console.error("Failed to refresh Cline recommended models:", error)
+			console.error("Failed to refresh Enki AI recommended models:", error)
 			return false
 		}
 	}, [])
 
-	const clearClineRecommendedModelsRetryTimeout = useCallback(() => {
-		if (clineRecommendedModelsRetryTimeoutRef.current !== null) {
-			window.clearTimeout(clineRecommendedModelsRetryTimeoutRef.current)
-			clineRecommendedModelsRetryTimeoutRef.current = null
+	const clearEnki AIRecommendedModelsRetryTimeout = useCallback(() => {
+		if (enkiRecommendedModelsRetryTimeoutRef.current !== null) {
+			window.clearTimeout(enkiRecommendedModelsRetryTimeoutRef.current)
+			enkiRecommendedModelsRetryTimeoutRef.current = null
 		}
 	}, [])
 
-	const fetchClineRecommendedModels = useCallback(async () => {
-		if (hasSuccessfulClineRecommendedModelsFetchRef.current || isFetchingClineRecommendedModelsRef.current) {
+	const fetchEnki AIRecommendedModels = useCallback(async () => {
+		if (hasSuccessfulEnki AIRecommendedModelsFetchRef.current || isFetchingEnki AIRecommendedModelsRef.current) {
 			return
 		}
-		isFetchingClineRecommendedModelsRef.current = true
-		const succeeded = await refreshClineRecommendedModels()
-		isFetchingClineRecommendedModelsRef.current = false
+		isFetchingEnki AIRecommendedModelsRef.current = true
+		const succeeded = await refreshEnki AIRecommendedModels()
+		isFetchingEnki AIRecommendedModelsRef.current = false
 
 		if (succeeded) {
-			hasSuccessfulClineRecommendedModelsFetchRef.current = true
-			clearClineRecommendedModelsRetryTimeout()
+			hasSuccessfulEnki AIRecommendedModelsFetchRef.current = true
+			clearEnki AIRecommendedModelsRetryTimeout()
 			return
 		}
 
-		if (clineRecommendedModelsRetryTimeoutRef.current === null) {
-			clineRecommendedModelsRetryTimeoutRef.current = window.setTimeout(() => {
-				clineRecommendedModelsRetryTimeoutRef.current = null
-				void fetchClineRecommendedModels()
+		if (enkiRecommendedModelsRetryTimeoutRef.current === null) {
+			enkiRecommendedModelsRetryTimeoutRef.current = window.setTimeout(() => {
+				enkiRecommendedModelsRetryTimeoutRef.current = null
+				void fetchEnki AIRecommendedModels()
 			}, CLINE_RECOMMENDED_MODELS_RETRY_DELAY_MS)
 		}
-	}, [clearClineRecommendedModelsRetryTimeout, refreshClineRecommendedModels])
+	}, [clearEnki AIRecommendedModelsRetryTimeout, refreshEnki AIRecommendedModels])
 
 	useEffect(() => {
 		return () => {
-			clearClineRecommendedModelsRetryTimeout()
+			clearEnki AIRecommendedModelsRetryTimeout()
 		}
-	}, [clearClineRecommendedModelsRetryTimeout])
+	}, [clearEnki AIRecommendedModelsRetryTimeout])
 
 	useEffect(() => {
 		if (initialTab) {
@@ -228,8 +228,8 @@ const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
 			return
 		}
 		const currentModelId = resolveModelId(configuredModelId)
-		setActiveTab(freeClineModelIdSet.has(normalizeModelId(currentModelId)) ? "free" : "recommended")
-	}, [configuredModelId, freeClineModelIdSet, initialTab, resolveModelId])
+		setActiveTab(freeEnki AIModelIdSet.has(normalizeModelId(currentModelId)) ? "free" : "recommended")
+	}, [configuredModelId, freeEnki AIModelIdSet, initialTab, resolveModelId])
 	const dropdownRef = useRef<HTMLDivElement>(null)
 	const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 	const dropdownListRef = useRef<HTMLDivElement>(null)
@@ -239,12 +239,12 @@ const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
 
 		handleModeFieldsChange(
 			{
-				clineModelId: modelIdFieldPair,
-				clineModelInfo: modelInfoFieldPair,
+				enkiModelId: modelIdFieldPair,
+				enkiModelInfo: modelInfoFieldPair,
 			},
 			{
-				clineModelId: newModelId,
-				clineModelInfo: resolvedModels?.[newModelId],
+				enkiModelId: newModelId,
+				enkiModelInfo: resolvedModels?.[newModelId],
 			},
 			currentMode,
 		)
@@ -260,7 +260,7 @@ const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
 						selectedModelInfo: resolvedModels?.[resolvedModelId] ?? normalizedSelection.selectedModelInfo,
 					}
 				: normalizedSelection
-		if (freeClineModelIdSet.has(normalizeModelId(selected.selectedModelId))) {
+		if (freeEnki AIModelIdSet.has(normalizeModelId(selected.selectedModelId))) {
 			return {
 				...selected,
 				selectedModelInfo: {
@@ -273,17 +273,17 @@ const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
 			}
 		}
 		return selected
-	}, [configuredModelId, defaultModelId, freeClineModelIdSet, models, normalizedSelection, resolvedModels, resolveModelId])
+	}, [configuredModelId, defaultModelId, freeEnki AIModelIdSet, models, normalizedSelection, resolvedModels, resolveModelId])
 
 	useMount(() => {
 		if (!models) {
-			refreshClineModels()
+			refreshEnki AIModels()
 		}
 	})
 
 	useEffect(() => {
-		void fetchClineRecommendedModels()
-	}, [fetchClineRecommendedModels])
+		void fetchEnki AIRecommendedModels()
+	}, [fetchEnki AIRecommendedModels])
 
 	// Sync external changes when the modelId changes
 	useEffect(() => {
@@ -305,8 +305,8 @@ const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
 
 	const modelIds = useMemo(() => {
 		const unfilteredModelIds = Object.keys(resolvedModels ?? {}).sort((a, b) => a.localeCompare(b))
-		return filterOpenRouterModelIds(unfilteredModelIds, "cline", freeClineModelIds)
-	}, [resolvedModels, freeClineModelIds])
+		return filterOpenRouterModelIds(unfilteredModelIds, "enki", freeEnki AIModelIds)
+	}, [resolvedModels, freeEnki AIModelIds])
 
 	const searchableItems = useMemo(() => {
 		return modelIds.map((id) => ({
@@ -654,7 +654,7 @@ const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
 						marginTop: 0,
 						color: "var(--vscode-descriptionForeground)",
 					}}>
-					The extension automatically fetches the latest Cline model list. If you're unsure which model to choose, Cline
+					The extension automatically fetches the latest Enki AI model list. If you're unsure which model to choose, Enki AI
 					works best with <strong>anthropic/claude-sonnet-4.5</strong>.
 				</p>
 			)}
@@ -662,7 +662,7 @@ const ClineModelPicker: React.FC<ClineModelPickerProps> = ({
 	)
 }
 
-export default ClineModelPicker
+export default Enki AIModelPicker
 
 const DropdownWrapper = styled.div`
 	position: relative;

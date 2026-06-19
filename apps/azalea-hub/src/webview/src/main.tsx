@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import App from "./App.tsx";
 import { syncHubTheme } from "./lib/theme";
 
-window.addEventListener("cline-hub-theme-change", syncHubTheme);
+window.addEventListener("enki-hub-theme-change", syncHubTheme);
 
 // Apply immediately
 syncHubTheme();

@@ -10,7 +10,7 @@ import {
 	createTool,
 	validateWithZod,
 	zodToJsonSchema,
-} from "@cline/shared";
+} from "@enki/shared";
 import { captureRunCommandsTimeout } from "../../services/telemetry/core-events";
 import { getToolContextTelemetry } from "../../services/telemetry/tool-context";
 import { CommandExitError } from "./executors/bash";
@@ -808,7 +808,7 @@ export function createSubmitAndExitTool(
  *
  * @example
  * ```typescript
- * import { Agent, createDefaultTools } from "@cline/core"
+ * import { Agent, createDefaultTools } from "@enki/core"
  * import * as fs from "fs/promises"
  * import { exec } from "child_process"
  *

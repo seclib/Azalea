@@ -1,5 +1,5 @@
 /**
- * Banner message types for Cline extension
+ * Banner message types for Enki AI extension
  */
 
 export type BannerSeverity = "info" | "success" | "warning"

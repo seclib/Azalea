@@ -1,12 +1,12 @@
 import "should"
 import { openRouterDefaultModelInfo } from "@shared/api"
 import sinon from "sinon"
-import { ClineAccountService } from "@/services/account/ClineAccountService"
+import { Enki AIAccountService } from "@/services/account/Enki AIAccountService"
 import { AuthService } from "@/services/auth/AuthService"
-import { ClineError, ClineErrorType } from "@/services/error/ClineError"
-import { ClineHandler } from "../cline"
+import { Enki AIError, Enki AIErrorType } from "@/services/error/Enki AIError"
+import { Enki AIHandler } from "../enki"
 
-describe("ClineHandler", () => {
+describe("Enki AIHandler", () => {
 	afterEach(() => {
 		sinon.restore()
 	})
@@ -17,10 +17,10 @@ describe("ClineHandler", () => {
 		},
 	})
 
-	const createHandler = (options: ConstructorParameters<typeof ClineHandler>[0]) => {
-		sinon.stub(ClineAccountService, "getInstance").returns({} as any)
+	const createHandler = (options: ConstructorParameters<typeof Enki AIHandler>[0]) => {
+		sinon.stub(Enki AIAccountService, "getInstance").returns({} as any)
 		sinon.stub(AuthService, "getInstance").returns({} as any)
-		return new ClineHandler(options)
+		return new Enki AIHandler(options)
 	}
 
 	it("should handle usage-only chunks when delta is missing", async () => {
@@ -138,7 +138,7 @@ describe("ClineHandler", () => {
 		payload.parallel_tool_calls.should.equal(true)
 	})
 
-	it("should send cache_control for qwen3.7-max without changing the selected Cline model id", async () => {
+	it("should send cache_control for qwen3.7-max without changing the selected Enki AI model id", async () => {
 		const handler = createHandler({
 			openRouterModelId: "qwen/qwen3.7-max",
 			openRouterModelInfo: openRouterDefaultModelInfo,
@@ -180,7 +180,7 @@ describe("ClineHandler", () => {
 		const fakeClient = { chat: { completions: { create: sinon.stub().rejects(apiError) } } }
 		sinon.stub(handler as any, "ensureClient").resolves(fakeClient as any)
 		sinon.stub(handler as any, "getFreeModelIdSet").resolves(new Set())
-		sinon.stub(handler, "getModel").returns({ id: "cline-pass/glm-5.1", info: openRouterDefaultModelInfo })
+		sinon.stub(handler, "getModel").returns({ id: "enki-pass/glm-5.1", info: openRouterDefaultModelInfo })
 
 		let thrown: unknown
 		try {
@@ -191,7 +191,7 @@ describe("ClineHandler", () => {
 			thrown = e
 		}
 
-		const clineError = ClineError.transform(thrown, "cline-pass/glm-5.1", "cline-pass")
-		clineError.isErrorType(ClineErrorType.Entitlement).should.be.true()
+		const enkiError = Enki AIError.transform(thrown, "enki-pass/glm-5.1", "enki-pass")
+		enkiError.isErrorType(Enki AIErrorType.Entitlement).should.be.true()
 	})
 })

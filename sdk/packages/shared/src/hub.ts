@@ -370,7 +370,7 @@ export type HubCommandName =
 	| "client.update"
 	| "client.unregister"
 	| "client.list"
-	| "cline.account.get_current"
+	| "enki.account.get_current"
 	| "prompt_commands.list"
 	| "prompt_commands.execute"
 	| "mention_files.search"

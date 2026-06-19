@@ -9,19 +9,19 @@ export const LOCK_TEXT_SYMBOL = "\u{1F512}"
 
 /**
  * Controls LLM access to files by enforcing ignore patterns.
- * Designed to be instantiated once in Cline.ts and passed to file manipulation services.
- * Uses the 'ignore' library to support standard .gitignore syntax in .clineignore files.
+ * Designed to be instantiated once in Enki AI.ts and passed to file manipulation services.
+ * Uses the 'ignore' library to support standard .gitignore syntax in .enkiignore files.
  */
-export class ClineIgnoreController {
+export class Enki AIIgnoreController {
 	private cwd: string
 	private ignoreInstance: Ignore
 	private fileWatcher?: FSWatcher
-	clineIgnoreContent: string | undefined
+	enkiIgnoreContent: string | undefined
 
 	constructor(cwd: string) {
 		this.cwd = cwd
 		this.ignoreInstance = ignore()
-		this.clineIgnoreContent = undefined
+		this.enkiIgnoreContent = undefined
 	}
 
 	/**
@@ -29,16 +29,16 @@ export class ClineIgnoreController {
 	 * Must be called after construction and before using the controller
 	 */
 	async initialize(): Promise<void> {
-		// Set up file watcher for .clineignore
+		// Set up file watcher for .enkiignore
 		this.setupFileWatcher()
-		await this.loadClineIgnore()
+		await this.loadEnki AIIgnore()
 	}
 
 	/**
-	 * Set up the file watcher for .clineignore changes
+	 * Set up the file watcher for .enkiignore changes
 	 */
 	private setupFileWatcher(): void {
-		const ignorePath = path.join(this.cwd, ".clineignore")
+		const ignorePath = path.join(this.cwd, ".enkiignore")
 
 		this.fileWatcher = chokidar.watch(ignorePath, {
 			persistent: true, // Keep the process running as long as files are being watched
@@ -53,42 +53,42 @@ export class ClineIgnoreController {
 
 		// Watch for file changes, creation, and deletion
 		this.fileWatcher.on("change", () => {
-			this.loadClineIgnore()
+			this.loadEnki AIIgnore()
 		})
 
 		this.fileWatcher.on("add", () => {
-			this.loadClineIgnore()
+			this.loadEnki AIIgnore()
 		})
 
 		this.fileWatcher.on("unlink", () => {
-			this.loadClineIgnore()
+			this.loadEnki AIIgnore()
 		})
 
 		this.fileWatcher.on("error", (error) => {
-			Logger.error("Error watching .clineignore file:", error)
+			Logger.error("Error watching .enkiignore file:", error)
 		})
 	}
 
 	/**
-	 * Load custom patterns from .clineignore if it exists.
+	 * Load custom patterns from .enkiignore if it exists.
 	 * Supports "!include <filename>" to load additional ignore patterns from other files.
 	 */
-	private async loadClineIgnore(): Promise<void> {
+	private async loadEnki AIIgnore(): Promise<void> {
 		try {
 			// Reset ignore instance to prevent duplicate patterns
 			this.ignoreInstance = ignore()
-			const ignorePath = path.join(this.cwd, ".clineignore")
+			const ignorePath = path.join(this.cwd, ".enkiignore")
 			if (await fileExistsAtPath(ignorePath)) {
 				const content = await fs.readFile(ignorePath, "utf8")
-				this.clineIgnoreContent = content
+				this.enkiIgnoreContent = content
 				await this.processIgnoreContent(content)
-				this.ignoreInstance.add(".clineignore")
+				this.ignoreInstance.add(".enkiignore")
 			} else {
-				this.clineIgnoreContent = undefined
+				this.enkiIgnoreContent = undefined
 			}
 		} catch (error) {
 			// Should never happen: reading file failed even though it exists
-			Logger.error("Unexpected error loading .clineignore:", error)
+			Logger.error("Unexpected error loading .enkiignore:", error)
 		}
 	}
 
@@ -103,14 +103,14 @@ export class ClineIgnoreController {
 		}
 
 		// Process !include directives
-		const combinedContent = await this.processClineIgnoreIncludes(content)
+		const combinedContent = await this.processEnki AIIgnoreIncludes(content)
 		this.ignoreInstance.add(combinedContent)
 	}
 
 	/**
 	 * Process !include directives and combine all included file contents
 	 */
-	private async processClineIgnoreIncludes(content: string): Promise<string> {
+	private async processEnki AIIgnoreIncludes(content: string): Promise<string> {
 		let combinedContent = ""
 		const lines = content.split(/\r?\n/)
 
@@ -140,7 +140,7 @@ export class ClineIgnoreController {
 		const resolvedIncludePath = path.join(this.cwd, includePath)
 
 		if (!(await fileExistsAtPath(resolvedIncludePath))) {
-			Logger.debug(`[ClineIgnore] Included file not found: ${resolvedIncludePath}`)
+			Logger.debug(`[Enki AIIgnore] Included file not found: ${resolvedIncludePath}`)
 			return null
 		}
 
@@ -153,8 +153,8 @@ export class ClineIgnoreController {
 	 * @returns true if file is accessible, false if ignored
 	 */
 	validateAccess(filePath: string): boolean {
-		// Always allow access if .clineignore does not exist
-		if (!this.clineIgnoreContent) {
+		// Always allow access if .enkiignore does not exist
+		if (!this.enkiIgnoreContent) {
 			return true
 		}
 		try {
@@ -177,8 +177,8 @@ export class ClineIgnoreController {
 	 * @returns path of file that is being accessed if it is being accessed, undefined if command is allowed
 	 */
 	validateCommand(command: string): string | undefined {
-		// Always allow if no .clineignore exists
-		if (!this.clineIgnoreContent) {
+		// Always allow if no .enkiignore exists
+		if (!this.enkiIgnoreContent) {
 			return undefined
 		}
 

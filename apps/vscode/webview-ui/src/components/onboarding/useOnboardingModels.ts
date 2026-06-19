@@ -1,8 +1,8 @@
-import { buildModelInfoNameMap, type ModelInfo, resolveClinePassModelInfo } from "@shared/api"
-import { CLINE_ONBOARDING_MODELS } from "@shared/cline/onboarding"
-import { EmptyRequest } from "@shared/proto/cline/common"
-import type { ClineRecommendedModel } from "@shared/proto/cline/models"
-import type { OnboardingModel, OnboardingModelGroup } from "@shared/proto/cline/state"
+import { buildModelInfoNameMap, type ModelInfo, resolveEnki AIPassModelInfo } from "@shared/api"
+import { CLINE_ONBOARDING_MODELS } from "@shared/enki/onboarding"
+import { EmptyRequest } from "@shared/proto/enki/common"
+import type { Enki AIRecommendedModel } from "@shared/proto/enki/models"
+import type { OnboardingModel, OnboardingModelGroup } from "@shared/proto/enki/state"
 import { useEffect, useMemo, useState } from "react"
 import { CLINE_PASS_FEATURE_FLAG } from "@/constants/featureFlags"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -18,7 +18,7 @@ export interface UseOnboardingModelsResult {
 }
 
 function toOnboardingModel(
-	rec: ClineRecommendedModel,
+	rec: Enki AIRecommendedModel,
 	group: string,
 	fallbackBadge: string,
 	modelCatalog: Record<string, ModelInfo>,
@@ -50,8 +50,8 @@ function toOnboardingModel(
 type FetchState = { status: "loading" } | { status: "success"; data: RecommendedModelsData } | { status: "empty" }
 
 export function useOnboardingModels(): UseOnboardingModelsResult {
-	const { openRouterModels, clineModels, refreshClineModels } = useExtensionState()
-	const isClinePassEnabled = useHasFeatureFlag(CLINE_PASS_FEATURE_FLAG)
+	const { openRouterModels, enkiModels, refreshEnki AIModels } = useExtensionState()
+	const isEnki AIPassEnabled = useHasFeatureFlag(CLINE_PASS_FEATURE_FLAG)
 	const [fetchState, setFetchState] = useState<FetchState>({ status: "loading" })
 
 	useEffect(() => {
@@ -59,9 +59,9 @@ export function useOnboardingModels(): UseOnboardingModelsResult {
 
 		const refreshRecommendedModels = async () => {
 			try {
-				const response = await ModelsServiceClient.refreshClineRecommendedModelsRpc(EmptyRequest.create({}))
+				const response = await ModelsServiceClient.refreshEnki AIRecommendedModelsRpc(EmptyRequest.create({}))
 				if (!cancelled) {
-					const data = getRecommendedModelsData(response, isClinePassEnabled)
+					const data = getRecommendedModelsData(response, isEnki AIPassEnabled)
 					if (!data) {
 						setFetchState({ status: "empty" })
 					} else {
@@ -80,20 +80,20 @@ export function useOnboardingModels(): UseOnboardingModelsResult {
 		return () => {
 			cancelled = true
 		}
-	}, [isClinePassEnabled])
+	}, [isEnki AIPassEnabled])
 
 	useEffect(() => {
-		refreshClineModels()
-	}, [refreshClineModels])
+		refreshEnki AIModels()
+	}, [refreshEnki AIModels])
 
-	// Merge openRouter and cline models into a single catalog for lookups
+	// Merge openRouter and enki models into a single catalog for lookups
 	const modelCatalog = useMemo<Record<string, ModelInfo>>(() => {
-		return { ...openRouterModels, ...(clineModels ?? {}) }
-	}, [openRouterModels, clineModels])
+		return { ...openRouterModels, ...(enkiModels ?? {}) }
+	}, [openRouterModels, enkiModels])
 
-	// ClinePass model IDs omit the upstream lab (e.g. "cline-pass/glm-5.1"), so look up
+	// Enki AIPass model IDs omit the upstream lab (e.g. "enki-pass/glm-5.1"), so look up
 	// capabilities via the model slug against the OpenRouter catalog, falling back to
-	// conservative ClinePass defaults. Mirrors ClinePassProvider's resolution.
+	// conservative Enki AIPass defaults. Mirrors Enki AIPassProvider's resolution.
 	const openRouterModelsByName = useMemo(() => buildModelInfoNameMap(openRouterModels), [openRouterModels])
 
 	return useMemo<UseOnboardingModelsResult>(() => {
@@ -104,11 +104,11 @@ export function useOnboardingModels(): UseOnboardingModelsResult {
 		const { data } = fetchState
 		const freeModels = data.free.map((rec) => toOnboardingModel(rec, "free", "Free", modelCatalog))
 		const frontierModels = data.recommended.map((rec) => toOnboardingModel(rec, "frontier", "", modelCatalog))
-		const clinePassCatalog = Object.fromEntries(
-			data.clinePass.map((rec) => [rec.id, resolveClinePassModelInfo(rec.id, openRouterModelsByName)]),
+		const enkiPassCatalog = Object.fromEntries(
+			data.enkiPass.map((rec) => [rec.id, resolveEnki AIPassModelInfo(rec.id, openRouterModelsByName)]),
 		)
-		const clinePassModels = data.clinePass.map((rec) => toOnboardingModel(rec, "clinepass", "", clinePassCatalog))
+		const enkiPassModels = data.enkiPass.map((rec) => toOnboardingModel(rec, "enkipass", "", enkiPassCatalog))
 
-		return { status: "success", models: { models: [...clinePassModels, ...freeModels, ...frontierModels] } }
+		return { status: "success", models: { models: [...enkiPassModels, ...freeModels, ...frontierModels] } }
 	}, [fetchState, modelCatalog, openRouterModelsByName])
 }

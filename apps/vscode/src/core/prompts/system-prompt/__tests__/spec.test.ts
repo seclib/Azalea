@@ -1,8 +1,8 @@
 import { expect } from "chai"
 import { describe, it } from "mocha"
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import type { ClineToolSpec } from "../spec"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import type { Enki AIToolSpec } from "../spec"
 import { toolSpecFunctionDeclarations, toolSpecFunctionDefinition, toolSpecInputSchema } from "../spec"
 import type { SystemPromptContext } from "../types"
 
@@ -10,16 +10,16 @@ const mockContext: SystemPromptContext = {
 	cwd: "/test/project",
 	ide: "TestIde",
 	supportsBrowserUse: true,
-	clineWebToolsEnabled: true,
+	enkiWebToolsEnabled: true,
 	subagentsEnabled: true,
 	providerInfo: { providerId: "test", model: { id: "test-model", info: { supportsPromptCache: false } }, mode: "act" },
 	enableNativeToolCalls: false,
 	isTesting: true,
 }
 
-const makeTool = (overrides?: Partial<ClineToolSpec>): ClineToolSpec => ({
+const makeTool = (overrides?: Partial<Enki AIToolSpec>): Enki AIToolSpec => ({
 	variant: ModelFamily.GENERIC,
-	id: ClineDefaultTool.FILE_READ,
+	id: Enki AIDefaultTool.FILE_READ,
 	name: "read_file",
 	description: "Read a file",
 	parameters: [

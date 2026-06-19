@@ -2,13 +2,13 @@ import { strict as assert } from "node:assert"
 import type { ToolUse } from "@core/assistant-message"
 import { registerPartialMessageCallback } from "@core/controller/ui/subscribeToPartialMessage"
 import { Task } from "@core/task"
-import type { ClineMessage } from "@shared/ExtensionMessage"
-import { ClineDefaultTool } from "@shared/tools"
+import type { Enki AIMessage } from "@shared/ExtensionMessage"
+import { Enki AIDefaultTool } from "@shared/tools"
 import { describe, it } from "mocha"
 
 describe("Task.processNativeToolCalls", () => {
 	it("finalizes a partial text row before handing off to native tool calls", async () => {
-		const clineMessages: ClineMessage[] = [
+		const enkiMessages: Enki AIMessage[] = [
 			{
 				ts: 1,
 				type: "say",
@@ -30,7 +30,7 @@ describe("Task.processNativeToolCalls", () => {
 		const toolBlocks: ToolUse[] = [
 			{
 				type: "tool_use",
-				name: ClineDefaultTool.ASK,
+				name: Enki AIDefaultTool.ASK,
 				params: {
 					question: "Need clarification",
 				},
@@ -42,8 +42,8 @@ describe("Task.processNativeToolCalls", () => {
 
 		const fakeTask = {
 			messageStateHandler: {
-				getClineMessages: () => clineMessages,
-				saveClineMessagesAndUpdateHistory: async () => {
+				getEnki AIMessages: () => enkiMessages,
+				saveEnki AIMessagesAndUpdateHistory: async () => {
 					saveCalls += 1
 				},
 			},
@@ -59,8 +59,8 @@ describe("Task.processNativeToolCalls", () => {
 				Task.prototype as unknown as { processNativeToolCalls: (text: string, blocks: ToolUse[]) => Promise<void> }
 			).processNativeToolCalls.call(fakeTask, "visible streamed text", toolBlocks)
 
-			assert.equal(clineMessages[0].text, "visible streamed text")
-			assert.equal(clineMessages[0].partial, false)
+			assert.equal(enkiMessages[0].text, "visible streamed text")
+			assert.equal(enkiMessages[0].partial, false)
 			assert.equal(saveCalls, 1)
 			assert.deepEqual(emittedPartialMessages, [{ partial: false, text: "visible streamed text" }])
 

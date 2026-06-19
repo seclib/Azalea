@@ -1,8 +1,8 @@
 /**
- * ClineTempManager - Manages temporary files for Cline with automatic cleanup.
+ * Enki AITempManager - Manages temporary files for Enki AI with automatic cleanup.
  *
  * Simple approach:
- * - Uses a "cline" subdirectory inside the system temp dir (falls back to system temp if creation fails)
+ * - Uses a "enki" subdirectory inside the system temp dir (falls back to system temp if creation fails)
  * - Cleans up files older than 50 hours on extension activation
  * - Enforces 2GB total size cap to prevent disk bloat
  * - Cross-platform (macOS, Windows, Linux)
@@ -25,23 +25,23 @@ interface TempFileInfo {
 }
 
 /**
- * Singleton manager for Cline's temporary files.
+ * Singleton manager for Enki AI's temporary files.
  */
-class ClineTempManagerImpl {
+class Enki AITempManagerImpl {
 	private readonly tempDir: string
 	private cleanupIntervalId: NodeJS.Timeout | null = null
 
 	constructor() {
-		// Uses system temp directory with a dedicated "cline" subdirectory when possible:
-		// macOS: /var/folders/xx/.../T/cline
-		// Windows: C:\Users\{user}\AppData\Local\Temp\cline
-		// Linux: /tmp/cline
+		// Uses system temp directory with a dedicated "enki" subdirectory when possible:
+		// macOS: /var/folders/xx/.../T/enki
+		// Windows: C:\Users\{user}\AppData\Local\Temp\enki
+		// Linux: /tmp/enki
 		const baseTempDir = os.tmpdir()
-		const clineTempDir = path.join(baseTempDir, "cline")
+		const enkiTempDir = path.join(baseTempDir, "enki")
 
 		try {
-			fs.mkdirSync(clineTempDir, { recursive: true })
-			this.tempDir = clineTempDir
+			fs.mkdirSync(enkiTempDir, { recursive: true })
+			this.tempDir = enkiTempDir
 		} catch {
 			this.tempDir = baseTempDir
 		}
@@ -76,11 +76,11 @@ class ClineTempManagerImpl {
 	}
 
 	/**
-	 * Clean up old Cline temp files based on age and total size constraints.
+	 * Clean up old Enki AI temp files based on age and total size constraints.
 	 * Called on extension activation.
 	 *
 	 * Strategy:
-	 * 1. Scan the Cline temp directory
+	 * 1. Scan the Enki AI temp directory
 	 * 2. Delete all files older than 50 hours
 	 * 3. If still over 2GB total, delete oldest files until under limit
 	 */
@@ -154,10 +154,10 @@ class ClineTempManagerImpl {
 			}
 
 			if (deletedCount > 0) {
-				Logger.info(`Cline temp cleanup: deleted ${deletedCount} files, freed ${Math.round(freedBytes / 1024 / 1024)}MB`)
+				Logger.info(`Enki AI temp cleanup: deleted ${deletedCount} files, freed ${Math.round(freedBytes / 1024 / 1024)}MB`)
 			}
 		} catch (error) {
-			Logger.error("Error during Cline temp cleanup", error)
+			Logger.error("Error during Enki AI temp cleanup", error)
 		}
 
 		return { deletedCount, freedBytes }
@@ -215,4 +215,4 @@ class ClineTempManagerImpl {
 }
 
 // Export singleton instance
-export const ClineTempManager = new ClineTempManagerImpl()
+export const Enki AITempManager = new Enki AITempManagerImpl()

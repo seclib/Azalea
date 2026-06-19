@@ -1,11 +1,11 @@
-import type { ChatStartSessionRequest, RuntimeLoggerConfig } from "@cline/core";
+import type { ChatStartSessionRequest, RuntimeLoggerConfig } from "@enki/core";
 import {
 	CoreSessionService,
 	HubSessionClient,
 	Llms,
 	ProviderSettingsManager,
 	SqliteSessionStore,
-} from "@cline/core";
+} from "@enki/core";
 import type { Thread } from "chat";
 import {
 	ensureOAuthProviderApiKey,
@@ -64,13 +64,13 @@ export async function buildConnectorStartRequest(input: {
 	const providerSettingsManager = new ProviderSettingsManager();
 	const lastUsedProviderSettings =
 		providerSettingsManager.getLastUsedProviderSettings({
-			isClinePassEnabled:
-				getCliFeatureFlagsService().getBooleanFlagEnabled("ext-cline-pass"),
+			isEnki AIPassEnabled:
+				getCliFeatureFlagsService().getBooleanFlagEnabled("ext-enki-pass"),
 		});
 	const provider = normalizeProviderId(
 		input.options.provider?.trim() ||
 			lastUsedProviderSettings?.provider ||
-			"cline",
+			"enki",
 	);
 	let selectedProviderSettings =
 		providerSettingsManager.getProviderSettings(provider);

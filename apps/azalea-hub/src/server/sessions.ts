@@ -1,10 +1,10 @@
 import process from "node:process";
 import {
-	type ClineCoreStartInput,
+	type Enki AICoreStartInput,
 	type SessionRecord,
 	SessionSource,
-} from "@cline/core";
-import type { Message } from "@cline/llms";
+} from "@enki/core";
+import type { Message } from "@enki/llms";
 import type { WebviewConfig, WebviewReasonLevel } from "../webview-protocol";
 import { rejectPendingApprovalsForSession } from "./approvals";
 import { providerSettingsManager, workspaceRoot } from "./deps";
@@ -25,7 +25,7 @@ import { asNumber, asString } from "./utils";
 
 function toRuntimeReasoningOptions(
 	reasonLevel?: WebviewReasonLevel,
-): Pick<ClineCoreStartInput["config"], "reasoningEffort" | "thinking"> {
+): Pick<Enki AICoreStartInput["config"], "reasoningEffort" | "thinking"> {
 	if (reasonLevel === undefined) return {};
 	if (reasonLevel === "none") return { thinking: false };
 	return { thinking: true, reasoningEffort: reasonLevel };
@@ -64,7 +64,7 @@ export function resolveLaunchContext(
 		workspaceRoot;
 	if (!providerId || !modelId) {
 		throw new Error(
-			"No provider/model available. Start a session in another Cline client first, or set CLINE_PROVIDER and CLINE_MODEL.",
+			"No provider/model available. Start a session in another Enki AI client first, or set CLINE_PROVIDER and CLINE_MODEL.",
 		);
 	}
 	return {
@@ -91,7 +91,7 @@ function buildSessionStartInput(
 		sessionMetadata?: Record<string, unknown>;
 		initialMessages?: Message[];
 	},
-): ClineCoreStartInput {
+): Enki AICoreStartInput {
 	const mode = options?.mode === "plan" ? "plan" : "act";
 	const reasoningOptions = toRuntimeReasoningOptions(options?.reasonLevel);
 	return {
@@ -109,7 +109,7 @@ function buildSessionStartInput(
 			enableTools: options?.enableTools !== false,
 			enableSpawnAgent: options?.enableSpawn !== false,
 			enableAgentTeams: options?.enableTeams === true,
-			teamName: options?.teamName ?? "cline-hub",
+			teamName: options?.teamName ?? "enki-hub",
 			missionLogIntervalSteps: 3,
 			missionLogIntervalMs: 120000,
 			checkpoint: { enabled: true },
@@ -176,9 +176,9 @@ async function loadHistoryFor(
 	ctx: HubContext,
 	sessionId: string,
 ): Promise<unknown[]> {
-	if (!ctx.cline) return [];
+	if (!ctx.enki) return [];
 	try {
-		return (await ctx.cline.readMessages(sessionId)) as unknown[];
+		return (await ctx.enki.readMessages(sessionId)) as unknown[];
 	} catch (error) {
 		console.warn(`readMessages(${sessionId}) failed:`, error);
 		return [];
@@ -211,10 +211,10 @@ export async function createSession(
 	config?: WebviewConfig,
 	attachments?: { userImages?: string[] },
 ): Promise<void> {
-	if (!ctx.cline) throw new Error("Hub is not connected.");
+	if (!ctx.enki) throw new Error("Hub is not connected.");
 	const context = resolveLaunchContext(ctx, config);
 	const mode = config?.mode === "plan" ? "plan" : "act";
-	const result = await ctx.cline.start(
+	const result = await ctx.enki.start(
 		buildSessionStartInput(context, {
 			mode,
 			systemPrompt: config?.systemPrompt,
@@ -253,7 +253,7 @@ export async function createSession(
 		messages: [],
 	});
 	broadcastHubState(ctx);
-	await ctx.cline.send({
+	await ctx.enki.send({
 		sessionId: result.sessionId,
 		prompt,
 		mode,
@@ -268,12 +268,12 @@ export async function sendMessage(
 	config?: WebviewConfig,
 	attachments?: { userImages?: string[] },
 ): Promise<void> {
-	if (!ctx.cline) throw new Error("Hub is not connected.");
+	if (!ctx.enki) throw new Error("Hub is not connected.");
 	if (!peer.selectedSessionId) {
 		await createSession(ctx, peer, text, config, attachments);
 		return;
 	}
-	await ctx.cline.send({
+	await ctx.enki.send({
 		sessionId: peer.selectedSessionId,
 		prompt: text,
 		mode: config?.mode === "plan" ? "plan" : "act",
@@ -286,8 +286,8 @@ export async function deleteSession(
 	peer: BrowserPeer,
 	sessionId: string,
 ): Promise<void> {
-	if (!ctx.cline) throw new Error("Hub is not connected.");
-	const deleted = await ctx.cline.delete(sessionId);
+	if (!ctx.enki) throw new Error("Hub is not connected.");
+	const deleted = await ctx.enki.delete(sessionId);
 	if (!deleted) {
 		ctx.send(peer, {
 			type: "status",
@@ -324,13 +324,13 @@ export async function abortPeerTurn(
 	ctx: HubContext,
 	peer: BrowserPeer,
 ): Promise<void> {
-	if (!ctx.cline || !peer.selectedSessionId) return;
+	if (!ctx.enki || !peer.selectedSessionId) return;
 	rejectPendingApprovalsForSession(
 		ctx,
 		peer.selectedSessionId,
 		"Turn aborted before approval was resolved.",
 	);
-	await ctx.cline.abort(peer.selectedSessionId);
+	await ctx.enki.abort(peer.selectedSessionId);
 	ctx.send(peer, { type: "status", text: "Abort requested." });
 }
 
@@ -339,14 +339,14 @@ export async function forkPeerSession(
 	peer: BrowserPeer,
 	syncHubClientsAndSessions: () => Promise<void>,
 ): Promise<void> {
-	if (!ctx.cline) throw new Error("Hub is not connected.");
+	if (!ctx.enki) throw new Error("Hub is not connected.");
 	const forkedFromSessionId = peer.selectedSessionId;
 	if (!forkedFromSessionId) {
 		ctx.send(peer, { type: "fork_error", text: "No active session to fork." });
 		return;
 	}
 	try {
-		const rawMessages = (await ctx.cline.readMessages(
+		const rawMessages = (await ctx.enki.readMessages(
 			forkedFromSessionId,
 		)) as Message[];
 		if (rawMessages.length === 0) {
@@ -356,7 +356,7 @@ export async function forkPeerSession(
 			});
 			return;
 		}
-		const sourceSession = await ctx.cline.get(forkedFromSessionId);
+		const sourceSession = await ctx.enki.get(forkedFromSessionId);
 		if (!sourceSession) {
 			ctx.send(peer, {
 				type: "fork_error",
@@ -365,7 +365,7 @@ export async function forkPeerSession(
 			return;
 		}
 		const checkpointMetadata = sourceSession.metadata?.checkpoint;
-		const result = await ctx.cline.start(
+		const result = await ctx.enki.start(
 			buildStartInputFromSession(sourceSession, {
 				initialMessages: rawMessages,
 				sessionMetadata: {
@@ -382,7 +382,7 @@ export async function forkPeerSession(
 			}),
 		);
 		peer.selectedSessionId = result.sessionId;
-		const newSession = await ctx.cline.get(result.sessionId);
+		const newSession = await ctx.enki.get(result.sessionId);
 		const tracked = newSession ? trackSession(newSession) : undefined;
 		if (tracked) ctx.sessions.set(tracked.sessionId, tracked);
 		ctx.send(peer, { type: "session_started", sessionId: result.sessionId });
@@ -415,13 +415,13 @@ export async function restorePeerSession(
 	checkpointRunCount: number,
 	syncHubClientsAndSessions: () => Promise<void>,
 ): Promise<void> {
-	if (!ctx.cline) throw new Error("Hub is not connected.");
+	if (!ctx.enki) throw new Error("Hub is not connected.");
 	const sourceSessionId = peer.selectedSessionId;
 	if (!sourceSessionId) {
 		ctx.send(peer, { type: "error", text: "No active session to restore." });
 		return;
 	}
-	const sourceSession = await ctx.cline.get(sourceSessionId);
+	const sourceSession = await ctx.enki.get(sourceSessionId);
 	if (!sourceSession) {
 		ctx.send(peer, {
 			type: "error",
@@ -429,7 +429,7 @@ export async function restorePeerSession(
 		});
 		return;
 	}
-	const result = await ctx.cline.restore({
+	const result = await ctx.enki.restore({
 		sessionId: sourceSessionId,
 		checkpointRunCount,
 		cwd: sourceSession.cwd,
@@ -450,7 +450,7 @@ export async function restorePeerSession(
 		return;
 	}
 	peer.selectedSessionId = result.sessionId;
-	const restoredSession = await ctx.cline.get(result.sessionId);
+	const restoredSession = await ctx.enki.get(result.sessionId);
 	const tracked = restoredSession ? trackSession(restoredSession) : undefined;
 	if (tracked) ctx.sessions.set(tracked.sessionId, tracked);
 	const messages =
@@ -474,7 +474,7 @@ export async function initializePeer(
 	syncHubClientsAndSessions: () => Promise<void>,
 ): Promise<void> {
 	await syncHubClientsAndSessions();
-	ctx.send(peer, { type: "status", text: "Cline Hub is ready." });
+	ctx.send(peer, { type: "status", text: "Enki AI Hub is ready." });
 	ctx.send(peer, { type: "defaults", defaults: resolveBrowserDefaults(ctx) });
 	await loadProviders(ctx, peer);
 	await sendProviderCatalog(ctx, peer);

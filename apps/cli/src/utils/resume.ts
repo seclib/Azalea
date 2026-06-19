@@ -1,8 +1,8 @@
-import type { ClineCore } from "@cline/core";
-import type { Message } from "@cline/shared";
+import type { Enki AICore } from "@enki/core";
+import type { Message } from "@enki/shared";
 
 export async function loadInteractiveResumeMessages(
-	sessionManager: ClineCore,
+	sessionManager: Enki AICore,
 	resumeSessionId?: string,
 ): Promise<Message[] | undefined> {
 	const target = resumeSessionId?.trim();

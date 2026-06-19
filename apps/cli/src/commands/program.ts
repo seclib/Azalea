@@ -41,7 +41,7 @@ export function addRootOptions(cmd: Command): Command {
 				"Open the terminal user interface (TUI) for interactive sessions",
 			)
 			.option("--id <session-id>", "Resume an existing session by ID")
-			.option("-P, --provider <id>", "Provider id (default: cline)")
+			.option("-P, --provider <id>", "Provider id (default: enki)")
 			.option("-k, --key <api-key>", "API key override for this run")
 			.option(
 				"-m, --model <model-id>",
@@ -66,19 +66,19 @@ export function addRootOptions(cmd: Command): Command {
 			)
 			.option(
 				"--config <path>",
-				"Configuration directory (default: ~/.cline/data/settings)",
+				"Configuration directory (default: ~/.enki/data/settings)",
 			)
 			.option(
 				"--data-dir <path>",
-				"Use isolated local state at this directory path (default: ~/.cline)",
+				"Use isolated local state at this directory path (default: ~/.enki)",
 			)
 			.option(
 				"--hooks-dir <path>",
-				"Directory path to additional hooks for runtime hook injection (default: ~/.cline/hooks)",
+				"Directory path to additional hooks for runtime hook injection (default: ~/.enki/hooks)",
 			)
 			.option(
 				"--worktree",
-				"Auto-create a detached git worktree under ~/.cline/worktrees/ and run the task there",
+				"Auto-create a detached git worktree under ~/.enki/worktrees/ and run the task there",
 			)
 			.option("--update", "Check for updates and install if available")
 			.option("--kanban", "Run the kanban app")
@@ -108,8 +108,8 @@ export function addRootOptions(cmd: Command): Command {
 }
 
 export function createProgram(): Command {
-	const program = new Command("cline")
-		.description("Cline CLI - AI coding assistant in your terminal")
+	const program = new Command("enki")
+		.description("Enki AI CLI - AI coding assistant in your terminal")
 		.version(version, "-V, --version", "Output the version number")
 		.exitOverride() // don't call process.exit
 		.configureOutput({

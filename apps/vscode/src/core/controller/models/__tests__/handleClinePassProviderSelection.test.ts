@@ -3,9 +3,9 @@ import { afterEach, beforeEach, describe, it } from "mocha";
 import sinon from "sinon";
 import { Logger } from "@/shared/services/Logger";
 import type { Controller } from "../../index";
-import { clearOrganizationForClinePassProviderSelection } from "../handleClinePassProviderSelection";
+import { clearOrganizationForEnki AIPassProviderSelection } from "../handleEnki AIPassProviderSelection";
 
-describe("clearOrganizationForClinePassProviderSelection", () => {
+describe("clearOrganizationForEnki AIPassProviderSelection", () => {
 	let sandbox: sinon.SinonSandbox;
 	let switchAccount: sinon.SinonStub;
 
@@ -25,18 +25,18 @@ describe("clearOrganizationForClinePassProviderSelection", () => {
 		} as unknown as Controller;
 	}
 
-	it("does nothing when Cline Pass is not selected", async () => {
-		await clearOrganizationForClinePassProviderSelection(createController(), {
-			planModeApiProvider: "cline",
+	it("does nothing when Enki AI Pass is not selected", async () => {
+		await clearOrganizationForEnki AIPassProviderSelection(createController(), {
+			planModeApiProvider: "enki",
 			actModeApiProvider: "openrouter",
 		});
 
 		assert.strictEqual(switchAccount.callCount, 0);
 	});
 
-	it("switches to the personal account when Cline Pass is selected", async () => {
-		await clearOrganizationForClinePassProviderSelection(createController(), {
-			planModeApiProvider: "cline-pass",
+	it("switches to the personal account when Enki AI Pass is selected", async () => {
+		await clearOrganizationForEnki AIPassProviderSelection(createController(), {
+			planModeApiProvider: "enki-pass",
 			actModeApiProvider: "openrouter",
 		});
 
@@ -48,9 +48,9 @@ describe("clearOrganizationForClinePassProviderSelection", () => {
 		const error = new Error("not signed in");
 		switchAccount.rejects(error);
 
-		await clearOrganizationForClinePassProviderSelection(createController(), {
-			planModeApiProvider: "cline",
-			actModeApiProvider: "cline-pass",
+		await clearOrganizationForEnki AIPassProviderSelection(createController(), {
+			planModeApiProvider: "enki",
+			actModeApiProvider: "enki-pass",
 		});
 
 		assert.strictEqual(switchAccount.callCount, 1);

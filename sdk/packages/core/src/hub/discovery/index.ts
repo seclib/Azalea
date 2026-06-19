@@ -2,7 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { existsSync } from "node:fs";
 import { chmod, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { resolveClineDataDir, resolveClineDir } from "@cline/shared/storage";
+import { resolveEnki AIDataDir, resolveEnki AIDir } from "@enki/shared/storage";
 import corePackage from "../../../package.json";
 
 const HUB_DISCOVERY_ENV = "CLINE_HUB_DISCOVERY_PATH";
@@ -118,7 +118,7 @@ export function resolveHubOwnerContext(
 	const discoveryPath =
 		process.env[HUB_DISCOVERY_ENV]?.trim() ||
 		join(
-			resolveClineDataDir(),
+			resolveEnki AIDataDir(),
 			"locks",
 			"hub",
 			"owners",
@@ -344,4 +344,4 @@ export function isDiscoveryFilePresent(pathname: string): boolean {
 	return existsSync(pathname);
 }
 
-export { resolveClineDataDir, resolveClineDir };
+export { resolveEnki AIDataDir, resolveEnki AIDir };

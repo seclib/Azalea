@@ -1,5 +1,5 @@
-import { Empty } from "@shared/proto/cline/common"
-import { OnboardingProgressRequest } from "@shared/proto/cline/state"
+import { Empty } from "@shared/proto/enki/common"
+import { OnboardingProgressRequest } from "@shared/proto/enki/state"
 import { Logger } from "@/shared/services/Logger"
 import { telemetryService } from "../../../services/telemetry"
 import type { Controller } from "../index"

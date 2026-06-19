@@ -1,35 +1,35 @@
 import {
 	buildModelInfoNameMap,
-	clinePassDefaultModelId,
-	clinePassModels,
+	enkiPassDefaultModelId,
+	enkiPassModels,
 	type ModelInfo,
-	resolveClinePassModelInfo,
+	resolveEnki AIPassModelInfo,
 } from "@shared/api"
-import { EmptyRequest } from "@shared/proto/cline/common"
+import { EmptyRequest } from "@shared/proto/enki/common"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { ModelsServiceClient } from "@/services/grpc-client"
-import { ClineAccountInfoCard } from "../ClineAccountInfoCard"
-import ClineModelPicker from "../ClineModelPicker"
-import { ClineProvider } from "./ClineProvider"
+import { Enki AIAccountInfoCard } from "../Enki AIAccountInfoCard"
+import Enki AIModelPicker from "../Enki AIModelPicker"
+import { Enki AIProvider } from "./Enki AIProvider"
 
-export const ClinePassProvider: typeof ClineProvider = (props) => {
+export const Enki AIPassProvider: typeof Enki AIProvider = (props) => {
 	const { openRouterModels } = useExtensionState()
 	const openRouterModelsByName = useMemo(() => buildModelInfoNameMap(openRouterModels), [openRouterModels])
-	const [clinePassRecommendedModels, setClinePassRecommendedModels] = useState<Record<string, ModelInfo> | undefined>(undefined)
+	const [enkiPassRecommendedModels, setEnki AIPassRecommendedModels] = useState<Record<string, ModelInfo> | undefined>(undefined)
 
-	const refreshClinePassModels = useCallback(async () => {
+	const refreshEnki AIPassModels = useCallback(async () => {
 		try {
-			const response = await ModelsServiceClient.refreshClineRecommendedModelsRpc(EmptyRequest.create({}))
+			const response = await ModelsServiceClient.refreshEnki AIRecommendedModelsRpc(EmptyRequest.create({}))
 			const models = Object.fromEntries(
-				(response.clinePass ?? [])
+				(response.enkiPass ?? [])
 					.filter((model) => model.id)
 					.map((model) => {
-						// Cline Pass model IDs omit the upstream lab, so look up capabilities using
-						// the model slug (for example, glm-5.1 instead of cline-pass/glm-5.1).
+						// Enki AI Pass model IDs omit the upstream lab, so look up capabilities using
+						// the model slug (for example, glm-5.1 instead of enki-pass/glm-5.1).
 						// If the model is not in OpenRouter yet, use conservative generic defaults
 						// instead of copying GLM-5.1-specific context/max-token values.
-						const fallback = resolveClinePassModelInfo(model.id, openRouterModelsByName)
+						const fallback = resolveEnki AIPassModelInfo(model.id, openRouterModelsByName)
 						return [
 							model.id,
 							{
@@ -40,39 +40,39 @@ export const ClinePassProvider: typeof ClineProvider = (props) => {
 						]
 					}),
 			)
-			setClinePassRecommendedModels(Object.keys(models).length > 0 ? models : undefined)
+			setEnki AIPassRecommendedModels(Object.keys(models).length > 0 ? models : undefined)
 		} catch (error) {
-			console.error("Failed to refresh Cline Pass models:", error)
+			console.error("Failed to refresh Enki AI Pass models:", error)
 		}
 	}, [openRouterModelsByName])
 
 	useEffect(() => {
-		void refreshClinePassModels()
-	}, [refreshClinePassModels])
+		void refreshEnki AIPassModels()
+	}, [refreshEnki AIPassModels])
 
-	const clinePassModelOptions = clinePassRecommendedModels ?? clinePassModels
-	const clinePassDefaultModel = useMemo(() => {
-		if (!clinePassModelOptions) {
+	const enkiPassModelOptions = enkiPassRecommendedModels ?? enkiPassModels
+	const enkiPassDefaultModel = useMemo(() => {
+		if (!enkiPassModelOptions) {
 			return undefined
 		}
 
-		return clinePassModelOptions[clinePassDefaultModelId]
-			? clinePassDefaultModelId
-			: (Object.keys(clinePassModelOptions)[0] ?? clinePassDefaultModelId)
-	}, [clinePassModelOptions])
+		return enkiPassModelOptions[enkiPassDefaultModelId]
+			? enkiPassDefaultModelId
+			: (Object.keys(enkiPassModelOptions)[0] ?? enkiPassDefaultModelId)
+	}, [enkiPassModelOptions])
 
 	return (
 		<div>
 			<div style={{ marginBottom: 14, marginTop: 4 }}>
-				<ClineAccountInfoCard />
+				<Enki AIAccountInfoCard />
 			</div>
 
-			<ClineModelPicker
+			<Enki AIModelPicker
 				{...props}
-				defaultModelId={clinePassDefaultModel}
-				modelIdFieldPair={{ plan: "planModeClinePassModelId", act: "actModeClinePassModelId" }}
-				modelInfoFieldPair={{ plan: "planModeClinePassModelInfo", act: "actModeClinePassModelInfo" }}
-				models={clinePassModelOptions}
+				defaultModelId={enkiPassDefaultModel}
+				modelIdFieldPair={{ plan: "planModeEnki AIPassModelId", act: "actModeEnki AIPassModelId" }}
+				modelInfoFieldPair={{ plan: "planModeEnki AIPassModelInfo", act: "actModeEnki AIPassModelInfo" }}
+				models={enkiPassModelOptions}
 				showFeaturedModels={false}
 			/>
 		</div>

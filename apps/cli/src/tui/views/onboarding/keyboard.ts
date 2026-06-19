@@ -1,7 +1,7 @@
-import type { ProviderConfigFieldKey } from "@cline/core";
+import type { ProviderConfigFieldKey } from "@enki/core";
 import { useKeyboard } from "@opentui/react";
 import type { Dispatch, SetStateAction } from "react";
-import type { ClineModelPickerEntry } from "../../components/model-selector/cline-model-picker";
+import type { Enki AIModelPickerEntry } from "../../components/model-selector/enki-model-picker";
 import type { SearchableListState } from "../../components/searchable-list";
 import {
 	isOnboardingOAuthProviderId,
@@ -24,8 +24,8 @@ export function useOnboardingKeyboard(input: {
 	menuSelected: number;
 	providerList: SearchableListState;
 	modelList: SearchableListState;
-	clineEntries: ClineModelPickerEntry[];
-	clineModelSelected: number;
+	enkiEntries: Enki AIModelPickerEntry[];
+	enkiModelSelected: number;
 	thinkingSelected: number;
 	setStep: (step: OnboardingStep) => void;
 	setMenuSelected: Dispatch<SetStateAction<number>>;
@@ -37,7 +37,7 @@ export function useOnboardingKeyboard(input: {
 	setDeviceVerifyUrl: (value: string) => void;
 	setDeviceError: (value: string) => void;
 	setDeviceStatus: (value: string) => void;
-	setClineModelSelected: Dispatch<SetStateAction<number>>;
+	setEnki AIModelSelected: Dispatch<SetStateAction<number>>;
 	setThinkingSelected: Dispatch<SetStateAction<number>>;
 	abortOAuth: () => void;
 	abortDeviceCode: () => void;
@@ -47,7 +47,7 @@ export function useOnboardingKeyboard(input: {
 	startDeviceCodeFlow: (providerId: OnboardingOAuthProviderId) => void;
 	selectProvider: (providerId: string) => void;
 	loadModelsForProvider: (providerId: string) => void;
-	saveClineModelSelection: (modelId: string, modelName: string) => void;
+	saveEnki AIModelSelection: (modelId: string, modelName: string) => void;
 	saveCodexCliConfig: () => void;
 	saveByoConfig: () => void;
 	saveModelSelection: () => void;
@@ -93,15 +93,15 @@ export function useOnboardingKeyboard(input: {
 				input.setStep("byo_provider");
 				return;
 			}
-			if (input.step === "cline_model") {
+			if (input.step === "enki_model") {
 				input.setStep("menu");
 				input.setMenuSelected(0);
 				return;
 			}
 			if (input.step === "model_picker") {
-				if (input.activeProviderId === "cline") {
-					input.setClineModelSelected(0);
-					input.setStep("cline_model");
+				if (input.activeProviderId === "enki") {
+					input.setEnki AIModelSelected(0);
+					input.setStep("enki_model");
 				} else {
 					input.setStep("menu");
 					input.setMenuSelected(0);
@@ -113,9 +113,9 @@ export function useOnboardingKeyboard(input: {
 				return;
 			}
 			if (input.step === "thinking_level") {
-				if (input.activeProviderId === "cline") {
-					input.setClineModelSelected(0);
-					input.setStep("cline_model");
+				if (input.activeProviderId === "enki") {
+					input.setEnki AIModelSelected(0);
+					input.setStep("enki_model");
 				} else {
 					input.setStep("model_picker");
 					input.loadModelsForProvider(input.activeProviderId);
@@ -125,10 +125,10 @@ export function useOnboardingKeyboard(input: {
 		}
 
 		if (input.step === "oauth_pending") {
-			if (key.name === "d" && input.oauthProvider === "cline") {
+			if (key.name === "d" && input.oauthProvider === "enki") {
 				input.abortOAuth();
 				input.resetAuth();
-				input.startDeviceCodeFlow("cline");
+				input.startDeviceCodeFlow("enki");
 			}
 			return;
 		}
@@ -204,22 +204,22 @@ export function useOnboardingKeyboard(input: {
 			return;
 		}
 
-		if (input.step === "cline_model") {
-			const total = input.clineEntries.length;
+		if (input.step === "enki_model") {
+			const total = input.enkiEntries.length;
 			if (total === 0) return;
 			if (key.name === "up" || (key.ctrl && key.name === "p")) {
-				input.setClineModelSelected((s) => (s <= 0 ? total - 1 : s - 1));
+				input.setEnki AIModelSelected((s) => (s <= 0 ? total - 1 : s - 1));
 				return;
 			}
 			if (key.name === "down" || (key.ctrl && key.name === "n")) {
-				input.setClineModelSelected((s) => (s >= total - 1 ? 0 : s + 1));
+				input.setEnki AIModelSelected((s) => (s >= total - 1 ? 0 : s + 1));
 				return;
 			}
 			if (key.name === "return") {
-				const entry = input.clineEntries[input.clineModelSelected];
+				const entry = input.enkiEntries[input.enkiModelSelected];
 				if (!entry) return;
 				if (entry.kind === "model") {
-					input.saveClineModelSelection(entry.model.id, entry.model.name);
+					input.saveEnki AIModelSelection(entry.model.id, entry.model.name);
 				} else {
 					input.setStep("model_picker");
 					input.loadModelsForProvider(input.activeProviderId);

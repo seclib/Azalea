@@ -14,18 +14,18 @@ import {
 	type AgentPlugin,
 	type AgentToolContext,
 	createTool,
-} from "@cline/core";
+} from "@enki/core";
 
 /**
  * Background Terminal Plugin Example
  *
  * Starts shell commands in detached background processes, stores stdout/stderr
- * under Cline's data directory, and optionally steers a completion summary back
+ * under Enki AI's data directory, and optionally steers a completion summary back
  * into the current session when the command exits.
  *
  * CLI usage:
- *   cline plugin install https://github.com/cline/cline/blob/main/sdk/examples/plugins/background-terminal.ts --cwd .
- *   cline -i "Start the dev server in the background and keep working"
+ *   enki plugin install https://github.com/enki/enki/blob/main/sdk/examples/plugins/background-terminal.ts --cwd .
+ *   enki -i "Start the dev server in the background and keep working"
  */
 
 type JobStatus = "running" | "completed" | "failed";
@@ -48,17 +48,17 @@ type JobRecord = {
 	metaPath: string;
 };
 
-interface ClinePluginHost {
+interface Enki AIPluginHost {
 	emitEvent?: (name: string, payload?: unknown) => void;
 }
 
 declare global {
-	var __clinePluginHost: ClinePluginHost | undefined;
+	var __enkiPluginHost: Enki AIPluginHost | undefined;
 }
 
 const DEFAULT_SHELL = process.env.SHELL || "/bin/zsh";
 const CLINE_DATA_DIR =
-	process.env.CLINE_DATA_DIR || join(homedir(), ".cline", "data");
+	process.env.CLINE_DATA_DIR || join(homedir(), ".enki", "data");
 const JOBS_DIR = join(CLINE_DATA_DIR, "plugins", "background-shell", "jobs");
 let sessionDefaultCwd = process.cwd();
 let setupSessionId: string | undefined;
@@ -168,7 +168,7 @@ function emitSteer(sessionId: string | undefined, prompt: string) {
 	if (!sessionId || !prompt.trim()) {
 		return;
 	}
-	globalThis.__clinePluginHost?.emitEvent?.("steer_message", {
+	globalThis.__enkiPluginHost?.emitEvent?.("steer_message", {
 		sessionId,
 		prompt,
 	});

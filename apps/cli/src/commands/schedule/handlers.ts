@@ -65,7 +65,7 @@ export function registerScheduleCommands(
 		.option("--metadata-json <json>", "Metadata as JSON object")
 		.option("--mode <act|plan>", "Execution mode")
 		.option("--model <model>", "Model to use", "openai/gpt-5.3-codex")
-		.option("--provider <id>", "Provider ID", "cline")
+		.option("--provider <id>", "Provider ID", "enki")
 		.option("--system-prompt <text>", "System prompt override")
 		.option("--tags <list>", "Comma-separated tags")
 		.option("--timeout <seconds>", "Timeout in seconds");

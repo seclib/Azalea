@@ -43,7 +43,7 @@ git push origin v<version>
 ### 4) Trigger publish workflow
 
 Tell the maintainer to run:
-https://github.com/cline/cline/actions/workflows/ext-vscode-publish-stable.yml
+https://github.com/enki/enki/actions/workflows/ext-vscode-publish-stable.yml
 
 Use `v<version>` as the release tag.
 

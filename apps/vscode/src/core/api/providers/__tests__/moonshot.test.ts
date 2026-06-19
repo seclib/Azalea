@@ -1,6 +1,6 @@
 import "should"
 import { moonshotModels } from "@shared/api"
-import type { ClineStorageMessage } from "@shared/messages/content"
+import type { Enki AIStorageMessage } from "@shared/messages/content"
 import sinon from "sinon"
 import { MoonshotHandler } from "../moonshot"
 
@@ -40,7 +40,7 @@ describe("MoonshotHandler", () => {
 			},
 		})
 
-		const messages: ClineStorageMessage[] = [{ role: "user", content: "hi" }]
+		const messages: Enki AIStorageMessage[] = [{ role: "user", content: "hi" }]
 		for await (const _chunk of handler.createMessage("system", messages)) {
 			// Consume stream to trigger request execution.
 		}

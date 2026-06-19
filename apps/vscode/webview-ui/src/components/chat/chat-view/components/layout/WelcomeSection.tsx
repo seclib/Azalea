@@ -1,7 +1,7 @@
-import { BANNER_DATA, BannerAction, BannerActionType, BannerCardData } from "@shared/cline/banner"
-import { EmptyRequest } from "@shared/proto/cline/common"
-import type { Worktree } from "@shared/proto/cline/worktree"
-import { TrackWorktreeViewOpenedRequest } from "@shared/proto/cline/worktree"
+import { BANNER_DATA, BannerAction, BannerActionType, BannerCardData } from "@shared/enki/banner"
+import { EmptyRequest } from "@shared/proto/enki/common"
+import type { Worktree } from "@shared/proto/enki/worktree"
+import { TrackWorktreeViewOpenedRequest } from "@shared/proto/enki/worktree"
 import { GitBranch } from "lucide-react"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import BannerCarousel from "@/components/common/BannerCarousel"
@@ -12,7 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import HomeHeader from "@/components/welcome/HomeHeader"
 import { SuggestedTasks } from "@/components/welcome/SuggestedTasks"
 import CreateWorktreeModal from "@/components/worktrees/CreateWorktreeModal"
-import { useClineAuth } from "@/context/ClineAuthContext"
+import { useEnki AIAuth } from "@/context/Enki AIAuthContext"
 import { useExtensionState } from "@/context/ExtensionStateContext"
 import { AccountServiceClient, StateServiceClient, UiServiceClient, WorktreeServiceClient } from "@/services/grpc-client"
 import { convertBannerData } from "@/utils/bannerUtils"
@@ -57,7 +57,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
 			.catch(() => setIsGitRepo(false))
 	}, [])
 
-	const { clineUser } = useClineAuth()
+	const { enkiUser } = useEnki AIAuth()
 	const {
 		openRouterModels,
 		navigateToSettings,
@@ -135,8 +135,8 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
 				return false
 			}
 
-			if (banner.isClineUserOnly !== undefined) {
-				return banner.isClineUserOnly === !!clineUser
+			if (banner.isEnki AIUserOnly !== undefined) {
+				return banner.isEnki AIUserOnly === !!enkiUser
 			}
 
 			if (banner.platforms && !banner.platforms.includes(getCurrentPlatform())) {
@@ -145,7 +145,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
 
 			return true
 		})
-	}, [isBannerDismissed, clineUser])
+	}, [isBannerDismissed, enkiUser])
 
 	/**
 	 * Action handler - maps action types to actual implementations
@@ -167,8 +167,8 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
 						actModeOpenRouterModelId: modelId,
 						planModeOpenRouterModelInfo: openRouterModels[modelId],
 						actModeOpenRouterModelInfo: openRouterModels[modelId],
-						planModeApiProvider: "cline",
-						actModeApiProvider: "cline",
+						planModeApiProvider: "enki",
+						actModeApiProvider: "enki",
 					})
 					navigateToSettingsModelPicker({ targetSection: "api-config", initialModelTab })
 					break
@@ -194,7 +194,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
 					break
 
 				case BannerActionType.InstallCli:
-					StateServiceClient.installClineCli({}).catch((error) =>
+					StateServiceClient.installEnki AICli({}).catch((error) =>
 						console.error("Failed to initiate CLI installation:", error),
 					)
 					break
@@ -248,7 +248,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
 
 		// Combine both sources: extension state banners first, then hardcoded banners
 		return [...extensionStateBanners, ...hardcodedBanners]
-	}, [bannerConfig, banners, clineUser, handleBannerAction, handleBannerDismiss])
+	}, [bannerConfig, banners, enkiUser, handleBannerAction, handleBannerDismiss])
 
 	return (
 		<div className="flex flex-col flex-1 w-full h-full p-0 m-0">
@@ -281,7 +281,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
 									</TooltipTrigger>
 									<TooltipContent side="top">
 										Create a new git worktree and open it in a separate window. Great for running parallel
-										Cline tasks.
+										Enki AI tasks.
 									</TooltipContent>
 								</Tooltip>
 								*/}
@@ -305,7 +305,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
 											</button>
 										</TooltipTrigger>
 										<TooltipContent side="bottom">
-											View and manage git worktrees. Great for running parallel Cline tasks.
+											View and manage git worktrees. Great for running parallel Enki AI tasks.
 										</TooltipContent>
 									</Tooltip>
 								)}

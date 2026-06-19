@@ -13,7 +13,7 @@ import { getCliBuildInfo } from "../utils/common";
 
 const {
 	mockSpawnSync,
-	mockResolveClineDataDir,
+	mockResolveEnki AIDataDir,
 	mockResolveProductionHubOwnerContext,
 	mockResolveSharedHubOwnerContext,
 	mockReadHubDiscovery,
@@ -24,11 +24,11 @@ const {
 	mockStopAllConnectors,
 } = vi.hoisted(() => ({
 	mockSpawnSync: vi.fn(),
-	mockResolveClineDataDir: vi.fn(() => "/tmp/cline-data"),
+	mockResolveEnki AIDataDir: vi.fn(() => "/tmp/enki-data"),
 	mockResolveProductionHubOwnerContext: vi.fn(() => ({
 		ownerId: "hub-production",
 		discoveryPath: path.join(
-			"/tmp/cline-data",
+			"/tmp/enki-data",
 			"locks",
 			"hub",
 			"production.json",
@@ -37,7 +37,7 @@ const {
 	mockResolveSharedHubOwnerContext: vi.fn(() => ({
 		ownerId: "hub-owner",
 		discoveryPath: path.join(
-			"/tmp/cline-data",
+			"/tmp/enki-data",
 			"locks",
 			"hub",
 			"owners",
@@ -60,8 +60,8 @@ vi.mock("node:child_process", () => ({
 	spawnSync: mockSpawnSync,
 }));
 
-vi.mock("@cline/core", () => ({
-	resolveClineDataDir: mockResolveClineDataDir,
+vi.mock("@enki/core", () => ({
+	resolveEnki AIDataDir: mockResolveEnki AIDataDir,
 	resolveProductionHubOwnerContext: mockResolveProductionHubOwnerContext,
 	resolveSharedHubOwnerContext: mockResolveSharedHubOwnerContext,
 	clearHubDiscovery: mockClearHubDiscovery,
@@ -86,11 +86,11 @@ describe("runDoctorCommand", () => {
 
 	afterEach(() => {
 		vi.clearAllMocks();
-		mockResolveClineDataDir.mockReturnValue("/tmp/cline-data");
+		mockResolveEnki AIDataDir.mockReturnValue("/tmp/enki-data");
 		mockResolveProductionHubOwnerContext.mockReturnValue({
 			ownerId: "hub-production",
 			discoveryPath: path.join(
-				"/tmp/cline-data",
+				"/tmp/enki-data",
 				"locks",
 				"hub",
 				"production.json",
@@ -335,7 +335,7 @@ describe("createDoctorCommand log subcommand", () => {
 			path.join(os.tmpdir(), `${commandName}-doctor-log-test-`),
 		);
 		tempDirs.push(dataDir);
-		mockResolveClineDataDir.mockReturnValue(dataDir);
+		mockResolveEnki AIDataDir.mockReturnValue(dataDir);
 		mockEnsureFileExists.mockImplementation((filePath: string) => {
 			mkdirSync(path.dirname(filePath), { recursive: true });
 			appendFileSync(filePath, "");
@@ -380,7 +380,7 @@ describe("createDoctorCommand log subcommand", () => {
 			path.join(os.tmpdir(), `${commandName}-doctor-log-test-`),
 		);
 		tempDirs.push(dataDir);
-		mockResolveClineDataDir.mockReturnValue(dataDir);
+		mockResolveEnki AIDataDir.mockReturnValue(dataDir);
 
 		const errors: string[] = [];
 		let exitCode = 0;

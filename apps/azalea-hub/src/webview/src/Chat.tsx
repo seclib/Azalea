@@ -1129,7 +1129,7 @@ export default function Chat({
 			type: "approval_response",
 			approvalId,
 			approved,
-			reason: approved ? "Approved in Cline Hub." : "Rejected in Cline Hub.",
+			reason: approved ? "Approved in Enki AI Hub." : "Rejected in Enki AI Hub.",
 		});
 		setStatus(approved ? "Approval sent." : "Rejection sent.");
 	};

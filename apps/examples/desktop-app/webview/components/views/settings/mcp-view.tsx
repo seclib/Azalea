@@ -445,7 +445,7 @@ export function McpServersContent() {
 				</div>
 				<p className="mb-6 text-xs text-muted-foreground">
 					{hasSettingsFile
-						? "Editing this list updates cline_mcp_settings.json."
+						? "Editing this list updates enki_mcp_settings.json."
 						: "No MCP settings file found yet. Add a server to create it."}
 				</p>
 
@@ -585,7 +585,7 @@ export function McpServersContent() {
 						<DialogDescription>
 							Update the MCP server stored in{" "}
 							<code className="font-mono">
-								{settingsPath || "cline_mcp_settings.json"}
+								{settingsPath || "enki_mcp_settings.json"}
 							</code>
 							.
 						</DialogDescription>

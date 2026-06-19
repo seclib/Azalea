@@ -1,7 +1,7 @@
 import { readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { isAbsolute, join, resolve } from "node:path";
-import type * as LlmsProviders from "@cline/llms";
+import type * as LlmsProviders from "@enki/llms";
 import {
 	type AgentConfig,
 	type AgentEvent,
@@ -11,8 +11,8 @@ import {
 	type ITelemetryService,
 	isLikelyAuthError,
 	normalizeUserInput,
-} from "@cline/shared";
-import { setHomeDirIfUnset } from "@cline/shared/storage";
+} from "@enki/shared";
+import { setHomeDirIfUnset } from "@enki/shared/storage";
 import { isOAuthProvider } from "../../auth/provider-auth-registry";
 import { createContextCompactionPrepareTurn } from "../../extensions/context/compaction";
 import type { ToolExecutors } from "../../extensions/tools";
@@ -1201,7 +1201,7 @@ export class LocalRuntimeHost implements RuntimeHost {
 	 * Anchor `task.completed` telemetry to the assistant's explicit
 	 * completion declaration. We emit at most once per session, the moment
 	 * a successful `submit_and_exit` tool call is observed in the run
-	 * result. This is the SDK analog of original Cline's
+	 * result. This is the SDK analog of original Enki AI's
 	 * `attempt_completion`-driven emission and works for both interactive
 	 * and non-interactive sessions.
 	 *

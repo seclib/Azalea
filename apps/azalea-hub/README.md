@@ -1,6 +1,6 @@
-# Cline Hub
+# Enki AI Hub
 
-A browser dashboard for the local Cline hub. Open it to see who's connected, what sessions are running, drive a session from a chat box, and restart the hub when you need a fresh daemon.
+A browser dashboard for the local Enki AI hub. Open it to see who's connected, what sessions are running, drive a session from a chat box, and restart the hub when you need a fresh daemon.
 
 ## Capabilities
 
@@ -12,12 +12,12 @@ A browser dashboard for the local Cline hub. Open it to see who's connected, wha
 - **Restart Hub** button: gracefully stops the local detached hub and respawns a fresh one
 - optional LAN/tunnel exposure gated by a shared `ROOM_SECRET`
 
-The dashboard registers two clients with the hub: a `cline-hub-server` (via `ClineCore`) for driving sessions and a `cline-hub-server` (via `HubUIClient`) for the admin view.
+The dashboard registers two clients with the hub: a `enki-hub-server` (via `Enki AICore`) for driving sessions and a `enki-hub-server` (via `HubUIClient`) for the admin view.
 
 ## Run
 
 ```bash
-cd apps/cline-hub
+cd apps/enki-hub
 bun run start
 ```
 
@@ -26,7 +26,7 @@ Open <http://127.0.0.1:8787> and click **Connect**. The server will discover or 
 For webview development with Vite hot reload:
 
 ```bash
-cd apps/cline-hub
+cd apps/enki-hub
 bun run dev
 ```
 
@@ -61,7 +61,7 @@ bun run smoke:options
 Choose a strong room secret and bind explicitly to all interfaces:
 
 ```bash
-cd apps/cline-hub
+cd apps/enki-hub
 HOST=0.0.0.0 \
 CLINE_HUB_DASHBOARD_PORT=8787 \
 PUBLIC_URL=http://YOUR_LAN_IP:8787 \
@@ -78,7 +78,7 @@ Share the printed invite URL with another machine on the same LAN.
 Start the dashboard locally with an explicit secret:
 
 ```bash
-cd apps/cline-hub
+cd apps/enki-hub
 ROOM_SECRET='use-a-long-random-secret' bun run start
 ```
 
@@ -102,7 +102,7 @@ Share only the printed invite URL with trusted participants.
 
 Clicking **Restart Hub** in the sidebar:
 
-1. Detaches the dashboard's `ClineCore` and `HubUIClient` from the current hub.
+1. Detaches the dashboard's `Enki AICore` and `HubUIClient` from the current hub.
 2. Calls `stopLocalHubServerGracefully()` to shut the local detached hub down.
 3. Calls `ensureDetachedHubServer(workspaceRoot)` to spawn a fresh hub.
 4. Reconnects and broadcasts the new hub state to every open browser tab.

@@ -11,8 +11,8 @@ describe("chat commands", () => {
 		for (const { command, botUserName } of [
 			{ command: "/help" },
 			{ command: "/start" },
-			{ command: "/help@clinebot", botUserName: "clinebot" },
-			{ command: "/start@cline_bot", botUserName: "@cline_bot" },
+			{ command: "/help@enkibot", botUserName: "enkibot" },
+			{ command: "/start@enki_bot", botUserName: "@enki_bot" },
 		]) {
 			const reply = vi.fn(async () => undefined);
 
@@ -31,7 +31,7 @@ describe("chat commands", () => {
 
 			expect(handled).toBe(true);
 			expect(reply).toHaveBeenCalledWith(
-				expect.stringContaining("Cline connector commands:"),
+				expect.stringContaining("Enki AI connector commands:"),
 			);
 			expect(reply).toHaveBeenCalledWith(
 				expect.stringContaining("Current state: tools=on, yolo=off"),
@@ -54,7 +54,7 @@ describe("chat commands", () => {
 
 		const handled = await maybeHandleChatCommand("/help@otherbot", {
 			enabled: true,
-			botUserName: "clinebot",
+			botUserName: "enkibot",
 			getState: async () => ({
 				enableTools: true,
 				autoApproveTools: false,
@@ -73,7 +73,7 @@ describe("chat commands", () => {
 		const reply = vi.fn(async () => undefined);
 		const context = {
 			enabled: true,
-			botUserName: "clinebot",
+			botUserName: "enkibot",
 			requireBotMention: true,
 			getState: async () => ({
 				enableTools: true,
@@ -88,31 +88,31 @@ describe("chat commands", () => {
 		expect(await maybeHandleChatCommand("/help", context)).toBe(false);
 		expect(reply).not.toHaveBeenCalled();
 
-		expect(await maybeHandleChatCommand("/help@clinebot", context)).toBe(true);
+		expect(await maybeHandleChatCommand("/help@enkibot", context)).toBe(true);
 		expect(reply).toHaveBeenCalledWith(
-			expect.stringContaining("Cline connector commands:"),
+			expect.stringContaining("Enki AI connector commands:"),
 		);
 	});
 
 	it("detects commands addressed to the configured bot", () => {
-		expect(isCommandAddressedToBot("/new@clinebot", "clinebot")).toBe(true);
-		expect(isCommandAddressedToBot("/new@cline_bot", "@cline_bot")).toBe(true);
-		expect(isCommandAddressedToBot("/new@cline.bot", "cline.bot")).toBe(true);
-		expect(isCommandAddressedToBot("/new@cline-bot", "cline-bot")).toBe(true);
-		expect(isCommandAddressedToBot("/new", "clinebot")).toBe(false);
-		expect(isCommandAddressedToBot("/new@otherbot", "clinebot")).toBe(false);
-		expect(isCommandAddressedToBot("/new@clinebot", undefined)).toBe(false);
+		expect(isCommandAddressedToBot("/new@enkibot", "enkibot")).toBe(true);
+		expect(isCommandAddressedToBot("/new@enki_bot", "@enki_bot")).toBe(true);
+		expect(isCommandAddressedToBot("/new@enki.bot", "enki.bot")).toBe(true);
+		expect(isCommandAddressedToBot("/new@enki-bot", "enki-bot")).toBe(true);
+		expect(isCommandAddressedToBot("/new", "enkibot")).toBe(false);
+		expect(isCommandAddressedToBot("/new@otherbot", "enkibot")).toBe(false);
+		expect(isCommandAddressedToBot("/new@enkibot", undefined)).toBe(false);
 	});
 
 	it("normalizes commands addressed to dotted and hyphenated bot names", () => {
-		expect(normalizeCommandName("/new@cline.bot", "cline.bot")).toBe("/new");
-		expect(normalizeCommandName("/new@cline-bot", "cline-bot")).toBe("/new");
+		expect(normalizeCommandName("/new@enki.bot", "enki.bot")).toBe("/new");
+		expect(normalizeCommandName("/new@enki-bot", "enki-bot")).toBe("/new");
 	});
 
 	it("leaves bot-suffixed commands unmatched without a known bot username", async () => {
 		const reply = vi.fn(async () => undefined);
 
-		const handled = await maybeHandleChatCommand("/help@clinebot", {
+		const handled = await maybeHandleChatCommand("/help@enkibot", {
 			enabled: true,
 			getState: async () => ({
 				enableTools: true,

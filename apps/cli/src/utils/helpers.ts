@@ -2,8 +2,8 @@ import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { type HookEventPayload, parseHookEventPayload } from "@cline/shared";
-import { ensureHookLogDir } from "@cline/shared/storage";
+import { type HookEventPayload, parseHookEventPayload } from "@enki/shared";
+import { ensureHookLogDir } from "@enki/shared/storage";
 import { nanoid } from "nanoid";
 import { commanderToParsedArgs, createProgram } from "../commands/program";
 import type { ParsedArgs } from "./types";
@@ -532,7 +532,7 @@ export function resolveSandboxDataDir(
 ): string {
 	const envDir = process.env.CLINE_SANDBOX_DATA_DIR?.trim();
 	const baseDir =
-		explicitDir?.trim() || envDir || join(tmpdir(), "cline-sandbox");
+		explicitDir?.trim() || envDir || join(tmpdir(), "enki-sandbox");
 	return resolve(cwd, baseDir);
 }
 

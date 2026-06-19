@@ -22,7 +22,7 @@ export interface TextContent {
 }
 
 /**
- * File content block for Cline
+ * File content block for Enki AI
  */
 export interface FileContent {
 	type: "file";

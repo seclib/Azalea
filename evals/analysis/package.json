@@ -13,7 +13,7 @@
 		"test:ui": "vitest --ui"
 	},
 	"keywords": [
-		"cline",
+		"enki",
 		"evaluation",
 		"benchmarking",
 		"ai-testing",

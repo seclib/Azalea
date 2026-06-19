@@ -1,4 +1,4 @@
-import type { BasicLogger } from "@cline/shared";
+import type { BasicLogger } from "@enki/shared";
 import { describe, expect, it, vi } from "vitest";
 import type { ITelemetryAdapter } from "./ITelemetryAdapter";
 import { TelemetryService } from "./TelemetryService";
@@ -10,7 +10,7 @@ describe("TelemetryService", () => {
 			adapters: [adapter],
 			metadata: {
 				extension_version: "1.2.3",
-				cline_type: "cli",
+				enki_type: "cli",
 			},
 			distinctId: "distinct-1",
 			commonProperties: {
@@ -22,7 +22,7 @@ describe("TelemetryService", () => {
 			event: "session.started",
 			properties: { sessionId: "session-1" },
 		});
-		service.recordCounter("cline.session.starts.total", 1, {
+		service.recordCounter("enki.session.starts.total", 1, {
 			sessionId: "session-1",
 		});
 		await service.flush();
@@ -34,12 +34,12 @@ describe("TelemetryService", () => {
 				sessionId: "session-1",
 				organization_id: "org-1",
 				extension_version: "1.2.3",
-				cline_type: "cli",
+				enki_type: "cli",
 				distinct_id: "distinct-1",
 			}),
 		);
 		expect(recordCounter).toHaveBeenCalledWith(
-			"cline.session.starts.total",
+			"enki.session.starts.total",
 			1,
 			expect.objectContaining({
 				sessionId: "session-1",
@@ -60,7 +60,7 @@ describe("TelemetryService", () => {
 			logger,
 			metadata: {
 				extension_version: "1.2.3",
-				cline_type: "cli",
+				enki_type: "cli",
 			},
 			distinctId: "distinct-1",
 		});
@@ -70,7 +70,7 @@ describe("TelemetryService", () => {
 			properties: { sessionId: "session-1" },
 		});
 		service.captureRequired("user.opt_out", { reason: "manual" });
-		service.recordCounter("cline.session.starts.total", 1, {
+		service.recordCounter("enki.session.starts.total", 1, {
 			sessionId: "session-1",
 		});
 
@@ -103,7 +103,7 @@ describe("TelemetryService", () => {
 			expect.objectContaining({
 				telemetrySink: "TelemetryLoggerSink",
 				instrument: "counter",
-				name: "cline.session.starts.total",
+				name: "enki.session.starts.total",
 			}),
 		);
 	});

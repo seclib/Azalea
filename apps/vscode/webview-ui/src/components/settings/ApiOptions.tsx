@@ -1,4 +1,4 @@
-import { StringRequest } from "@shared/proto/cline/common"
+import { StringRequest } from "@shared/proto/enki/common"
 import PROVIDERS from "@shared/providers/providers.json"
 import { Mode } from "@shared/storage/types"
 import { VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
@@ -21,8 +21,8 @@ import { BasetenProvider } from "./providers/BasetenProvider"
 import { BedrockProvider } from "./providers/BedrockProvider"
 import { CerebrasProvider } from "./providers/CerebrasProvider"
 import { ClaudeCodeProvider } from "./providers/ClaudeCodeProvider"
-import { ClinePassProvider } from "./providers/ClinePassProvider"
-import { ClineProvider } from "./providers/ClineProvider"
+import { Enki AIPassProvider } from "./providers/Enki AIPassProvider"
+import { Enki AIProvider } from "./providers/Enki AIProvider"
 import { DeepSeekProvider } from "./providers/DeepSeekProvider"
 import { DifyProvider } from "./providers/DifyProvider"
 import { DoubaoProvider } from "./providers/DoubaoProvider"
@@ -102,9 +102,9 @@ const ApiOptions = ({
 }: ApiOptionsProps) => {
 	// Use full context state for immediate save payload
 	const { apiConfiguration, remoteConfigSettings } = useExtensionState()
-	const isClinePassEnabled = useHasFeatureFlag(CLINE_PASS_FEATURE_FLAG)
+	const isEnki AIPassEnabled = useHasFeatureFlag(CLINE_PASS_FEATURE_FLAG)
 
-	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, currentMode, { isClinePassEnabled })
+	const { selectedProvider } = normalizeApiConfiguration(apiConfiguration, currentMode, { isEnki AIPassEnabled })
 
 	const { handleModeFieldChange } = useApiConfigurationHandlers()
 
@@ -145,8 +145,8 @@ const ApiOptions = ({
 
 	const providerOptions = useMemo(() => {
 		let providers = PROVIDERS.list
-		if (!isClinePassEnabled) {
-			providers = providers.filter((option) => option.value !== "cline-pass")
+		if (!isEnki AIPassEnabled) {
+			providers = providers.filter((option) => option.value !== "enki-pass")
 		}
 		// Filter by platform
 		if (PLATFORM_CONFIG.type !== PlatformType.VSCODE) {
@@ -161,7 +161,7 @@ const ApiOptions = ({
 		}
 
 		return providers
-	}, [isClinePassEnabled, remoteConfigSettings])
+	}, [isEnki AIPassEnabled, remoteConfigSettings])
 
 	const currentProviderLabel = useMemo(() => {
 		return providerOptions.find((option) => option.value === selectedProvider)?.label || selectedProvider
@@ -366,18 +366,18 @@ const ApiOptions = ({
 				<HicapProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 			)}
 
-			{apiConfiguration && selectedProvider === "cline" && (
-				<ClineProvider
+			{apiConfiguration && selectedProvider === "enki" && (
+				<Enki AIProvider
 					currentMode={currentMode}
 					initialModelTab={initialModelTab}
-					isClinePassEnabled={isClinePassEnabled}
+					isEnki AIPassEnabled={isEnki AIPassEnabled}
 					isPopup={isPopup}
 					showModelOptions={showModelOptions}
 				/>
 			)}
 
-			{apiConfiguration && isClinePassEnabled && selectedProvider === "cline-pass" && (
-				<ClinePassProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
+			{apiConfiguration && isEnki AIPassEnabled && selectedProvider === "enki-pass" && (
+				<Enki AIPassProvider currentMode={currentMode} isPopup={isPopup} showModelOptions={showModelOptions} />
 			)}
 
 			{apiConfiguration && selectedProvider === "asksage" && (

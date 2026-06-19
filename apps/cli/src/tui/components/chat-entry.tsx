@@ -3,13 +3,13 @@ import type React from "react";
 import { useState } from "react";
 import "opentui-spinner/react";
 import {
-	getClinePassSubscriptionUrl,
-	isClinePassSubscriptionError,
-} from "../../utils/cline-pass-errors";
+	getEnki AIPassSubscriptionUrl,
+	isEnki AIPassSubscriptionError,
+} from "../../utils/enki-pass-errors";
 import {
 	CLINE_CREDITS_DASHBOARD_URL,
-	isClineAccountCreditsErrorMessage,
-} from "../cline-account";
+	isEnki AIAccountCreditsErrorMessage,
+} from "../enki-account";
 import { useTerminalBackground } from "../hooks/use-terminal-background";
 import {
 	getDefaultForeground,
@@ -264,7 +264,7 @@ function ToolCallView(props: {
 	);
 }
 
-function ClineCreditsErrorView(props: { defaultFg?: string }) {
+function Enki AICreditsErrorView(props: { defaultFg?: string }) {
 	return (
 		<box flexDirection="row">
 			<text fg="red" content="* " />
@@ -275,11 +275,11 @@ function ClineCreditsErrorView(props: { defaultFg?: string }) {
 				borderColor="red"
 				paddingX={1}
 			>
-				<text fg="red">Cline Credits depleted</text>
+				<text fg="red">Enki AI Credits depleted</text>
 				<text
 					fg={props.defaultFg}
 					selectable
-					content="You have run out of Cline credits. Add credits in the dashboard to continue."
+					content="You have run out of Enki AI credits. Add credits in the dashboard to continue."
 				/>
 				<box flexDirection="row">
 					<text fg="gray">Dashboard: </text>
@@ -294,8 +294,8 @@ function ClineCreditsErrorView(props: { defaultFg?: string }) {
 	);
 }
 
-function ClinePassSubscriptionErrorView(props: { defaultFg?: string }) {
-	const subscriptionUrl = getClinePassSubscriptionUrl();
+function Enki AIPassSubscriptionErrorView(props: { defaultFg?: string }) {
+	const subscriptionUrl = getEnki AIPassSubscriptionUrl();
 	return (
 		<box flexDirection="row">
 			<text fg="yellow" content="* " />
@@ -306,11 +306,11 @@ function ClinePassSubscriptionErrorView(props: { defaultFg?: string }) {
 				borderColor="yellow"
 				paddingX={1}
 			>
-				<text fg="yellow">ClinePass subscription required</text>
+				<text fg="yellow">Enki AIPass subscription required</text>
 				<text
 					fg={props.defaultFg}
 					selectable
-					content="No access to ClinePass subscription models yet. Subscribe to ClinePass, the low cost open weights model coding plan."
+					content="No access to Enki AIPass subscription models yet. Subscribe to Enki AIPass, the low cost open weights model coding plan."
 				/>
 				<box flexDirection="row">
 					<text fg="gray">Subscribe: </text>
@@ -424,11 +424,11 @@ export function ChatEntryView(props: {
 			);
 
 		case "error":
-			if (isClineAccountCreditsErrorMessage(entry.text)) {
-				return <ClineCreditsErrorView defaultFg={defaultFg} />;
+			if (isEnki AIAccountCreditsErrorMessage(entry.text)) {
+				return <Enki AICreditsErrorView defaultFg={defaultFg} />;
 			}
-			if (isClinePassSubscriptionError(entry.text)) {
-				return <ClinePassSubscriptionErrorView defaultFg={defaultFg} />;
+			if (isEnki AIPassSubscriptionError(entry.text)) {
+				return <Enki AIPassSubscriptionErrorView defaultFg={defaultFg} />;
 			}
 			return (
 				<box flexDirection="row">

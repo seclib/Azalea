@@ -1,23 +1,23 @@
 export {
-	ClineAccountService,
-	type ClineAccountServiceOptions,
-} from "./cline-account-service";
+	Enki AIAccountService,
+	type Enki AIAccountServiceOptions,
+} from "./enki-account-service";
 export {
-	type ClineAccountOperations,
-	executeClineAccountAction,
-	isClineAccountActionRequest,
+	type Enki AIAccountOperations,
+	executeEnki AIAccountAction,
+	isEnki AIAccountActionRequest,
 	type ProviderActionExecutor,
-	RpcClineAccountService,
+	RpcEnki AIAccountService,
 } from "./rpc";
 export type {
-	ClineAccountBalance,
-	ClineAccountOrganization,
-	ClineAccountOrganizationBalance,
-	ClineAccountOrganizationUsageTransaction,
-	ClineAccountPaymentTransaction,
-	ClineAccountUsageTransaction,
-	ClineAccountUser,
-	ClineOrganization,
+	Enki AIAccountBalance,
+	Enki AIAccountOrganization,
+	Enki AIAccountOrganizationBalance,
+	Enki AIAccountOrganizationUsageTransaction,
+	Enki AIAccountPaymentTransaction,
+	Enki AIAccountUsageTransaction,
+	Enki AIAccountUser,
+	Enki AIOrganization,
 	FeaturebaseTokenResponse,
 	UserRemoteConfigOrganization,
 	UserRemoteConfigResponse,

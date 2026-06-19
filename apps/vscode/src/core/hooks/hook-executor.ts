@@ -1,6 +1,6 @@
 import type { HookOutputStreamMeta } from "@shared/ExtensionMessage"
-import { ClineMessage } from "@shared/ExtensionMessage"
-import type { HookOutput } from "@shared/proto/cline/hooks"
+import { Enki AIMessage } from "@shared/ExtensionMessage"
+import type { HookOutput } from "@shared/proto/enki/hooks"
 import { Logger } from "@/shared/services/Logger"
 import { MessageStateHandler } from "../task/message-state"
 import { HookExecutionError } from "./HookError"
@@ -264,10 +264,10 @@ async function updateHookMessage(
 	hookMessageTs: number,
 	metadata: Record<string, any>,
 ): Promise<void> {
-	const clineMessages = messageStateHandler.getClineMessages()
-	const hookMessageIndex = clineMessages.findIndex((m: ClineMessage) => m.ts === hookMessageTs)
+	const enkiMessages = messageStateHandler.getEnki AIMessages()
+	const hookMessageIndex = enkiMessages.findIndex((m: Enki AIMessage) => m.ts === hookMessageTs)
 	if (hookMessageIndex !== -1) {
-		await messageStateHandler.updateClineMessage(hookMessageIndex, {
+		await messageStateHandler.updateEnki AIMessage(hookMessageIndex, {
 			text: JSON.stringify(metadata),
 		})
 	}
@@ -284,15 +284,15 @@ async function updateHookMessage(
  * 4. Re-add the tool message at the end (after hook messages)
  */
 async function reorderHookAndToolMessages(messageStateHandler: MessageStateHandler): Promise<void> {
-	const clineMessages = messageStateHandler.getClineMessages()
+	const enkiMessages = messageStateHandler.getEnki AIMessages()
 
 	// Define all message types that represent tool executions with PreToolUse hooks
 	const toolMessageTypes = ["tool", "command", "use_mcp_server", "browser_action_launch"]
 
 	// Find the most recent tool message
 	let lastToolMessageIndex = -1
-	for (let i = clineMessages.length - 1; i >= 0; i--) {
-		const msgType = clineMessages[i].ask || clineMessages[i].say
+	for (let i = enkiMessages.length - 1; i >= 0; i--) {
+		const msgType = enkiMessages[i].ask || enkiMessages[i].say
 		if (msgType && toolMessageTypes.includes(msgType)) {
 			lastToolMessageIndex = i
 			break
@@ -305,8 +305,8 @@ async function reorderHookAndToolMessages(messageStateHandler: MessageStateHandl
 
 	// Check if there are any hook messages after the tool message
 	let hasHookMessagesAfterTool = false
-	for (let i = lastToolMessageIndex + 1; i < clineMessages.length; i++) {
-		if (clineMessages[i].say === "hook_status" || clineMessages[i].say === "hook_output_stream") {
+	for (let i = lastToolMessageIndex + 1; i < enkiMessages.length; i++) {
+		if (enkiMessages[i].say === "hook_status" || enkiMessages[i].say === "hook_output_stream") {
 			hasHookMessagesAfterTool = true
 			break
 		}
@@ -317,11 +317,11 @@ async function reorderHookAndToolMessages(messageStateHandler: MessageStateHandl
 	}
 
 	// Store the tool message (deep copy to preserve all properties)
-	const toolMessage = { ...clineMessages[lastToolMessageIndex] }
+	const toolMessage = { ...enkiMessages[lastToolMessageIndex] }
 
 	// Delete the tool message at its current position
-	await messageStateHandler.deleteClineMessage(lastToolMessageIndex)
+	await messageStateHandler.deleteEnki AIMessage(lastToolMessageIndex)
 
 	// Re-add the tool message at the end (after hook messages)
-	await messageStateHandler.addToClineMessages(toolMessage)
+	await messageStateHandler.addToEnki AIMessages(toolMessage)
 }

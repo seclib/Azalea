@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
 	AwsBedrockSettingsSchema,
-	ClineSettingsSchema,
+	Enki AISettingsSchema,
 	EnterpriseTelemetrySchema,
 	OpenAiCompatibleSchema,
 	PromptUploadingSchema,
@@ -238,20 +238,20 @@ describe("Remote Config Schema", () => {
 		});
 	});
 
-	describe("ClineSettingsSchema", () => {
-		it("should accept valid Cline provider settings", () => {
+	describe("Enki AISettingsSchema", () => {
+		it("should accept valid Enki AI provider settings", () => {
 			const validSettings = {
 				models: [
 					{ id: "claude-3-5-sonnet-20241022" },
 					{ id: "claude-3-5-haiku-20241022" },
 				],
 			};
-			const result = ClineSettingsSchema.parse(validSettings);
+			const result = Enki AISettingsSchema.parse(validSettings);
 			expect(result).to.deep.equal(validSettings);
 		});
 
 		it("should accept empty settings object", () => {
-			const result = ClineSettingsSchema.parse({});
+			const result = Enki AISettingsSchema.parse({});
 			expect(result.models).to.be.undefined;
 		});
 
@@ -259,12 +259,12 @@ describe("Remote Config Schema", () => {
 			const settings = {
 				models: [{ id: "claude-3-5-sonnet-20241022" }],
 			};
-			expect(() => ClineSettingsSchema.parse(settings)).to.not.throw();
+			expect(() => Enki AISettingsSchema.parse(settings)).to.not.throw();
 		});
 
 		it("should reject models with missing id field", () => {
 			expect(() =>
-				ClineSettingsSchema.parse({
+				Enki AISettingsSchema.parse({
 					models: [{}],
 				}),
 			).to.throw();
@@ -722,7 +722,7 @@ describe("Remote Config Schema", () => {
 						awsBedrockUsePromptCache: true,
 						awsBedrockEndpoint: "https://custom-bedrock.endpoint",
 					},
-					Cline: {
+					Enki AI: {
 						models: [
 							{ id: "claude-3-5-sonnet-20241022" },
 							{ id: "claude-3-5-haiku-20241022" },
@@ -744,7 +744,7 @@ describe("Remote Config Schema", () => {
 							{ id: "claude-3-5-sonnet-20241022" },
 							{ id: "claude-3-5-sonnet-20241024", thinkingBudgetTokens: 1600 },
 						],
-						baseUrl: "https://example.cline.bot",
+						baseUrl: "https://example.enki.bot",
 					},
 				},
 				enterpriseTelemetry: {
@@ -803,12 +803,12 @@ describe("Remote Config Schema", () => {
 				"https://custom-bedrock.endpoint",
 			);
 
-			// Verify Cline settings
-			expect(result.providerSettings?.Cline?.models).to.have.lengthOf(2);
-			expect(result.providerSettings?.Cline?.models?.[0].id).to.equal(
+			// Verify Enki AI settings
+			expect(result.providerSettings?.Enki AI?.models).to.have.lengthOf(2);
+			expect(result.providerSettings?.Enki AI?.models?.[0].id).to.equal(
 				"claude-3-5-sonnet-20241022",
 			);
-			expect(result.providerSettings?.Cline?.models?.[1].id).to.equal(
+			expect(result.providerSettings?.Enki AI?.models?.[1].id).to.equal(
 				"claude-3-5-haiku-20241022",
 			);
 
@@ -846,7 +846,7 @@ describe("Remote Config Schema", () => {
 				result.providerSettings?.Anthropic?.models?.[1].thinkingBudgetTokens,
 			).to.equal(1600);
 			expect(result.providerSettings?.Anthropic?.baseUrl).to.equal(
-				"https://example.cline.bot",
+				"https://example.enki.bot",
 			);
 
 			// Verify OpenTelemetry settings

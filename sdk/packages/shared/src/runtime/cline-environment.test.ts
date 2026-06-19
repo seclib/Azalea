@@ -4,9 +4,9 @@ import {
 	CLINE_ENVIRONMENT_OVERRIDE_ENV,
 	CLINE_ENVIRONMENTS,
 	DEFAULT_CLINE_ENVIRONMENT,
-	getClineEnvironmentConfig,
-	resolveClineEnvironment,
-} from "./cline-environment";
+	getEnki AIEnvironmentConfig,
+	resolveEnki AIEnvironment,
+} from "./enki-environment";
 
 const ENV_KEYS = [
 	CLINE_ENVIRONMENT_ENV,
@@ -37,74 +37,74 @@ afterEach(() => {
 	}
 });
 
-describe("resolveClineEnvironment", () => {
+describe("resolveEnki AIEnvironment", () => {
 	it("defaults to production when no env var is set", () => {
-		expect(resolveClineEnvironment()).toBe(DEFAULT_CLINE_ENVIRONMENT);
+		expect(resolveEnki AIEnvironment()).toBe(DEFAULT_CLINE_ENVIRONMENT);
 	});
 
 	it("reads CLINE_ENVIRONMENT from process.env", () => {
 		process.env[CLINE_ENVIRONMENT_ENV] = "staging";
-		expect(resolveClineEnvironment()).toBe("staging");
+		expect(resolveEnki AIEnvironment()).toBe("staging");
 
 		process.env[CLINE_ENVIRONMENT_ENV] = "local";
-		expect(resolveClineEnvironment()).toBe("local");
+		expect(resolveEnki AIEnvironment()).toBe("local");
 	});
 
 	it("prefers CLINE_ENVIRONMENT_OVERRIDE over CLINE_ENVIRONMENT", () => {
 		process.env[CLINE_ENVIRONMENT_OVERRIDE_ENV] = "local";
 		process.env[CLINE_ENVIRONMENT_ENV] = "staging";
 
-		expect(resolveClineEnvironment()).toBe("local");
+		expect(resolveEnki AIEnvironment()).toBe("local");
 	});
 
 	it("normalizes case and surrounding whitespace", () => {
 		process.env[CLINE_ENVIRONMENT_ENV] = "  STAGING  ";
 
-		expect(resolveClineEnvironment()).toBe("staging");
+		expect(resolveEnki AIEnvironment()).toBe("staging");
 	});
 
 	it("ignores unknown values and falls through to the next source", () => {
 		process.env[CLINE_ENVIRONMENT_OVERRIDE_ENV] = "qa";
 		process.env[CLINE_ENVIRONMENT_ENV] = "staging";
-		expect(resolveClineEnvironment()).toBe("staging");
+		expect(resolveEnki AIEnvironment()).toBe("staging");
 
 		delete process.env[CLINE_ENVIRONMENT_OVERRIDE_ENV];
 		process.env[CLINE_ENVIRONMENT_ENV] = "qa";
-		expect(resolveClineEnvironment()).toBe(DEFAULT_CLINE_ENVIRONMENT);
+		expect(resolveEnki AIEnvironment()).toBe(DEFAULT_CLINE_ENVIRONMENT);
 	});
 
 	it("defaults to production when process is unavailable", () => {
 		vi.stubGlobal("process", undefined);
 
-		expect(resolveClineEnvironment()).toBe(DEFAULT_CLINE_ENVIRONMENT);
+		expect(resolveEnki AIEnvironment()).toBe(DEFAULT_CLINE_ENVIRONMENT);
 	});
 });
 
-describe("getClineEnvironmentConfig", () => {
+describe("getEnki AIEnvironmentConfig", () => {
 	it("returns the config for an explicit environment", () => {
-		expect(getClineEnvironmentConfig("staging")).toBe(
+		expect(getEnki AIEnvironmentConfig("staging")).toBe(
 			CLINE_ENVIRONMENTS.staging,
 		);
-		expect(getClineEnvironmentConfig("local")).toBe(CLINE_ENVIRONMENTS.local);
-		expect(getClineEnvironmentConfig("production")).toBe(
+		expect(getEnki AIEnvironmentConfig("local")).toBe(CLINE_ENVIRONMENTS.local);
+		expect(getEnki AIEnvironmentConfig("production")).toBe(
 			CLINE_ENVIRONMENTS.production,
 		);
 	});
 
 	it("falls back to production by default", () => {
-		expect(getClineEnvironmentConfig()).toBe(CLINE_ENVIRONMENTS.production);
+		expect(getEnki AIEnvironmentConfig()).toBe(CLINE_ENVIRONMENTS.production);
 	});
 
 	it("uses the resolved process.env environment when no explicit environment is provided", () => {
 		process.env[CLINE_ENVIRONMENT_ENV] = "staging";
 
-		expect(getClineEnvironmentConfig()).toBe(CLINE_ENVIRONMENTS.staging);
+		expect(getEnki AIEnvironmentConfig()).toBe(CLINE_ENVIRONMENTS.staging);
 	});
 
 	it("applies CLINE_API_BASE_URL without mutating the catalog config", () => {
 		process.env.CLINE_API_BASE_URL = "http://127.0.0.1:3000";
 
-		expect(getClineEnvironmentConfig("local")).toEqual({
+		expect(getEnki AIEnvironmentConfig("local")).toEqual({
 			...CLINE_ENVIRONMENTS.local,
 			apiBaseUrl: "http://127.0.0.1:3000",
 			mcpBaseUrl: "http://127.0.0.1:3000/v1/mcp",
@@ -115,7 +115,7 @@ describe("getClineEnvironmentConfig", () => {
 	it("defaults to production when process is unavailable", () => {
 		vi.stubGlobal("process", undefined);
 
-		expect(getClineEnvironmentConfig()).toBe(CLINE_ENVIRONMENTS.production);
+		expect(getEnki AIEnvironmentConfig()).toBe(CLINE_ENVIRONMENTS.production);
 	});
 });
 

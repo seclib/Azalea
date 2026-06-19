@@ -1,14 +1,14 @@
-import type { Boolean, EmptyRequest } from "@shared/proto/cline/common"
+import type { Boolean, EmptyRequest } from "@shared/proto/enki/common"
 import { useCallback, useEffect } from "react"
 import AccountView from "./components/account/AccountView"
 import ChatView from "./components/chat/ChatView"
 import HistoryView from "./components/history/HistoryView"
 import McpView from "./components/mcp/configuration/McpConfigurationView"
-import { openClinePassSubscriptionIfPending } from "./components/onboarding/clinePassSubscribe"
+import { openEnki AIPassSubscriptionIfPending } from "./components/onboarding/enkiPassSubscribe"
 import OnboardingView from "./components/onboarding/OnboardingView"
 import SettingsView from "./components/settings/SettingsView"
 import WorktreesView from "./components/worktrees/WorktreesView"
-import { useClineAuth } from "./context/ClineAuthContext"
+import { useEnki AIAuth } from "./context/Enki AIAuthContext"
 import { useExtensionState } from "./context/ExtensionStateContext"
 import { Providers } from "./Providers"
 import { UiServiceClient } from "./services/grpc-client"
@@ -37,7 +37,7 @@ const AppContent = () => {
 		hideAnnouncement,
 	} = useExtensionState()
 
-	const { clineUser, organizations, activeOrganization } = useClineAuth()
+	const { enkiUser, organizations, activeOrganization } = useEnki AIAuth()
 
 	const showUpdateAnnouncementModal = useCallback(() => {
 		setShowAnnouncement(true)
@@ -57,13 +57,13 @@ const AppContent = () => {
 		showUpdateAnnouncementModal()
 	}, [didHydrateState, showWelcome, shouldShowAnnouncement, showAnnouncement, showUpdateAnnouncementModal])
 
-	// Open the ClinePass subscription page once auth completes. Lives here (not in OnboardingView)
-	// because handleAuthCallback unmounts onboarding before the clineUser update arrives.
+	// Open the Enki AIPass subscription page once auth completes. Lives here (not in OnboardingView)
+	// because handleAuthCallback unmounts onboarding before the enkiUser update arrives.
 	useEffect(() => {
-		if (clineUser?.uid) {
-			openClinePassSubscriptionIfPending(clineUser.appBaseUrl)
+		if (enkiUser?.uid) {
+			openEnki AIPassSubscriptionIfPending(enkiUser.appBaseUrl)
 		}
-	}, [clineUser?.uid, clineUser?.appBaseUrl])
+	}, [enkiUser?.uid, enkiUser?.appBaseUrl])
 
 	if (!didHydrateState) {
 		return null
@@ -81,7 +81,7 @@ const AppContent = () => {
 			{showAccount && (
 				<AccountView
 					activeOrganization={activeOrganization}
-					clineUser={clineUser}
+					enkiUser={enkiUser}
 					onDone={hideAccount}
 					organizations={organizations}
 				/>

@@ -5,8 +5,8 @@ const mocks = vi.hoisted(() => ({
 	getBooleanFlagEnabled: vi.fn(() => true),
 }));
 
-vi.mock("@cline/core", async (importOriginal) => {
-	const actual = await importOriginal<typeof import("@cline/core")>();
+vi.mock("@enki/core", async (importOriginal) => {
+	const actual = await importOriginal<typeof import("@enki/core")>();
 	return {
 		...actual,
 		listLocalProviders: mocks.listLocalProviders,
@@ -20,15 +20,15 @@ vi.mock("./feature-flags", () => ({
 }));
 
 describe("listLocalProviders", () => {
-	it("passes the ClinePass feature flag into the SDK provider list", async () => {
+	it("passes the Enki AIPass feature flag into the SDK provider list", async () => {
 		const { listLocalProviders } = await import("./provider-catalog");
 		const manager = {} as never;
 
 		await listLocalProviders(manager);
 
-		expect(mocks.getBooleanFlagEnabled).toHaveBeenCalledWith("ext-cline-pass");
+		expect(mocks.getBooleanFlagEnabled).toHaveBeenCalledWith("ext-enki-pass");
 		expect(mocks.listLocalProviders).toHaveBeenCalledWith(manager, {
-			isClinePassEnabled: true,
+			isEnki AIPassEnabled: true,
 		});
 	});
 });

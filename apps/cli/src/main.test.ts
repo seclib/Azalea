@@ -24,7 +24,7 @@ const authMocks = vi.hoisted(() => ({
 	ensureOAuthProviderApiKey: vi.fn(),
 	getPersistedProviderApiKey: vi.fn(() => undefined),
 	isOAuthProvider: vi.fn(() => false),
-	normalizeProviderId: vi.fn((providerId?: string) => providerId ?? "cline"),
+	normalizeProviderId: vi.fn((providerId?: string) => providerId ?? "enki"),
 	parseAuthCommandArgs: vi.fn(),
 	runAuthCommand: vi.fn(),
 }));
@@ -59,10 +59,10 @@ const dashboardMocks = vi.hoisted(() => ({
 	runDashboardCommand: vi.fn(),
 }));
 const migrationNoticeMocks = vi.hoisted(() => ({
-	getClineCliMigrationNotice: vi.fn<() => CliMigrationNotice | undefined>(
+	getEnki AICliMigrationNotice: vi.fn<() => CliMigrationNotice | undefined>(
 		() => undefined,
 	),
-	markClineCliMigrationNoticeShown: vi.fn(),
+	markEnki AICliMigrationNoticeShown: vi.fn(),
 }));
 const updateMocks = vi.hoisted(() => ({
 	autoUpdateOnStartup: vi.fn(),
@@ -150,7 +150,7 @@ vi.mock("./runtime/run-interactive", () => {
 });
 vi.mock("./utils/session", () => sessionMocks);
 vi.mock("./session/session", () => sessionMocks);
-vi.mock("@cline/core", () => {
+vi.mock("@enki/core", () => {
 	return {
 		resolveProviderConfig: llmMocks.resolveProviderConfig,
 		createTeamName: vi.fn(() => "team-test"),
@@ -226,7 +226,7 @@ describe("runCli lightweight command dispatch", () => {
 		worktreeMocks.createTaskWorktree.mockResolvedValue({
 			success: true,
 			message: "Worktree created",
-			path: "/tmp/cline-worktree",
+			path: "/tmp/enki-worktree",
 			taskId: "task-1",
 			repoRoot: "/tmp/source",
 		});
@@ -244,7 +244,7 @@ describe("runCli lightweight command dispatch", () => {
 		authMocks.isOAuthProvider.mockReturnValue(false);
 		authMocks.normalizeProviderId.mockReset();
 		authMocks.normalizeProviderId.mockImplementation(
-			(providerId?: string) => providerId ?? "cline",
+			(providerId?: string) => providerId ?? "enki",
 		);
 		authMocks.parseAuthCommandArgs.mockReset();
 		authMocks.runAuthCommand.mockReset();
@@ -262,9 +262,9 @@ describe("runCli lightweight command dispatch", () => {
 		kanbanMocks.launchKanban.mockResolvedValue(0);
 		dashboardMocks.runDashboardCommand.mockReset();
 		dashboardMocks.runDashboardCommand.mockResolvedValue(0);
-		migrationNoticeMocks.getClineCliMigrationNotice.mockReset();
-		migrationNoticeMocks.getClineCliMigrationNotice.mockReturnValue(undefined);
-		migrationNoticeMocks.markClineCliMigrationNoticeShown.mockReset();
+		migrationNoticeMocks.getEnki AICliMigrationNotice.mockReset();
+		migrationNoticeMocks.getEnki AICliMigrationNotice.mockReturnValue(undefined);
+		migrationNoticeMocks.markEnki AICliMigrationNoticeShown.mockReset();
 		updateMocks.autoUpdateOnStartup.mockReset();
 		updateMocks.checkForUpdates.mockReset();
 		updateMocks.checkForUpdates.mockResolvedValue(0);
@@ -485,8 +485,8 @@ describe("runCli lightweight command dispatch", () => {
 		expect(runtimeMocks.runAgent).toHaveBeenCalledWith(
 			"hello",
 			expect.objectContaining({
-				cwd: "/tmp/cline-worktree",
-				workspaceRoot: "/tmp/cline-worktree",
+				cwd: "/tmp/enki-worktree",
+				workspaceRoot: "/tmp/enki-worktree",
 			}),
 			expect.anything(),
 		);
@@ -508,8 +508,8 @@ describe("runCli lightweight command dispatch", () => {
 		expect(runtimeMocks.runAgent).not.toHaveBeenCalled();
 		expect(runtimeMocks.runInteractive).toHaveBeenCalledWith(
 			expect.objectContaining({
-				cwd: "/tmp/cline-worktree",
-				workspaceRoot: "/tmp/cline-worktree",
+				cwd: "/tmp/enki-worktree",
+				workspaceRoot: "/tmp/enki-worktree",
 			}),
 			expect.anything(),
 			undefined,
@@ -567,8 +567,8 @@ describe("runCli lightweight command dispatch", () => {
 		expect(runtimeMocks.runAgent).toHaveBeenCalledWith(
 			"from pipe",
 			expect.objectContaining({
-				cwd: "/tmp/cline-worktree",
-				workspaceRoot: "/tmp/cline-worktree",
+				cwd: "/tmp/enki-worktree",
+				workspaceRoot: "/tmp/enki-worktree",
 			}),
 			expect.anything(),
 		);
@@ -606,10 +606,10 @@ describe("runCli lightweight command dispatch", () => {
 
 	it("passes the migration notice marker into interactive mode", async () => {
 		const notice = {
-			id: "cline-cli-tui-default",
-			title: "Welcome to the new Cline CLI",
+			id: "enki-cli-tui-default",
+			title: "Welcome to the new Enki AI CLI",
 		};
-		migrationNoticeMocks.getClineCliMigrationNotice.mockReturnValue(notice);
+		migrationNoticeMocks.getEnki AICliMigrationNotice.mockReturnValue(notice);
 		Object.defineProperty(process.stdout, "isTTY", {
 			value: true,
 			configurable: true,
@@ -629,18 +629,18 @@ describe("runCli lightweight command dispatch", () => {
 			}),
 		);
 		expect(
-			migrationNoticeMocks.markClineCliMigrationNoticeShown,
+			migrationNoticeMocks.markEnki AICliMigrationNoticeShown,
 		).not.toHaveBeenCalled();
 		const options = runtimeMocks.runInteractive.mock.calls[0]?.[3];
 		await options?.onInitialNoticeShown?.(notice);
 		expect(
-			migrationNoticeMocks.markClineCliMigrationNoticeShown,
+			migrationNoticeMocks.markEnki AICliMigrationNoticeShown,
 		).toHaveBeenCalledTimes(1);
 	});
 
 	it("does not start OAuth before onboarding in interactive mode", async () => {
 		authMocks.isOAuthProvider.mockReturnValue(true);
-		authMocks.normalizeProviderId.mockReturnValue("cline");
+		authMocks.normalizeProviderId.mockReturnValue("enki");
 		authMocks.getPersistedProviderApiKey.mockReturnValue(undefined);
 		authMocks.ensureOAuthProviderApiKey.mockClear();
 		process.argv = ["bun", "src/index.ts", "-i"];
@@ -652,7 +652,7 @@ describe("runCli lightweight command dispatch", () => {
 		expect(runtimeMocks.runInteractive).toHaveBeenCalledTimes(1);
 		expect(runtimeMocks.runInteractive).toHaveBeenCalledWith(
 			expect.objectContaining({
-				providerId: "cline",
+				providerId: "enki",
 				apiKey: "",
 			}),
 			expect.anything(),
@@ -676,7 +676,7 @@ describe("runCli lightweight command dispatch", () => {
 
 		await expect(runCli()).resolves.toBeUndefined();
 		expect(llmMocks.resolveProviderConfig).toHaveBeenCalledWith(
-			"cline",
+			"enki",
 			{
 				loadLatestOnInit: true,
 				loadPrivateOnAuth: true,
@@ -705,7 +705,7 @@ describe("runCli lightweight command dispatch", () => {
 
 		await expect(runCli()).resolves.toBeUndefined();
 		expect(llmMocks.resolveProviderConfig).toHaveBeenCalledWith(
-			"cline",
+			"enki",
 			{
 				loadLatestOnInit: true,
 				loadPrivateOnAuth: true,
@@ -733,7 +733,7 @@ describe("runCli lightweight command dispatch", () => {
 
 		await expect(runCli()).resolves.toBeUndefined();
 		expect(llmMocks.resolveProviderConfig).toHaveBeenCalledWith(
-			"cline",
+			"enki",
 			undefined,
 			undefined,
 		);
@@ -857,7 +857,7 @@ describe("runCli lightweight command dispatch", () => {
 		);
 	});
 
-	it("does not pass non-Cline provider settings as Cline account options", async () => {
+	it("does not pass non-Enki AI provider settings as Enki AI account options", async () => {
 		providerSettingsMocks.getLastUsedProviderSettings.mockReturnValue({
 			provider: "openrouter",
 			baseUrl: "https://openrouter.ai/api/v1",
@@ -882,24 +882,24 @@ describe("runCli lightweight command dispatch", () => {
 			expect.anything(),
 			undefined,
 			expect.objectContaining({
-				clineApiBaseUrl: undefined,
-				clineProviderSettings: undefined,
+				enkiApiBaseUrl: undefined,
+				enkiProviderSettings: undefined,
 			}),
 		);
 	});
 
-	it("passes Cline provider settings as Cline account options", async () => {
-		const clineSettings = {
-			provider: "cline",
+	it("passes Enki AI provider settings as Enki AI account options", async () => {
+		const enkiSettings = {
+			provider: "enki",
 			baseUrl: "https://api.example.test",
 			model: "anthropic/claude-sonnet-4.6",
 		};
 		providerSettingsMocks.getLastUsedProviderSettings.mockReturnValue(
-			clineSettings,
+			enkiSettings,
 		);
-		providerSettingsMocks.getProviderSettings.mockReturnValue(clineSettings);
+		providerSettingsMocks.getProviderSettings.mockReturnValue(enkiSettings);
 		authMocks.normalizeProviderId.mockImplementation(
-			(providerId?: string) => providerId ?? "cline",
+			(providerId?: string) => providerId ?? "enki",
 		);
 		process.argv = ["bun", "src/index.ts"];
 
@@ -912,15 +912,15 @@ describe("runCli lightweight command dispatch", () => {
 			expect.anything(),
 			undefined,
 			expect.objectContaining({
-				clineApiBaseUrl: "https://api.example.test",
-				clineProviderSettings: clineSettings,
+				enkiApiBaseUrl: "https://api.example.test",
+				enkiProviderSettings: enkiSettings,
 			}),
 		);
 	});
 
-	it("seeds feature flag identity from persisted Cline account id before checking flags", async () => {
-		const clineSettings = {
-			provider: "cline",
+	it("seeds feature flag identity from persisted Enki AI account id before checking flags", async () => {
+		const enkiSettings = {
+			provider: "enki",
 			model: "anthropic/claude-sonnet-4.6",
 			auth: {
 				accountId: "acct-startup",
@@ -928,7 +928,7 @@ describe("runCli lightweight command dispatch", () => {
 				refreshToken: "refresh-token",
 			},
 		};
-		providerSettingsMocks.getProviderSettings.mockReturnValue(clineSettings);
+		providerSettingsMocks.getProviderSettings.mockReturnValue(enkiSettings);
 		process.argv = ["bun", "src/index.ts"];
 
 		const { runCli } = await import("./main");
@@ -963,9 +963,9 @@ describe("runCli lightweight command dispatch", () => {
 			"src/index.ts",
 			"dashboard",
 			"--config",
-			"/tmp/cline-config",
+			"/tmp/enki-config",
 			"--data-dir",
-			".cline-dashboard-data",
+			".enki-dashboard-data",
 			"--port",
 			"9090",
 			"--no-open",
@@ -976,8 +976,8 @@ describe("runCli lightweight command dispatch", () => {
 		await expect(runCli()).resolves.toBeUndefined();
 		expect(dashboardMocks.runDashboardCommand).toHaveBeenCalledWith(
 			expect.objectContaining({
-				configDir: "/tmp/cline-config",
-				dataDir: ".cline-dashboard-data",
+				configDir: "/tmp/enki-config",
+				dataDir: ".enki-dashboard-data",
 				port: "9090",
 				openBrowser: false,
 				io: expect.any(Object),
@@ -1132,7 +1132,7 @@ describe("runCli lightweight command dispatch", () => {
 		mockState.runAgentCalls = 0;
 		runtimeMocks.runAgent.mockClear();
 		providerSettingsMocks.getProviderSettings.mockReturnValue({
-			provider: "cline",
+			provider: "enki",
 			model: "openai/gpt-5",
 			reasoning: { enabled: true, effort: "high" },
 		});
@@ -1158,7 +1158,7 @@ describe("runCli lightweight command dispatch", () => {
 		mockState.runAgentCalls = 0;
 		runtimeMocks.runAgent.mockClear();
 		providerSettingsMocks.getProviderSettings.mockReturnValue({
-			provider: "cline",
+			provider: "enki",
 			model: "openai/gpt-5",
 			reasoning: { enabled: true, effort: "high" },
 		});
@@ -1325,7 +1325,7 @@ describe("runCli lightweight command dispatch", () => {
 		mockState.runAgentCalls = 0;
 		runtimeMocks.runAgent.mockClear();
 		authMocks.isOAuthProvider.mockReturnValue(true);
-		authMocks.normalizeProviderId.mockReturnValue("cline");
+		authMocks.normalizeProviderId.mockReturnValue("enki");
 		authMocks.getPersistedProviderApiKey.mockReturnValue(undefined);
 		authMocks.ensureOAuthProviderApiKey.mockClear();
 
@@ -1342,7 +1342,7 @@ describe("runCli lightweight command dispatch", () => {
 			expect.objectContaining({
 				outputMode: "json",
 				apiKey: "",
-				providerId: "cline",
+				providerId: "enki",
 			}),
 			expect.anything(),
 		);

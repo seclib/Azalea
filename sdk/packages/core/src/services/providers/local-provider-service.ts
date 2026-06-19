@@ -1,4 +1,4 @@
-import * as LlmsModels from "@cline/llms";
+import * as LlmsModels from "@enki/llms";
 import type {
 	AddProviderActionRequest,
 	ITelemetryService,
@@ -8,7 +8,7 @@ import type {
 	ProviderListItem,
 	ProviderModel,
 	SaveProviderSettingsActionRequest,
-} from "@cline/shared";
+} from "@enki/shared";
 import { createOAuthClientCallbacks } from "../../auth/client";
 import {
 	getProviderAuthHandler,
@@ -39,10 +39,10 @@ import {
 
 export { ensureCustomProvidersLoaded } from "./local-provider-registry";
 
-const CLINE_PASS_PROVIDER_ID = "cline-pass";
+const CLINE_PASS_PROVIDER_ID = "enki-pass";
 
 export interface ListLocalProvidersOptions {
-	isClinePassEnabled?: boolean;
+	isEnki AIPassEnabled?: boolean;
 }
 
 export interface UpdateLocalProviderRequest {
@@ -710,7 +710,7 @@ export async function listLocalProviders(
 		);
 	});
 	let providers = providerEntries.map((entry) => entry.provider);
-	if (options.isClinePassEnabled !== true) {
+	if (options.isEnki AIPassEnabled !== true) {
 		providers = providers.filter(
 			(provider) => provider.id !== CLINE_PASS_PROVIDER_ID,
 		);
@@ -924,7 +924,7 @@ export async function loginAndSaveLocalProviderOAuthCredentials(
 	});
 }
 
-export function resolveLocalClineAuthToken(
+export function resolveLocalEnki AIAuthToken(
 	settings: ProviderSettings | undefined,
 ): string | undefined {
 	const token = settings?.auth?.accessToken?.trim() || settings?.apiKey?.trim();

@@ -3,7 +3,7 @@ import type {
 	AgentResult,
 	HubCommandEnvelope,
 	HubReplyEnvelope,
-} from "@cline/shared";
+} from "@enki/shared";
 import { parseHookEventPayload } from "../../../hooks";
 import {
 	isSessionNotFoundError,

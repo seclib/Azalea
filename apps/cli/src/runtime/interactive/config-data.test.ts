@@ -8,7 +8,7 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { UserInstructionConfigService } from "@cline/core";
+import type { UserInstructionConfigService } from "@enki/core";
 import { afterEach, describe, expect, it } from "vitest";
 import {
 	buildSlashCommandRegistry,
@@ -68,7 +68,7 @@ describe("interactive config data loader", () => {
 	});
 
 	async function writeSettingsPlugin(tempRoot: string): Promise<string> {
-		const pluginsDir = join(tempRoot, ".cline", "plugins");
+		const pluginsDir = join(tempRoot, ".enki", "plugins");
 		await mkdir(pluginsDir, { recursive: true });
 		const pluginPath = join(pluginsDir, "settings-plugin.js");
 		await writeFile(
@@ -92,7 +92,7 @@ describe("interactive config data loader", () => {
 	}
 
 	async function writeMcpSettingsPlugin(tempRoot: string): Promise<string> {
-		const pluginsDir = join(tempRoot, ".cline", "plugins");
+		const pluginsDir = join(tempRoot, ".enki", "plugins");
 		await mkdir(pluginsDir, { recursive: true });
 		const pluginPath = join(pluginsDir, "settings-mcp-plugin.js");
 		await writeFile(
@@ -351,7 +351,7 @@ Find installable skills.`,
 	it("loads plugin-owned MCP servers from settings", async () => {
 		const tempRoot = await mkdtemp(join(tmpdir(), "cli-config-data-"));
 		tempRoots.push(tempRoot);
-		const settingsPath = join(tempRoot, "cline_mcp_settings.json");
+		const settingsPath = join(tempRoot, "enki_mcp_settings.json");
 		process.env.CLINE_MCP_SETTINGS_PATH = settingsPath;
 		const pluginPath = await writeMcpSettingsPlugin(tempRoot);
 		await writeFile(
@@ -419,7 +419,7 @@ Find installable skills.`,
 			tempRoot,
 			"global-settings.json",
 		);
-		const pluginsDir = join(tempRoot, ".cline", "plugins");
+		const pluginsDir = join(tempRoot, ".enki", "plugins");
 		await mkdir(pluginsDir, { recursive: true });
 		const pluginPath = join(pluginsDir, "broken-plugin.js");
 		const invalidPluginPath = join(pluginsDir, "invalid-plugin.js");
@@ -524,7 +524,7 @@ Find installable skills.`,
 			tempRoot,
 			"global-settings.json",
 		);
-		const pluginsDir = join(tempRoot, ".cline", "plugins");
+		const pluginsDir = join(tempRoot, ".enki", "plugins");
 		await mkdir(pluginsDir, { recursive: true });
 		const pluginPath = join(pluginsDir, "workspace-plugin.js");
 		await writeFile(pluginPath, "export default {};\n");
@@ -563,7 +563,7 @@ Find installable skills.`,
 			tempRoot,
 			"global-settings.json",
 		);
-		const packageDir = join(tempRoot, ".cline", "plugins", "delete-plugin");
+		const packageDir = join(tempRoot, ".enki", "plugins", "delete-plugin");
 		const pluginPath = join(packageDir, "index.ts");
 		const skillPath = join(packageDir, "skills", "erase", "SKILL.md");
 		await mkdir(join(packageDir, "skills", "erase"), { recursive: true });
@@ -572,7 +572,7 @@ Find installable skills.`,
 			JSON.stringify(
 				{
 					name: "delete-plugin",
-					cline: {
+					enki: {
 						plugins: [{ paths: ["./index.ts"] }],
 					},
 				},
@@ -667,7 +667,7 @@ Erase stale plugin commands.`,
 		tempRoots.push(tempRoot);
 		const packageDir = join(
 			tempRoot,
-			".cline",
+			".enki",
 			"plugins",
 			"_installed",
 			"git",
@@ -681,8 +681,8 @@ Erase stale plugin commands.`,
 			join(packageDir, "package.json"),
 			JSON.stringify(
 				{
-					name: "cline-sdk-portable-agents",
-					cline: {
+					name: "enki-sdk-portable-agents",
+					enki: {
 						plugins: [{ paths: ["./index.ts"] }],
 					},
 				},
@@ -698,7 +698,7 @@ Erase stale plugin commands.`,
 		const data = await loader.loadConfigData();
 		const plugin = data.plugins.find((item) => item.path === pluginPath);
 
-		expect(plugin?.name).toBe("cline-sdk-portable-agents");
+		expect(plugin?.name).toBe("enki-sdk-portable-agents");
 	});
 
 	it("marks bundled package skills with their plugin owner", async () => {
@@ -706,7 +706,7 @@ Erase stale plugin commands.`,
 		tempRoots.push(tempRoot);
 		const installRoot = join(
 			tempRoot,
-			".cline",
+			".enki",
 			"plugins",
 			"_installed",
 			"git",
@@ -721,8 +721,8 @@ Erase stale plugin commands.`,
 			join(installRoot, "package.json"),
 			JSON.stringify(
 				{
-					name: "cline-installed-plugin-demo",
-					cline: {
+					name: "enki-installed-plugin-demo",
+					enki: {
 						plugins: [{ paths: ["./package/index.ts"] }],
 					},
 				},
@@ -734,7 +734,7 @@ Erase stale plugin commands.`,
 			join(packageDir, "package.json"),
 			JSON.stringify(
 				{
-					name: "cline-sdk-portable-agents",
+					name: "enki-sdk-portable-agents",
 				},
 				null,
 				2,
@@ -782,7 +782,7 @@ Review with the bundled skill.`,
 
 		expect(skill).toMatchObject({
 			name: "review",
-			pluginName: "cline-sdk-portable-agents",
+			pluginName: "enki-sdk-portable-agents",
 			pluginPath,
 			source: "workspace-plugin",
 		});
@@ -791,7 +791,7 @@ Review with the bundled skill.`,
 	it("toggles MCP server enabled state through core settings", async () => {
 		const tempRoot = await mkdtemp(join(tmpdir(), "cli-config-data-"));
 		tempRoots.push(tempRoot);
-		const settingsPath = join(tempRoot, "cline_mcp_settings.json");
+		const settingsPath = join(tempRoot, "enki_mcp_settings.json");
 		process.env.CLINE_MCP_SETTINGS_PATH = settingsPath;
 		await writeFile(
 			settingsPath,
@@ -835,7 +835,7 @@ Review with the bundled skill.`,
 	it("disables and re-syncs plugin-owned MCP servers when toggling plugins", async () => {
 		const tempRoot = await mkdtemp(join(tmpdir(), "cli-config-data-"));
 		tempRoots.push(tempRoot);
-		const settingsPath = join(tempRoot, "cline_mcp_settings.json");
+		const settingsPath = join(tempRoot, "enki_mcp_settings.json");
 		process.env.CLINE_GLOBAL_SETTINGS_PATH = join(
 			tempRoot,
 			"global-settings.json",
@@ -912,7 +912,7 @@ Review with the bundled skill.`,
 		async () => {
 			const tempRoot = await mkdtemp(join(tmpdir(), "cli-config-data-"));
 			tempRoots.push(tempRoot);
-			const settingsPath = join(tempRoot, "cline_mcp_settings.json");
+			const settingsPath = join(tempRoot, "enki_mcp_settings.json");
 			const globalSettingsPath = join(tempRoot, "global-settings.json");
 			process.env.CLINE_GLOBAL_SETTINGS_PATH = globalSettingsPath;
 			process.env.CLINE_MCP_SETTINGS_PATH = settingsPath;
@@ -971,7 +971,7 @@ Review with the bundled skill.`,
 	it("surfaces MCP OAuth status and errors", async () => {
 		const tempRoot = await mkdtemp(join(tmpdir(), "cli-config-data-"));
 		tempRoots.push(tempRoot);
-		const settingsPath = join(tempRoot, "cline_mcp_settings.json");
+		const settingsPath = join(tempRoot, "enki_mcp_settings.json");
 		process.env.CLINE_MCP_SETTINGS_PATH = settingsPath;
 		await writeFile(
 			settingsPath,

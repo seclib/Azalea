@@ -1,3 +1,3 @@
-export function isClineProvider(provider: string | undefined) {
-	return provider === "cline" || provider === "cline-pass"
+export function isEnki AIProvider(provider: string | undefined) {
+	return provider === "enki" || provider === "enki-pass"
 }

@@ -1,6 +1,6 @@
 import { resolveWorkspacePath } from "@core/workspace"
 import { isMultiRootEnabled } from "@core/workspace/multi-root-utils"
-import { ClineDefaultTool } from "@shared/tools"
+import { Enki AIDefaultTool } from "@shared/tools"
 import { StateManager } from "@/core/storage/StateManager"
 import { HostProvider } from "@/hosts/host-provider"
 import { getCwd, getDesktopDir, isLocatedInPath, isLocatedInWorkspace } from "@/utils/path"
@@ -39,48 +39,48 @@ export class AutoApprove {
 
 	// Check if the tool should be auto-approved based on the settings
 	// Returns bool for most tools, and tuple for tools with nested settings
-	shouldAutoApproveTool(toolName: ClineDefaultTool): boolean | [boolean, boolean] {
+	shouldAutoApproveTool(toolName: Enki AIDefaultTool): boolean | [boolean, boolean] {
 		if (this.stateManager.getGlobalSettingsKey("yoloModeToggled")) {
 			switch (toolName) {
-				case ClineDefaultTool.FILE_READ:
-				case ClineDefaultTool.LIST_FILES:
-				case ClineDefaultTool.LIST_CODE_DEF:
-				case ClineDefaultTool.SEARCH:
-				case ClineDefaultTool.NEW_RULE:
-				case ClineDefaultTool.FILE_NEW:
-				case ClineDefaultTool.FILE_EDIT:
-				case ClineDefaultTool.APPLY_PATCH:
-				case ClineDefaultTool.BASH:
-				case ClineDefaultTool.USE_SUBAGENTS:
+				case Enki AIDefaultTool.FILE_READ:
+				case Enki AIDefaultTool.LIST_FILES:
+				case Enki AIDefaultTool.LIST_CODE_DEF:
+				case Enki AIDefaultTool.SEARCH:
+				case Enki AIDefaultTool.NEW_RULE:
+				case Enki AIDefaultTool.FILE_NEW:
+				case Enki AIDefaultTool.FILE_EDIT:
+				case Enki AIDefaultTool.APPLY_PATCH:
+				case Enki AIDefaultTool.BASH:
+				case Enki AIDefaultTool.USE_SUBAGENTS:
 					return [true, true]
 
-				case ClineDefaultTool.BROWSER:
-				case ClineDefaultTool.WEB_FETCH:
-				case ClineDefaultTool.WEB_SEARCH:
-				case ClineDefaultTool.MCP_ACCESS:
-				case ClineDefaultTool.MCP_USE:
+				case Enki AIDefaultTool.BROWSER:
+				case Enki AIDefaultTool.WEB_FETCH:
+				case Enki AIDefaultTool.WEB_SEARCH:
+				case Enki AIDefaultTool.MCP_ACCESS:
+				case Enki AIDefaultTool.MCP_USE:
 					return true
 			}
 		}
 
 		if (this.stateManager.getGlobalSettingsKey("autoApproveAllToggled")) {
 			switch (toolName) {
-				case ClineDefaultTool.FILE_READ:
-				case ClineDefaultTool.LIST_FILES:
-				case ClineDefaultTool.LIST_CODE_DEF:
-				case ClineDefaultTool.SEARCH:
-				case ClineDefaultTool.NEW_RULE:
-				case ClineDefaultTool.FILE_NEW:
-				case ClineDefaultTool.FILE_EDIT:
-				case ClineDefaultTool.APPLY_PATCH:
-				case ClineDefaultTool.BASH:
-				case ClineDefaultTool.USE_SUBAGENTS:
+				case Enki AIDefaultTool.FILE_READ:
+				case Enki AIDefaultTool.LIST_FILES:
+				case Enki AIDefaultTool.LIST_CODE_DEF:
+				case Enki AIDefaultTool.SEARCH:
+				case Enki AIDefaultTool.NEW_RULE:
+				case Enki AIDefaultTool.FILE_NEW:
+				case Enki AIDefaultTool.FILE_EDIT:
+				case Enki AIDefaultTool.APPLY_PATCH:
+				case Enki AIDefaultTool.BASH:
+				case Enki AIDefaultTool.USE_SUBAGENTS:
 					return [true, true]
-				case ClineDefaultTool.BROWSER:
-				case ClineDefaultTool.WEB_FETCH:
-				case ClineDefaultTool.WEB_SEARCH:
-				case ClineDefaultTool.MCP_ACCESS:
-				case ClineDefaultTool.MCP_USE:
+				case Enki AIDefaultTool.BROWSER:
+				case Enki AIDefaultTool.WEB_FETCH:
+				case Enki AIDefaultTool.WEB_SEARCH:
+				case Enki AIDefaultTool.MCP_ACCESS:
+				case Enki AIDefaultTool.MCP_USE:
 					return true
 			}
 		}
@@ -88,29 +88,29 @@ export class AutoApprove {
 		const autoApprovalSettings = this.stateManager.getGlobalSettingsKey("autoApprovalSettings")
 
 		switch (toolName) {
-			case ClineDefaultTool.FILE_READ:
-			case ClineDefaultTool.LIST_FILES:
-			case ClineDefaultTool.LIST_CODE_DEF:
-			case ClineDefaultTool.SEARCH:
-			case ClineDefaultTool.USE_SUBAGENTS:
+			case Enki AIDefaultTool.FILE_READ:
+			case Enki AIDefaultTool.LIST_FILES:
+			case Enki AIDefaultTool.LIST_CODE_DEF:
+			case Enki AIDefaultTool.SEARCH:
+			case Enki AIDefaultTool.USE_SUBAGENTS:
 				return [autoApprovalSettings.actions.readFiles, autoApprovalSettings.actions.readFilesExternally ?? false]
-			case ClineDefaultTool.NEW_RULE:
-			case ClineDefaultTool.FILE_NEW:
-			case ClineDefaultTool.FILE_EDIT:
-			case ClineDefaultTool.APPLY_PATCH:
+			case Enki AIDefaultTool.NEW_RULE:
+			case Enki AIDefaultTool.FILE_NEW:
+			case Enki AIDefaultTool.FILE_EDIT:
+			case Enki AIDefaultTool.APPLY_PATCH:
 				return [autoApprovalSettings.actions.editFiles, autoApprovalSettings.actions.editFilesExternally ?? false]
-			case ClineDefaultTool.BASH:
+			case Enki AIDefaultTool.BASH:
 				return [
 					autoApprovalSettings.actions.executeSafeCommands ?? false,
 					autoApprovalSettings.actions.executeAllCommands ?? false,
 				]
-			case ClineDefaultTool.BROWSER:
+			case Enki AIDefaultTool.BROWSER:
 				return autoApprovalSettings.actions.useBrowser
-			case ClineDefaultTool.WEB_FETCH:
-			case ClineDefaultTool.WEB_SEARCH:
+			case Enki AIDefaultTool.WEB_FETCH:
+			case Enki AIDefaultTool.WEB_SEARCH:
 				return autoApprovalSettings.actions.useBrowser
-			case ClineDefaultTool.MCP_ACCESS:
-			case ClineDefaultTool.MCP_USE:
+			case Enki AIDefaultTool.MCP_ACCESS:
+			case Enki AIDefaultTool.MCP_USE:
 				return autoApprovalSettings.actions.useMcp
 		}
 		return false
@@ -120,7 +120,7 @@ export class AutoApprove {
 	// and the path of the action. Returns true if the tool should be auto-approved
 	// based on the user's settings and the path of the action.
 	async shouldAutoApproveToolWithPath(
-		blockname: ClineDefaultTool,
+		blockname: Enki AIDefaultTool,
 		autoApproveActionpath: string | undefined,
 	): Promise<boolean> {
 		if (this.stateManager.getGlobalSettingsKey("yoloModeToggled")) {

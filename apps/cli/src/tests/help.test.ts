@@ -1,17 +1,17 @@
 import { test } from "@microsoft/tui-test";
 import { CLINE_BIN } from "./helpers/constants.js";
-import { clineEnv } from "./helpers/env.js";
+import { enkiEnv } from "./helpers/env.js";
 import { expectVisible } from "./helpers/terminal.js";
 
 const HELP_TERMINAL = { columns: 120, rows: 50 };
 
 // ===========================================================================
-// cline --help  (root help)
+// enki --help  (root help)
 // ===========================================================================
-test.describe("cline --help", () => {
+test.describe("enki --help", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["--help"] },
-		env: clineEnv("claude-sonnet-4.6"),
+		env: enkiEnv("claude-sonnet-4.6"),
 		...HELP_TERMINAL,
 	});
 
@@ -44,12 +44,12 @@ test.describe("cline --help", () => {
 });
 
 // ===========================================================================
-// cline -h  (short help flag)
+// enki -h  (short help flag)
 // ===========================================================================
-test.describe("cline -h", () => {
+test.describe("enki -h", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["-h"] },
-		env: clineEnv("claude-sonnet-4.6"),
+		env: enkiEnv("claude-sonnet-4.6"),
 		...HELP_TERMINAL,
 	});
 
@@ -59,12 +59,12 @@ test.describe("cline -h", () => {
 });
 
 // ===========================================================================
-// cline history --help
+// enki history --help
 // ===========================================================================
-test.describe("cline history --help", () => {
+test.describe("enki history --help", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["history", "--help"] },
-		env: clineEnv("claude-sonnet-4.6"),
+		env: enkiEnv("claude-sonnet-4.6"),
 		...HELP_TERMINAL,
 	});
 
@@ -74,12 +74,12 @@ test.describe("cline history --help", () => {
 });
 
 // ===========================================================================
-// cline h --help  (history alias)
+// enki h --help  (history alias)
 // ===========================================================================
-test.describe("cline h --help (history alias)", () => {
+test.describe("enki h --help (history alias)", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["h", "--help"] },
-		env: clineEnv("claude-sonnet-4.6"),
+		env: enkiEnv("claude-sonnet-4.6"),
 		...HELP_TERMINAL,
 	});
 
@@ -89,12 +89,12 @@ test.describe("cline h --help (history alias)", () => {
 });
 
 // ===========================================================================
-// cline config --help
+// enki config --help
 // ===========================================================================
-test.describe("cline config --help", () => {
+test.describe("enki config --help", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["config", "--help"] },
-		env: clineEnv("claude-sonnet-4.6"),
+		env: enkiEnv("claude-sonnet-4.6"),
 		...HELP_TERMINAL,
 	});
 
@@ -104,12 +104,12 @@ test.describe("cline config --help", () => {
 });
 
 // ===========================================================================
-// cline auth --help
+// enki auth --help
 // ===========================================================================
-test.describe("cline auth --help", () => {
+test.describe("enki auth --help", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["auth", "--help"] },
-		env: clineEnv("claude-sonnet-4.6"),
+		env: enkiEnv("claude-sonnet-4.6"),
 		...HELP_TERMINAL,
 	});
 
@@ -126,12 +126,12 @@ test.describe("cline auth --help", () => {
 });
 
 // ===========================================================================
-// cline version --help
+// enki version --help
 // ===========================================================================
-test.describe("cline version --help", () => {
+test.describe("enki version --help", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["version", "--help"] },
-		env: clineEnv("claude-sonnet-4.6"),
+		env: enkiEnv("claude-sonnet-4.6"),
 		...HELP_TERMINAL,
 	});
 
@@ -141,12 +141,12 @@ test.describe("cline version --help", () => {
 });
 
 // ===========================================================================
-// cline update --help
+// enki update --help
 // ===========================================================================
-test.describe("cline update --help", () => {
+test.describe("enki update --help", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["update", "--help"] },
-		env: clineEnv("claude-sonnet-4.6"),
+		env: enkiEnv("claude-sonnet-4.6"),
 		...HELP_TERMINAL,
 	});
 
@@ -156,12 +156,12 @@ test.describe("cline update --help", () => {
 });
 
 // ===========================================================================
-// cline doctor --help
+// enki doctor --help
 // ===========================================================================
-test.describe("cline doctor --help", () => {
+test.describe("enki doctor --help", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["doctor", "--help"] },
-		env: clineEnv("claude-sonnet-4.6"),
+		env: enkiEnv("claude-sonnet-4.6"),
 		...HELP_TERMINAL,
 	});
 

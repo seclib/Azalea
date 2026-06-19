@@ -1,20 +1,20 @@
-import { EmptyRequest } from "@shared/proto/cline/common"
-import { OpenRouterCompatibleModelInfo } from "@shared/proto/cline/models"
+import { EmptyRequest } from "@shared/proto/enki/common"
+import { OpenRouterCompatibleModelInfo } from "@shared/proto/enki/models"
 import { toProtobufModels } from "../../../shared/proto-conversions/models/typeConversion"
 import type { Controller } from "../index"
-import { refreshClineModels } from "./refreshClineModels"
+import { refreshEnki AIModels } from "./refreshEnki AIModels"
 
 /**
- * Refreshes Cline models and returns protobuf types for gRPC
+ * Refreshes Enki AI models and returns protobuf types for gRPC
  * @param controller The controller instance
  * @param request Empty request (unused but required for gRPC signature)
  * @returns OpenRouterCompatibleModelInfo with protobuf types (reusing the same proto type)
  */
-export async function refreshClineModelsRpc(
+export async function refreshEnki AIModelsRpc(
 	controller: Controller,
 	_request: EmptyRequest,
 ): Promise<OpenRouterCompatibleModelInfo> {
-	const models = await refreshClineModels(controller)
+	const models = await refreshEnki AIModels(controller)
 	return OpenRouterCompatibleModelInfo.create({
 		models: toProtobufModels(models),
 	})

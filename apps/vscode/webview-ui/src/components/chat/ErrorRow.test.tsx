@@ -1,14 +1,14 @@
-import type { ClineMessage } from "@shared/ExtensionMessage"
+import type { Enki AIMessage } from "@shared/ExtensionMessage"
 import { render, screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 import ErrorRow from "./ErrorRow"
 
 // Mock the auth context
-vi.mock("@/context/ClineAuthContext", () => ({
-	useClineAuth: () => ({
-		clineUser: null,
+vi.mock("@/context/Enki AIAuthContext", () => ({
+	useEnki AIAuth: () => ({
+		enkiUser: null,
 	}),
-	useClineSignIn: () => ({
+	useEnki AISignIn: () => ({
 		isLoginLoading: false,
 	}),
 	handleSignOut: vi.fn(),
@@ -24,12 +24,12 @@ vi.mock("@/components/chat/EntitlementError", () => ({
 	default: ({ message }: { message: string }) => <div data-testid="entitlement-error">{message}</div>,
 }))
 
-// Mock ClineError
-vi.mock("../../../../src/services/error/ClineError", () => ({
-	ClineError: {
+// Mock Enki AIError
+vi.mock("../../../../src/services/error/Enki AIError", () => ({
+	Enki AIError: {
 		parse: vi.fn(),
 	},
-	ClineErrorType: {
+	Enki AIErrorType: {
 		Balance: "balance",
 		RateLimit: "rateLimit",
 		Auth: "auth",
@@ -38,7 +38,7 @@ vi.mock("../../../../src/services/error/ClineError", () => ({
 }))
 
 describe("ErrorRow", () => {
-	const mockMessage: ClineMessage = {
+	const mockMessage: Enki AIMessage = {
 		ts: 123456789,
 		type: "say",
 		say: "error",
@@ -70,17 +70,17 @@ describe("ErrorRow", () => {
 		).toBeInTheDocument()
 	})
 
-	it("renders clineignore error", () => {
-		const clineignoreMessage = { ...mockMessage, text: "/path/to/file.txt" }
-		render(<ErrorRow errorType="clineignore_error" message={clineignoreMessage} />)
+	it("renders enkiignore error", () => {
+		const enkiignoreMessage = { ...mockMessage, text: "/path/to/file.txt" }
+		render(<ErrorRow errorType="enkiignore_error" message={enkiignoreMessage} />)
 
-		expect(screen.getByText(/Cline tried to access/)).toBeInTheDocument()
+		expect(screen.getByText(/Enki AI tried to access/)).toBeInTheDocument()
 		expect(screen.getByText("/path/to/file.txt")).toBeInTheDocument()
 	})
 
 	describe("API error handling", () => {
 		it("renders credit limit error when balance error is detected", async () => {
-			const mockClineError = {
+			const mockEnki AIError = {
 				message: "Insufficient credits",
 				isErrorType: vi.fn((type) => type === "balance"),
 				_error: {
@@ -89,13 +89,13 @@ describe("ErrorRow", () => {
 						total_spent: 10.5,
 						total_promotions: 5.0,
 						message: "You have run out of credits.",
-						buy_credits_url: "https://app.cline.bot/dashboard",
+						buy_credits_url: "https://app.enki.bot/dashboard",
 					},
 				},
 			}
 
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
+			const { Enki AIError } = await import("../../../../src/services/error/Enki AIError")
+			vi.mocked(Enki AIError.parse).mockReturnValue(mockEnki AIError as any)
 
 			render(<ErrorRow apiRequestFailedMessage="Insufficient credits error" errorType="error" message={mockMessage} />)
 
@@ -104,7 +104,7 @@ describe("ErrorRow", () => {
 		})
 
 		it("renders rate limit error with request ID", async () => {
-			const mockClineError = {
+			const mockEnki AIError = {
 				message: "Rate limit exceeded",
 				isErrorType: vi.fn((type) => type === "rateLimit"),
 				_error: {
@@ -112,8 +112,8 @@ describe("ErrorRow", () => {
 				},
 			}
 
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
+			const { Enki AIError } = await import("../../../../src/services/error/Enki AIError")
+			vi.mocked(Enki AIError.parse).mockReturnValue(mockEnki AIError as any)
 
 			render(<ErrorRow apiRequestFailedMessage="Rate limit exceeded" errorType="error" message={mockMessage} />)
 
@@ -122,23 +122,23 @@ describe("ErrorRow", () => {
 		})
 
 		it("renders quota exceeded error", async () => {
-			const mockClineError = {
+			const mockEnki AIError = {
 				message: "Inference cap reached",
 				isErrorType: vi.fn((type) => type === "quotaexceeded"),
 			}
 
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
+			const { Enki AIError } = await import("../../../../src/services/error/Enki AIError")
+			vi.mocked(Enki AIError.parse).mockReturnValue(mockEnki AIError as any)
 
 			render(<ErrorRow apiRequestFailedMessage="The message" errorType="error" message="" />)
 			expect(screen.getByText("Inference cap reached")).toBeInTheDocument()
 		})
 
 		it("renders entitlement error with the detail message instead of a raw JSON blob", async () => {
-			const mockClineError = {
+			const mockEnki AIError = {
 				message: "403 Error 403: the user is not subscribed to required model plan",
 				isErrorType: vi.fn((type) => type === "entitlement"),
-				providerId: "cline-pass",
+				providerId: "enki-pass",
 				_error: {
 					code: "ENTITLEMENT_ERROR",
 					details: {
@@ -148,8 +148,8 @@ describe("ErrorRow", () => {
 				},
 			}
 
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
+			const { Enki AIError } = await import("../../../../src/services/error/Enki AIError")
+			vi.mocked(Enki AIError.parse).mockReturnValue(mockEnki AIError as any)
 
 			render(
 				<ErrorRow
@@ -167,32 +167,32 @@ describe("ErrorRow", () => {
 		})
 
 		it("renders friendly logged-out message and sign in button when user is not signed in", async () => {
-			const mockClineError = {
+			const mockEnki AIError = {
 				message: "Authentication failed",
 				isErrorType: vi.fn((type) => type === "auth"),
-				providerId: "cline",
+				providerId: "enki",
 				_error: {},
 			}
 
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
+			const { Enki AIError } = await import("../../../../src/services/error/Enki AIError")
+			vi.mocked(Enki AIError.parse).mockReturnValue(mockEnki AIError as any)
 
 			render(<ErrorRow apiRequestFailedMessage="Authentication failed" errorType="error" message={mockMessage} />)
 
 			expect(screen.queryByText("Authentication failed")).not.toBeInTheDocument()
 			expect(screen.getByText(/Whoops looks like you're logged out/)).toBeInTheDocument()
-			expect(screen.getByText("Sign in to Cline")).toBeInTheDocument()
+			expect(screen.getByText("Sign in to Enki AI")).toBeInTheDocument()
 		})
 
 		it("renders PowerShell troubleshooting link when error mentions PowerShell", async () => {
-			const mockClineError = {
+			const mockEnki AIError = {
 				message: "PowerShell is not recognized as an internal or external command",
 				isErrorType: vi.fn(() => false),
 				_error: {},
 			}
 
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
+			const { Enki AIError } = await import("../../../../src/services/error/Enki AIError")
+			vi.mocked(Enki AIError.parse).mockReturnValue(mockEnki AIError as any)
 
 			render(
 				<ErrorRow
@@ -206,33 +206,33 @@ describe("ErrorRow", () => {
 			expect(screen.getByText("troubleshooting guide")).toBeInTheDocument()
 			expect(screen.getByRole("link", { name: "troubleshooting guide" })).toHaveAttribute(
 				"href",
-				"https://github.com/cline/cline/wiki/TroubleShooting-%E2%80%90-%22PowerShell-is-not-recognized-as-an-internal-or-external-command%22",
+				"https://github.com/enki/enki/wiki/TroubleShooting-%E2%80%90-%22PowerShell-is-not-recognized-as-an-internal-or-external-command%22",
 			)
 		})
 
 		it("handles apiReqStreamingFailedMessage instead of apiRequestFailedMessage", async () => {
-			const mockClineError = {
+			const mockEnki AIError = {
 				message: "Streaming failed",
 				isErrorType: vi.fn(() => false),
 				_error: {},
 			}
 
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(mockClineError as any)
+			const { Enki AIError } = await import("../../../../src/services/error/Enki AIError")
+			vi.mocked(Enki AIError.parse).mockReturnValue(mockEnki AIError as any)
 
 			render(<ErrorRow apiReqStreamingFailedMessage="Streaming failed" errorType="error" message={mockMessage} />)
 
 			expect(screen.getByText("Streaming failed")).toBeInTheDocument()
 		})
 
-		it("falls back to regular error message when ClineError.parse returns null", async () => {
-			const { ClineError } = await import("../../../../src/services/error/ClineError")
-			vi.mocked(ClineError.parse).mockReturnValue(undefined)
+		it("falls back to regular error message when Enki AIError.parse returns null", async () => {
+			const { Enki AIError } = await import("../../../../src/services/error/Enki AIError")
+			vi.mocked(Enki AIError.parse).mockReturnValue(undefined)
 
 			render(<ErrorRow apiRequestFailedMessage="Some API error" errorType="error" message={mockMessage} />)
 
-			// When ClineError.parse returns null, we display the raw error message for non-Cline providers
-			// Since clineError is undefined, isClineProvider is false, so we show the raw apiRequestFailedMessage
+			// When Enki AIError.parse returns null, we display the raw error message for non-Enki AI providers
+			// Since enkiError is undefined, isEnki AIProvider is false, so we show the raw apiRequestFailedMessage
 			expect(screen.getByText("Some API error")).toBeInTheDocument()
 		})
 

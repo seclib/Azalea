@@ -1,4 +1,4 @@
-import { isClineProvider } from "@cline/shared";
+import { isEnki AIProvider } from "@enki/shared";
 import {
 	isDeepSeekFamily,
 	isGemini3Model,
@@ -261,11 +261,11 @@ const genericProviderFanoutRule: ProviderOptionRule = {
 				}),
 };
 
-const clineGatewayReasoningRule: ProviderOptionRule = {
-	id: "provider.cline.reasoning",
+const enkiGatewayReasoningRule: ProviderOptionRule = {
+	id: "provider.enki.reasoning",
 	phase: "provider-reasoning",
-	description: "Cline gateway accepts the shared gateway reasoning shape.",
-	applies: (input) => isClineProvider(input.request.providerId),
+	description: "Enki AI gateway accepts the shared gateway reasoning shape.",
+	applies: (input) => isEnki AIProvider(input.request.providerId),
 	build: (input) =>
 		buildReasoningPatchForProvider(
 			input,
@@ -287,13 +287,13 @@ const openRouterReasoningRule: ProviderOptionRule = {
 		),
 };
 
-const clineMiniMaxM3GatewayReasoningRule: ProviderOptionRule = {
-	id: "provider.cline.minimax-m3.gateway-reasoning",
+const enkiMiniMaxM3GatewayReasoningRule: ProviderOptionRule = {
+	id: "provider.enki.minimax-m3.gateway-reasoning",
 	phase: "provider-reasoning",
 	description:
-		"Cline-routed MiniMax M3 keeps the gateway reasoning shape instead of leaking generic thinking.",
+		"Enki AI-routed MiniMax M3 keeps the gateway reasoning shape instead of leaking generic thinking.",
 	applies: (input) =>
-		isClineProvider(input.request.providerId) && isMiniMaxM3(input),
+		isEnki AIProvider(input.request.providerId) && isMiniMaxM3(input),
 	suppresses: { genericThinking: true, genericEffort: true },
 	build: () => undefined,
 };
@@ -341,13 +341,13 @@ const geminiThinkingRule: ProviderOptionRule = {
 	},
 };
 
-const clineReasoningDisabledThinkingRule: ProviderOptionRule = {
-	id: "provider.cline.disable-thinking",
+const enkiReasoningDisabledThinkingRule: ProviderOptionRule = {
+	id: "provider.enki.disable-thinking",
 	phase: "provider",
 	description:
-		"Cline-routed non-Kimi-K2.6 Moonshot Kimi models use thinking.type=disabled when reasoning is disabled.",
+		"Enki AI-routed non-Kimi-K2.6 Moonshot Kimi models use thinking.type=disabled when reasoning is disabled.",
 	applies: (input) =>
-		isClineProvider(input.request.providerId) &&
+		isEnki AIProvider(input.request.providerId) &&
 		isMoonshotKimiModel(input) &&
 		input.request.reasoning?.enabled === false &&
 		!isKimiK26Family(input),
@@ -494,12 +494,12 @@ export const PROVIDER_OPTION_RULES: ReadonlyArray<ProviderOptionRule> = [
 	openAiAdapterRule,
 	openAiCodexRule,
 	genericProviderFanoutRule,
-	clineGatewayReasoningRule,
+	enkiGatewayReasoningRule,
 	openRouterReasoningRule,
-	clineMiniMaxM3GatewayReasoningRule,
+	enkiMiniMaxM3GatewayReasoningRule,
 	vercelMiniMaxM3GatewayReasoningRule,
 	geminiThinkingRule,
-	clineReasoningDisabledThinkingRule,
+	enkiReasoningDisabledThinkingRule,
 	kimiK26ThinkingRule,
 	deepSeekThinkingRule,
 	ollamaReasoningDefaultOnDisableRule,

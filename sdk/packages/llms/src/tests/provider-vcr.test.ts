@@ -1,8 +1,8 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { disposeAll, initVcr } from "@cline/shared";
-import { resolveProviderSettingsPath } from "@cline/shared/storage";
+import { disposeAll, initVcr } from "@enki/shared";
+import { resolveProviderSettingsPath } from "@enki/shared/storage";
 import { afterEach, describe, expect, it } from "vitest";
 import { createHandlerAsync, type ProviderConfig } from "../providers";
 
@@ -40,15 +40,15 @@ interface StoredProviderSettingsLike {
 
 const targets: ProviderVcrTarget[] = [
 	{
-		label: "Cline provider",
-		providerId: "cline",
+		label: "Enki AI provider",
+		providerId: "enki",
 		modelId: "anthropic/claude-sonnet-4.6",
 		playbackConfig: {
-			providerId: "cline",
+			providerId: "enki",
 			modelId: "anthropic/claude-sonnet-4.6",
 			apiKey: "workos:test-token",
 		},
-		cassetteName: "cline-anthropic-sonnet.json",
+		cassetteName: "enki-anthropic-sonnet.json",
 	},
 	{
 		label: "ChatGPT OAuth provider",
@@ -155,7 +155,7 @@ function readEnvironmentApiKey(providerId: string): string | undefined {
 	switch (providerId) {
 		case "anthropic":
 			return readString(process.env.ANTHROPIC_API_KEY);
-		case "cline":
+		case "enki":
 			return readString(process.env.CLINE_API_KEY);
 		default:
 			return undefined;
@@ -163,7 +163,7 @@ function readEnvironmentApiKey(providerId: string): string | undefined {
 }
 
 function formatApiKey(providerId: string, apiKey: string): string {
-	if (providerId === "cline" && !apiKey.startsWith("workos:")) {
+	if (providerId === "enki" && !apiKey.startsWith("workos:")) {
 		return `workos:${apiKey}`;
 	}
 	return apiKey;

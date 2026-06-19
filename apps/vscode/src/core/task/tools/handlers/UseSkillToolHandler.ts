@@ -2,14 +2,14 @@ import type { ToolUse } from "@core/assistant-message"
 import { discoverAvailableSkills, getSkillContent } from "@core/context/instructions/user-instructions/skills"
 import type { SkillMetadata } from "@shared/skills"
 import { telemetryService } from "@/services/telemetry"
-import { ClineDefaultTool } from "@/shared/tools"
+import { Enki AIDefaultTool } from "@/shared/tools"
 import type { ToolResponse } from "../../index"
 import type { IPartialBlockHandler, IToolHandler } from "../ToolExecutorCoordinator"
 import type { TaskConfig } from "../types/TaskConfig"
 import type { StronglyTypedUIHelpers } from "../types/UIHelpers"
 
 export class UseSkillToolHandler implements IToolHandler, IPartialBlockHandler {
-	readonly name = ClineDefaultTool.USE_SKILL
+	readonly name = Enki AIDefaultTool.USE_SKILL
 
 	constructor() {}
 

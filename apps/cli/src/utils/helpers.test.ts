@@ -94,14 +94,14 @@ describe("parseArgs", () => {
 	});
 
 	it("parses provider via -P shorthand", () => {
-		const parsed = parseArgs(["-P", "cline"]);
-		expect(parsed.provider).toBe("cline");
+		const parsed = parseArgs(["-P", "enki"]);
+		expect(parsed.provider).toBe("enki");
 	});
 
 	it("enables sandbox automatically when --data-dir is set", () => {
-		const parsed = parseArgs(["--data-dir", "./.tmp-cline"]);
+		const parsed = parseArgs(["--data-dir", "./.tmp-enki"]);
 		expect(parsed.sandbox).toBe(true);
-		expect(parsed.dataDir).toBe("./.tmp-cline");
+		expect(parsed.dataDir).toBe("./.tmp-enki");
 	});
 
 	it("does not enable sandbox when --data-dir is omitted", () => {
@@ -379,7 +379,7 @@ describe("hook payload validation and audit logging", () => {
 	it("validates hook payload structure", async () => {
 		expect(
 			await isCliHookPayload({
-				clineVersion: "",
+				enkiVersion: "",
 				hookName: "tool_call",
 				timestamp: new Date().toISOString(),
 				taskId: "conv_1",
@@ -409,7 +409,7 @@ describe("hook payload validation and audit logging", () => {
 		delete process.env.CLINE_SESSION_DATA_DIR;
 
 		await appendHookAudit({
-			clineVersion: "",
+			enkiVersion: "",
 			hookName: "tool_call",
 			timestamp: new Date().toISOString(),
 			taskId: "conv_1",
@@ -443,7 +443,7 @@ describe("hook payload validation and audit logging", () => {
 		delete process.env.CLINE_SESSION_DATA_DIR;
 
 		await appendHookAudit({
-			clineVersion: "",
+			enkiVersion: "",
 			hookName: "tool_result",
 			timestamp: new Date().toISOString(),
 			taskId: "conv_3",

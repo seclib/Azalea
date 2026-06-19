@@ -42,10 +42,10 @@ For file hooks, successful task completion maps to the `agent_end` event. For a 
 Log every tool call and its inputs. Useful for auditing what the agent is about to do.
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PreToolUse.sh .cline/hooks/
-chmod +x .cline/hooks/PreToolUse.sh
-cline -i "do something"  # See tool calls logged to stderr
+mkdir -p .enki/hooks
+cp examples/hooks/PreToolUse.sh .enki/hooks/
+chmod +x .enki/hooks/PreToolUse.sh
+enki -i "do something"  # See tool calls logged to stderr
 ```
 
 #### `PostToolUse.sh`
@@ -53,10 +53,10 @@ cline -i "do something"  # See tool calls logged to stderr
 Inspect tool results and add supplementary context.
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PostToolUse.sh .cline/hooks/
-chmod +x .cline/hooks/PostToolUse.sh
-cline -i "do something"  # See tool results logged and enriched
+mkdir -p .enki/hooks
+cp examples/hooks/PostToolUse.sh .enki/hooks/
+chmod +x .enki/hooks/PostToolUse.sh
+enki -i "do something"  # See tool results logged and enriched
 ```
 
 #### `PreToolUse_BlockDestructive.sh`
@@ -64,10 +64,10 @@ cline -i "do something"  # See tool results logged and enriched
 Prevent destructive operations like force pushes or bulk deletes.
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PreToolUse_BlockDestructive.sh .cline/hooks/PreToolUse.sh
-chmod +x .cline/hooks/PreToolUse.sh
-cline -i "clean up the repo"  # Destructive operations will be blocked
+mkdir -p .enki/hooks
+cp examples/hooks/PreToolUse_BlockDestructive.sh .enki/hooks/PreToolUse.sh
+chmod +x .enki/hooks/PreToolUse.sh
+enki -i "clean up the repo"  # Destructive operations will be blocked
 ```
 
 #### `PreToolUse_RequireReview.sh`
@@ -75,10 +75,10 @@ cline -i "clean up the repo"  # Destructive operations will be blocked
 Require user review before certain operations (file writes to critical files).
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PreToolUse_RequireReview.sh .cline/hooks/PreToolUse.sh
-chmod +x .cline/hooks/PreToolUse.sh
-cline -i "update dependencies"  # Critical file writes will pause for review
+mkdir -p .enki/hooks
+cp examples/hooks/PreToolUse_RequireReview.sh .enki/hooks/PreToolUse.sh
+chmod +x .enki/hooks/PreToolUse.sh
+enki -i "update dependencies"  # Critical file writes will pause for review
 ```
 
 #### `PreToolUse_InjectFileContext.sh`
@@ -86,10 +86,10 @@ cline -i "update dependencies"  # Critical file writes will pause for review
 Extract and inject file context before tool execution (related test files, lock files, environment context).
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PreToolUse_InjectFileContext.sh .cline/hooks/PreToolUse.sh
-chmod +x .cline/hooks/PreToolUse.sh
-cline -i "review the configuration"  # Related files will be mentioned automatically
+mkdir -p .enki/hooks
+cp examples/hooks/PreToolUse_InjectFileContext.sh .enki/hooks/PreToolUse.sh
+chmod +x .enki/hooks/PreToolUse.sh
+enki -i "review the configuration"  # Related files will be mentioned automatically
 ```
 
 #### `TaskStart.sh`, `TaskComplete.sh`, `SessionShutdown.sh`
@@ -97,12 +97,12 @@ cline -i "review the configuration"  # Related files will be mentioned automatic
 Track agent session lifecycle events (start, end, shutdown).
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/TaskStart.sh .cline/hooks/
-cp examples/hooks/TaskComplete.sh .cline/hooks/
-cp examples/hooks/SessionShutdown.sh .cline/hooks/
-chmod +x .cline/hooks/Task*.sh .cline/hooks/SessionShutdown.sh
-cline -i "do something"  # Session lifecycle will be logged
+mkdir -p .enki/hooks
+cp examples/hooks/TaskStart.sh .enki/hooks/
+cp examples/hooks/TaskComplete.sh .enki/hooks/
+cp examples/hooks/SessionShutdown.sh .enki/hooks/
+chmod +x .enki/hooks/Task*.sh .enki/hooks/SessionShutdown.sh
+enki -i "do something"  # Session lifecycle will be logged
 ```
 
 ### Python Examples
@@ -112,10 +112,10 @@ cline -i "do something"  # Session lifecycle will be logged
 Python-based hook to log and filter tool calls.
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PreToolUse.py .cline/hooks/
-chmod +x .cline/hooks/PreToolUse.py
-cline -i "do something"  # Python hook will log tool calls
+mkdir -p .enki/hooks
+cp examples/hooks/PreToolUse.py .enki/hooks/
+chmod +x .enki/hooks/PreToolUse.py
+enki -i "do something"  # Python hook will log tool calls
 ```
 
 #### `PostToolUse.py`
@@ -123,10 +123,10 @@ cline -i "do something"  # Python hook will log tool calls
 Python-based post-tool-use hook for result enrichment.
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PostToolUse.py .cline/hooks/
-chmod +x .cline/hooks/PostToolUse.py
-cline -i "do something"  # Python hook will enrich tool results
+mkdir -p .enki/hooks
+cp examples/hooks/PostToolUse.py .enki/hooks/
+chmod +x .enki/hooks/PostToolUse.py
+enki -i "do something"  # Python hook will enrich tool results
 ```
 
 #### `PreToolUse_InjectContext.py`
@@ -134,10 +134,10 @@ cline -i "do something"  # Python hook will enrich tool results
 Python-based context injection with file analysis (test files, config files, lock files, Node.js version, git branch).
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PreToolUse_InjectContext.py .cline/hooks/PreToolUse.py
-chmod +x .cline/hooks/PreToolUse.py
-cline -i "add a new feature"  # Related files and environment will be injected
+mkdir -p .enki/hooks
+cp examples/hooks/PreToolUse_InjectContext.py .enki/hooks/PreToolUse.py
+chmod +x .enki/hooks/PreToolUse.py
+enki -i "add a new feature"  # Related files and environment will be injected
 ```
 
 ### TypeScript Examples
@@ -147,10 +147,10 @@ cline -i "add a new feature"  # Related files and environment will be injected
 TypeScript hook for advanced tool call filtering and logging.
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PreToolUse.ts .cline/hooks/
-chmod +x .cline/hooks/PreToolUse.ts
-cline -i "do something"  # TypeScript hook will execute via bun
+mkdir -p .enki/hooks
+cp examples/hooks/PreToolUse.ts .enki/hooks/
+chmod +x .enki/hooks/PreToolUse.ts
+enki -i "do something"  # TypeScript hook will execute via bun
 ```
 
 #### `PostToolUse.ts`
@@ -158,10 +158,10 @@ cline -i "do something"  # TypeScript hook will execute via bun
 TypeScript hook for post-execution actions.
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PostToolUse.ts .cline/hooks/
-chmod +x .cline/hooks/PostToolUse.ts
-cline -i "do something"  # TypeScript hook will execute via bun
+mkdir -p .enki/hooks
+cp examples/hooks/PostToolUse.ts .enki/hooks/
+chmod +x .enki/hooks/PostToolUse.ts
+enki -i "do something"  # TypeScript hook will execute via bun
 ```
 
 #### `PreToolUse_ModifyInput.ts`
@@ -169,45 +169,45 @@ cline -i "do something"  # TypeScript hook will execute via bun
 Modify tool inputs before execution (normalize paths, add defaults, sanitize).
 
 ```bash
-mkdir -p .cline/hooks
-cp examples/hooks/PreToolUse_ModifyInput.ts .cline/hooks/PreToolUse.ts
-chmod +x .cline/hooks/PreToolUse.ts
-cline -i "install dependencies"  # npm install will have --save-exact added automatically
+mkdir -p .enki/hooks
+cp examples/hooks/PreToolUse_ModifyInput.ts .enki/hooks/PreToolUse.ts
+chmod +x .enki/hooks/PreToolUse.ts
+enki -i "install dependencies"  # npm install will have --save-exact added automatically
 ```
 
 ## Getting Started
 
 ### 1. Copy a hook to your project
 
-**File hooks** go in `.cline/hooks/` and must be named after the event they handle:
+**File hooks** go in `.enki/hooks/` and must be named after the event they handle:
 
 ```bash
-mkdir -p .cline/hooks
+mkdir -p .enki/hooks
 
 # Copy PreToolUse example (pick your language)
-cp examples/hooks/PreToolUse.sh .cline/hooks/PreToolUse.sh      # Bash
-cp examples/hooks/PreToolUse.py .cline/hooks/PreToolUse.py      # Python
-cp examples/hooks/PreToolUse.ts .cline/hooks/PreToolUse.ts      # TypeScript
+cp examples/hooks/PreToolUse.sh .enki/hooks/PreToolUse.sh      # Bash
+cp examples/hooks/PreToolUse.py .enki/hooks/PreToolUse.py      # Python
+cp examples/hooks/PreToolUse.ts .enki/hooks/PreToolUse.ts      # TypeScript
 
 # Copy PostToolUse example
-cp examples/hooks/PostToolUse.sh .cline/hooks/PostToolUse.sh    # Bash
-cp examples/hooks/PostToolUse.py .cline/hooks/PostToolUse.py    # Python
-cp examples/hooks/PostToolUse.ts .cline/hooks/PostToolUse.ts    # TypeScript
+cp examples/hooks/PostToolUse.sh .enki/hooks/PostToolUse.sh    # Bash
+cp examples/hooks/PostToolUse.py .enki/hooks/PostToolUse.py    # Python
+cp examples/hooks/PostToolUse.ts .enki/hooks/PostToolUse.ts    # TypeScript
 ```
 
 ### 2. Make it executable
 
 ```bash
-chmod +x .cline/hooks/PreToolUse.*
-chmod +x .cline/hooks/PostToolUse.*
+chmod +x .enki/hooks/PreToolUse.*
+chmod +x .enki/hooks/PostToolUse.*
 ```
 
 ### 3. Test it
 
 ```bash
-cline -i "test prompt"
+enki -i "test prompt"
 # Or load from a custom hooks directory:
-cline --hooks-dir ./my-hooks -i "test prompt"
+enki --hooks-dir ./my-hooks -i "test prompt"
 ```
 
 ## Hook Input/Output Format
@@ -220,7 +220,7 @@ All hooks receive a detailed JSON event on stdin and must return JSON on stdout.
 ```json
 {
   "hookName": "tool_call",
-  "clineVersion": "1.0.0",
+  "enkiVersion": "1.0.0",
   "timestamp": "2026-01-15T10:30:00Z",
   "taskId": "conv-123",
   "workspaceRoots": ["/path/to/repo"],
@@ -238,7 +238,7 @@ All hooks receive a detailed JSON event on stdin and must return JSON on stdout.
 ```json
 {
   "hookName": "tool_result",
-  "clineVersion": "1.0.0",
+  "enkiVersion": "1.0.0",
   "timestamp": "2026-01-15T10:30:00Z",
   "tool_result": {
     "id": "call-456",
@@ -255,7 +255,7 @@ All hooks receive a detailed JSON event on stdin and must return JSON on stdout.
 ```json
 {
   "hookName": "agent_start",
-  "clineVersion": "1.0.0",
+  "enkiVersion": "1.0.0",
   "timestamp": "2026-01-15T10:30:00Z",
   "taskId": "conv-123",
   "workspaceRoots": ["/path/to/repo"],
@@ -391,17 +391,17 @@ async function getGitBranch(): Promise<string> {
 
 ### Print hook invocations
 ```bash
-cline --verbose "your prompt"
+enki --verbose "your prompt"
 ```
 
 ### Test a hook manually
 ```bash
-echo '{"tool_call": {"name": "read_files", "input": {"filePath": "test.ts"}}}' | .cline/hooks/PreToolUse.sh
+echo '{"tool_call": {"name": "read_files", "input": {"filePath": "test.ts"}}}' | .enki/hooks/PreToolUse.sh
 ```
 
 ### Check hook output
 ```bash
-.cline/hooks/PreToolUse.sh < input.json | jq .
+.enki/hooks/PreToolUse.sh < input.json | jq .
 ```
 
 ## Runtime Hooks: Custom Compaction
@@ -409,9 +409,9 @@ echo '{"tool_call": {"name": "read_files", "input": {"filePath": "test.ts"}}}' |
 File hooks observe lifecycle events. For more advanced use cases like message compaction, use a TypeScript **runtime hook** plugin:
 
 ```bash
-cline plugin install https://github.com/cline/cline/blob/main/sdk/examples/hooks/custom-compaction-hook.example.ts --cwd .
+enki plugin install https://github.com/enki/enki/blob/main/sdk/examples/hooks/custom-compaction-hook.example.ts --cwd .
 
-cline -i "Search the codebase for dispatcher usage, then summarize it"
+enki -i "Search the codebase for dispatcher usage, then summarize it"
 ```
 
 This example uses `hooks.beforeModel` to estimate request size and replace older middle history with a summary message before the provider request.
@@ -420,7 +420,7 @@ This example uses `hooks.beforeModel` to estimate request size and replace older
 
 | Example | Extension Point | Message Shape | Best For |
 | ------- | --------------- | ------------- | -------- |
-| `custom-compaction-hook.example.ts` (in `.cline/plugins/`) | `hooks.beforeModel` runtime hook | Agent runtime request messages with runtime parts such as `tool-call`, `tool-result`, `reasoning`, `image`, and `file` | Cases needing runtime-hook context, current runtime snapshot, or direct request mutation |
+| `custom-compaction-hook.example.ts` (in `.enki/plugins/`) | `hooks.beforeModel` runtime hook | Agent runtime request messages with runtime parts such as `tool-call`, `tool-result`, `reasoning`, `image`, and `file` | Cases needing runtime-hook context, current runtime snapshot, or direct request mutation |
 | `plugins/custom-compaction.ts` | `api.registerMessageBuilder()` | SDK/provider-bound `Message[]` after runtime messages are converted for model delivery | Most reusable plugin-owned message rewrites and compaction policies |
 
 **Prefer `registerMessageBuilder()`** for normal plugin-owned provider-message rewrites because it runs in the core message pipeline before the built-in provider-safety builder. **Use `beforeModel`** when the compaction logic needs runtime hook context or needs to inspect the exact runtime request object.
@@ -431,5 +431,5 @@ This example uses `hooks.beforeModel` to estimate request size and replace older
 - **Use stderr for logging** — stdout is reserved for JSON output
 - **Keep hooks fast** — they run before every tool call, so performance matters
 - **Test with `jq`** — JSON parsing is finicky; use `jq` for safe extraction
-- **Use multiple hooks** — different event files can coexist in `.cline/hooks/`
+- **Use multiple hooks** — different event files can coexist in `.enki/hooks/`
 - **Load from custom dirs** — use `--hooks-dir ./ci/hooks` to load from elsewhere

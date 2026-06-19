@@ -14,7 +14,7 @@ import {
 	EXIT_CODE_SUCCESS,
 	TERMINAL_WIDE,
 } from "../helpers/constants.js";
-import { clineEnv } from "../helpers/env.js";
+import { enkiEnv } from "../helpers/env.js";
 import { expectExitCode, expectVisible } from "../helpers/terminal.js";
 
 function findMessagesArtifacts(root: string): string[] {
@@ -40,14 +40,14 @@ function findMessagesArtifacts(root: string): string[] {
 	return out.sort();
 }
 
-test.describe("cline --json persisted messages contract - authenticated @live", () => {
+test.describe("enki --json persisted messages contract - authenticated @live", () => {
 	const sessionDataDir = mkdtempSync(
-		join(tmpdir(), "cline-headless-messages-contract-"),
+		join(tmpdir(), "enki-headless-messages-contract-"),
 	);
 	test.use({
 		program: { file: CLINE_BIN, args: ["--json", "tell me a joke"] },
 		...TERMINAL_WIDE,
-		env: clineEnv("default", {
+		env: enkiEnv("default", {
 			CLINE_VCR_CASSETTE: "./fixtures/headless-json.json",
 			CLINE_SESSION_DATA_DIR: sessionDataDir,
 		}),

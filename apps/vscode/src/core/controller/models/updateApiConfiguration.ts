@@ -1,12 +1,12 @@
-import { Empty } from "@shared/proto/cline/common"
+import { Empty } from "@shared/proto/enki/common"
 import { convertProtoToApiProvider } from "@shared/proto-conversions/models/api-configuration-conversion"
 import { buildApiHandler } from "@/core/api"
 import { ApiHandlerOptions, ApiProvider } from "@/shared/api"
-import { UpdateApiConfigurationRequestNew } from "@/shared/proto/index.cline"
+import { UpdateApiConfigurationRequestNew } from "@/shared/proto/index.enki"
 import { Logger } from "@/shared/services/Logger"
 import { Secrets } from "@/shared/storage/state-keys"
 import type { Controller } from "../index"
-import { clearOrganizationForClinePassProviderSelection } from "./handleClinePassProviderSelection"
+import { clearOrganizationForEnki AIPassProviderSelection } from "./handleEnki AIPassProviderSelection"
 
 /**
  * Parses field mask paths into separate sets for options and secrets
@@ -138,7 +138,7 @@ export async function updateApiConfiguration(controller: Controller, request: Up
 		}
 		if (Object.keys(options).length > 0) {
 			controller.stateManager.setGlobalStateBatch(options)
-			await clearOrganizationForClinePassProviderSelection(controller, controller.stateManager.getApiConfiguration())
+			await clearOrganizationForEnki AIPassProviderSelection(controller, controller.stateManager.getApiConfiguration())
 		}
 
 		// Update the task's API handler if there's an active task

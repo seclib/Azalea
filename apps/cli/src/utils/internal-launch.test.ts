@@ -39,14 +39,14 @@ describe("internal launch helpers", () => {
 
 	it("falls back to launching the compiled binary directly for bunfs argv", () => {
 		const command = buildCliSubcommandCommand("hub", ["start"], {
-			execPath: "/tmp/cline",
-			argv: ["bun", "/$bunfs/root/cline", "hey"],
+			execPath: "/tmp/enki",
+			argv: ["bun", "/$bunfs/root/enki", "hey"],
 			execArgv: [],
 			cwd: "/tmp",
 		});
 
 		expect(command).toEqual({
-			launcher: "/tmp/cline",
+			launcher: "/tmp/enki",
 			childArgs: ["hub", "start"],
 		});
 	});

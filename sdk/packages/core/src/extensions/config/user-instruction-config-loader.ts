@@ -9,7 +9,7 @@ import {
 	resolveWorkflowsConfigSearchPaths as resolveWorkflowsConfigSearchPathsFromShared,
 	SKILLS_CONFIG_DIRECTORY_NAME,
 	WORKFLOWS_CONFIG_DIRECTORY_NAME,
-} from "@cline/shared/storage";
+} from "@enki/shared/storage";
 import YAML from "yaml";
 import { resolveAgentPluginSkillDirectories } from "../plugin/plugin-config-loader";
 import {
@@ -153,16 +153,16 @@ function resolveSkillDirectories(
 }
 
 async function discoverManagedPluginRoots(
-	clineDirectoryPath: string,
+	enkiDirectoryPath: string,
 ): Promise<string[]> {
 	try {
-		const entries = await readdir(clineDirectoryPath, { withFileTypes: true });
+		const entries = await readdir(enkiDirectoryPath, { withFileTypes: true });
 		const pluginRoots: string[] = [];
 		for (const entry of entries) {
 			if (!entry.isDirectory()) {
 				continue;
 			}
-			const pluginRoot = join(clineDirectoryPath, entry.name);
+			const pluginRoot = join(enkiDirectoryPath, entry.name);
 			const manifestPath = join(pluginRoot, MANAGED_PLUGIN_MANIFEST_FILE_NAME);
 			try {
 				const content = await readFile(manifestPath, "utf8");
@@ -379,7 +379,7 @@ export function resolveWorkflowsConfigSearchPaths(
 async function discoverSkillFiles(
 	directoryPath: string,
 ): Promise<ReadonlyArray<UnifiedConfigFileCandidate>> {
-	if (basename(directoryPath) === ".cline") {
+	if (basename(directoryPath) === ".enki") {
 		const pluginRoots = await discoverManagedPluginRoots(directoryPath);
 		const nestedCandidates = await Promise.all(
 			pluginRoots.map((pluginRoot) =>
@@ -433,7 +433,7 @@ async function discoverSkillFiles(
 async function discoverRulesLikeFiles(
 	directoryPath: string,
 ): Promise<ReadonlyArray<UnifiedConfigFileCandidate>> {
-	if (basename(directoryPath) === ".cline") {
+	if (basename(directoryPath) === ".enki") {
 		const pluginRoots = await discoverManagedPluginRoots(directoryPath);
 		const nestedCandidates = await Promise.all(
 			pluginRoots.map((pluginRoot) =>
@@ -503,7 +503,7 @@ async function discoverRulesLikeFiles(
 async function discoverManagedWorkflowFiles(
 	directoryPath: string,
 ): Promise<ReadonlyArray<UnifiedConfigFileCandidate>> {
-	if (basename(directoryPath) === ".cline") {
+	if (basename(directoryPath) === ".enki") {
 		const pluginRoots = await discoverManagedPluginRoots(directoryPath);
 		const nestedCandidates = await Promise.all(
 			pluginRoots.map((pluginRoot) =>
@@ -522,7 +522,7 @@ export function createSkillsConfigDefinition(
 ): UnifiedConfigDefinition<"skill", SkillConfig> {
 	const directories = resolveSkillDirectories(options);
 	const managedRoot = options?.workspacePath
-		? join(options.workspacePath, ".cline")
+		? join(options.workspacePath, ".enki")
 		: undefined;
 
 	return {
@@ -548,7 +548,7 @@ export function createRulesConfigDefinition(
 		options?.directories ??
 		resolveRulesConfigSearchPaths(options?.workspacePath);
 	const managedRoot = options?.workspacePath
-		? join(options.workspacePath, ".cline")
+		? join(options.workspacePath, ".enki")
 		: undefined;
 
 	return {
@@ -556,7 +556,7 @@ export function createRulesConfigDefinition(
 		directories: managedRoot ? [...directories, managedRoot] : directories,
 		discoverFiles: discoverRulesLikeFiles,
 		includeFile: (fileName, filePath) =>
-			fileName === ".clinerules" ||
+			fileName === ".enkirules" ||
 			isMarkdownFile(fileName) ||
 			isMarkdownFile(filePath),
 		parseFile: (context) =>
@@ -575,7 +575,7 @@ export function createWorkflowsConfigDefinition(
 		options?.directories ??
 		resolveWorkflowsConfigSearchPaths(options?.workspacePath);
 	const managedRoot = options?.workspacePath
-		? join(options.workspacePath, ".cline")
+		? join(options.workspacePath, ".enki")
 		: undefined;
 
 	return {

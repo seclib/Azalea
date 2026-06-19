@@ -23,12 +23,12 @@ import type {
 import { PROTOCOL_VERSION, RequestError } from "@agentclientprotocol/sdk";
 import {
 	type AgentEvent,
-	type ClineCore,
+	type Enki AICore,
 	Llms,
 	ProviderSettingsManager,
 	SessionSource,
-} from "@cline/core";
-import type { Message } from "@cline/shared";
+} from "@enki/core";
+import type { Message } from "@enki/shared";
 import { getPersistedProviderApiKey } from "../commands/auth";
 import { resolveSystemPrompt } from "../runtime/prompt";
 import { subscribeToAgentEvents } from "../runtime/session-events";
@@ -62,7 +62,7 @@ interface SessionState {
 	/** Current model id for the session. */
 	currentModelId: string;
 	/** Active session manager for the running agent, if any. */
-	sessionManager?: ClineCore;
+	sessionManager?: Enki AICore;
 	/** Internal session id within the session manager. */
 	activeSessionId?: string;
 	/** Abort controller for the current prompt, if running. */
@@ -128,7 +128,7 @@ export class AcpAgent implements Agent {
 
 		const defaultMode = "act";
 		const providerId =
-			process.env.CLINE_PROVIDER ?? this.authResult?.providerId ?? "cline";
+			process.env.CLINE_PROVIDER ?? this.authResult?.providerId ?? "enki";
 		const defaultModelId =
 			process.env.CLINE_MODEL ?? "anthropic/claude-sonnet-4.6";
 

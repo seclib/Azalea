@@ -55,7 +55,7 @@ describe("notifications", () => {
 		)
 
 		await notificationsModule.showSystemNotification({
-			title: 'Cline "Agent"',
+			title: 'Enki AI "Agent"',
 			subtitle: "Path C:\\temp",
 			message: 'He said "hello"',
 		})
@@ -64,7 +64,7 @@ describe("notifications", () => {
 		expect(execaStub.firstCall.args[0]).to.equal("osascript")
 		const script = (execaStub.firstCall.args[1] as string[])[1]
 		expect(script).to.contain('display notification "He said \\"hello\\""')
-		expect(script).to.contain('with title "Cline \\"Agent\\""')
+		expect(script).to.contain('with title "Enki AI \\"Agent\\""')
 		expect(script).to.contain('subtitle "Path C:\\\\temp"')
 	})
 
@@ -78,11 +78,11 @@ describe("notifications", () => {
 			platformStub as unknown as Parameters<typeof notificationsModule.setNotificationPlatformForTesting>[0],
 		)
 
-		await notificationsModule.showSystemNotification({ title: "Cline", subtitle: "Approval Required", message: "test" })
+		await notificationsModule.showSystemNotification({ title: "Enki AI", subtitle: "Approval Required", message: "test" })
 
 		sinon.assert.calledOnce(execaStub)
 		expect(execaStub.firstCall.args[0]).to.equal("notify-send")
-		expect(execaStub.firstCall.args[1]).to.deep.equal(["Cline", "Approval Required\ntest"])
+		expect(execaStub.firstCall.args[1]).to.deep.equal(["Enki AI", "Approval Required\ntest"])
 	})
 
 	it("creates explicit approval marker only when required", () => {
@@ -120,7 +120,7 @@ describe("notifications", () => {
 		sinon.assert.calledOnce(execaStub)
 		expect(execaStub.firstCall.args[0]).to.equal("notify-send")
 		expect(execaStub.firstCall.args[1]).to.deep.equal([
-			"Cline",
+			"Enki AI",
 			"Approval Required\nnpm install (explicit approval required)",
 		])
 	})

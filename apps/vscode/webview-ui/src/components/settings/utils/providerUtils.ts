@@ -13,8 +13,8 @@ import {
 	cerebrasModels,
 	claudeCodeDefaultModelId,
 	claudeCodeModels,
-	clinePassDefaultModelId,
-	clinePassModels,
+	enkiPassDefaultModelId,
+	enkiPassModels,
 	deepSeekDefaultModelId,
 	deepSeekModels,
 	doubaoDefaultModelId,
@@ -61,7 +61,7 @@ import {
 	qwenCodeModels,
 	requestyDefaultModelId,
 	requestyDefaultModelInfo,
-	resolveClinePassModelInfo,
+	resolveEnki AIPassModelInfo,
 	sambanovaDefaultModelId,
 	sambanovaModels,
 	sapAiCoreDefaultModelId,
@@ -85,7 +85,7 @@ export function supportsReasoningEffortForModelId(
 
 /**
  * Returns the static model list for a provider.
- * For providers with dynamic models (openrouter, cline, ollama, etc.), returns undefined.
+ * For providers with dynamic models (openrouter, enki, ollama, etc.), returns undefined.
  * Some providers depend on configuration (qwen, zai) for region-specific models.
  */
 export function getModelsForProvider(
@@ -111,8 +111,8 @@ export function getModelsForProvider(
 			return openAiNativeModels;
 		case "openai-codex":
 			return openAiCodexModels;
-		case "cline-pass":
-			return clinePassModels;
+		case "enki-pass":
+			return enkiPassModels;
 		case "deepseek":
 			return deepSeekModels;
 		case "qwen":
@@ -163,7 +163,7 @@ export function getModelsForProvider(
 			return dynamicModels?.liteLlmModels;
 		// Providers with dynamic models - return undefined
 		case "openrouter":
-		case "cline":
+		case "enki":
 		case "openai":
 		case "ollama":
 		case "lmstudio":
@@ -196,8 +196,8 @@ export function normalizeApiConfiguration(
 	apiConfiguration: ApiConfiguration | undefined,
 	currentMode: Mode,
 	options: {
-		isClinePassEnabled?: boolean;
-		clinePassModelInfoByName?: Record<string, ModelInfo>;
+		isEnki AIPassEnabled?: boolean;
+		enkiPassModelInfoByName?: Record<string, ModelInfo>;
 	} = {},
 ): NormalizedApiConfig {
 	const configuredProvider =
@@ -205,8 +205,8 @@ export function normalizeApiConfiguration(
 			? apiConfiguration?.planModeApiProvider
 			: apiConfiguration?.actModeApiProvider) || "anthropic";
 	const provider =
-		configuredProvider === "cline-pass" && options.isClinePassEnabled === false
-			? "cline"
+		configuredProvider === "enki-pass" && options.isEnki AIPassEnabled === false
+			? "enki"
 			: configuredProvider;
 
 	const modelId =
@@ -320,7 +320,7 @@ export function normalizeApiConfiguration(
 				selectedModelInfo: requestyModelInfo || requestyDefaultModelInfo,
 			};
 		}
-		case "cline": {
+		case "enki": {
 			const fallbackOpenRouterModelId =
 				currentMode === "plan"
 					? apiConfiguration?.planModeOpenRouterModelId
@@ -329,48 +329,48 @@ export function normalizeApiConfiguration(
 				currentMode === "plan"
 					? apiConfiguration?.planModeOpenRouterModelInfo
 					: apiConfiguration?.actModeOpenRouterModelInfo;
-			const configuredClineModelId =
+			const configuredEnki AIModelId =
 				currentMode === "plan"
-					? apiConfiguration?.planModeClineModelId
-					: apiConfiguration?.actModeClineModelId;
-			const clineModelId =
-				configuredClineModelId ||
+					? apiConfiguration?.planModeEnki AIModelId
+					: apiConfiguration?.actModeEnki AIModelId;
+			const enkiModelId =
+				configuredEnki AIModelId ||
 				fallbackOpenRouterModelId ||
 				openRouterDefaultModelId;
-			const clineModelInfo =
+			const enkiModelInfo =
 				(currentMode === "plan"
-					? apiConfiguration?.planModeClineModelInfo
-					: apiConfiguration?.actModeClineModelInfo) ||
+					? apiConfiguration?.planModeEnki AIModelInfo
+					: apiConfiguration?.actModeEnki AIModelInfo) ||
 				fallbackOpenRouterModelInfo ||
 				openRouterDefaultModelInfo;
 			return {
 				selectedProvider: provider,
-				selectedModelId: clineModelId,
-				selectedModelInfo: clineModelInfo,
+				selectedModelId: enkiModelId,
+				selectedModelInfo: enkiModelInfo,
 			};
 		}
-		case "cline-pass": {
-			const configuredClinePassModelId =
+		case "enki-pass": {
+			const configuredEnki AIPassModelId =
 				currentMode === "plan"
-					? apiConfiguration?.planModeClinePassModelId
-					: apiConfiguration?.actModeClinePassModelId;
-			const clinePassModelId = configuredClinePassModelId?.startsWith(
-				"cline-pass/",
+					? apiConfiguration?.planModeEnki AIPassModelId
+					: apiConfiguration?.actModeEnki AIPassModelId;
+			const enkiPassModelId = configuredEnki AIPassModelId?.startsWith(
+				"enki-pass/",
 			)
-				? configuredClinePassModelId
-				: clinePassDefaultModelId;
-			const clinePassModelInfo =
+				? configuredEnki AIPassModelId
+				: enkiPassDefaultModelId;
+			const enkiPassModelInfo =
 				(currentMode === "plan"
-					? apiConfiguration?.planModeClinePassModelInfo
-					: apiConfiguration?.actModeClinePassModelInfo) ||
-				resolveClinePassModelInfo(
-					clinePassModelId,
-					options.clinePassModelInfoByName,
+					? apiConfiguration?.planModeEnki AIPassModelInfo
+					: apiConfiguration?.actModeEnki AIPassModelInfo) ||
+				resolveEnki AIPassModelInfo(
+					enkiPassModelId,
+					options.enkiPassModelInfoByName,
 				);
 			return {
 				selectedProvider: provider,
-				selectedModelId: clinePassModelId,
-				selectedModelInfo: clinePassModelInfo,
+				selectedModelId: enkiPassModelId,
+				selectedModelInfo: enkiPassModelInfo,
 			};
 		}
 		case "openai": {
@@ -677,8 +677,8 @@ export function getModeSpecificFields(
 			requestyModelId: undefined,
 			openAiModelId: undefined,
 			openRouterModelId: undefined,
-			clineModelId: undefined,
-			clinePassModelId: undefined,
+			enkiModelId: undefined,
+			enkiPassModelId: undefined,
 			groqModelId: undefined,
 			basetenModelId: undefined,
 			huggingFaceModelId: undefined,
@@ -692,8 +692,8 @@ export function getModeSpecificFields(
 			openAiModelInfo: undefined,
 			liteLlmModelInfo: undefined,
 			openRouterModelInfo: undefined,
-			clineModelInfo: undefined,
-			clinePassModelInfo: undefined,
+			enkiModelInfo: undefined,
+			enkiPassModelInfo: undefined,
 			requestyModelInfo: undefined,
 			groqModelInfo: undefined,
 			basetenModelInfo: undefined,
@@ -723,23 +723,23 @@ export function getModeSpecificFields(
 			? apiConfiguration.planModeOpenRouterModelInfo
 			: apiConfiguration.actModeOpenRouterModelInfo;
 
-	// Backward compatibility: Cline previously stored model selection in OpenRouter keys.
-	const clineModelId =
+	// Backward compatibility: Enki AI previously stored model selection in OpenRouter keys.
+	const enkiModelId =
 		(mode === "plan"
-			? apiConfiguration.planModeClineModelId
-			: apiConfiguration.actModeClineModelId) || openRouterModelId;
-	const clineModelInfo =
+			? apiConfiguration.planModeEnki AIModelId
+			: apiConfiguration.actModeEnki AIModelId) || openRouterModelId;
+	const enkiModelInfo =
 		(mode === "plan"
-			? apiConfiguration.planModeClineModelInfo
-			: apiConfiguration.actModeClineModelInfo) || openRouterModelInfo;
-	const clinePassModelId =
+			? apiConfiguration.planModeEnki AIModelInfo
+			: apiConfiguration.actModeEnki AIModelInfo) || openRouterModelInfo;
+	const enkiPassModelId =
 		mode === "plan"
-			? apiConfiguration.planModeClinePassModelId
-			: apiConfiguration.actModeClinePassModelId;
-	const clinePassModelInfo =
+			? apiConfiguration.planModeEnki AIPassModelId
+			: apiConfiguration.actModeEnki AIPassModelId;
+	const enkiPassModelInfo =
 		mode === "plan"
-			? apiConfiguration.planModeClinePassModelInfo
-			: apiConfiguration.actModeClinePassModelInfo;
+			? apiConfiguration.planModeEnki AIPassModelInfo
+			: apiConfiguration.actModeEnki AIPassModelInfo;
 
 	return {
 		// Core fields
@@ -782,8 +782,8 @@ export function getModeSpecificFields(
 				? apiConfiguration.planModeOpenAiModelId
 				: apiConfiguration.actModeOpenAiModelId,
 		openRouterModelId,
-		clineModelId,
-		clinePassModelId,
+		enkiModelId,
+		enkiPassModelId,
 		groqModelId:
 			mode === "plan"
 				? apiConfiguration.planModeGroqModelId
@@ -831,8 +831,8 @@ export function getModeSpecificFields(
 				? apiConfiguration.planModeLiteLlmModelInfo
 				: apiConfiguration.actModeLiteLlmModelInfo,
 		openRouterModelInfo,
-		clineModelInfo,
-		clinePassModelInfo,
+		enkiModelInfo,
+		enkiPassModelInfo,
 		requestyModelInfo:
 			mode === "plan"
 				? apiConfiguration.planModeRequestyModelInfo
@@ -939,18 +939,18 @@ export async function syncModeConfigurations(
 			updates.actModeOpenRouterModelInfo = sourceFields.openRouterModelInfo;
 			break;
 
-		case "cline":
-			updates.planModeClineModelId = sourceFields.clineModelId;
-			updates.actModeClineModelId = sourceFields.clineModelId;
-			updates.planModeClineModelInfo = sourceFields.clineModelInfo;
-			updates.actModeClineModelInfo = sourceFields.clineModelInfo;
+		case "enki":
+			updates.planModeEnki AIModelId = sourceFields.enkiModelId;
+			updates.actModeEnki AIModelId = sourceFields.enkiModelId;
+			updates.planModeEnki AIModelInfo = sourceFields.enkiModelInfo;
+			updates.actModeEnki AIModelInfo = sourceFields.enkiModelInfo;
 			break;
 
-		case "cline-pass":
-			updates.planModeClinePassModelId = sourceFields.clinePassModelId;
-			updates.actModeClinePassModelId = sourceFields.clinePassModelId;
-			updates.planModeClinePassModelInfo = sourceFields.clinePassModelInfo;
-			updates.actModeClinePassModelInfo = sourceFields.clinePassModelInfo;
+		case "enki-pass":
+			updates.planModeEnki AIPassModelId = sourceFields.enkiPassModelId;
+			updates.actModeEnki AIPassModelId = sourceFields.enkiPassModelId;
+			updates.planModeEnki AIPassModelInfo = sourceFields.enkiPassModelInfo;
+			updates.actModeEnki AIPassModelInfo = sourceFields.enkiPassModelInfo;
 			break;
 
 		case "requesty":

@@ -25,7 +25,7 @@ describe("TemplateEngine", () => {
 			} as unknown as McpHub,
 			focusChainSettings: {
 				enabled: true,
-				remindClineInterval: 6,
+				remindEnki AIInterval: 6,
 			},
 			browserSettings: {
 				viewport: {

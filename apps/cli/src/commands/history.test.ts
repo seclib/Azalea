@@ -1,7 +1,7 @@
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { SessionHistoryRecord } from "@cline/core";
+import type { SessionHistoryRecord } from "@enki/core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
 	formatCheckpointDetail,
@@ -276,7 +276,7 @@ describe("runHistoryExport", () => {
 	});
 
 	it("writes standalone html from a persisted messages artifact", async () => {
-		tempDir = await mkdtemp(join(tmpdir(), "cline-history-export-"));
+		tempDir = await mkdtemp(join(tmpdir(), "enki-history-export-"));
 		const outputPath = join(tempDir, "export.html");
 		const artifact = {
 			version: 1,

@@ -1,19 +1,19 @@
-import { getClineEnvironmentConfig } from "@cline/shared";
+import { getEnki AIEnvironmentConfig } from "@enki/shared";
 import { ProviderSettingsManager } from "../storage/provider-settings-manager";
 
-export interface ClineRecommendedModel {
+export interface Enki AIRecommendedModel {
 	id: string;
 	name: string;
 	description: string;
 	tags: string[];
 }
 
-export interface ClineRecommendedModelsData {
-	recommended: ClineRecommendedModel[];
-	free: ClineRecommendedModel[];
+export interface Enki AIRecommendedModelsData {
+	recommended: Enki AIRecommendedModel[];
+	free: Enki AIRecommendedModel[];
 }
 
-export interface FetchClineRecommendedModelsOptions {
+export interface FetchEnki AIRecommendedModelsOptions {
 	baseUrl?: string;
 	fetchImpl?: typeof fetch;
 	providerSettingsManager?: Pick<
@@ -25,7 +25,7 @@ export interface FetchClineRecommendedModelsOptions {
 
 const DEFAULT_REQUEST_TIMEOUT_MS = 5_000;
 
-export const FALLBACK_CLINE_RECOMMENDED_MODELS: ClineRecommendedModelsData = {
+export const FALLBACK_CLINE_RECOMMENDED_MODELS: Enki AIRecommendedModelsData = {
 	recommended: [
 		{
 			id: "anthropic/claude-opus-4.6",
@@ -69,8 +69,8 @@ export const FALLBACK_CLINE_RECOMMENDED_MODELS: ClineRecommendedModelsData = {
 };
 
 function cloneRecommendedModels(
-	data: ClineRecommendedModelsData,
-): ClineRecommendedModelsData {
+	data: Enki AIRecommendedModelsData,
+): Enki AIRecommendedModelsData {
 	return {
 		recommended: data.recommended.map((model) => ({
 			...model,
@@ -80,7 +80,7 @@ function cloneRecommendedModels(
 	};
 }
 
-function normalizeModel(raw: unknown): ClineRecommendedModel | null {
+function normalizeModel(raw: unknown): Enki AIRecommendedModel | null {
 	if (!raw || typeof raw !== "object") return null;
 	const data = raw as Record<string, unknown>;
 	if (typeof data.id !== "string" || data.id.length === 0) return null;
@@ -97,7 +97,7 @@ function normalizeModel(raw: unknown): ClineRecommendedModel | null {
 	};
 }
 
-function normalizeResponse(raw: unknown): ClineRecommendedModelsData | null {
+function normalizeResponse(raw: unknown): Enki AIRecommendedModelsData | null {
 	if (!raw || typeof raw !== "object") return null;
 	const data = raw as Record<string, unknown>;
 	const recommendedRaw = Array.isArray(data.recommended)
@@ -106,10 +106,10 @@ function normalizeResponse(raw: unknown): ClineRecommendedModelsData | null {
 	const freeRaw = Array.isArray(data.free) ? data.free : [];
 	const recommended = recommendedRaw
 		.map(normalizeModel)
-		.filter((model): model is ClineRecommendedModel => model !== null);
+		.filter((model): model is Enki AIRecommendedModel => model !== null);
 	const free = freeRaw
 		.map(normalizeModel)
-		.filter((model): model is ClineRecommendedModel => model !== null);
+		.filter((model): model is Enki AIRecommendedModel => model !== null);
 	if (recommended.length === 0 && free.length === 0) {
 		return null;
 	}
@@ -118,16 +118,16 @@ function normalizeResponse(raw: unknown): ClineRecommendedModelsData | null {
 }
 
 function getConfiguredApiBaseUrl(
-	options: FetchClineRecommendedModelsOptions,
+	options: FetchEnki AIRecommendedModelsOptions,
 ): string {
 	const explicitBaseUrl = options.baseUrl?.trim();
 	if (explicitBaseUrl) return explicitBaseUrl;
 
-	const fallbackBaseUrl = getClineEnvironmentConfig().apiBaseUrl;
+	const fallbackBaseUrl = getEnki AIEnvironmentConfig().apiBaseUrl;
 	try {
 		const manager =
 			options.providerSettingsManager ?? new ProviderSettingsManager();
-		const settings = manager.getProviderSettings("cline");
+		const settings = manager.getProviderSettings("enki");
 		return settings?.baseUrl?.trim() || fallbackBaseUrl;
 	} catch {
 		return fallbackBaseUrl;
@@ -148,15 +148,15 @@ async function fetchWithTimeout(
 	}
 }
 
-export async function fetchClineRecommendedModels(
-	options: FetchClineRecommendedModelsOptions = {},
-): Promise<ClineRecommendedModelsData> {
+export async function fetchEnki AIRecommendedModels(
+	options: FetchEnki AIRecommendedModelsOptions = {},
+): Promise<Enki AIRecommendedModelsData> {
 	try {
 		const base = getConfiguredApiBaseUrl(options);
 		const fetchImpl = options.fetchImpl ?? fetch;
 		const resp = await fetchWithTimeout(
 			fetchImpl,
-			`${base}/api/v1/ai/cline/recommended-models`,
+			`${base}/api/v1/ai/enki/recommended-models`,
 			options.timeoutMs ?? DEFAULT_REQUEST_TIMEOUT_MS,
 		);
 		if (!resp.ok) throw new Error(`HTTP ${resp.status}`);

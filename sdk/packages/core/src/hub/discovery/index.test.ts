@@ -36,11 +36,11 @@ describe("hub discovery", () => {
 	it("stores shared hub discovery under the locks directory by default", () => {
 		snapshot = captureEnv();
 		delete process.env.CLINE_HUB_DISCOVERY_PATH;
-		process.env.CLINE_DATA_DIR = "/tmp/cline-data";
+		process.env.CLINE_DATA_DIR = "/tmp/enki-data";
 
 		expect(resolveHubOwnerContext("shared").discoveryPath).toBe(
 			join(
-				"/tmp/cline-data",
+				"/tmp/enki-data",
 				"locks",
 				"hub",
 				"owners",
@@ -61,7 +61,7 @@ describe("hub discovery", () => {
 	it("writes and clears discovery records at the resolved location", async () => {
 		snapshot = captureEnv();
 		delete process.env.CLINE_HUB_DISCOVERY_PATH;
-		process.env.CLINE_DATA_DIR = "/tmp/cline-data";
+		process.env.CLINE_DATA_DIR = "/tmp/enki-data";
 
 		const discoveryPath = resolveHubOwnerContext("shared").discoveryPath;
 		const record = {
@@ -93,7 +93,7 @@ describe("hub discovery", () => {
 	it("rejects discovery records without an auth token", async () => {
 		snapshot = captureEnv();
 		delete process.env.CLINE_HUB_DISCOVERY_PATH;
-		process.env.CLINE_DATA_DIR = "/tmp/cline-data";
+		process.env.CLINE_DATA_DIR = "/tmp/enki-data";
 
 		const discoveryPath = resolveHubOwnerContext("missing-auth").discoveryPath;
 		await mkdir(dirname(discoveryPath), { recursive: true });

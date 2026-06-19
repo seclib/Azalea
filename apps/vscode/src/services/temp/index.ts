@@ -1,1 +1,1 @@
-export { ClineTempManager } from "./ClineTempManager"
+export { Enki AITempManager } from "./Enki AITempManager"

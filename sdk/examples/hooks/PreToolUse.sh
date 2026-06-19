@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Cline Hook: PreToolUse
+# Enki AI Hook: PreToolUse
 # Logs every tool call before it executes
-# Copy to ~/.cline/hooks/PreToolUse.sh and chmod +x
+# Copy to ~/.enki/hooks/PreToolUse.sh and chmod +x
 
 input=$(cat)
 tool=$(echo "$input" | jq -r '.tool_call.name // "unknown"')

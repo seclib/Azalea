@@ -22,13 +22,13 @@ const NO_STORE_HEADERS = {
 };
 
 const IMMUTABLE_ASSET_CACHE = "public, max-age=31536000, immutable";
-const THEME_BOOTSTRAP_SCRIPT = `<script id="cline-hub-theme-bootstrap">
+const THEME_BOOTSTRAP_SCRIPT = `<script id="enki-hub-theme-bootstrap">
   (() => {
     try {
-      const theme = window.localStorage.getItem("cline-hub-theme");
+      const theme = window.localStorage.getItem("enki-hub-theme");
       if (theme === "dark" || theme === "light") {
         document.documentElement.classList.toggle("dark", theme === "dark");
-        document.documentElement.dataset.clineHubTheme = theme;
+        document.documentElement.dataset.enkiHubTheme = theme;
       }
     } catch {}
   })();
@@ -85,7 +85,7 @@ export function normalizeWebviewIndexHtml(html: string): string {
 	const normalized = html
 		.replaceAll('src="./', 'src="/')
 		.replaceAll('href="./', 'href="/');
-	if (normalized.includes('id="cline-hub-theme-bootstrap"')) {
+	if (normalized.includes('id="enki-hub-theme-bootstrap"')) {
 		return normalized;
 	}
 	return normalized.replace("<head>", `<head>\n${THEME_BOOTSTRAP_SCRIPT}`);
@@ -106,8 +106,8 @@ function renderDevIndexHtml(devServerUrl: string): string {
     window.__vite_plugin_react_preamble_installed__ = true;
   </script>
   <script type="module" src="${devServerUrl}/@vite/client"></script>
-  <link rel="icon" type="image/svg+xml" href="${devServerUrl}/cline-logo-filled.svg" />
-  <title>Cline Hub</title>
+  <link rel="icon" type="image/svg+xml" href="${devServerUrl}/enki-logo-filled.svg" />
+  <title>Enki AI Hub</title>
 </head>
 <body>
   <div id="root"></div>
@@ -151,7 +151,7 @@ export class WebviewAssets {
 			});
 		}
 		return createTextResponse(
-			"Cline Hub webview is not built. Run `bun run build:webview` from apps/cline-hub.",
+			"Enki AI Hub webview is not built. Run `bun run build:webview` from apps/enki-hub.",
 			503,
 		);
 	}

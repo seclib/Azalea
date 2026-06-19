@@ -22,7 +22,7 @@ const {
 	writeln: vi.fn(),
 }));
 
-vi.mock("@cline/core", () => ({
+vi.mock("@enki/core", () => ({
 	HubSessionClient: class {
 		connect = connect;
 		close = close;
@@ -78,7 +78,7 @@ describe("runZen", () => {
 			sandbox: false,
 			workspaceRoot: "/workspace",
 			cwd: "/workspace",
-			providerId: "cline",
+			providerId: "enki",
 			modelId: "test-model",
 			apiKey: "",
 			systemPrompt: "",

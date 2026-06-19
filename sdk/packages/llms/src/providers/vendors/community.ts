@@ -1,4 +1,4 @@
-import type { GatewayResolvedProviderConfig } from "@cline/shared";
+import type { GatewayResolvedProviderConfig } from "@enki/shared";
 import type { SAPAIProviderSettings } from "@jerome-benoit/sap-ai-provider";
 import { createClaudeCode } from "ai-sdk-provider-claude-code";
 import { createCodexExec } from "ai-sdk-provider-codex-cli";

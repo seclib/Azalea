@@ -96,7 +96,7 @@ describe("cli e2e", () => {
 		return {
 			...process.env,
 			HOME: homeDir,
-			CLINE_DIR: path.join(homeDir, ".cline"),
+			CLINE_DIR: path.join(homeDir, ".enki"),
 			CLINE_DATA_DIR: dataDir,
 			CLINE_DB_DATA_DIR: path.join(dataDir, "db"),
 			CLINE_SESSION_DATA_DIR: sessionDir,
@@ -296,7 +296,7 @@ describe("cli e2e", () => {
 	it("lists enabled workflows in text mode", () => {
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-workflows-"));
 		tempDirs.push(workspace);
-		const workflowsDir = path.join(workspace, ".clinerules", "workflows");
+		const workflowsDir = path.join(workspace, ".enkirules", "workflows");
 		mkdirSync(workflowsDir, { recursive: true });
 		writeFileSync(
 			path.join(workflowsDir, "release.md"),
@@ -332,7 +332,7 @@ Do not list this.`,
 	it("lists workflows from workspace root when run in a subdirectory", () => {
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-workflows-"));
 		tempDirs.push(workspace);
-		const workflowsDir = path.join(workspace, ".clinerules", "workflows");
+		const workflowsDir = path.join(workspace, ".enkirules", "workflows");
 		const nestedDir = path.join(workspace, "packages", "app");
 		mkdirSync(workflowsDir, { recursive: true });
 		mkdirSync(nestedDir, { recursive: true });
@@ -360,7 +360,7 @@ Release checklist.`,
 	it("lists enabled workflows in json mode", () => {
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-workflows-"));
 		tempDirs.push(workspace);
-		const workflowsDir = path.join(workspace, ".clinerules", "workflows");
+		const workflowsDir = path.join(workspace, ".enkirules", "workflows");
 		mkdirSync(workflowsDir, { recursive: true });
 		writeFileSync(
 			path.join(workflowsDir, "review.md"),
@@ -382,14 +382,14 @@ Review checklist.`,
 		expect(parsed.some((workflow) => workflow.name === "review")).toBe(true);
 	});
 
-	it("includes Documents/Cline workflows", () => {
+	it("includes Documents/Enki AI workflows", () => {
 		const homeDir = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-home-"));
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-workspace-"));
 		tempDirs.push(homeDir, workspace);
 		const docsWorkflowsDir = path.join(
 			homeDir,
 			"Documents",
-			"Cline",
+			"Enki AI",
 			"Workflows",
 		);
 		mkdirSync(docsWorkflowsDir, { recursive: true });
@@ -416,7 +416,7 @@ Release from docs path.`,
 	it("lists enabled rules", () => {
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-rules-"));
 		tempDirs.push(workspace);
-		const rulesDir = path.join(workspace, ".clinerules");
+		const rulesDir = path.join(workspace, ".enkirules");
 		mkdirSync(rulesDir, { recursive: true });
 		writeFileSync(
 			path.join(rulesDir, "rule.md"),
@@ -440,7 +440,7 @@ Do not force push.`,
 	it("lists enabled skills", () => {
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-skills-"));
 		tempDirs.push(workspace);
-		const skillsDir = path.join(workspace, ".clinerules", "skills", "commit");
+		const skillsDir = path.join(workspace, ".enkirules", "skills", "commit");
 		mkdirSync(skillsDir, { recursive: true });
 		writeFileSync(
 			path.join(skillsDir, "SKILL.md"),
@@ -461,15 +461,15 @@ Create a concise commit message.`,
 		expect(asText(result.stdout)).toContain(path.join(skillsDir, "SKILL.md"));
 	});
 
-	it("includes Documents/Cline rules and skills", () => {
+	it("includes Documents/Enki AI rules and skills", () => {
 		const homeDir = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-home-"));
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-workspace-"));
 		tempDirs.push(homeDir, workspace);
-		const docsRulesDir = path.join(homeDir, "Documents", "Cline", "Rules");
+		const docsRulesDir = path.join(homeDir, "Documents", "Enki AI", "Rules");
 		const docsSkillsDir = path.join(
 			homeDir,
 			"Documents",
-			"Cline",
+			"Enki AI",
 			"Skills",
 			"review",
 		);
@@ -517,8 +517,8 @@ Skill from docs path.`,
 		const homeDir = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-home-"));
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-workspace-"));
 		tempDirs.push(homeDir, workspace);
-		const globalAgentsDir = path.join(homeDir, ".cline", "agents");
-		const workspaceAgentsDir = path.join(workspace, ".cline", "agents");
+		const globalAgentsDir = path.join(homeDir, ".enki", "agents");
+		const workspaceAgentsDir = path.join(workspace, ".enki", "agents");
 		mkdirSync(globalAgentsDir, { recursive: true });
 		mkdirSync(workspaceAgentsDir, { recursive: true });
 		writeFileSync(
@@ -545,7 +545,7 @@ Break work into clear steps.`,
 			env: {
 				...createIsolatedEnv(),
 				HOME: homeDir,
-				CLINE_DIR: path.join(homeDir, ".cline"),
+				CLINE_DIR: path.join(homeDir, ".enki"),
 			},
 		});
 		expect(textResult.status).toBe(0);
@@ -564,7 +564,7 @@ Break work into clear steps.`,
 			env: {
 				...createIsolatedEnv(),
 				HOME: homeDir,
-				CLINE_DIR: path.join(homeDir, ".cline"),
+				CLINE_DIR: path.join(homeDir, ".enki"),
 			},
 		});
 		expect(jsonResult.status).toBe(0);
@@ -586,12 +586,12 @@ Break work into clear steps.`,
 		const dataDir = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-data-"));
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-workspace-"));
 		tempDirs.push(homeDir, dataDir, workspace);
-		const workspacePluginsDir = path.join(workspace, ".cline", "plugins");
-		const userPluginsDir = path.join(homeDir, ".cline", "plugins");
+		const workspacePluginsDir = path.join(workspace, ".enki", "plugins");
+		const userPluginsDir = path.join(homeDir, ".enki", "plugins");
 		const documentsPluginsDir = path.join(
 			homeDir,
 			"Documents",
-			"Cline",
+			"Enki AI",
 			"Plugins",
 		);
 		mkdirSync(workspacePluginsDir, { recursive: true });
@@ -618,7 +618,7 @@ Break work into clear steps.`,
 			env: {
 				...createIsolatedEnv(),
 				HOME: homeDir,
-				CLINE_DIR: path.join(homeDir, ".cline"),
+				CLINE_DIR: path.join(homeDir, ".enki"),
 				CLINE_DATA_DIR: dataDir,
 			},
 		});
@@ -642,7 +642,7 @@ Break work into clear steps.`,
 			env: {
 				...createIsolatedEnv(),
 				HOME: homeDir,
-				CLINE_DIR: path.join(homeDir, ".cline"),
+				CLINE_DIR: path.join(homeDir, ".enki"),
 				CLINE_DATA_DIR: dataDir,
 			},
 		});
@@ -659,19 +659,19 @@ Break work into clear steps.`,
 		expect(
 			parsed.some((plugin) =>
 				plugin.path.endsWith(
-					path.join(".cline", "plugins", "workspace-plugin.ts"),
+					path.join(".enki", "plugins", "workspace-plugin.ts"),
 				),
 			),
 		).toBe(true);
 		expect(
 			parsed.some((plugin) =>
-				plugin.path.endsWith(path.join(".cline", "plugins", "user-plugin.js")),
+				plugin.path.endsWith(path.join(".enki", "plugins", "user-plugin.js")),
 			),
 		).toBe(true);
 		expect(
 			parsed.some((plugin) =>
 				plugin.path.endsWith(
-					path.join("Documents", "Cline", "Plugins", "docs-plugin.ts"),
+					path.join("Documents", "Enki AI", "Plugins", "docs-plugin.ts"),
 				),
 			),
 		).toBe(true);
@@ -680,7 +680,7 @@ Break work into clear steps.`,
 	it("lists configured mcp servers", () => {
 		const tempRoot = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-mcp-"));
 		tempDirs.push(tempRoot);
-		const settingsPath = path.join(tempRoot, "cline_mcp_settings.json");
+		const settingsPath = path.join(tempRoot, "enki_mcp_settings.json");
 		writeFileSync(
 			settingsPath,
 			JSON.stringify(
@@ -763,7 +763,7 @@ Break work into clear steps.`,
 
 		expect(result.status).toBe(1);
 		expect(asText(result.stderr)).toContain(
-			"cline mcp install opens the MCP wizard and requires a TTY.",
+			"enki mcp install opens the MCP wizard and requires a TTY.",
 		);
 	});
 
@@ -772,7 +772,7 @@ Break work into clear steps.`,
 		const dataDir = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-data-"));
 		const workspace = mkdtempSync(path.join(os.tmpdir(), "cli-e2e-workspace-"));
 		tempDirs.push(homeDir, dataDir, workspace);
-		const workspacePluginsDir = path.join(workspace, ".cline", "plugins");
+		const workspacePluginsDir = path.join(workspace, ".enki", "plugins");
 		const globalSettingsPath = path.join(
 			dataDir,
 			"settings",
@@ -896,7 +896,7 @@ Break work into clear steps.`,
 		const hookPath = path.join(logDir, "hook-events.jsonl");
 		const defaultHookPath = path.join(
 			homeDir,
-			".cline",
+			".enki",
 			"data",
 			"logs",
 			"hooks.jsonl",
@@ -911,7 +911,7 @@ Break work into clear steps.`,
 			stdin: JSON.stringify({
 				hookName: "tool_call",
 				taskId: "conversation_1",
-				clineVersion: "",
+				enkiVersion: "",
 				timestamp: new Date().toISOString(),
 				workspaceRoots: [],
 				userId: "agent_1",

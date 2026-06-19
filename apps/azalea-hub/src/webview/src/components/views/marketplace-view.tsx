@@ -71,7 +71,7 @@ const primitivePageDetails = {
 	},
 	skill: {
 		title: "Skills",
-		description: "Install skills globally for Cline.",
+		description: "Install skills globally for Enki AI.",
 		emptyInstalled: "No skills installed.",
 		emptyCatalog: "No skills match the current filters.",
 		icon: Zap,
@@ -95,9 +95,9 @@ const primitivePageDetails = {
 >;
 
 const primitiveCommands = {
-	mcp: "cline mcp install",
-	plugin: "cline plugin install",
-	skill: "cline skill add",
+	mcp: "enki mcp install",
+	plugin: "enki plugin install",
+	skill: "enki skill add",
 } satisfies Record<MarketplacePrimitiveType, string>;
 
 export type MarketplaceLocalInstalledItem = {
@@ -194,7 +194,7 @@ function EntryDetails({
 						Environment setup needed
 					</p>
 					<p className="mt-1 text-xs leading-5 text-amber-800/80 dark:text-amber-100/80">
-						Add these values to your Cline/plugin environment after install.
+						Add these values to your Enki AI/plugin environment after install.
 					</p>
 					<div className="mt-3 grid gap-2">
 						{[...requiredEnv, ...optionalEnv].map((env) => (

@@ -259,7 +259,7 @@ export function SettingsView({
 		: null;
 
 	const isOAuthProvider = (id: string) =>
-		id === "cline" || id === "oca" || id === "openai-codex";
+		id === "enki" || id === "oca" || id === "openai-codex";
 
 	const runOAuthProviderLogin = async (id: string) => {
 		setOauthSigningProviderId(id);
@@ -618,7 +618,7 @@ function GeneralSettingsContent() {
 	const updateTheme = (darkModeEnabled: boolean) => {
 		const nextTheme = darkModeEnabled ? "dark" : "light";
 		setTheme(setStoredHubTheme(nextTheme));
-		window.dispatchEvent(new Event("cline-hub-theme-change"));
+		window.dispatchEvent(new Event("enki-hub-theme-change"));
 	};
 
 	return (
@@ -670,7 +670,7 @@ function GeneralSettingsContent() {
 							Telemetry
 						</p>
 						<p className="mt-1 text-[15px] text-muted-foreground">
-							Enable error and usage report to help us improve Cline.
+							Enable error and usage report to help us improve Enki AI.
 						</p>
 						{telemetryError ? (
 							<p className="mt-2 text-xs text-destructive">

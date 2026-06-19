@@ -1,12 +1,12 @@
-# Cline SDK Changelog
+# Enki AI SDK Changelog
 
 ## 0.0.49
 
-- Reverted ClinePass recommended-models support, removing the `clinePass` field from the recommended models data
+- Reverted Enki AIPass recommended-models support, removing the `enkiPass` field from the recommended models data
 
 ## 0.0.48
 
-- Added ClinePass support and ClinePass models
+- Added Enki AIPass support and Enki AIPass models
 - Added MCP server support to plugins
 - Updated the recommended/fixed model list
 - Encouraged parallel tool calls for faster task execution
@@ -19,12 +19,12 @@
 - Fixed search output cap and bash executor follow-up issues
 - Fixed disabled-reasoning handling for StepFun flash
 - Fixed the Hugging Face URL
-- Fixed Cline OAuth token formatting in provider config
+- Fixed Enki AI OAuth token formatting in provider config
 
 ## 0.0.47
 
 - Added support for overriding the API base URL
-- Enforced a production singleton Cline Hub so only one hub daemon runs, and a stale hub is respawned after an upgrade
+- Enforced a production singleton Enki AI Hub so only one hub daemon runs, and a stale hub is respawned after an upgrade
 - Allowed plugin chat commands to submit prompts to the agent
 - Fixed truncation of structured tool operation result strings so oversized tool output stays within limits
 - Stopped echoing the full command text in run_commands tool results
@@ -51,7 +51,7 @@
 
 ## 0.0.43
 
-- Added the Cline Hub web app for managing and monitoring agent sessions
+- Added the Enki AI Hub web app for managing and monitoring agent sessions
 - Added plugin uninstall support
 - Added skills bundled with plugins, including grouping plugin skills in settings and rule contributions from sandboxed plugins
 - Added support for global AGENTS rules
@@ -64,7 +64,7 @@
 - Fixed the hub daemon to stay alive on runtime abort
 - Fixed read-files tool input validation to use a union schema
 - Fixed discovery of symlinked SDK skill directories
-- Improved Cline provider migration
+- Improved Enki AI provider migration
 - Fixed OTEL variable bundling
 - Added telemetry for run_commands timeouts
 

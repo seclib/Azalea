@@ -1,4 +1,4 @@
-import { UpdateSettingsRequest } from "@shared/proto/cline/state"
+import { UpdateSettingsRequest } from "@shared/proto/enki/state"
 import { memo, type ReactNode, useCallback } from "react"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -36,7 +36,7 @@ const agentFeatures: FeatureToggle[] = [
 	{
 		id: "subagents",
 		label: "Subagents",
-		description: "Let Cline run focused subagents in parallel to explore the codebase for you.",
+		description: "Let Enki AI run focused subagents in parallel to explore the codebase for you.",
 		stateKey: "subagentsEnabled",
 		settingKey: "subagentsEnabled",
 	},
@@ -82,7 +82,7 @@ const editorFeatures: FeatureToggle[] = [
 	{
 		id: "show-feature-tips",
 		label: "Feature Tips",
-		description: "Show rotating tips during the thinking phase to help you discover Cline features.",
+		description: "Show rotating tips during the thinking phase to help you discover Enki AI features.",
 		stateKey: "showFeatureTips",
 		settingKey: "showFeatureTips",
 	},
@@ -101,16 +101,16 @@ const editorFeatures: FeatureToggle[] = [
 		settingKey: "enableCheckpointsSetting",
 	},
 	{
-		id: "cline-web-tools",
-		label: "Cline Web Tools",
+		id: "enki-web-tools",
+		label: "Enki AI Web Tools",
 		description: "Access web browsing and search capabilities",
-		stateKey: "clineWebToolsEnabled",
-		settingKey: "clineWebToolsEnabled",
+		stateKey: "enkiWebToolsEnabled",
+		settingKey: "enkiWebToolsEnabled",
 	},
 	{
 		id: "worktrees",
 		label: "Worktrees",
-		description: "Enables git worktree management for running parallel Cline tasks.",
+		description: "Enables git worktree management for running parallel Enki AI tasks.",
 		stateKey: "worktreesEnabled",
 		settingKey: "worktreesEnabled",
 	},
@@ -136,7 +136,7 @@ const experimentalFeatures: FeatureToggle[] = [
 	{
 		id: "lazy-teammate",
 		label: "Lazy Teammate Mode",
-		description: "Sometimes Cline just isn't feeling it today. For entertainment purposes only.",
+		description: "Sometimes Enki AI just isn't feeling it today. For entertainment purposes only.",
 		stateKey: "lazyTeammateModeEnabled",
 		settingKey: "lazyTeammateModeEnabled",
 	},
@@ -217,7 +217,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		yoloModeToggled,
 		useAutoCondense,
 		subagentsEnabled,
-		clineWebToolsEnabled,
+		enkiWebToolsEnabled,
 		worktreesEnabled,
 		focusChainSettings,
 		remoteConfigSettings,
@@ -231,7 +231,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 
 	const handleFocusChainIntervalChange = useCallback(
 		(value: number) => {
-			updateSetting("focusChainSettings", { ...focusChainSettings, remindClineInterval: value })
+			updateSetting("focusChainSettings", { ...focusChainSettings, remindEnki AIInterval: value })
 		},
 		[focusChainSettings],
 	)
@@ -248,7 +248,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		focusChainEnabled: focusChainSettings?.enabled,
 		useAutoCondense,
 		subagentsEnabled,
-		clineWebToolsEnabled: clineWebToolsEnabled?.user,
+		enkiWebToolsEnabled: enkiWebToolsEnabled?.user,
 		worktreesEnabled: worktreesEnabled?.user,
 		enableParallelToolCalling,
 		backgroundEditEnabled,
@@ -259,7 +259,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 
 	// Visibility lookup for features with feature flags
 	const featureVisibility: Record<string, boolean | undefined> = {
-		clineWebToolsEnabled: clineWebToolsEnabled?.featureFlag,
+		enkiWebToolsEnabled: enkiWebToolsEnabled?.featureFlag,
 		worktreesEnabled: worktreesEnabled?.featureFlag,
 	}
 
@@ -312,7 +312,7 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 											min={1}
 											onChange={handleFocusChainIntervalChange}
 											step={1}
-											value={focusChainSettings?.remindClineInterval || 6}
+											value={focusChainSettings?.remindEnki AIInterval || 6}
 											valueWidth="w-6"
 										/>
 									)}

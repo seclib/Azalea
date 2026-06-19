@@ -1,8 +1,8 @@
 import { processFilesIntoText } from "@integrations/misc/extract-text"
 import { showSystemNotification } from "@integrations/notifications"
 import { findLast, parsePartialArrayString } from "@shared/array"
-import { ClineAsk, ClineAskQuestion } from "@shared/ExtensionMessage"
-import { ClineDefaultTool } from "@shared/tools"
+import { Enki AIAsk, Enki AIAskQuestion } from "@shared/ExtensionMessage"
+import { Enki AIDefaultTool } from "@shared/tools"
 import { telemetryService } from "@/services/telemetry"
 import { ToolUse } from "../../../assistant-message"
 import { formatResponse } from "../../../prompts/responses"
@@ -12,7 +12,7 @@ import type { TaskConfig } from "../types/TaskConfig"
 import type { StronglyTypedUIHelpers } from "../types/UIHelpers"
 
 export class AskFollowupQuestionToolHandler implements IToolHandler, IPartialBlockHandler {
-	readonly name = ClineDefaultTool.ASK
+	readonly name = Enki AIDefaultTool.ASK
 
 	getDescription(block: ToolUse): string {
 		return `[${block.name} for '${block.params.question}']`
@@ -24,9 +24,9 @@ export class AskFollowupQuestionToolHandler implements IToolHandler, IPartialBlo
 		const sharedMessage = {
 			question: uiHelpers.removeClosingTag(block, "question", question),
 			options: parsePartialArrayString(uiHelpers.removeClosingTag(block, "options", optionsRaw)),
-		} satisfies ClineAskQuestion
+		} satisfies Enki AIAskQuestion
 
-		await uiHelpers.ask("followup" as ClineAsk, JSON.stringify(sharedMessage), block.partial).catch(() => {})
+		await uiHelpers.ask("followup" as Enki AIAsk, JSON.stringify(sharedMessage), block.partial).catch(() => {})
 	}
 
 	async execute(config: TaskConfig, block: ToolUse): Promise<ToolResponse> {
@@ -56,7 +56,7 @@ export class AskFollowupQuestionToolHandler implements IToolHandler, IPartialBlo
 		// Show notification if enabled
 		if (config.autoApprovalSettings.enableNotifications) {
 			showSystemNotification({
-				subtitle: "Cline has a question...",
+				subtitle: "Enki AI has a question...",
 				message: question.replace(/\n/g, " "),
 			})
 		}
@@ -64,7 +64,7 @@ export class AskFollowupQuestionToolHandler implements IToolHandler, IPartialBlo
 		const sharedMessage = {
 			question: question,
 			options: parsePartialArrayString(optionsRaw || "[]"),
-		} satisfies ClineAskQuestion
+		} satisfies Enki AIAskQuestion
 
 		const options = parsePartialArrayString(optionsRaw || "[]")
 
@@ -80,14 +80,14 @@ export class AskFollowupQuestionToolHandler implements IToolHandler, IPartialBlo
 			telemetryService.captureOptionSelected(config.ulid, options.length, "act")
 
 			// Valid option selected, update last followup message with selected option
-			const clineMessages = config.messageState.getClineMessages()
-			const lastFollowupMessage = findLast(clineMessages, (m: any) => m.ask === "followup")
+			const enkiMessages = config.messageState.getEnki AIMessages()
+			const lastFollowupMessage = findLast(enkiMessages, (m: any) => m.ask === "followup")
 			if (lastFollowupMessage) {
 				lastFollowupMessage.text = JSON.stringify({
 					...sharedMessage,
 					selected: text,
-				} satisfies ClineAskQuestion)
-				await config.messageState.saveClineMessagesAndUpdateHistory()
+				} satisfies Enki AIAskQuestion)
+				await config.messageState.saveEnki AIMessagesAndUpdateHistory()
 			}
 		} else {
 			// Option not selected, send user feedback

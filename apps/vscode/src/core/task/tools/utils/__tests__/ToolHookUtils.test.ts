@@ -3,7 +3,7 @@ import "should"
 import type { ToolUse } from "@core/assistant-message"
 import * as HookExecutor from "@core/hooks/hook-executor"
 import { TaskState } from "@core/task/TaskState"
-import { ClineDefaultTool } from "@shared/tools"
+import { Enki AIDefaultTool } from "@shared/tools"
 import * as sinon from "sinon"
 import { ToolHookUtils } from "../ToolHookUtils"
 
@@ -28,7 +28,7 @@ describe("ToolHookUtils", () => {
 
 			const block: ToolUse = {
 				type: "tool_use",
-				name: ClineDefaultTool.FILE_READ,
+				name: Enki AIDefaultTool.FILE_READ,
 				params: { path: "src/index.ts" },
 				partial: false,
 			}
@@ -74,7 +74,7 @@ describe("ToolHookUtils", () => {
 
 			const block: ToolUse = {
 				type: "tool_use",
-				name: ClineDefaultTool.BASH,
+				name: Enki AIDefaultTool.BASH,
 				params: { command: "echo hello", requires_approval: "false" },
 				partial: false,
 			}

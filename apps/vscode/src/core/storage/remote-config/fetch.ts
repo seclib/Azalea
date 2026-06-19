@@ -1,14 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 import { Controller } from "@/core/controller"
-import { CLINE_PASS_PROVIDER_ID } from "@/core/controller/models/handleClinePassProviderSelection"
-import { ClineAccountService } from "@/services/account/ClineAccountService"
-import { buildBasicClineHeaders } from "@/services/EnvUtils"
+import { CLINE_PASS_PROVIDER_ID } from "@/core/controller/models/handleEnki AIPassProviderSelection"
+import { Enki AIAccountService } from "@/services/account/Enki AIAccountService"
+import { buildBasicEnki AIHeaders } from "@/services/EnvUtils"
 import { getAxiosSettings } from "@/shared/net"
 import { Logger } from "@/shared/services/Logger"
 import { ConfiguredAPIKeys } from "@/shared/storage/state-keys"
-import { ClineEnv } from "../../../config"
+import { Enki AIEnv } from "../../../config"
 import { AuthService } from "../../../services/auth/AuthService"
-import { CLINE_API_ENDPOINT } from "../../../shared/cline/api"
+import { CLINE_API_ENDPOINT } from "../../../shared/enki/api"
 import { APIKeySchema, type APIKeySettings, RemoteConfig, RemoteConfigSchema } from "../../../shared/remote-config/schema"
 import { deleteRemoteConfigFromCache, readRemoteConfigFromCache, writeRemoteConfigToCache } from "../disk"
 import { applyRemoteConfig, clearRemoteConfig, isRemoteConfigEnabled } from "./utils"
@@ -31,7 +31,7 @@ function parseApiKeys(value: string): APIKeySettings {
 }
 
 /**
- * Helper function to make authenticated requests to the Cline API
+ * Helper function to make authenticated requests to the Enki AI API
  * @param endpoint The API endpoint path (with {id} placeholder if needed)
  * @param organizationId The organization ID to replace in the endpoint
  * @returns The response data on success
@@ -43,19 +43,19 @@ async function makeAuthenticatedRequest<T>(endpoint: string, organizationId: str
 	// Get authentication token
 	const authToken = await authService.getAuthToken()
 	if (!authToken) {
-		throw new Error("No Cline account auth token found")
+		throw new Error("No Enki AI account auth token found")
 	}
 
 	// Construct URL by replacing {id} placeholder with organizationId
 	const apiEndpoint = endpoint.replace("{id}", organizationId)
-	const url = new URL(apiEndpoint, ClineEnv.config().apiBaseUrl).toString()
+	const url = new URL(apiEndpoint, Enki AIEnv.config().apiBaseUrl).toString()
 
 	// Make authenticated request
 	const requestConfig: AxiosRequestConfig = {
 		headers: {
 			Authorization: `Bearer ${authToken}`,
 			"Content-Type": "application/json",
-			...(await buildBasicClineHeaders()),
+			...(await buildBasicEnki AIHeaders()),
 		},
 		...getAxiosSettings(),
 	}
@@ -159,7 +159,7 @@ async function fetchApiKeysForOrganization(organizationId: string): Promise<APIK
 }
 
 async function discoverRemoteConfigOrg(): Promise<{ organizationId: string; discoveredValue?: string } | undefined> {
-	const accountService = ClineAccountService.getInstance()
+	const accountService = Enki AIAccountService.getInstance()
 
 	const discovery = await accountService.fetchUserRemoteConfig()
 	if (!discovery) {
@@ -203,7 +203,7 @@ async function resolveRemoteConfig(organizationId: string, discoveredValue?: str
 	return fetchRemoteConfigForOrganization(organizationId)
 }
 
-function isClinePassSelected(controller: Controller): boolean {
+function isEnki AIPassSelected(controller: Controller): boolean {
 	const apiConfiguration = controller.stateManager.getApiConfiguration()
 
 	return (
@@ -223,7 +223,7 @@ function isClinePassSelected(controller: Controller): boolean {
 async function ensureUserInOrgWithRemoteConfig(controller: Controller): Promise<RemoteConfig | undefined> {
 	const authService = AuthService.getInstance()
 
-	if (isClinePassSelected(controller)) {
+	if (isEnki AIPassSelected(controller)) {
 		clearRemoteConfig()
 		controller.postStateToWebview()
 		return undefined

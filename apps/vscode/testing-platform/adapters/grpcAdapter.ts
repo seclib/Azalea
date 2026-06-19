@@ -1,31 +1,31 @@
-import { AccountServiceClient } from "@cline-grpc/account"
-import { BrowserServiceClient } from "@cline-grpc/browser"
-import { CheckpointsServiceClient } from "@cline-grpc/checkpoints"
-import { CommandsServiceClient } from "@cline-grpc/commands"
-import { FileServiceClient } from "@cline-grpc/file"
-import { McpServiceClient } from "@cline-grpc/mcp"
-import { ModelsServiceClient } from "@cline-grpc/models"
-import { SlashServiceClient } from "@cline-grpc/slash"
-import { StateServiceClient } from "@cline-grpc/state"
-import { TaskServiceClient } from "@cline-grpc/task"
-import { UiServiceClient } from "@cline-grpc/ui"
-import { WebServiceClient } from "@cline-grpc/web"
+import { AccountServiceClient } from "@enki-grpc/account"
+import { BrowserServiceClient } from "@enki-grpc/browser"
+import { CheckpointsServiceClient } from "@enki-grpc/checkpoints"
+import { CommandsServiceClient } from "@enki-grpc/commands"
+import { FileServiceClient } from "@enki-grpc/file"
+import { McpServiceClient } from "@enki-grpc/mcp"
+import { ModelsServiceClient } from "@enki-grpc/models"
+import { SlashServiceClient } from "@enki-grpc/slash"
+import { StateServiceClient } from "@enki-grpc/state"
+import { TaskServiceClient } from "@enki-grpc/task"
+import { UiServiceClient } from "@enki-grpc/ui"
+import { WebServiceClient } from "@enki-grpc/web"
 import { credentials } from "@grpc/grpc-js"
 import { promisify } from "util"
 
 const serviceRegistry = {
-	"cline.AccountService": AccountServiceClient,
-	"cline.BrowserService": BrowserServiceClient,
-	"cline.CheckpointsService": CheckpointsServiceClient,
-	"cline.CommandsService": CommandsServiceClient,
-	"cline.FileService": FileServiceClient,
-	"cline.McpService": McpServiceClient,
-	"cline.ModelsService": ModelsServiceClient,
-	"cline.SlashService": SlashServiceClient,
-	"cline.StateService": StateServiceClient,
-	"cline.TaskService": TaskServiceClient,
-	"cline.UiService": UiServiceClient,
-	"cline.WebService": WebServiceClient,
+	"enki.AccountService": AccountServiceClient,
+	"enki.BrowserService": BrowserServiceClient,
+	"enki.CheckpointsService": CheckpointsServiceClient,
+	"enki.CommandsService": CommandsServiceClient,
+	"enki.FileService": FileServiceClient,
+	"enki.McpService": McpServiceClient,
+	"enki.ModelsService": ModelsServiceClient,
+	"enki.SlashService": SlashServiceClient,
+	"enki.StateService": StateServiceClient,
+	"enki.TaskService": TaskServiceClient,
+	"enki.UiService": UiServiceClient,
+	"enki.WebService": WebServiceClient,
 } as const
 
 export type ServiceClients = {

@@ -1,5 +1,5 @@
-import { AgentRuntimeAbortError } from "@cline/agents";
-import { initVcr, resolveClineBuildEnv } from "@cline/shared";
+import { AgentRuntimeAbortError } from "@enki/agents";
+import { initVcr, resolveEnki AIBuildEnv } from "@enki/shared";
 import { createLocalHubScheduleRuntimeHandlers } from "../daemon/runtime-handlers";
 import { resolveHubEndpointOptions } from "../discovery/defaults";
 import {
@@ -66,7 +66,7 @@ async function main(): Promise<void> {
 		port: endpoint.port,
 		pathname: endpoint.pathname,
 		owner:
-			resolveClineBuildEnv() === "production"
+			resolveEnki AIBuildEnv() === "production"
 				? resolveProductionHubOwnerContext()
 				: resolveSharedHubOwnerContext(),
 		runtimeHandlers: createLocalHubScheduleRuntimeHandlers(),

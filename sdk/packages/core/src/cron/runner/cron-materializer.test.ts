@@ -10,7 +10,7 @@ describe("CronMaterializer", () => {
 	let store: SqliteCronStore;
 
 	beforeEach(() => {
-		dir = mkdtempSync(join(tmpdir(), "cline-materializer-"));
+		dir = mkdtempSync(join(tmpdir(), "enki-materializer-"));
 		store = new SqliteCronStore({ dbPath: join(dir, "cron.db") });
 	});
 	afterEach(() => {

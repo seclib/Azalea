@@ -8,7 +8,7 @@ import {
 	type ProviderSettings,
 	type ProviderSettingsManager,
 	saveProviderOAuthCredentials,
-} from "@cline/core";
+} from "@enki/core";
 import { Command } from "commander";
 import open from "open";
 import React from "react";
@@ -430,7 +430,7 @@ export async function runAuthProviderCommand(
 ): Promise<number> {
 	if (!isOAuthProvider(providerId)) {
 		io.writeErr(
-			`provider "${providerId}" does not support OAuth login (supported: cline, openai-codex, oca)`,
+			`provider "${providerId}" does not support OAuth login (supported: enki, openai-codex, oca)`,
 		);
 		return 1;
 	}

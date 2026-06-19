@@ -372,54 +372,54 @@ export type ProviderSettingsActionRequest =
 	| SaveProviderSettingsActionRequest
 	| AddProviderActionRequest;
 
-export type ClineAccountActionRequest =
+export type Enki AIAccountActionRequest =
 	| {
-			action: "clineAccount";
+			action: "enkiAccount";
 			operation: "fetchMe";
 	  }
 	| {
-			action: "clineAccount";
+			action: "enkiAccount";
 			operation: "fetchBalance";
 			userId?: string;
 	  }
 	| {
-			action: "clineAccount";
+			action: "enkiAccount";
 			operation: "fetchUsageTransactions";
 			userId?: string;
 	  }
 	| {
-			action: "clineAccount";
+			action: "enkiAccount";
 			operation: "fetchPaymentTransactions";
 			userId?: string;
 	  }
 	| {
-			action: "clineAccount";
+			action: "enkiAccount";
 			operation: "fetchUserOrganizations";
 	  }
 	| {
-			action: "clineAccount";
+			action: "enkiAccount";
 			operation: "fetchOrganizationBalance";
 			organizationId: string;
 	  }
 	| {
-			action: "clineAccount";
+			action: "enkiAccount";
 			operation: "fetchOrganizationUsageTransactions";
 			organizationId: string;
 			memberId?: string;
 	  }
 	| {
-			action: "clineAccount";
+			action: "enkiAccount";
 			operation: "switchAccount";
 			organizationId?: string | null;
 	  }
 	| {
-			action: "clineAccount";
+			action: "enkiAccount";
 			operation: "fetchFeaturebaseToken";
 	  };
 
 export type ProviderActionRequest =
 	| ProviderSettingsActionRequest
-	| ClineAccountActionRequest;
+	| Enki AIAccountActionRequest;
 
 export interface ProviderOAuthLoginResponse {
 	provider: string;

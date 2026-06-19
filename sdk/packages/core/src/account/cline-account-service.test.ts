@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { ClineAccountService } from "./cline-account-service";
+import { Enki AIAccountService } from "./enki-account-service";
 
-describe("ClineAccountService", () => {
+describe("Enki AIAccountService", () => {
 	it("fetches current user balance and sends auth header", async () => {
 		const fetchImpl = vi.fn(async (input: unknown, init?: RequestInit) => {
 			expect(String(input)).toBe(
-				"https://api.cline.bot/api/v1/users/user-1/balance",
+				"https://api.enki.bot/api/v1/users/user-1/balance",
 			);
 			expect(init?.headers).toMatchObject({
 				Authorization: "Bearer workos:token-123",
@@ -19,8 +19,8 @@ describe("ClineAccountService", () => {
 			);
 		});
 
-		const service = new ClineAccountService({
-			apiBaseUrl: "https://api.cline.bot",
+		const service = new Enki AIAccountService({
+			apiBaseUrl: "https://api.enki.bot",
 			getAuthToken: async () => "workos:token-123",
 			getCurrentUserId: () => "user-1",
 			fetchImpl: fetchImpl as unknown as typeof fetch,
@@ -65,8 +65,8 @@ describe("ClineAccountService", () => {
 				),
 			);
 
-		const service = new ClineAccountService({
-			apiBaseUrl: "https://api.cline.bot",
+		const service = new Enki AIAccountService({
+			apiBaseUrl: "https://api.enki.bot",
 			getAuthToken: async () => "workos:token-123",
 			fetchImpl: fetchImpl as unknown as typeof fetch,
 		});
@@ -77,7 +77,7 @@ describe("ClineAccountService", () => {
 
 		expect(fetchImpl).toHaveBeenCalledTimes(2);
 		expect(String(fetchImpl.mock.calls[1][0])).toBe(
-			"https://api.cline.bot/api/v1/organizations/org-1/members/member-9/usages",
+			"https://api.enki.bot/api/v1/organizations/org-1/members/member-9/usages",
 		);
 		expect(transactions).toEqual([{ id: "tx-1" }]);
 	});
@@ -95,7 +95,7 @@ describe("ClineAccountService", () => {
 
 		const fetchImpl = vi.fn(async (input: unknown) => {
 			expect(String(input)).toBe(
-				"https://api.cline.bot/api/v1/users/me/remote-config",
+				"https://api.enki.bot/api/v1/users/me/remote-config",
 			);
 			return new Response(
 				JSON.stringify({ success: true, data: remoteConfigPayload }),
@@ -103,8 +103,8 @@ describe("ClineAccountService", () => {
 			);
 		});
 
-		const service = new ClineAccountService({
-			apiBaseUrl: "https://api.cline.bot",
+		const service = new Enki AIAccountService({
+			apiBaseUrl: "https://api.enki.bot",
 			getAuthToken: async () => "workos:token-123",
 			fetchImpl: fetchImpl as unknown as typeof fetch,
 		});
@@ -133,8 +133,8 @@ describe("ClineAccountService", () => {
 			);
 		});
 
-		const service = new ClineAccountService({
-			apiBaseUrl: "https://api.cline.bot",
+		const service = new Enki AIAccountService({
+			apiBaseUrl: "https://api.enki.bot",
 			getAuthToken: async () => "workos:token-123",
 			fetchImpl: fetchImpl as unknown as typeof fetch,
 		});
@@ -156,8 +156,8 @@ describe("ClineAccountService", () => {
 			});
 		});
 
-		const service = new ClineAccountService({
-			apiBaseUrl: "https://api.cline.bot",
+		const service = new Enki AIAccountService({
+			apiBaseUrl: "https://api.enki.bot",
 			getAuthToken: async () => "workos:token-123",
 			fetchImpl: fetchImpl as unknown as typeof fetch,
 		});
@@ -171,14 +171,14 @@ describe("ClineAccountService", () => {
 			return new Response("Authentication failed", { status: 401 });
 		});
 
-		const service = new ClineAccountService({
-			apiBaseUrl: "https://api.cline.bot",
+		const service = new Enki AIAccountService({
+			apiBaseUrl: "https://api.enki.bot",
 			getAuthToken: async () => "workos:token-123",
 			fetchImpl: fetchImpl as unknown as typeof fetch,
 		});
 
 		await expect(service.fetchMe()).rejects.toThrow(
-			"Cline account request failed with status 401: Authentication failed",
+			"Enki AI account request failed with status 401: Authentication failed",
 		);
 	});
 
@@ -187,14 +187,14 @@ describe("ClineAccountService", () => {
 			return new Response("Account service unavailable", { status: 200 });
 		});
 
-		const service = new ClineAccountService({
-			apiBaseUrl: "https://api.cline.bot",
+		const service = new Enki AIAccountService({
+			apiBaseUrl: "https://api.enki.bot",
 			getAuthToken: async () => "workos:token-123",
 			fetchImpl: fetchImpl as unknown as typeof fetch,
 		});
 
 		await expect(service.fetchMe()).rejects.toThrow(
-			"Cline account response was not valid JSON",
+			"Enki AI account response was not valid JSON",
 		);
 	});
 
@@ -205,8 +205,8 @@ describe("ClineAccountService", () => {
 			return new Response(null, { status: 204 });
 		});
 
-		const service = new ClineAccountService({
-			apiBaseUrl: "https://api.cline.bot",
+		const service = new Enki AIAccountService({
+			apiBaseUrl: "https://api.enki.bot",
 			getAuthToken: async () => "workos:token-123",
 			fetchImpl: fetchImpl as unknown as typeof fetch,
 		});

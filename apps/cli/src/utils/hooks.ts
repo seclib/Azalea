@@ -1,4 +1,4 @@
-import type { AgentHooks, HookEventPayload } from "@cline/core";
+import type { AgentHooks, HookEventPayload } from "@enki/core";
 import { closeInlineStreamIfNeeded } from "./events";
 import {
 	c,
@@ -123,7 +123,7 @@ function basePayload(
 		process.env.CLINE_USER_ID?.trim() || process.env.USER?.trim() || "unknown";
 	const sessionContext = currentHookSessionContext();
 	return {
-		clineVersion: process.env.CLINE_VERSION?.trim() || "",
+		enkiVersion: process.env.CLINE_VERSION?.trim() || "",
 		timestamp: new Date().toISOString(),
 		taskId: ctx.conversationId,
 		...(sessionContext ? { sessionContext } : {}),

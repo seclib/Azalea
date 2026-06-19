@@ -8,7 +8,7 @@ import {
 	isHubProtocolCompatible,
 	MAX_CLIENT_HUB_PROTOCOL_VERSION,
 	MIN_CLIENT_HUB_PROTOCOL_VERSION,
-} from "@cline/shared";
+} from "@enki/shared";
 import { WebSocketServer } from "ws";
 import corePackage from "../../../package.json";
 import { rememberRecoverableLocalHubUrl, verifyHubConnection } from "../client";
@@ -204,7 +204,7 @@ function isAddressInUseError(error: unknown): boolean {
 }
 
 const SHARED_SERVERS = new Map<string, Promise<HubWebSocketServer>>();
-const HUB_AUTH_PROTOCOL_PREFIX = "cline-hub-auth.";
+const HUB_AUTH_PROTOCOL_PREFIX = "enki-hub-auth.";
 const HUB_SOCKET_HEARTBEAT_INTERVAL_MS = 30_000;
 
 function parseHeaderValue(value: string | string[] | undefined): string {

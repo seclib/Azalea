@@ -12,13 +12,13 @@ describe("spawnDetachedConnector", () => {
 		expect(
 			__test__.buildDetachedConnectorArgs(
 				["connect", "telegram"],
-				["-m", "ClineAdapterBot", "-k", "token-123"],
+				["-m", "Enki AIAdapterBot", "-k", "token-123"],
 			),
 		).toEqual([
 			"connect",
 			"telegram",
 			"-m",
-			"ClineAdapterBot",
+			"Enki AIAdapterBot",
 			"-k",
 			"token-123",
 			"-i",
@@ -31,7 +31,7 @@ describe("spawnDetachedConnector", () => {
 		expect(
 			__test__.buildDetachedConnectorCommand(
 				["connect", "telegram"],
-				["-m", "ClineAdapterBot", "-k", "token-123"],
+				["-m", "Enki AIAdapterBot", "-k", "token-123"],
 				"/Users/test/.bun/bin/bun",
 				"./apps/cli/src/index.ts",
 				["--conditions=development"],
@@ -48,7 +48,7 @@ describe("spawnDetachedConnector", () => {
 				"connect",
 				"telegram",
 				"-m",
-				"ClineAdapterBot",
+				"Enki AIAdapterBot",
 				"-k",
 				"token-123",
 				"-i",
@@ -62,7 +62,7 @@ describe("spawnDetachedConnector", () => {
 		expect(
 			__test__.buildDetachedConnectorCommand(
 				["connect", "telegram"],
-				["-m", "ClineAdapterBot"],
+				["-m", "Enki AIAdapterBot"],
 				"/usr/local/bin/node",
 				"./apps/cli/src/index.ts",
 				[],
@@ -78,7 +78,7 @@ describe("spawnDetachedConnector", () => {
 				"connect",
 				"telegram",
 				"-m",
-				"ClineAdapterBot",
+				"Enki AIAdapterBot",
 				"-i",
 			],
 		});

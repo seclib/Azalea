@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import * as LlmsModels from "@cline/llms";
+import * as LlmsModels from "@enki/llms";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ProviderSettingsManager } from "../storage/provider-settings-manager";
 import {
@@ -17,7 +17,7 @@ import {
 	listLocalProviders,
 	normalizeOAuthProvider,
 	refreshProviderModelsFromSource,
-	resolveLocalClineAuthToken,
+	resolveLocalEnki AIAuthToken,
 	saveLocalProviderSettings,
 	updateLocalProvider,
 } from "./local-provider-service";
@@ -661,7 +661,7 @@ describe("models.json model overlays", () => {
 					{
 						version: 1,
 						providers: {
-							cline: {
+							enki: {
 								models: {
 									"openai/gpt-5.5": {
 										id: "openai/gpt-5.5",
@@ -680,14 +680,14 @@ describe("models.json model overlays", () => {
 				filePath: path.join(settingsDir, "providers.json"),
 			});
 
-			const provider = await LlmsModels.getProvider("cline");
+			const provider = await LlmsModels.getProvider("enki");
 			expect(provider).toMatchObject({
-				id: "cline",
-				baseUrl: "https://api.cline.bot/api/v1",
+				id: "enki",
+				baseUrl: "https://api.enki.bot/api/v1",
 				defaultModelId: "anthropic/claude-sonnet-4.6",
 			});
 
-			const { models } = await getLocalProviderModels("cline");
+			const { models } = await getLocalProviderModels("enki");
 			expect(
 				models.find((model) => model.id === "openai/gpt-5.5"),
 			).toMatchObject({
@@ -1090,20 +1090,20 @@ describe("listLocalProviders", () => {
 		expect(ids).toContain("list-provider-b");
 	});
 
-	it("hides ClinePass when the ClinePass feature flag is disabled", async () => {
+	it("hides Enki AIPass when the Enki AIPass feature flag is disabled", async () => {
 		const { providers } = await listLocalProviders(manager, {
-			isClinePassEnabled: false,
+			isEnki AIPassEnabled: false,
 		});
 
-		expect(providers.map((p) => p.id)).not.toContain("cline-pass");
+		expect(providers.map((p) => p.id)).not.toContain("enki-pass");
 	});
 
-	it("includes ClinePass when the ClinePass feature flag is enabled", async () => {
+	it("includes Enki AIPass when the Enki AIPass feature flag is enabled", async () => {
 		const { providers } = await listLocalProviders(manager, {
-			isClinePassEnabled: true,
+			isEnki AIPassEnabled: true,
 		});
 
-		expect(providers.map((p) => p.id)).toContain("cline-pass");
+		expect(providers.map((p) => p.id)).toContain("enki-pass");
 	});
 
 	it("marks enabled providers correctly", async () => {
@@ -1193,25 +1193,25 @@ describe("listLocalProviders", () => {
 		).toBe(false);
 	});
 
-	it("uses the same built-in model list for cline as openrouter", async () => {
+	it("uses the same built-in model list for enki as openrouter", async () => {
 		manager.saveProviderSettings(
 			{
-				provider: "cline",
+				provider: "enki",
 				apiKey: "test-key",
-				baseUrl: "https://api.cline.bot/api/v1",
+				baseUrl: "https://api.enki.bot/api/v1",
 				model: "anthropic/claude-sonnet-4.6",
 			},
 			{ setLastUsed: false },
 		);
 
 		const { providers } = await listLocalProviders(manager);
-		const cline = providers.find((provider) => provider.id === "cline");
+		const enki = providers.find((provider) => provider.id === "enki");
 		const openrouter = providers.find(
 			(provider) => provider.id === "openrouter",
 		);
 
-		expect(cline?.modelList?.length).toBeGreaterThan(0);
-		expect(cline?.modelList).toEqual(openrouter?.modelList);
+		expect(enki?.modelList?.length).toBeGreaterThan(0);
+		expect(enki?.modelList).toEqual(openrouter?.modelList);
 	});
 
 	it("does not eagerly fetch LiteLLM private models while listing providers", async () => {
@@ -1254,9 +1254,9 @@ describe("listLocalProviders", () => {
 // ===========================================================================
 
 describe("normalizeOAuthProvider", () => {
-	it("normalizes 'cline' to 'cline'", () => {
-		expect(normalizeOAuthProvider("cline")).toBe("cline");
-		expect(normalizeOAuthProvider("  CLINE  ")).toBe("cline");
+	it("normalizes 'enki' to 'enki'", () => {
+		expect(normalizeOAuthProvider("enki")).toBe("enki");
+		expect(normalizeOAuthProvider("  CLINE  ")).toBe("enki");
 	});
 
 	it("normalizes 'oca' to 'oca'", () => {
@@ -1278,18 +1278,18 @@ describe("normalizeOAuthProvider", () => {
 });
 
 // ===========================================================================
-// resolveLocalClineAuthToken
+// resolveLocalEnki AIAuthToken
 // ===========================================================================
 
-describe("resolveLocalClineAuthToken", () => {
+describe("resolveLocalEnki AIAuthToken", () => {
 	it("returns undefined when settings is undefined", () => {
-		expect(resolveLocalClineAuthToken(undefined)).toBeUndefined();
+		expect(resolveLocalEnki AIAuthToken(undefined)).toBeUndefined();
 	});
 
 	it("returns accessToken when present", () => {
 		expect(
-			resolveLocalClineAuthToken({
-				provider: "cline" as never,
+			resolveLocalEnki AIAuthToken({
+				provider: "enki" as never,
 				auth: { accessToken: "tok123" },
 			}),
 		).toBe("tok123");
@@ -1297,8 +1297,8 @@ describe("resolveLocalClineAuthToken", () => {
 
 	it("falls back to apiKey when accessToken is absent", () => {
 		expect(
-			resolveLocalClineAuthToken({
-				provider: "cline" as never,
+			resolveLocalEnki AIAuthToken({
+				provider: "enki" as never,
 				apiKey: "api-key-456",
 			}),
 		).toBe("api-key-456");
@@ -1306,8 +1306,8 @@ describe("resolveLocalClineAuthToken", () => {
 
 	it("prefers accessToken over apiKey", () => {
 		expect(
-			resolveLocalClineAuthToken({
-				provider: "cline" as never,
+			resolveLocalEnki AIAuthToken({
+				provider: "enki" as never,
 				apiKey: "api-key",
 				auth: { accessToken: "access-token" },
 			}),
@@ -1316,8 +1316,8 @@ describe("resolveLocalClineAuthToken", () => {
 
 	it("returns undefined when both accessToken and apiKey are empty strings", () => {
 		expect(
-			resolveLocalClineAuthToken({
-				provider: "cline" as never,
+			resolveLocalEnki AIAuthToken({
+				provider: "enki" as never,
 				apiKey: "   ",
 				auth: { accessToken: "  " },
 			}),
@@ -1326,7 +1326,7 @@ describe("resolveLocalClineAuthToken", () => {
 
 	it("returns undefined when both fields are absent", () => {
 		expect(
-			resolveLocalClineAuthToken({ provider: "cline" as never }),
+			resolveLocalEnki AIAuthToken({ provider: "enki" as never }),
 		).toBeUndefined();
 	});
 });

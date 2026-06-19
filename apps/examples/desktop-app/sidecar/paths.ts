@@ -8,7 +8,7 @@ import {
 } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { resolveSessionDataDir } from "@cline/shared/storage";
+import { resolveSessionDataDir } from "@enki/shared/storage";
 import type { JsonRecord } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -72,7 +72,7 @@ export function toolApprovalDir(): string {
 export function resolveMcpSettingsPath(): string {
 	return (
 		process.env.CLINE_MCP_SETTINGS_PATH?.trim() ||
-		join(homedir(), ".cline", "data", "settings", "cline_mcp_settings.json")
+		join(homedir(), ".enki", "data", "settings", "enki_mcp_settings.json")
 	);
 }
 
@@ -83,7 +83,7 @@ export function resolveMcpSettingsPath(): string {
 function kanbanDataRoot(): string {
 	return (
 		process.env.CLINE_KANBAN_DATA_DIR?.trim() ||
-		join(homedir(), ".cline", "apps", "kanban")
+		join(homedir(), ".enki", "apps", "kanban")
 	);
 }
 

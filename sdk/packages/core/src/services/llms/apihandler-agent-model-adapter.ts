@@ -1,5 +1,5 @@
 /**
- * Adapter: wrap a custom `ApiHandler` (from the `@cline/llms` handler registry)
+ * Adapter: wrap a custom `ApiHandler` (from the `@enki/llms` handler registry)
  * as an `AgentModel` for the agent runtime.
  *
  * The agent runtime builds models via `createAgentModelFromConfig`, which goes
@@ -10,16 +10,16 @@
  * `AgentModel` contract (`stream` -> `AgentModelEvent`).
  *
  * This is the inverse of the gateway's `toApiStreamChunk` in
- * `@cline/llms` `compat.ts`.
+ * `@enki/llms` `compat.ts`.
  */
 
-import type { ApiHandler, ApiStreamChunk } from "@cline/llms";
+import type { ApiHandler, ApiStreamChunk } from "@enki/llms";
 import type {
 	AgentModel,
 	AgentModelEvent,
 	AgentModelFinishReason,
 	AgentModelRequest,
-} from "@cline/shared";
+} from "@enki/shared";
 import { agentMessagesToMessages } from "../../runtime/config/agent-message-codec";
 
 type ApiStreamDoneChunk = Extract<ApiStreamChunk, { type: "done" }>;

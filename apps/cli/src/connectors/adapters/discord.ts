@@ -2,15 +2,15 @@ import {
 	createDiscordAdapter,
 	type DiscordAdapter,
 } from "@chat-adapter/discord";
-import type { ChatStartSessionRequest } from "@cline/core";
+import type { ChatStartSessionRequest } from "@enki/core";
 import {
 	createUserInstructionConfigService,
 	HubSessionClient,
-} from "@cline/core";
+} from "@enki/core";
 import type {
 	ConnectDiscordOptions,
 	DiscordConnectorState,
-} from "@cline/shared";
+} from "@enki/shared";
 import { Chat, ConsoleLogger, type Thread, ThreadImpl } from "chat";
 import type { Command } from "commander";
 import { createCliLoggerAdapter } from "../../logging/adapter";
@@ -430,7 +430,7 @@ async function fetchDiscordJson(input: {
 		headers: {
 			Authorization: `Bot ${input.botToken}`,
 			...(input.body ? { "Content-Type": "application/json" } : {}),
-			"User-Agent": "Cline Discord Connector",
+			"User-Agent": "Enki AI Discord Connector",
 		},
 		...(input.body ? { body: JSON.stringify(input.body) } : {}),
 	});
@@ -825,7 +825,7 @@ class DiscordConnector extends ConnectorBase<
 			userName:
 				opts.userName?.trim() ||
 				process.env.DISCORD_BOT_USERNAME?.trim() ||
-				"cline-discord",
+				"enki-discord",
 			applicationId:
 				opts.applicationId?.trim() ||
 				opts.appId?.trim() ||
@@ -985,7 +985,7 @@ class DiscordConnector extends ConnectorBase<
 				formatBackgroundStartMessage: (pid) =>
 					`[discord] starting background connector pid=${pid} application=${options.applicationId}`,
 				foregroundHint:
-					"[discord] use `cline connect discord -i ...` to run in the foreground",
+					"[discord] use `enki connect discord -i ...` to run in the foreground",
 				launchFailureMessage:
 					"failed to launch Discord connector in background",
 			})

@@ -3,10 +3,10 @@ import { formatResponse } from "@core/prompts/responses"
 import { WorkspacePathAdapter } from "@core/workspace/WorkspacePathAdapter"
 import { showApprovalNotification, showSystemNotification } from "@integrations/notifications"
 import { COMMAND_REQ_APP_STRING } from "@shared/combineCommandSequences"
-import { ClineAsk } from "@shared/ExtensionMessage"
+import { Enki AIAsk } from "@shared/ExtensionMessage"
 import { arePathsEqual } from "@utils/path"
 import { telemetryService } from "@/services/telemetry"
-import { ClineDefaultTool } from "@/shared/tools"
+import { Enki AIDefaultTool } from "@/shared/tools"
 import type { ToolResponse } from "../../index"
 import type { IFullyManagedTool } from "../ToolExecutorCoordinator"
 import type { ToolValidator } from "../ToolValidator"
@@ -56,7 +56,7 @@ export function resolveCommandTimeoutSeconds(
 }
 
 export class ExecuteCommandToolHandler implements IFullyManagedTool {
-	readonly name = ClineDefaultTool.BASH
+	readonly name = Enki AIDefaultTool.BASH
 
 	constructor(_validator: ToolValidator) {}
 
@@ -80,7 +80,7 @@ export class ExecuteCommandToolHandler implements IFullyManagedTool {
 			return
 		}
 		await uiHelpers
-			.ask("command" as ClineAsk, uiHelpers.removeClosingTag(block, "command", command), block.partial)
+			.ask("command" as Enki AIAsk, uiHelpers.removeClosingTag(block, "command", command), block.partial)
 			.catch(() => {})
 	}
 
@@ -101,7 +101,7 @@ export class ExecuteCommandToolHandler implements IFullyManagedTool {
 			config.taskState.consecutiveMistakeCount++
 			await config.callbacks.say(
 				"error",
-				"Cline tried to use execute_command without value for required parameter 'command'. Retrying...",
+				"Enki AI tried to use execute_command without value for required parameter 'command'. Retrying...",
 			)
 			return formatResponse.toolError(formatResponse.executeCommandMissingCommandError())
 		}
@@ -180,13 +180,13 @@ export class ExecuteCommandToolHandler implements IFullyManagedTool {
 			return formatResponse.toolError(formatResponse.permissionDeniedError(errorMessage))
 		}
 
-		// Check clineignore validation for command
-		const ignoredFileAttemptedToAccess = config.services.clineIgnoreController.validateCommand(actualCommand)
+		// Check enkiignore validation for command
+		const ignoredFileAttemptedToAccess = config.services.enkiIgnoreController.validateCommand(actualCommand)
 		if (ignoredFileAttemptedToAccess) {
 			if (!config.isSubagentExecution) {
-				await config.callbacks.say("clineignore_error", ignoredFileAttemptedToAccess)
+				await config.callbacks.say("enkiignore_error", ignoredFileAttemptedToAccess)
 			}
-			return formatResponse.toolError(formatResponse.clineIgnoreError(ignoredFileAttemptedToAccess))
+			return formatResponse.toolError(formatResponse.enkiIgnoreError(ignoredFileAttemptedToAccess))
 		}
 
 		let didAutoApprove = false

@@ -4,7 +4,7 @@ import {
 	normalizeUserInput,
 	type ToolResultContent,
 	type ToolUseContent,
-} from "@cline/shared";
+} from "@enki/shared";
 
 export interface ConversationHistory {
 	version: number;

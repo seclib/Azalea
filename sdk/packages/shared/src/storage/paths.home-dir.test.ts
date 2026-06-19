@@ -43,8 +43,8 @@ describe("storage home directory fallback", () => {
 		delete process.env.HOMEPATH;
 		delete process.env.CLINE_DIR;
 
-		const { resolveClineDir } = await import("./paths");
-		expect(resolveClineDir()).toBe(join("C:\\Users\\saoud", ".cline"));
+		const { resolveEnki AIDir } = await import("./paths");
+		expect(resolveEnki AIDir()).toBe(join("C:\\Users\\saoud", ".enki"));
 	});
 
 	it("treats HOME=~ as unset and falls back to USERPROFILE", async () => {
@@ -55,7 +55,7 @@ describe("storage home directory fallback", () => {
 		delete process.env.HOMEPATH;
 		delete process.env.CLINE_DIR;
 
-		const { resolveClineDir } = await import("./paths");
-		expect(resolveClineDir()).toBe(join("C:\\Users\\saoud", ".cline"));
+		const { resolveEnki AIDir } = await import("./paths");
+		expect(resolveEnki AIDir()).toBe(join("C:\\Users\\saoud", ".enki"));
 	});
 });

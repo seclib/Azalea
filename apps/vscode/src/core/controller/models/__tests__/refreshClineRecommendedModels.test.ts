@@ -4,34 +4,34 @@ import { expect } from "chai";
 import fs from "fs/promises";
 import { afterEach, beforeEach, describe, it } from "mocha";
 import sinon from "sinon";
-import { ClineEnv, Environment } from "@/config";
+import { Enki AIEnv, Environment } from "@/config";
 import { Logger } from "@/shared/services/Logger";
 import {
-	refreshClineRecommendedModels,
-	resetClineRecommendedModelsCacheForTests,
-} from "../refreshClineRecommendedModels";
+	refreshEnki AIRecommendedModels,
+	resetEnki AIRecommendedModelsCacheForTests,
+} from "../refreshEnki AIRecommendedModels";
 
-describe("refreshClineRecommendedModels", () => {
+describe("refreshEnki AIRecommendedModels", () => {
 	let sandbox: sinon.SinonSandbox;
 
 	beforeEach(() => {
 		sandbox = sinon.createSandbox();
-		resetClineRecommendedModelsCacheForTests();
+		resetEnki AIRecommendedModelsCacheForTests();
 		sandbox.stub(Logger, "log");
 		sandbox.stub(Logger, "error");
 	});
 
 	afterEach(() => {
-		resetClineRecommendedModelsCacheForTests();
+		resetEnki AIRecommendedModelsCacheForTests();
 		sandbox.restore();
 	});
 
 	it("fetches from upstream", async () => {
-		sandbox.stub(ClineEnv, "config").returns({
+		sandbox.stub(Enki AIEnv, "config").returns({
 			environment: Environment.production,
-			appBaseUrl: "https://app.cline-mock.bot",
-			apiBaseUrl: "https://api.cline-mock.bot",
-			mcpBaseUrl: "https://api.cline-mock.bot/v1/mcp",
+			appBaseUrl: "https://app.enki-mock.bot",
+			apiBaseUrl: "https://api.enki-mock.bot",
+			mcpBaseUrl: "https://api.enki-mock.bot/v1/mcp",
 		});
 		sandbox.stub(disk, "ensureCacheDirectoryExists").resolves("/tmp");
 		sandbox.stub(fs, "writeFile").resolves();
@@ -45,17 +45,17 @@ describe("refreshClineRecommendedModels", () => {
 					},
 				],
 				free: [{ id: "z-ai/glm-5", description: "Remote free" }],
-				clinePass: [
+				enkiPass: [
 					{
-						id: "cline-pass/glm-5",
-						description: "Remote Cline Pass",
+						id: "enki-pass/glm-5",
+						description: "Remote Enki AI Pass",
 						tags: ["CLINE_PASS"],
 					},
 				],
 			},
 		});
 
-		const result = await refreshClineRecommendedModels();
+		const result = await refreshEnki AIRecommendedModels();
 
 		expect(axiosGetStub.calledOnce).to.equal(true);
 		expect(result).to.deep.equal({
@@ -75,11 +75,11 @@ describe("refreshClineRecommendedModels", () => {
 					tags: [],
 				},
 			],
-			clinePass: [
+			enkiPass: [
 				{
-					id: "cline-pass/glm-5",
-					name: "cline-pass/glm-5",
-					description: "Remote Cline Pass",
+					id: "enki-pass/glm-5",
+					name: "enki-pass/glm-5",
+					description: "Remote Enki AI Pass",
 					tags: ["CLINE_PASS"],
 				},
 			],
@@ -87,11 +87,11 @@ describe("refreshClineRecommendedModels", () => {
 	});
 
 	it("uses the in-memory cache after upstream cache is populated", async () => {
-		sandbox.stub(ClineEnv, "config").returns({
+		sandbox.stub(Enki AIEnv, "config").returns({
 			environment: Environment.production,
-			appBaseUrl: "https://app.cline-mock.bot",
-			apiBaseUrl: "https://api.cline-mock.bot",
-			mcpBaseUrl: "https://api.cline-mock.bot/v1/mcp",
+			appBaseUrl: "https://app.enki-mock.bot",
+			apiBaseUrl: "https://api.enki-mock.bot",
+			mcpBaseUrl: "https://api.enki-mock.bot/v1/mcp",
 		});
 		sandbox.stub(disk, "ensureCacheDirectoryExists").resolves("/tmp");
 		sandbox.stub(fs, "writeFile").resolves();
@@ -111,18 +111,18 @@ describe("refreshClineRecommendedModels", () => {
 						tags: ["FREE"],
 					},
 				],
-				clinePass: [
+				enkiPass: [
 					{
-						id: "cline-pass/glm-5",
-						description: "Remote Cline Pass",
+						id: "enki-pass/glm-5",
+						description: "Remote Enki AI Pass",
 						tags: ["CLINE_PASS"],
 					},
 				],
 			},
 		});
 
-		const firstResult = await refreshClineRecommendedModels();
-		const secondResult = await refreshClineRecommendedModels();
+		const firstResult = await refreshEnki AIRecommendedModels();
+		const secondResult = await refreshEnki AIRecommendedModels();
 
 		expect(axiosGetStub.calledOnce).to.equal(true);
 		expect(secondResult).to.deep.equal(firstResult);

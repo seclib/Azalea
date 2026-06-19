@@ -1,7 +1,7 @@
 import { isGPT5ModelFamily, isGPT51PlusModel, isGptOssModelFamily, isNextGenModelProvider } from "@utils/model-utils"
 import { ModelFamily } from "@/shared/prompts"
 import { Logger } from "@/shared/services/Logger"
-import { ClineDefaultTool } from "@/shared/tools"
+import { Enki AIDefaultTool } from "@/shared/tools"
 import { SystemPromptSection } from "../../templates/placeholders"
 import { createVariant } from "../variant-builder"
 import { validateVariant } from "../variant-validator"
@@ -55,27 +55,27 @@ export const config = createVariant(ModelFamily.NATIVE_GPT_5)
 		SystemPromptSection.SKILLS,
 	)
 	.tools(
-		ClineDefaultTool.BASH,
-		ClineDefaultTool.FILE_READ,
+		Enki AIDefaultTool.BASH,
+		Enki AIDefaultTool.FILE_READ,
 		// Should disable FILE_NEW and FILE_EDIT when enabled
-		ClineDefaultTool.APPLY_PATCH,
-		// ClineDefaultTool.FILE_NEW, // Replaced by APPLY_PATCH
-		// ClineDefaultTool.FILE_EDIT, // Replaced by APPLY_PATCH
-		ClineDefaultTool.SEARCH,
-		ClineDefaultTool.LIST_FILES,
-		ClineDefaultTool.LIST_CODE_DEF,
-		ClineDefaultTool.BROWSER,
-		ClineDefaultTool.WEB_FETCH,
-		ClineDefaultTool.WEB_SEARCH,
-		ClineDefaultTool.MCP_ACCESS,
-		ClineDefaultTool.ASK,
-		ClineDefaultTool.ATTEMPT,
-		ClineDefaultTool.PLAN_MODE,
-		ClineDefaultTool.MCP_DOCS,
-		ClineDefaultTool.TODO,
-		ClineDefaultTool.GENERATE_EXPLANATION,
-		ClineDefaultTool.USE_SKILL,
-		ClineDefaultTool.USE_SUBAGENTS,
+		Enki AIDefaultTool.APPLY_PATCH,
+		// Enki AIDefaultTool.FILE_NEW, // Replaced by APPLY_PATCH
+		// Enki AIDefaultTool.FILE_EDIT, // Replaced by APPLY_PATCH
+		Enki AIDefaultTool.SEARCH,
+		Enki AIDefaultTool.LIST_FILES,
+		Enki AIDefaultTool.LIST_CODE_DEF,
+		Enki AIDefaultTool.BROWSER,
+		Enki AIDefaultTool.WEB_FETCH,
+		Enki AIDefaultTool.WEB_SEARCH,
+		Enki AIDefaultTool.MCP_ACCESS,
+		Enki AIDefaultTool.ASK,
+		Enki AIDefaultTool.ATTEMPT,
+		Enki AIDefaultTool.PLAN_MODE,
+		Enki AIDefaultTool.MCP_DOCS,
+		Enki AIDefaultTool.TODO,
+		Enki AIDefaultTool.GENERATE_EXPLANATION,
+		Enki AIDefaultTool.USE_SKILL,
+		Enki AIDefaultTool.USE_SUBAGENTS,
 	)
 	.placeholders({
 		MODEL_FAMILY: ModelFamily.NATIVE_GPT_5,

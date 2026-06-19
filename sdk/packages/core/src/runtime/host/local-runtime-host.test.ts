@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { MessageWithMetadata } from "@cline/llms";
+import type { MessageWithMetadata } from "@enki/llms";
 import type {
 	AgentConfig,
 	AgentEvent,
@@ -10,8 +10,8 @@ import type {
 	AgentResult,
 	AgentRuntimeEvent,
 	BasicLogger,
-} from "@cline/shared";
-import { setClineDir, setHomeDir } from "@cline/shared/storage";
+} from "@enki/shared";
+import { setEnki AIDir, setHomeDir } from "@enki/shared/storage";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TelemetryService } from "../../services/telemetry/TelemetryService";
 import type { SessionManifest } from "../../session/models/session-manifest";
@@ -180,16 +180,16 @@ describe("LocalRuntimeHost", () => {
 	beforeEach(() => {
 		isolatedHomeDir = mkdtempSync(join(tmpdir(), "core-session-home-"));
 		process.env.HOME = isolatedHomeDir;
-		process.env.CLINE_DIR = join(isolatedHomeDir, ".cline");
+		process.env.CLINE_DIR = join(isolatedHomeDir, ".enki");
 		setHomeDir(isolatedHomeDir);
-		setClineDir(process.env.CLINE_DIR);
+		setEnki AIDir(process.env.CLINE_DIR);
 	});
 
 	afterEach(() => {
 		process.env.HOME = envSnapshot.HOME;
 		process.env.CLINE_DIR = envSnapshot.CLINE_DIR;
 		setHomeDir(envSnapshot.HOME ?? "~");
-		setClineDir(envSnapshot.CLINE_DIR ?? join("~", ".cline"));
+		setEnki AIDir(envSnapshot.CLINE_DIR ?? join("~", ".enki"));
 		rmSync(isolatedHomeDir, { recursive: true, force: true });
 	});
 
@@ -264,8 +264,8 @@ describe("LocalRuntimeHost", () => {
 			}),
 		);
 
-		// `session.started` is emitted from `ClineCore.start` (see
-		// `ClineCore.test.ts`), not from `LocalRuntimeHost`, so that the
+		// `session.started` is emitted from `Enki AICore.start` (see
+		// `Enki AICore.test.ts`), not from `LocalRuntimeHost`, so that the
 		// signal fires for every backend. We assert that it is NOT emitted
 		// here and only transport-scoped events remain.
 		expect(adapter.emit).not.toHaveBeenCalledWith(
@@ -342,8 +342,8 @@ describe("LocalRuntimeHost", () => {
 			normalizeStartInput({
 				config: createConfig({
 					sessionId,
-					providerId: "cline-pass",
-					modelId: "cline-pass/glm-5.1",
+					providerId: "enki-pass",
+					modelId: "enki-pass/glm-5.1",
 					apiKey: undefined,
 				}),
 				prompt: "hello",
@@ -351,11 +351,11 @@ describe("LocalRuntimeHost", () => {
 		);
 
 		expect(oauthTokenManager.resolveProviderApiKey).toHaveBeenCalledWith({
-			providerId: "cline-pass",
+			providerId: "enki-pass",
 		});
 		expect(createAgent).toHaveBeenCalledWith(
 			expect.objectContaining({
-				providerId: "cline-pass",
+				providerId: "enki-pass",
 				apiKey: "workos:resolved-token",
 			}),
 		);

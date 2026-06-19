@@ -37,7 +37,7 @@ export type CustomizationSection =
 	| "Tools";
 
 const sectionDescriptions: Record<CustomizationSection, string> = {
-	Rules: "Review project and global rule files that shape Cline behavior.",
+	Rules: "Review project and global rule files that shape Enki AI behavior.",
 	Hooks: "Inspect hook configuration and recent execution status.",
 	MCP: "Manage installed MCP servers and add new servers from the catalog.",
 	Skills: "Manage installed skills and add new skills from the catalog.",
@@ -47,13 +47,13 @@ const sectionDescriptions: Record<CustomizationSection, string> = {
 };
 
 const sectionCommands: Record<CustomizationSection, string> = {
-	Rules: "cline config rules",
-	Hooks: "cline config hooks",
-	MCP: "cline mcp install",
-	Skills: "cline skill",
-	Agents: "cline config agents",
-	Plugins: "cline plugin",
-	Tools: "cline config tools",
+	Rules: "enki config rules",
+	Hooks: "enki config hooks",
+	MCP: "enki mcp install",
+	Skills: "enki skill",
+	Agents: "enki config agents",
+	Plugins: "enki plugin",
+	Tools: "enki config tools",
 };
 
 type RuleItem = {
@@ -715,7 +715,7 @@ export function CustomizationSectionView({
 			if (
 				normalizedRoot &&
 				normalized.startsWith(`${normalizedRoot}/`) &&
-				normalized.includes("/.clinerules/")
+				normalized.includes("/.enkirules/")
 			) {
 				project.push(rule);
 			} else {
@@ -734,7 +734,7 @@ export function CustomizationSectionView({
 			if (
 				normalizedRoot &&
 				normalized.startsWith(`${normalizedRoot}/`) &&
-				normalized.includes("/.clinerules/hooks")
+				normalized.includes("/.enkirules/hooks")
 			) {
 				project.push(hook);
 			} else {
@@ -753,7 +753,7 @@ export function CustomizationSectionView({
 			if (
 				normalizedRoot &&
 				normalized.startsWith(`${normalizedRoot}/`) &&
-				normalized.includes("/.cline/plugins")
+				normalized.includes("/.enki/plugins")
 			) {
 				project.push(plugin);
 			} else {

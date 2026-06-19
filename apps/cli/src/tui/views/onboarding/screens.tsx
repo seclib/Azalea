@@ -5,9 +5,9 @@ import {
 	type CodexCliStatus,
 } from "../../../utils/codex-cli";
 import {
-	ClineModelPicker,
-	type ClineModelPickerEntry,
-} from "../../components/model-selector/cline-model-picker";
+	Enki AIModelPicker,
+	type Enki AIModelPickerEntry,
+} from "../../components/model-selector/enki-model-picker";
 import {
 	type SearchableItem,
 	SearchableList,
@@ -217,7 +217,7 @@ export function OnboardingDeviceCodeScreen(props: {
 import type {
 	ProviderConfigFieldKey,
 	ProviderConfigFieldRequirement,
-} from "@cline/core";
+} from "@enki/core";
 
 const DEFAULT_FIELD_LABELS: Partial<Record<ProviderConfigFieldKey, string>> = {
 	apiKey: "API key",
@@ -431,10 +431,10 @@ export function OnboardingProviderPickerScreen(props: {
 	);
 }
 
-export function OnboardingClineModelScreen(props: {
-	clineEntries: ClineModelPickerEntry[];
-	clineKnownModels: Record<string, unknown> | undefined;
-	clineModelSelected: number;
+export function OnboardingEnki AIModelScreen(props: {
+	enkiEntries: Enki AIModelPickerEntry[];
+	enkiKnownModels: Record<string, unknown> | undefined;
+	enkiModelSelected: number;
 	compact: boolean;
 	contentWidth: number;
 	mouse: MouseTrackerState;
@@ -454,11 +454,11 @@ export function OnboardingClineModelScreen(props: {
 				You can change this anytime
 			</text>
 
-			<ClineModelPicker
-				entries={props.clineEntries}
-				selected={props.clineModelSelected}
+			<Enki AIModelPicker
+				entries={props.enkiEntries}
+				selected={props.enkiModelSelected}
 				loading={props.recommendedLoading}
-				knownModels={props.clineKnownModels}
+				knownModels={props.enkiKnownModels}
 			/>
 
 			<text fg="gray" paddingX={1}>
@@ -659,7 +659,7 @@ export function OnboardingMainMenuScreen(props: {
 				marginTop={1}
 			>
 				<text fg={defaultFg}>
-					<strong>Welcome to Cline</strong>
+					<strong>Welcome to Enki AI</strong>
 				</text>
 				<text fg="gray" marginTop={1}>
 					Connect a model provider to get started.

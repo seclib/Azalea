@@ -2,7 +2,7 @@ import {
 	createLocalHubScheduleRuntimeHandlers,
 	HubScheduleCommandService,
 	HubScheduleService,
-} from "@cline/core";
+} from "@enki/core";
 import { asTrimmedString, toPositiveInt } from "./utils";
 
 let scheduleService: HubScheduleService | undefined;
@@ -24,7 +24,7 @@ async function clientCommand(
 ): Promise<Record<string, unknown>> {
 	const reply = await getCommands().handleCommand({
 		version: "v1",
-		clientId: "cline-hub-schedules",
+		clientId: "enki-hub-schedules",
 		command: hubCommand as never,
 		payload,
 	});
@@ -89,7 +89,7 @@ export async function handleRoutineScheduleCommand(
 			cronPattern,
 			prompt,
 			modelSelection: {
-				providerId: asTrimmedString(args?.provider) ?? "cline",
+				providerId: asTrimmedString(args?.provider) ?? "enki",
 				modelId: asTrimmedString(args?.model) ?? "openai/gpt-5.3-codex",
 			},
 			mode: args?.mode === "plan" ? "plan" : "act",
@@ -128,7 +128,7 @@ export async function handleRoutineScheduleCommand(
 			cronPattern,
 			prompt,
 			modelSelection: {
-				providerId: asTrimmedString(args?.provider) ?? "cline",
+				providerId: asTrimmedString(args?.provider) ?? "enki",
 				modelId: asTrimmedString(args?.model) ?? "openai/gpt-5.3-codex",
 			},
 			mode: args?.mode === "plan" ? "plan" : "act",

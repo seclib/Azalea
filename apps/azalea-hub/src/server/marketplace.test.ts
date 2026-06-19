@@ -23,7 +23,7 @@ import {
 
 describe("marketplace installer", () => {
 	const originalWrapperPath = process.env.CLINE_WRAPPER_PATH;
-	const originalClineDir = process.env.CLINE_DIR;
+	const originalEnki AIDir = process.env.CLINE_DIR;
 	const originalHome = process.env.HOME;
 	const originalMcpSettingsPath = process.env.CLINE_MCP_SETTINGS_PATH;
 
@@ -33,10 +33,10 @@ describe("marketplace installer", () => {
 		} else {
 			process.env.CLINE_WRAPPER_PATH = originalWrapperPath;
 		}
-		if (originalClineDir === undefined) {
+		if (originalEnki AIDir === undefined) {
 			delete process.env.CLINE_DIR;
 		} else {
-			process.env.CLINE_DIR = originalClineDir;
+			process.env.CLINE_DIR = originalEnki AIDir;
 		}
 		if (originalHome === undefined) {
 			delete process.env.HOME;
@@ -98,8 +98,8 @@ describe("marketplace installer", () => {
 		});
 	});
 
-	it("runs skills globally for Cline without prompts", async () => {
-		const homeDir = mkdtempSync(join(tmpdir(), "cline-marketplace-home-"));
+	it("runs skills globally for Enki AI without prompts", async () => {
+		const homeDir = mkdtempSync(join(tmpdir(), "enki-marketplace-home-"));
 		process.env.HOME = homeDir;
 		const spawnCommand = vi.fn(async () => {
 			mkdirSync(join(homeDir, ".agents", "skills", "web-design-guidelines"), {
@@ -143,20 +143,20 @@ describe("marketplace installer", () => {
 			"web-design-guidelines",
 			"-g",
 			"-a",
-			"cline",
+			"enki",
 			"-y",
 		]);
 	});
 
 	it("skips skill install commands when the global skill already exists", async () => {
-		const homeDir = mkdtempSync(join(tmpdir(), "cline-marketplace-home-"));
+		const homeDir = mkdtempSync(join(tmpdir(), "enki-marketplace-home-"));
 		process.env.HOME = homeDir;
-		mkdirSync(join(homeDir, ".agents", "skills", "cline-sdk"), {
+		mkdirSync(join(homeDir, ".agents", "skills", "enki-sdk"), {
 			recursive: true,
 		});
 		writeFileSync(
-			join(homeDir, ".agents", "skills", "cline-sdk", "SKILL.md"),
-			"---\nname: cline-sdk\n---\n",
+			join(homeDir, ".agents", "skills", "enki-sdk", "SKILL.md"),
+			"---\nname: enki-sdk\n---\n",
 		);
 		const spawnCommand = vi.fn(async () => ({
 			exitCode: 0,
@@ -168,58 +168,58 @@ describe("marketplace installer", () => {
 			installMarketplaceEntry(
 				{
 					entry: {
-						id: "cline-sdk",
+						id: "enki-sdk",
 						type: "skill",
-						name: "Cline SDK",
-						install: { args: ["cline/sdk-skill"] },
+						name: "Enki AI SDK",
+						install: { args: ["enki/sdk-skill"] },
 					},
 				},
 				{ spawnCommand },
 			),
 		).resolves.toMatchObject({
 			status: "installed",
-			message: "Cline SDK is already installed.",
+			message: "Enki AI SDK is already installed.",
 		});
 		expect(spawnCommand).not.toHaveBeenCalled();
 	});
 
-	it("reports Cline global skills as marketplace-installed", () => {
-		const clineDir = mkdtempSync(join(tmpdir(), "cline-marketplace-cline-"));
-		process.env.CLINE_DIR = clineDir;
-		mkdirSync(join(clineDir, "skills", "cline-sdk"), {
+	it("reports Enki AI global skills as marketplace-installed", () => {
+		const enkiDir = mkdtempSync(join(tmpdir(), "enki-marketplace-enki-"));
+		process.env.CLINE_DIR = enkiDir;
+		mkdirSync(join(enkiDir, "skills", "enki-sdk"), {
 			recursive: true,
 		});
 		writeFileSync(
-			join(clineDir, "skills", "cline-sdk", "SKILL.md"),
-			"---\nname: cline-sdk\n---\n",
+			join(enkiDir, "skills", "enki-sdk", "SKILL.md"),
+			"---\nname: enki-sdk\n---\n",
 		);
 
 		expect(
 			listMarketplaceInstalledEntries({
 				entries: [
 					{
-						id: "cline-sdk",
+						id: "enki-sdk",
 						type: "skill",
-						name: "Cline SDK",
-						install: { args: ["cline/sdk-skill"] },
+						name: "Enki AI SDK",
+						install: { args: ["enki/sdk-skill"] },
 					},
 				],
 			}),
-		).toEqual({ installedKeys: ["skill:cline-sdk"] });
+		).toEqual({ installedKeys: ["skill:enki-sdk"] });
 	});
 
-	it("accepts skill installs that create Cline global skills", async () => {
-		const homeDir = mkdtempSync(join(tmpdir(), "cline-marketplace-home-"));
-		const clineDir = join(homeDir, ".cline");
+	it("accepts skill installs that create Enki AI global skills", async () => {
+		const homeDir = mkdtempSync(join(tmpdir(), "enki-marketplace-home-"));
+		const enkiDir = join(homeDir, ".enki");
 		process.env.HOME = homeDir;
-		process.env.CLINE_DIR = clineDir;
+		process.env.CLINE_DIR = enkiDir;
 		const spawnCommand = vi.fn(async () => {
-			mkdirSync(join(clineDir, "skills", "cline-sdk"), {
+			mkdirSync(join(enkiDir, "skills", "enki-sdk"), {
 				recursive: true,
 			});
 			writeFileSync(
-				join(clineDir, "skills", "cline-sdk", "SKILL.md"),
-				"---\nname: cline-sdk\n---\n",
+				join(enkiDir, "skills", "enki-sdk", "SKILL.md"),
+				"---\nname: enki-sdk\n---\n",
 			);
 			return {
 				exitCode: 0,
@@ -232,26 +232,26 @@ describe("marketplace installer", () => {
 			installMarketplaceEntry(
 				{
 					entry: {
-						id: "cline-sdk",
+						id: "enki-sdk",
 						type: "skill",
-						name: "Cline SDK",
-						install: { args: ["cline/sdk-skill"] },
+						name: "Enki AI SDK",
+						install: { args: ["enki/sdk-skill"] },
 					},
 				},
 				{ spawnCommand },
 			),
 		).resolves.toMatchObject({
 			status: "installed",
-			message: "Installed Cline SDK globally for Cline.",
+			message: "Installed Enki AI SDK globally for Enki AI.",
 		});
 	});
 
-	it("removes Cline global marketplace skills without prompts", async () => {
-		const homeDir = mkdtempSync(join(tmpdir(), "cline-marketplace-home-"));
+	it("removes Enki AI global marketplace skills without prompts", async () => {
+		const homeDir = mkdtempSync(join(tmpdir(), "enki-marketplace-home-"));
 		process.env.HOME = homeDir;
-		const skillDir = join(homeDir, ".agents", "skills", "cline-sdk");
+		const skillDir = join(homeDir, ".agents", "skills", "enki-sdk");
 		mkdirSync(skillDir, { recursive: true });
-		writeFileSync(join(skillDir, "SKILL.md"), "---\nname: cline-sdk\n---\n");
+		writeFileSync(join(skillDir, "SKILL.md"), "---\nname: enki-sdk\n---\n");
 		const spawnCommand = vi.fn(async () => {
 			rmSync(skillDir, { recursive: true, force: true });
 			return {
@@ -265,32 +265,32 @@ describe("marketplace installer", () => {
 			uninstallMarketplaceEntry(
 				{
 					entry: {
-						id: "cline-sdk",
+						id: "enki-sdk",
 						type: "skill",
-						name: "Cline SDK",
-						install: { args: ["cline/sdk-skill"] },
+						name: "Enki AI SDK",
+						install: { args: ["enki/sdk-skill"] },
 					},
 				},
 				{ spawnCommand },
 			),
 		).resolves.toMatchObject({
 			status: "uninstalled",
-			message: "Uninstalled Cline SDK.",
+			message: "Uninstalled Enki AI SDK.",
 		});
 		expect(spawnCommand).toHaveBeenCalledWith("npx", [
 			"-y",
 			"skills@latest",
 			"remove",
-			"cline-sdk",
+			"enki-sdk",
 			"-g",
 			"-a",
-			"cline",
+			"enki",
 			"-y",
 		]);
 	});
 
 	it("does not report project-local skills as marketplace-installed globals", () => {
-		const homeDir = mkdtempSync(join(tmpdir(), "cline-marketplace-home-"));
+		const homeDir = mkdtempSync(join(tmpdir(), "enki-marketplace-home-"));
 		process.env.HOME = homeDir;
 
 		expect(
@@ -298,19 +298,19 @@ describe("marketplace installer", () => {
 				{
 					entries: [
 						{
-							id: "cline-sdk",
+							id: "enki-sdk",
 							type: "skill",
-							name: "Cline SDK",
-							install: { args: ["cline/sdk-skill"] },
+							name: "Enki AI SDK",
+							install: { args: ["enki/sdk-skill"] },
 						},
 					],
 				},
 				{
 					skills: [
 						{
-							id: "cline-sdk",
-							name: "cline-sdk",
-							path: "/workspace/project/.agents/skills/cline-sdk/SKILL.md",
+							id: "enki-sdk",
+							name: "enki-sdk",
+							path: "/workspace/project/.agents/skills/enki-sdk/SKILL.md",
 						},
 					],
 				},
@@ -319,7 +319,7 @@ describe("marketplace installer", () => {
 	});
 
 	it("rejects skill installs that exit zero but report failure", async () => {
-		const homeDir = mkdtempSync(join(tmpdir(), "cline-marketplace-home-"));
+		const homeDir = mkdtempSync(join(tmpdir(), "enki-marketplace-home-"));
 		process.env.HOME = homeDir;
 		const spawnCommand = vi.fn(async () => ({
 			exitCode: 0,
@@ -331,10 +331,10 @@ describe("marketplace installer", () => {
 			installMarketplaceEntry(
 				{
 					entry: {
-						id: "cline-sdk",
+						id: "enki-sdk",
 						type: "skill",
-						name: "Cline SDK",
-						install: { args: ["cline/sdk-skill"] },
+						name: "Enki AI SDK",
+						install: { args: ["enki/sdk-skill"] },
 					},
 				},
 				{ spawnCommand },
@@ -343,7 +343,7 @@ describe("marketplace installer", () => {
 	});
 
 	it("redacts common secret formats from failed install output", async () => {
-		const homeDir = mkdtempSync(join(tmpdir(), "cline-marketplace-home-"));
+		const homeDir = mkdtempSync(join(tmpdir(), "enki-marketplace-home-"));
 		process.env.HOME = homeDir;
 		const spawnCommand = vi.fn(async () => ({
 			exitCode: 1,
@@ -358,10 +358,10 @@ describe("marketplace installer", () => {
 			await installMarketplaceEntry(
 				{
 					entry: {
-						id: "cline-sdk",
+						id: "enki-sdk",
 						type: "skill",
-						name: "Cline SDK",
-						install: { args: ["cline/sdk-skill"] },
+						name: "Enki AI SDK",
+						install: { args: ["enki/sdk-skill"] },
 					},
 				},
 				{ spawnCommand },
@@ -385,7 +385,7 @@ describe("marketplace installer", () => {
 	});
 
 	it("rejects skill installs before spawning when the global skill directory is not writable", async () => {
-		const homeDir = mkdtempSync(join(tmpdir(), "cline-marketplace-home-"));
+		const homeDir = mkdtempSync(join(tmpdir(), "enki-marketplace-home-"));
 		process.env.HOME = homeDir;
 		mkdirSync(join(homeDir, ".agents"), { recursive: true });
 		writeFileSync(join(homeDir, ".agents", "skills"), "");
@@ -399,10 +399,10 @@ describe("marketplace installer", () => {
 			installMarketplaceEntry(
 				{
 					entry: {
-						id: "cline-sdk",
+						id: "enki-sdk",
 						type: "skill",
-						name: "Cline SDK",
-						install: { args: ["cline/sdk-skill"] },
+						name: "Enki AI SDK",
+						install: { args: ["enki/sdk-skill"] },
 					},
 				},
 				{ spawnCommand },
@@ -414,7 +414,7 @@ describe("marketplace installer", () => {
 	});
 
 	it("rejects skill installs that do not create a global skill", async () => {
-		const homeDir = mkdtempSync(join(tmpdir(), "cline-marketplace-home-"));
+		const homeDir = mkdtempSync(join(tmpdir(), "enki-marketplace-home-"));
 		process.env.HOME = homeDir;
 		const spawnCommand = vi.fn(async () => ({
 			exitCode: 0,
@@ -426,19 +426,19 @@ describe("marketplace installer", () => {
 			installMarketplaceEntry(
 				{
 					entry: {
-						id: "cline-sdk",
+						id: "enki-sdk",
 						type: "skill",
-						name: "Cline SDK",
-						install: { args: ["cline/sdk-skill"] },
+						name: "Enki AI SDK",
+						install: { args: ["enki/sdk-skill"] },
 					},
 				},
 				{ spawnCommand },
 			),
-		).rejects.toThrow("was not found in Cline's global skills directories");
+		).rejects.toThrow("was not found in Enki AI's global skills directories");
 	});
 
-	it("runs official plugin installs through the current Cline CLI", async () => {
-		process.env.CLINE_WRAPPER_PATH = "/usr/local/bin/cline";
+	it("runs official plugin installs through the current Enki AI CLI", async () => {
+		process.env.CLINE_WRAPPER_PATH = "/usr/local/bin/enki";
 		const spawnCommand = vi.fn(async () => ({
 			exitCode: 0,
 			stdout: JSON.stringify({ installPath: "/tmp/plugin" }),
@@ -457,7 +457,7 @@ describe("marketplace installer", () => {
 			{ spawnCommand },
 		);
 
-		expect(spawnCommand).toHaveBeenCalledWith("/usr/local/bin/cline", [
+		expect(spawnCommand).toHaveBeenCalledWith("/usr/local/bin/enki", [
 			"plugin",
 			"install",
 			"marketplace-test-plugin",
@@ -465,8 +465,8 @@ describe("marketplace installer", () => {
 		]);
 	});
 
-	it("runs official plugin uninstalls through the current Cline CLI", async () => {
-		process.env.CLINE_WRAPPER_PATH = "/usr/local/bin/cline";
+	it("runs official plugin uninstalls through the current Enki AI CLI", async () => {
+		process.env.CLINE_WRAPPER_PATH = "/usr/local/bin/enki";
 		const spawnCommand = vi.fn(async () => ({
 			exitCode: 0,
 			stdout: JSON.stringify({
@@ -495,7 +495,7 @@ describe("marketplace installer", () => {
 			message: "Uninstalled Goal.",
 		});
 
-		expect(spawnCommand).toHaveBeenCalledWith("/usr/local/bin/cline", [
+		expect(spawnCommand).toHaveBeenCalledWith("/usr/local/bin/enki", [
 			"plugin",
 			"uninstall",
 			"goal",
@@ -504,7 +504,7 @@ describe("marketplace installer", () => {
 	});
 
 	it("resolves desktop installs from the server catalog instead of browser-sent args", async () => {
-		process.env.CLINE_WRAPPER_PATH = "/usr/local/bin/cline";
+		process.env.CLINE_WRAPPER_PATH = "/usr/local/bin/enki";
 		const spawnCommand = vi.fn(async () => ({
 			exitCode: 0,
 			stdout: JSON.stringify({ installPath: "/tmp/plugin" }),
@@ -535,7 +535,7 @@ describe("marketplace installer", () => {
 			},
 		);
 
-		expect(spawnCommand).toHaveBeenCalledWith("/usr/local/bin/cline", [
+		expect(spawnCommand).toHaveBeenCalledWith("/usr/local/bin/enki", [
 			"plugin",
 			"install",
 			"marketplace-test-plugin",
@@ -544,7 +544,7 @@ describe("marketplace installer", () => {
 	});
 
 	it("resolves desktop uninstalls from the server catalog instead of browser-sent args", async () => {
-		process.env.CLINE_WRAPPER_PATH = "/usr/local/bin/cline";
+		process.env.CLINE_WRAPPER_PATH = "/usr/local/bin/enki";
 		const spawnCommand = vi.fn(async () => ({
 			exitCode: 0,
 			stdout: JSON.stringify({
@@ -580,7 +580,7 @@ describe("marketplace installer", () => {
 			},
 		);
 
-		expect(spawnCommand).toHaveBeenCalledWith("/usr/local/bin/cline", [
+		expect(spawnCommand).toHaveBeenCalledWith("/usr/local/bin/enki", [
 			"plugin",
 			"uninstall",
 			"goal",
@@ -588,10 +588,10 @@ describe("marketplace installer", () => {
 		]);
 	});
 
-	it("uninstalls MCP marketplace entries from Cline MCP settings", async () => {
+	it("uninstalls MCP marketplace entries from Enki AI MCP settings", async () => {
 		const settingsPath = join(
-			mkdtempSync(join(tmpdir(), "cline-marketplace-mcp-")),
-			"cline_mcp_settings.json",
+			mkdtempSync(join(tmpdir(), "enki-marketplace-mcp-")),
+			"enki_mcp_settings.json",
 		);
 		process.env.CLINE_MCP_SETTINGS_PATH = settingsPath;
 		writeFileSync(
@@ -655,8 +655,8 @@ describe("marketplace installer", () => {
 
 	it("uninstalls local MCP servers by name", async () => {
 		const settingsPath = join(
-			mkdtempSync(join(tmpdir(), "cline-local-mcp-")),
-			"cline_mcp_settings.json",
+			mkdtempSync(join(tmpdir(), "enki-local-mcp-")),
+			"enki_mcp_settings.json",
 		);
 		process.env.CLINE_MCP_SETTINGS_PATH = settingsPath;
 		writeFileSync(
@@ -691,8 +691,8 @@ describe("marketplace installer", () => {
 	});
 
 	it("uninstalls local skills by removing their configured skill directory", async () => {
-		const workspaceRoot = mkdtempSync(join(tmpdir(), "cline-local-skill-"));
-		const skillDir = join(workspaceRoot, ".cline", "skills", "review");
+		const workspaceRoot = mkdtempSync(join(tmpdir(), "enki-local-skill-"));
+		const skillDir = join(workspaceRoot, ".enki", "skills", "review");
 		mkdirSync(skillDir, { recursive: true });
 		const skillPath = join(skillDir, "SKILL.md");
 		writeFileSync(skillPath, "---\nname: review\n---\nReview changes.");
@@ -714,17 +714,17 @@ describe("marketplace installer", () => {
 		expect(existsSync(skillDir)).toBe(false);
 	});
 
-	it("reports official plugin marketplace entries installed from Cline home", () => {
-		const clineDir = mkdtempSync(join(tmpdir(), "cline-marketplace-test-"));
-		process.env.CLINE_DIR = clineDir;
+	it("reports official plugin marketplace entries installed from Enki AI home", () => {
+		const enkiDir = mkdtempSync(join(tmpdir(), "enki-marketplace-test-"));
+		process.env.CLINE_DIR = enkiDir;
 		const sourceKey =
-			"official:https://github.com/cline/plugins.git#plugins/goal";
+			"official:https://github.com/enki/plugins.git#plugins/goal";
 		const hash = createHash("sha256")
 			.update(sourceKey)
 			.digest("hex")
 			.slice(0, 12);
 		mkdirSync(
-			join(clineDir, "plugins", "_installed", "official", `goal-${hash}`),
+			join(enkiDir, "plugins", "_installed", "official", `goal-${hash}`),
 			{
 				recursive: true,
 			},
@@ -746,7 +746,7 @@ describe("marketplace installer", () => {
 
 	it("does not report plugin inventory substring matches as installed", () => {
 		process.env.CLINE_DIR = mkdtempSync(
-			join(tmpdir(), "cline-marketplace-test-"),
+			join(tmpdir(), "enki-marketplace-test-"),
 		);
 
 		expect(
@@ -765,7 +765,7 @@ describe("marketplace installer", () => {
 					plugins: [
 						{
 							name: "goal-helper",
-							path: "/workspace/.cline/plugins/goal-helper/index.ts",
+							path: "/workspace/.enki/plugins/goal-helper/index.ts",
 						},
 					],
 				},
@@ -774,16 +774,16 @@ describe("marketplace installer", () => {
 	});
 
 	it("skips invalid marketplace entries during installed-status checks", () => {
-		const clineDir = mkdtempSync(join(tmpdir(), "cline-marketplace-test-"));
-		process.env.CLINE_DIR = clineDir;
+		const enkiDir = mkdtempSync(join(tmpdir(), "enki-marketplace-test-"));
+		process.env.CLINE_DIR = enkiDir;
 		const sourceKey =
-			"official:https://github.com/cline/plugins.git#plugins/goal";
+			"official:https://github.com/enki/plugins.git#plugins/goal";
 		const hash = createHash("sha256")
 			.update(sourceKey)
 			.digest("hex")
 			.slice(0, 12);
 		mkdirSync(
-			join(clineDir, "plugins", "_installed", "official", `goal-${hash}`),
+			join(enkiDir, "plugins", "_installed", "official", `goal-${hash}`),
 			{
 				recursive: true,
 			},
@@ -850,7 +850,7 @@ describe("marketplace installer", () => {
 			entries: [],
 		});
 		expect(fetchImpl).toHaveBeenCalledWith(
-			"https://cline.github.io/marketplace/catalog.json",
+			"https://enki.github.io/marketplace/catalog.json",
 			{ headers: { Accept: "application/json" } },
 		);
 	});

@@ -1,35 +1,35 @@
-import type { ClineRecommendedModel, OpenRouterModelInfo } from "@shared/proto/cline/models"
-import type { OnboardingModel, OnboardingModelGroup } from "@shared/proto/cline/state"
+import type { Enki AIRecommendedModel, OpenRouterModelInfo } from "@shared/proto/enki/models"
+import type { OnboardingModel, OnboardingModelGroup } from "@shared/proto/enki/state"
 
 export interface RecommendedModelsData {
-	recommended: ClineRecommendedModel[]
-	free: ClineRecommendedModel[]
-	clinePass: ClineRecommendedModel[]
+	recommended: Enki AIRecommendedModel[]
+	free: Enki AIRecommendedModel[]
+	enkiPass: Enki AIRecommendedModel[]
 }
 
 type RecommendedModelsResponseLike = {
-	recommended?: ClineRecommendedModel[]
-	free?: ClineRecommendedModel[]
-	clinePass?: ClineRecommendedModel[]
+	recommended?: Enki AIRecommendedModel[]
+	free?: Enki AIRecommendedModel[]
+	enkiPass?: Enki AIRecommendedModel[]
 }
 
 export function getRecommendedModelsData(
 	response: RecommendedModelsResponseLike,
-	isClinePassEnabled: boolean,
+	isEnki AIPassEnabled: boolean,
 ): RecommendedModelsData | undefined {
 	const recommended = response.recommended ?? []
 	const free = response.free ?? []
-	const clinePass = isClinePassEnabled ? (response.clinePass ?? []) : []
+	const enkiPass = isEnki AIPassEnabled ? (response.enkiPass ?? []) : []
 
-	if (recommended.length === 0 && free.length === 0 && clinePass.length === 0) {
+	if (recommended.length === 0 && free.length === 0 && enkiPass.length === 0) {
 		return undefined
 	}
 
-	return { recommended, free, clinePass }
+	return { recommended, free, enkiPass }
 }
 
 export interface OnboardingModelsByGroup {
-	clinePass: ModelGroup[]
+	enkiPass: ModelGroup[]
 	free: ModelGroup[]
 	power: ModelGroup[]
 }
@@ -39,16 +39,16 @@ interface ModelGroup {
 	models: OnboardingModel[]
 }
 
-export function getClineUIOnboardingGroups(groupedModels: OnboardingModelGroup): OnboardingModelsByGroup {
+export function getEnki AIUIOnboardingGroups(groupedModels: OnboardingModelGroup): OnboardingModelsByGroup {
 	const { models } = groupedModels
 
-	const clinePassModels = models.filter((m) => m.group === "clinepass")
+	const enkiPassModels = models.filter((m) => m.group === "enkipass")
 	const freeModels = models.filter((m) => m.group === "free")
 	const frontierModels = models.filter((m) => m.group === "frontier")
 	const openSourceModels = models.filter((m) => m.group === "open source")
 
 	return {
-		clinePass: clinePassModels.length > 0 ? [{ group: "clinepass", models: clinePassModels }] : [],
+		enkiPass: enkiPassModels.length > 0 ? [{ group: "enkipass", models: enkiPassModels }] : [],
 		free: freeModels.length > 0 ? [{ group: "free", models: freeModels }] : [],
 		power: [
 			...(frontierModels.length > 0 ? [{ group: "frontier", models: frontierModels }] : []),

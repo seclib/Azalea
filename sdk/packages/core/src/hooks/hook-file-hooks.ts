@@ -8,16 +8,16 @@ import type {
 	AgentHooks,
 	AgentRunLifecycleContext,
 	AgentRuntimeEvent,
-} from "@cline/shared";
+} from "@enki/shared";
 import {
 	augmentNodeCommandForDebug,
 	type BasicLogger,
 	type HookControl,
 	type HookSessionContext,
 	type WorkspaceInfo,
-	withResolvedClineBuildEnv,
-} from "@cline/shared";
-import { ensureHookLogDir } from "@cline/shared/storage";
+	withResolvedEnki AIBuildEnv,
+} from "@enki/shared";
+import { ensureHookLogDir } from "@enki/shared/storage";
 import { createAgentHooksExtension } from "./hook-extension";
 import { listHookConfigFiles } from "./hook-file-config";
 import type { HookEventName, HookEventPayload } from "./subprocess";
@@ -184,7 +184,7 @@ function createPayloadBase(
 		rootSessionId: options.rootSessionId || ctx.conversationId,
 	};
 	return {
-		clineVersion: process.env.CLINE_VERSION?.trim() || "",
+		enkiVersion: process.env.CLINE_VERSION?.trim() || "",
 		timestamp: new Date().toISOString(),
 		taskId: ctx.conversationId,
 		sessionContext,
@@ -330,7 +330,7 @@ async function runHookCommandOnce(
 	});
 	const child = spawn(command[0], command.slice(1), {
 		cwd: options.cwd,
-		env: withResolvedClineBuildEnv(options.env),
+		env: withResolvedEnki AIBuildEnv(options.env),
 		stdio: options.detached
 			? ["pipe", "ignore", "ignore"]
 			: ["pipe", "pipe", "pipe"],
@@ -533,7 +533,7 @@ async function runBlockingHookCommands(options: {
 			const result = await runHookCommand(options.payload, {
 				command,
 				cwd: options.cwd,
-				env: withResolvedClineBuildEnv(process.env),
+				env: withResolvedEnki AIBuildEnv(process.env),
 				detached: false,
 				timeoutMs: options.timeoutMs,
 			});
@@ -571,7 +571,7 @@ function runAsyncHookCommands(options: {
 		void runHookCommand(options.payload, {
 			command,
 			cwd: options.cwd,
-			env: withResolvedClineBuildEnv(process.env),
+			env: withResolvedEnki AIBuildEnv(process.env),
 			detached: true,
 		}).catch((error) => {
 			logHookError(

@@ -6,7 +6,7 @@ import {
 import { calculateApiCostOpenAI } from "@utils/cost";
 import type OpenAI from "openai";
 import type { ChatCompletionTool as OpenAITool } from "openai/resources/chat/completions";
-import type { ClineStorageMessage } from "@/shared/messages/content";
+import type { Enki AIStorageMessage } from "@/shared/messages/content";
 import { createOpenAIClient } from "@/shared/net";
 import type { ApiHandler, CommonApiHandlerOptions } from "../";
 import { withRetry } from "../retry";
@@ -77,7 +77,7 @@ export class HuggingFaceHandler implements ApiHandler {
 	@withRetry()
 	async *createMessage(
 		systemPrompt: string,
-		messages: ClineStorageMessage[],
+		messages: Enki AIStorageMessage[],
 		tools?: OpenAITool[],
 	): ApiStream {
 		try {

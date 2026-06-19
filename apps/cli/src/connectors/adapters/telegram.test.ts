@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { ConnectTelegramOptions } from "@cline/shared";
+import type { ConnectTelegramOptions } from "@enki/shared";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { __test__, telegramConnector } from "./telegram";
 
@@ -12,11 +12,11 @@ const parseTelegramArgs = (rawArgs: string[]): ConnectTelegramOptions =>
 		}
 	).parseArgs(rawArgs);
 
-const originalClineDataDir = process.env.CLINE_DATA_DIR;
+const originalEnki AIDataDir = process.env.CLINE_DATA_DIR;
 const tempDataDirs: string[] = [];
 
-function useTempClineDataDir(): string {
-	const dataDir = mkdtempSync(join(tmpdir(), "cline-telegram-test-"));
+function useTempEnki AIDataDir(): string {
+	const dataDir = mkdtempSync(join(tmpdir(), "enki-telegram-test-"));
 	tempDataDirs.push(dataDir);
 	process.env.CLINE_DATA_DIR = dataDir;
 	return dataDir;
@@ -24,10 +24,10 @@ function useTempClineDataDir(): string {
 
 afterEach(() => {
 	vi.unstubAllGlobals();
-	if (originalClineDataDir === undefined) {
+	if (originalEnki AIDataDir === undefined) {
 		delete process.env.CLINE_DATA_DIR;
 	} else {
-		process.env.CLINE_DATA_DIR = originalClineDataDir;
+		process.env.CLINE_DATA_DIR = originalEnki AIDataDir;
 	}
 	for (const dir of tempDataDirs.splice(0)) {
 		rmSync(dir, { recursive: true, force: true });
@@ -154,7 +154,7 @@ describe("telegramConnector", () => {
 	});
 
 	it("does not call getMe when the token-only connector is already running", async () => {
-		const dataDir = useTempClineDataDir();
+		const dataDir = useTempEnki AIDataDir();
 		const connectorDir = join(dataDir, "connectors", "telegram");
 		mkdirSync(connectorDir, { recursive: true });
 		writeFileSync(

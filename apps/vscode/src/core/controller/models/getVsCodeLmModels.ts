@@ -1,5 +1,5 @@
-import { EmptyRequest } from "@shared/proto/cline/common"
-import { VsCodeLmModelsArray } from "@shared/proto/cline/models"
+import { EmptyRequest } from "@shared/proto/enki/common"
+import { VsCodeLmModelsArray } from "@shared/proto/enki/models"
 import * as vscode from "vscode"
 import { Logger } from "@/shared/services/Logger"
 import { convertVsCodeNativeModelsToProtoModels } from "../../../shared/proto-conversions/models/vscode-lm-models-conversion"

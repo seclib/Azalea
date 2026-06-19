@@ -11,9 +11,9 @@ import {
 	type AgentPlugin,
 	type AgentTool,
 	type AgentToolContext,
-	ClineCore,
+	Enki AICore,
 	createTool,
-} from "@cline/core";
+} from "@enki/core";
 import YAML from "yaml";
 import { z } from "zod";
 
@@ -21,15 +21,15 @@ import { z } from "zod";
 // Types
 // ---------------------------------------------------------------------------
 
-type SessionManager = ClineCore;
+type SessionManager = Enki AICore;
 
 /** Minimal plugin host interface injected by the runtime via globalThis. */
-interface ClinePluginHost {
+interface Enki AIPluginHost {
 	emitEvent?: (name: string, payload?: unknown) => void;
 }
 
 declare global {
-	var __clinePluginHost: ClinePluginHost | undefined;
+	var __enkiPluginHost: Enki AIPluginHost | undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -57,33 +57,33 @@ function resolveDefaultHomeDir(): string {
 	return "~";
 }
 
-function resolveClineDirPath(): string {
+function resolveEnki AIDirPath(): string {
 	const explicitDir = process.env.CLINE_DIR?.trim();
 	if (explicitDir) {
 		return explicitDir;
 	}
-	return join(resolveDefaultHomeDir(), ".cline");
+	return join(resolveDefaultHomeDir(), ".enki");
 }
 
-function resolveClineDataDirPath(): string {
+function resolveEnki AIDataDirPath(): string {
 	const explicitDir = process.env.CLINE_DATA_DIR?.trim();
 	if (explicitDir) {
 		return explicitDir;
 	}
-	return join(resolveClineDirPath(), "data");
+	return join(resolveEnki AIDirPath(), "data");
 }
 
 function resolveGlobalAgentsDirPath(): string {
-	return join(resolveClineDataDirPath(), "settings", "agents");
+	return join(resolveEnki AIDataDirPath(), "settings", "agents");
 }
 
 const HANDOFFS_DIR = join(
-	resolveClineDataDirPath(),
+	resolveEnki AIDataDirPath(),
 	"plugins",
 	"subagents",
 	"handoffs",
 );
-const GLOBAL_SKILLS_DIR = join(resolveClineDataDirPath(), "settings", "skills");
+const GLOBAL_SKILLS_DIR = join(resolveEnki AIDataDirPath(), "settings", "skills");
 
 // Agent and skill definitions live in the `agents/` and `skills/`
 // directories alongside this file. They are loaded at runtime from disk.
@@ -94,7 +94,7 @@ const SAFE_ID_RE = /^[A-Za-z0-9_-]+$/;
 const envOr = (key: string, fallback: string): string =>
 	process.env[key]?.trim() || fallback;
 
-const DEFAULT_PROVIDER_ID = envOr("CLINE_SUBAGENT_PROVIDER_ID", "cline");
+const DEFAULT_PROVIDER_ID = envOr("CLINE_SUBAGENT_PROVIDER_ID", "enki");
 const DEFAULT_MODEL_ID = envOr(
 	"CLINE_SUBAGENT_MODEL_ID",
 	"anthropic/claude-sonnet-4.6",
@@ -230,7 +230,7 @@ function readAgentDefinitions(baseCwd: string): AgentDefinition[] {
 	const dirs: Array<{ path: string; source: AgentDefinition["source"] }> = [
 		{ path: BUNDLED_AGENTS_DIR, source: "bundled" },
 		{ path: resolveGlobalAgentsDirPath(), source: "global" },
-		{ path: join(baseCwd, ".cline", "agents"), source: "project" },
+		{ path: join(baseCwd, ".enki", "agents"), source: "project" },
 	];
 	const defs = new Map<string, AgentDefinition>();
 	for (const { path, source } of dirs) {
@@ -254,7 +254,7 @@ function readSkillDefinitions(baseCwd: string): SkillDefinition[] {
 	const dirs: Array<{ path: string; source: SkillDefinition["source"] }> = [
 		{ path: BUNDLED_SKILLS_DIR, source: "bundled" },
 		{ path: GLOBAL_SKILLS_DIR, source: "global" },
-		{ path: join(baseCwd, ".cline", "skills"), source: "project" },
+		{ path: join(baseCwd, ".enki", "skills"), source: "project" },
 	];
 	const defs = new Map<string, SkillDefinition>();
 	for (const { path, source } of dirs) {
@@ -308,7 +308,7 @@ function resolveHandoffPath(
 
 function emitSteer(sessionId: string | undefined, prompt: string): void {
 	if (sessionId && prompt.trim()) {
-		globalThis.__clinePluginHost?.emitEvent?.("steer_message", {
+		globalThis.__enkiPluginHost?.emitEvent?.("steer_message", {
 			sessionId,
 			prompt,
 		});
@@ -316,7 +316,7 @@ function emitSteer(sessionId: string | undefined, prompt: string): void {
 }
 
 async function getSessionManager(): Promise<SessionManager> {
-	sessionManagerPromise ??= ClineCore.create({
+	sessionManagerPromise ??= Enki AICore.create({
 		backendMode: resolveSubagentBackendMode(DEFAULT_BACKEND_MODE),
 	}).catch((err) => {
 		// Clear the cached promise so subsequent calls can retry.

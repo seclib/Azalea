@@ -1,6 +1,6 @@
-import { getCurrentContextSize, summarizeUsageFromMessages } from "@cline/core";
-import type { Message } from "@cline/shared";
-import { formatDisplayUserInput, truncateStr } from "@cline/shared";
+import { getCurrentContextSize, summarizeUsageFromMessages } from "@enki/core";
+import type { Message } from "@enki/shared";
+import { formatDisplayUserInput, truncateStr } from "@enki/shared";
 import type { KeyEvent } from "@opentui/core";
 import { useRenderer, useTerminalDimensions } from "@opentui/react";
 import type { ChoiceContext } from "@opentui-ui/dialog";
@@ -241,8 +241,8 @@ function App(props: TuiProps) {
 	const openAccount = useAccountDialog({
 		dialog,
 		termHeight,
-		loadAccount: props.loadClineAccount,
-		switchAccount: props.switchClineAccount,
+		loadAccount: props.loadEnki AIAccount,
+		switchAccount: props.switchEnki AIAccount,
 		onAccountChange: props.onAccountChange,
 		openModelSelector,
 		refocusTextarea: () => refocusTextareaRef.current(),
@@ -423,7 +423,7 @@ function App(props: TuiProps) {
 		}
 	}, [dialog, props, session, showToast, termHeight]);
 
-	const exitCline = useCallback(() => {
+	const exitEnki AI = useCallback(() => {
 		session.requestExit();
 	}, [session]);
 
@@ -647,7 +647,7 @@ function App(props: TuiProps) {
 		onCompact: props.onCompact,
 		onFork: props.onFork,
 		onUndo: openCheckpointRestore,
-		onExit: exitCline,
+		onExit: exitEnki AI,
 	});
 
 	const runCommandPaletteResult = useCallback(
@@ -847,7 +847,7 @@ function App(props: TuiProps) {
 		setInputKey: promptInput.setInputKey,
 		setInputValue: promptInput.setInputValue,
 		onAbort: props.onAbort,
-		onExit: exitCline,
+		onExit: exitEnki AI,
 		onToggleMode: toggleMode,
 		onClearConversation: clearConversation,
 		onRestoreCheckpoint: openCheckpointRestore,
@@ -925,7 +925,7 @@ function App(props: TuiProps) {
 					handleModelChange().then(() => setAppView("home"));
 				}}
 				onExit={() => {
-					exitCline();
+					exitEnki AI();
 				}}
 			/>
 		);

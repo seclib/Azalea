@@ -1,7 +1,7 @@
 import { isTrinityModelFamily } from "@utils/model-utils"
 import { ModelFamily } from "@/shared/prompts"
 import { Logger } from "@/shared/services/Logger"
-import { ClineDefaultTool } from "@/shared/tools"
+import { Enki AIDefaultTool } from "@/shared/tools"
 import { SystemPromptSection } from "../../templates/placeholders"
 import { createVariant } from "../variant-builder"
 import { validateVariant } from "../variant-validator"
@@ -37,24 +37,24 @@ export const config = createVariant(ModelFamily.TRINITY)
 		SystemPromptSection.SKILLS,
 	)
 	.tools(
-		ClineDefaultTool.BASH,
-		ClineDefaultTool.FILE_READ,
-		ClineDefaultTool.FILE_NEW,
-		ClineDefaultTool.FILE_EDIT,
-		ClineDefaultTool.SEARCH,
-		ClineDefaultTool.LIST_FILES,
-		ClineDefaultTool.LIST_CODE_DEF,
-		ClineDefaultTool.BROWSER,
-		ClineDefaultTool.MCP_USE,
-		ClineDefaultTool.MCP_ACCESS,
-		ClineDefaultTool.ASK,
-		ClineDefaultTool.ATTEMPT,
-		ClineDefaultTool.PLAN_MODE,
-		ClineDefaultTool.MCP_DOCS,
-		ClineDefaultTool.TODO,
-		ClineDefaultTool.GENERATE_EXPLANATION,
-		ClineDefaultTool.USE_SKILL,
-		ClineDefaultTool.USE_SUBAGENTS,
+		Enki AIDefaultTool.BASH,
+		Enki AIDefaultTool.FILE_READ,
+		Enki AIDefaultTool.FILE_NEW,
+		Enki AIDefaultTool.FILE_EDIT,
+		Enki AIDefaultTool.SEARCH,
+		Enki AIDefaultTool.LIST_FILES,
+		Enki AIDefaultTool.LIST_CODE_DEF,
+		Enki AIDefaultTool.BROWSER,
+		Enki AIDefaultTool.MCP_USE,
+		Enki AIDefaultTool.MCP_ACCESS,
+		Enki AIDefaultTool.ASK,
+		Enki AIDefaultTool.ATTEMPT,
+		Enki AIDefaultTool.PLAN_MODE,
+		Enki AIDefaultTool.MCP_DOCS,
+		Enki AIDefaultTool.TODO,
+		Enki AIDefaultTool.GENERATE_EXPLANATION,
+		Enki AIDefaultTool.USE_SKILL,
+		Enki AIDefaultTool.USE_SUBAGENTS,
 	)
 	.placeholders({
 		MODEL_FAMILY: ModelFamily.TRINITY,

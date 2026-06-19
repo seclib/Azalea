@@ -1,4 +1,4 @@
-import type { AgentConfig, AgentModel, ITelemetryService } from "@cline/shared";
+import type { AgentConfig, AgentModel, ITelemetryService } from "@enki/shared";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const gatewayMock = vi.hoisted(() => {
@@ -13,7 +13,7 @@ const gatewayMock = vi.hoisted(() => {
 	};
 });
 
-vi.mock("@cline/llms", () => ({
+vi.mock("@enki/llms", () => ({
 	createGateway: gatewayMock.createGateway,
 	MODEL_COLLECTIONS_BY_PROVIDER_ID: {},
 	hasRegisteredHandler: gatewayMock.hasRegisteredHandler,

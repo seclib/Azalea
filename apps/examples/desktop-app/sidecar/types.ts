@@ -1,9 +1,9 @@
 import type {
 	AgentToolContext,
-	ClineCore,
+	Enki AICore,
 	NodeHubClient,
 	ToolApprovalResult,
-} from "@cline/core";
+} from "@enki/core";
 
 export type JsonRecord = Record<string, unknown>;
 
@@ -101,7 +101,7 @@ export type SidecarContext = {
 	wsClients: Set<SidecarWebSocketClient>;
 	pendingApprovals: Map<string, PendingToolApproval>;
 	pendingQuestions: Map<string, PendingAskQuestion>;
-	sessionManager: ClineCore | null;
+	sessionManager: Enki AICore | null;
 	hubClient: NodeHubClient | null;
 	workspaceRoot: string;
 	unsubscribeSessionEvents: (() => void) | null;

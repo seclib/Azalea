@@ -12,21 +12,21 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const sourceWrapperPath = fileURLToPath(
-	new URL("../../bin/cline", import.meta.url),
+	new URL("../../bin/enki", import.meta.url),
 );
 
 function createWrapperCopy(): string {
-	const dir = mkdtempSync(join(tmpdir(), "cline-bin-package-"));
+	const dir = mkdtempSync(join(tmpdir(), "enki-bin-package-"));
 	const binDir = join(dir, "bin");
 	mkdirSync(binDir, { recursive: true });
-	const wrapperPath = join(binDir, "cline");
+	const wrapperPath = join(binDir, "enki");
 	copyFileSync(sourceWrapperPath, wrapperPath);
 	chmodSync(wrapperPath, 0o755);
 	return wrapperPath;
 }
 
 function createExecutableScript(contents: string): string {
-	const dir = mkdtempSync(join(tmpdir(), "cline-bin-wrapper-"));
+	const dir = mkdtempSync(join(tmpdir(), "enki-bin-wrapper-"));
 	const scriptPath = join(dir, "child.js");
 	writeFileSync(scriptPath, `#!/usr/bin/env node\n${contents}`);
 	chmodSync(scriptPath, 0o755);
@@ -44,7 +44,7 @@ function runWrapper(target: string, args: string[] = []) {
 	});
 }
 
-describe("bin/cline wrapper", () => {
+describe("bin/enki wrapper", () => {
 	it("preserves the child process exit status", () => {
 		const target = createExecutableScript(`
 process.exit(Number(process.argv[2] ?? "0"));
@@ -66,7 +66,7 @@ console.log(process.env.CLINE_WRAPPER_PATH ?? "");
 
 		expect(result.error).toBeUndefined();
 		expect(result.status).toBe(0);
-		expect(result.stdout.trim()).toMatch(/bin[/\\]cline$/);
+		expect(result.stdout.trim()).toMatch(/bin[/\\]enki$/);
 	});
 
 	it.skipIf(process.platform === "win32")(

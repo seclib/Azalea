@@ -27,20 +27,20 @@ const {
 	),
 	mockResolveProductionHubOwnerContext: vi.fn(() => ({
 		ownerId: "production",
-		discoveryPath: "/tmp/cline-data/locks/hub/production.json",
+		discoveryPath: "/tmp/enki-data/locks/hub/production.json",
 	})),
 	mockResolveSharedHubOwnerContext: vi.fn(() => ({
 		ownerId: "shared",
-		discoveryPath: "/tmp/cline-data/locks/hub/owners/shared.json",
+		discoveryPath: "/tmp/enki-data/locks/hub/owners/shared.json",
 	})),
 	mockStartHubWebSocketServer: vi.fn(async () => ({
 		close: vi.fn(async () => undefined),
 	})),
 }));
 
-vi.mock("@cline/shared", () => ({
+vi.mock("@enki/shared", () => ({
 	initVcr: mockInitVcr,
-	resolveClineBuildEnv: () => "production",
+	resolveEnki AIBuildEnv: () => "production",
 }));
 
 vi.mock("../daemon/runtime-handlers", () => ({
@@ -84,7 +84,7 @@ describe("hub daemon entry", () => {
 	});
 
 	it("starts the daemon with cron options for the daemon workspace root", async () => {
-		const cwd = mkdtempSync(join(tmpdir(), "cline-hub-entry-test-"));
+		const cwd = mkdtempSync(join(tmpdir(), "enki-hub-entry-test-"));
 		tempDirs.push(cwd);
 		process.argv = [
 			"node",

@@ -31,10 +31,10 @@ export type {
 	ProviderId,
 } from "./providers.browser";
 export {
-	ClineNotSubscribedError,
-	getClineNotSubscribedMessage,
-	getClinePassSubscriptionUrl,
-	isClineNotSubscribedError,
-	isClineNotSubscribedMessage,
+	Enki AINotSubscribedError,
+	getEnki AINotSubscribedMessage,
+	getEnki AIPassSubscriptionUrl,
+	isEnki AINotSubscribedError,
+	isEnki AINotSubscribedMessage,
 	normalizeProviderId,
 } from "./providers.browser";

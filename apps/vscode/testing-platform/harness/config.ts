@@ -6,7 +6,7 @@ export const NON_DETERMINISTIC_FIELDS = [
 	"stateJson.distinctId",
 	"stateJson.shouldShowAnnouncement",
 	"stateJson.platform",
-	"stateJson.clineMessages.ts",
+	"stateJson.enkiMessages.ts",
 	"paymentTransactions.paidAt",
 	"usageTransactions.createdAt",
 
@@ -38,7 +38,7 @@ export const NON_DETERMINISTIC_FIELDS = [
 	"tasks.tokensOut",
 	"tasks.totalCost",
 
-	"stateJson.clineMessages",
+	"stateJson.enkiMessages",
 	"stateJson.autoApprovalSettings.version",
 	"stateJson.browserSettings.chromeExecutablePath",
 ]

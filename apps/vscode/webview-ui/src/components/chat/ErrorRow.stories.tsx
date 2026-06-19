@@ -1,4 +1,4 @@
-import { ClineMessage } from "@shared/ExtensionMessage"
+import { Enki AIMessage } from "@shared/ExtensionMessage"
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { useMemo } from "react"
 import { expect, userEvent, within } from "storybook/test"
@@ -6,7 +6,7 @@ import { createStorybookDecorator } from "@/config/StorybookDecorator"
 import ErrorRow from "./ErrorRow"
 
 // Mock data factories
-const createMockMessage = (overrides: Partial<ClineMessage> = {}): ClineMessage => ({
+const createMockMessage = (overrides: Partial<Enki AIMessage> = {}): Enki AIMessage => ({
 	ts: Date.now(),
 	type: "say",
 	say: "error",
@@ -15,7 +15,7 @@ const createMockMessage = (overrides: Partial<ClineMessage> = {}): ClineMessage 
 })
 
 const createMockAuthState = (overrides: any = {}) => ({
-	clineUser: null,
+	enkiUser: null,
 	activeOrganization: null,
 	isAuthenticated: false,
 	...overrides,
@@ -23,7 +23,7 @@ const createMockAuthState = (overrides: any = {}) => ({
 
 const createMockExtensionState = (overrides: any = {}) => ({
 	version: "1.0.0",
-	clineMessages: [],
+	enkiMessages: [],
 	taskHistory: [],
 	shouldShowAnnouncement: false,
 	...overrides,
@@ -51,7 +51,7 @@ const meta: Meta<typeof ErrorRow> = {
 		docs: {
 			description: {
 				component:
-					"Displays different types of error messages in the chat interface, including API errors, credit limit errors, diff errors, and clineignore errors. Handles special error parsing for Cline provider errors and provides appropriate user actions.",
+					"Displays different types of error messages in the chat interface, including API errors, credit limit errors, diff errors, and enkiignore errors. Handles special error parsing for Enki AI provider errors and provides appropriate user actions.",
 			},
 		},
 	},
@@ -71,7 +71,7 @@ export const Default: Story = {
 	argTypes: {
 		errorType: {
 			control: { type: "select" },
-			options: ["error", "mistake_limit_reached", "diff_error", "clineignore_error"],
+			options: ["error", "mistake_limit_reached", "diff_error", "enkiignore_error"],
 			description: "Type of error to display",
 		},
 		message: {
@@ -120,8 +120,8 @@ export const ApiStreamingFailed: Story = {
 	},
 }
 
-// Cline-specific errors
-export const ClineBalanceError: Story = {
+// Enki AI-specific errors
+export const Enki AIBalanceError: Story = {
 	args: {
 		message: createMockMessage(),
 		errorType: "error",
@@ -129,7 +129,7 @@ export const ClineBalanceError: Story = {
 			message: "Insufficient credits to complete this request.",
 			code: "insufficient_credits",
 			request_id: "req_123456789",
-			providerId: "cline",
+			providerId: "enki",
 			details: {
 				current_balance: 0.5,
 				total_spent: 25.75,
@@ -141,19 +141,19 @@ export const ClineBalanceError: Story = {
 	},
 }
 
-export const ClineRateLimitError: Story = {
+export const Enki AIRateLimitError: Story = {
 	args: {
 		message: createMockMessage(),
 		errorType: "error",
 		apiRequestFailedMessage: JSON.stringify({
 			message: "Rate limit exceeded. Please wait before making another request.",
 			request_id: "req_987654321",
-			providerId: "cline",
+			providerId: "enki",
 		}),
 	},
 }
 
-export const ClineSpendLimitDaily: Story = {
+export const Enki AISpendLimitDaily: Story = {
 	args: {
 		message: createMockMessage(),
 		errorType: "error",
@@ -161,7 +161,7 @@ export const ClineSpendLimitDaily: Story = {
 			message: "$20.00 daily limit has been reached.",
 			status: 429,
 			code: "SPEND_LIMIT_EXCEEDED",
-			providerId: "cline",
+			providerId: "enki",
 			details: {
 				code: "SPEND_LIMIT_EXCEEDED",
 				limit_scope: "user",
@@ -175,7 +175,7 @@ export const ClineSpendLimitDaily: Story = {
 	},
 }
 
-export const ClineSpendLimitMonthly: Story = {
+export const Enki AISpendLimitMonthly: Story = {
 	args: {
 		message: createMockMessage(),
 		errorType: "error",
@@ -183,7 +183,7 @@ export const ClineSpendLimitMonthly: Story = {
 			message: "$100.00 monthly limit has been reached.",
 			status: 429,
 			code: "SPEND_LIMIT_EXCEEDED",
-			providerId: "cline",
+			providerId: "enki",
 			details: {
 				code: "SPEND_LIMIT_EXCEEDED",
 				limit_scope: "user",
@@ -197,7 +197,7 @@ export const ClineSpendLimitMonthly: Story = {
 	},
 }
 
-export const ClineSpendLimitMinimal: Story = {
+export const Enki AISpendLimitMinimal: Story = {
 	args: {
 		message: createMockMessage(),
 		errorType: "error",
@@ -205,7 +205,7 @@ export const ClineSpendLimitMinimal: Story = {
 			message: "Spend limit reached.",
 			status: 429,
 			code: "SPEND_LIMIT_EXCEEDED",
-			providerId: "cline",
+			providerId: "enki",
 			details: {
 				code: "SPEND_LIMIT_EXCEEDED",
 				message: "Spend limit reached.",
@@ -214,8 +214,8 @@ export const ClineSpendLimitMinimal: Story = {
 	},
 }
 
-// ClinePass entitlement error (user not subscribed to a required model plan)
-export const ClinePassEntitlementError: Story = {
+// Enki AIPass entitlement error (user not subscribed to a required model plan)
+export const Enki AIPassEntitlementError: Story = {
 	args: {
 		message: createMockMessage(),
 		errorType: "error",
@@ -223,8 +223,8 @@ export const ClinePassEntitlementError: Story = {
 			message: "403 Error 403: the user is not subscribed to required model plan",
 			status: 403,
 			code: "ENTITLEMENT_ERROR",
-			modelId: "cline-pass/glm-5.1",
-			providerId: "cline-pass",
+			modelId: "enki-pass/glm-5.1",
+			providerId: "enki-pass",
 			details: {
 				code: "ENTITLEMENT_ERROR",
 				message: "Error 403: the user is not subscribed to required model plan",
@@ -234,7 +234,7 @@ export const ClinePassEntitlementError: Story = {
 	parameters: {
 		docs: {
 			description: {
-				story: "ClinePass model returns a 403 ENTITLEMENT_ERROR when the user is not subscribed. Instead of dumping the raw JSON blob, a human-readable message with a 'Get ClinePass' subscribe link and a retry button is shown.",
+				story: "Enki AIPass model returns a 403 ENTITLEMENT_ERROR when the user is not subscribed. Instead of dumping the raw JSON blob, a human-readable message with a 'Get Enki AIPass' subscribe link and a retry button is shown.",
 			},
 		},
 	},
@@ -249,7 +249,7 @@ export const AuthenticationErrors: Story = {
 			message: "Authentication failed. Please sign in to continue.",
 			code: "ERR_BAD_REQUEST",
 			request_id: "req_auth_123",
-			providerId: "cline",
+			providerId: "enki",
 		}),
 	},
 	argTypes: {
@@ -272,7 +272,7 @@ export const AuthErrorSignedIn: Story = {
 	...AuthenticationErrors,
 	decorators: [
 		createStoryDecorator({
-			clineUser: { id: "user123", email: "user@example.com" },
+			enkiUser: { id: "user123", email: "user@example.com" },
 			isAuthenticated: true,
 		}),
 	],
@@ -293,17 +293,17 @@ export const InteractiveSignIn: Story = {
 		message: createMockMessage(),
 		errorType: "error",
 		apiRequestFailedMessage: JSON.stringify({
-			message: "Please sign in to access Cline services.",
+			message: "Please sign in to access Enki AI services.",
 			code: "ERR_BAD_REQUEST",
 			request_id: "req_signin_test",
-			providerId: "cline",
+			providerId: "enki",
 		}),
 	},
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement)
 
 		// Find the sign in button
-		const signInButton = canvas.getByRole("button", { name: /sign in to cline/i })
+		const signInButton = canvas.getByRole("button", { name: /sign in to enki/i })
 		await expect(signInButton).toBeInTheDocument()
 
 		// Test button is clickable
@@ -342,7 +342,7 @@ export const ErrorWithRequestId: Story = {
 		apiRequestFailedMessage: JSON.stringify({
 			message: "An unexpected error occurred while processing your request.",
 			request_id: "req_detailed_123456",
-			providerId: "cline",
+			providerId: "enki",
 		}),
 	},
 	play: async ({ canvasElement }) => {

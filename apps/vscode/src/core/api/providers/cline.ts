@@ -1,16 +1,16 @@
-import { clinePassModels, type ModelInfo, openRouterDefaultModelId, openRouterDefaultModelInfo } from "@shared/api"
+import { enkiPassModels, type ModelInfo, openRouterDefaultModelId, openRouterDefaultModelInfo } from "@shared/api"
 import { shouldSkipReasoningForModel } from "@utils/model-utils"
 import axios from "axios"
 import OpenAI from "openai"
 import type { ChatCompletionTool as OpenAITool } from "openai/resources/chat/completions"
-import { ClineEnv } from "@/config"
-import { refreshClineRecommendedModels } from "@/core/controller/models/refreshClineRecommendedModels"
-import { ClineAccountService } from "@/services/account/ClineAccountService"
+import { Enki AIEnv } from "@/config"
+import { refreshEnki AIRecommendedModels } from "@/core/controller/models/refreshEnki AIRecommendedModels"
+import { Enki AIAccountService } from "@/services/account/Enki AIAccountService"
 import { AuthService } from "@/services/auth/AuthService"
-import { buildClineExtraHeaders } from "@/services/EnvUtils"
-import { CLINE_ACCOUNT_AUTH_ERROR_MESSAGE } from "@/shared/ClineAccount"
-import { CLINE_RECOMMENDED_MODELS_FALLBACK } from "@/shared/cline/recommended-models"
-import type { ClineStorageMessage } from "@/shared/messages/content"
+import { buildEnki AIExtraHeaders } from "@/services/EnvUtils"
+import { CLINE_ACCOUNT_AUTH_ERROR_MESSAGE } from "@/shared/Enki AIAccount"
+import { CLINE_RECOMMENDED_MODELS_FALLBACK } from "@/shared/enki/recommended-models"
+import type { Enki AIStorageMessage } from "@/shared/messages/content"
 import { fetch, getAxiosSettings } from "@/shared/net"
 import { Logger } from "@/shared/services/Logger"
 import type { ApiHandler, CommonApiHandlerOptions } from "../"
@@ -20,7 +20,7 @@ import type { ApiStream, ApiStreamUsageChunk } from "../transform/stream"
 import { ToolCallProcessor } from "../transform/tool-call-processor"
 import type { OpenRouterErrorResponse } from "./types"
 
-interface ClineHandlerOptions extends CommonApiHandlerOptions {
+interface Enki AIHandlerOptions extends CommonApiHandlerOptions {
 	ulid?: string
 	taskId?: string
 	reasoningEffort?: string
@@ -28,8 +28,8 @@ interface ClineHandlerOptions extends CommonApiHandlerOptions {
 	openRouterProviderSorting?: string
 	openRouterModelId?: string
 	openRouterModelInfo?: ModelInfo
-	clineAccountId?: string
-	clineApiKey?: string
+	enkiAccountId?: string
+	enkiApiKey?: string
 	enableParallelToolCalling?: boolean
 }
 
@@ -39,7 +39,7 @@ function normalizeModelId(modelId: string): string {
 
 const CLINE_FREE_MODEL_IDS = new Set([
 	...CLINE_RECOMMENDED_MODELS_FALLBACK.free.map((model) => normalizeModelId(model.id)),
-	...Object.keys(clinePassModels).map((modelId) => normalizeModelId(modelId)),
+	...Object.keys(enkiPassModels).map((modelId) => normalizeModelId(modelId)),
 ])
 
 function getCacheReadTokens(usage: any): number {
@@ -50,56 +50,56 @@ function getCacheWriteTokens(usage: any): number {
 	return usage?.prompt_tokens_details?.cache_write_tokens || usage?.cache_creation_input_tokens || 0
 }
 
-export class ClineHandler implements ApiHandler {
-	private options: ClineHandlerOptions
-	private clineAccountService = ClineAccountService.getInstance()
+export class Enki AIHandler implements ApiHandler {
+	private options: Enki AIHandlerOptions
+	private enkiAccountService = Enki AIAccountService.getInstance()
 	private _authService: AuthService
 	private client: OpenAI | undefined
 	lastGenerationId?: string
 	private lastRequestId?: string
 
 	private get _baseUrl(): string {
-		return ClineEnv.config().apiBaseUrl
+		return Enki AIEnv.config().apiBaseUrl
 	}
 
-	constructor(options: ClineHandlerOptions) {
+	constructor(options: Enki AIHandlerOptions) {
 		this.options = options
 		this._authService = AuthService.getInstance()
 	}
 
 	private async getFreeModelIdSet(): Promise<Set<string>> {
 		try {
-			const models = await refreshClineRecommendedModels()
-			const freeModelIds = [...models.free, ...models.clinePass]
+			const models = await refreshEnki AIRecommendedModels()
+			const freeModelIds = [...models.free, ...models.enkiPass]
 				.map((model) => normalizeModelId(model.id))
 				.filter((modelId) => modelId.length > 0)
 			if (freeModelIds.length > 0) {
 				return new Set(freeModelIds)
 			}
 		} catch (error) {
-			Logger.error("Error resolving Cline free model IDs from recommended models:", error)
+			Logger.error("Error resolving Enki AI free model IDs from recommended models:", error)
 		}
 
 		return CLINE_FREE_MODEL_IDS
 	}
 
 	private async ensureClient(): Promise<OpenAI> {
-		const clineAccountAuthToken = this.options.clineApiKey || (await this._authService.getAuthToken())
-		if (!clineAccountAuthToken) {
+		const enkiAccountAuthToken = this.options.enkiApiKey || (await this._authService.getAuthToken())
+		if (!enkiAccountAuthToken) {
 			throw new Error(CLINE_ACCOUNT_AUTH_ERROR_MESSAGE)
 		}
 		if (!this.client) {
 			try {
 				const defaultHeaders: Record<string, string> = {
-					"HTTP-Referer": "https://cline.bot",
-					"X-Title": "Cline",
+					"HTTP-Referer": "https://enki.bot",
+					"X-Title": "Enki AI",
 					"X-Task-ID": this.options.ulid || "",
 				}
-				Object.assign(defaultHeaders, await buildClineExtraHeaders())
+				Object.assign(defaultHeaders, await buildEnki AIExtraHeaders())
 
 				this.client = new OpenAI({
 					baseURL: `${this._baseUrl}/api/v1`,
-					apiKey: clineAccountAuthToken,
+					apiKey: enkiAccountAuthToken,
 					defaultHeaders,
 					// Capture real HTTP request ID from initial streaming response headers
 					fetch: async (...args: Parameters<typeof fetch>): Promise<Awaited<ReturnType<typeof fetch>>> => {
@@ -128,16 +128,16 @@ export class ClineHandler implements ApiHandler {
 					},
 				})
 			} catch (error: any) {
-				throw new Error(`Error creating Cline client: ${error.message}`)
+				throw new Error(`Error creating Enki AI client: ${error.message}`)
 			}
 		}
 		// Ensure the client is always using the latest auth token
-		this.client.apiKey = clineAccountAuthToken
+		this.client.apiKey = enkiAccountAuthToken
 		return this.client
 	}
 
 	@withRetry()
-	async *createMessage(systemPrompt: string, messages: ClineStorageMessage[], tools?: OpenAITool[]): ApiStream {
+	async *createMessage(systemPrompt: string, messages: Enki AIStorageMessage[], tools?: OpenAITool[]): ApiStream {
 		try {
 			const client = await this.ensureClient()
 
@@ -162,14 +162,14 @@ export class ClineHandler implements ApiHandler {
 			const toolCallProcessor = new ToolCallProcessor()
 
 			for await (const chunk of stream) {
-				Logger.debug("ClineHandler chunk:" + JSON.stringify(chunk))
+				Logger.debug("Enki AIHandler chunk:" + JSON.stringify(chunk))
 				// openrouter returns an error object instead of the openai sdk throwing an error
 				if ("error" in chunk) {
 					const error = chunk.error as OpenRouterErrorResponse["error"]
-					Logger.error(`Cline API Error: ${error?.code} - ${error?.message}`)
+					Logger.error(`Enki AI API Error: ${error?.code} - ${error?.message}`)
 					// Include metadata in the error message if available
 					const metadataStr = error.metadata ? `\nMetadata: ${JSON.stringify(error.metadata, null, 2)}` : ""
-					throw new Error(`Cline API Error ${error.code}: ${error.message}${metadataStr}`)
+					throw new Error(`Enki AI API Error ${error.code}: ${error.message}${metadataStr}`)
 				}
 
 				if (!this.lastGenerationId && chunk.id) {
@@ -183,10 +183,10 @@ export class ClineHandler implements ApiHandler {
 					const choiceWithError = choice as any
 					if (choiceWithError.error) {
 						const error = choiceWithError.error
-						Logger.error(`Cline Mid-Stream Error: ${error.code || error.type || "Unknown"} - ${error.message}`)
-						throw new Error(`Cline Mid-Stream Error: ${error.code || error.type || "Unknown"} - ${error.message}`)
+						Logger.error(`Enki AI Mid-Stream Error: ${error.code || error.type || "Unknown"} - ${error.message}`)
+						throw new Error(`Enki AI Mid-Stream Error: ${error.code || error.type || "Unknown"} - ${error.message}`)
 					}
-					throw new Error("Cline Mid-Stream Error: Stream terminated with error status but no error details provided")
+					throw new Error("Enki AI Mid-Stream Error: Stream terminated with error status but no error details provided")
 				}
 
 				const delta = choice?.delta
@@ -264,14 +264,14 @@ export class ClineHandler implements ApiHandler {
 
 			// Fallback to generation endpoint if usage chunk not returned
 			if (!didOutputUsage) {
-				Logger.warn("Cline API did not return usage chunk, fetching from generation endpoint")
+				Logger.warn("Enki AI API did not return usage chunk, fetching from generation endpoint")
 				const apiStreamUsage = await this.getApiStreamUsage(freeModelIds)
 				if (apiStreamUsage) {
 					yield apiStreamUsage
 				}
 			}
 		} catch (error) {
-			Logger.error("Cline API Error:", error)
+			Logger.error("Enki AI API Error:", error)
 			throw error
 		}
 	}
@@ -280,17 +280,17 @@ export class ClineHandler implements ApiHandler {
 		if (this.lastGenerationId) {
 			try {
 				const resolvedFreeModelIds = freeModelIds || (await this.getFreeModelIdSet())
-				const clineAccountAuthToken = await this._authService.getAuthToken()
-				if (!clineAccountAuthToken) {
+				const enkiAccountAuthToken = await this._authService.getAuthToken()
+				if (!enkiAccountAuthToken) {
 					throw new Error(CLINE_ACCOUNT_AUTH_ERROR_MESSAGE)
 				}
 				const headers: Record<string, string> = {
 					// Align with backend auth expectations
-					Authorization: `Bearer ${clineAccountAuthToken}`,
+					Authorization: `Bearer ${enkiAccountAuthToken}`,
 				}
-				Object.assign(headers, await buildClineExtraHeaders())
+				Object.assign(headers, await buildEnki AIExtraHeaders())
 
-				const response = await axios.get(`${this.clineAccountService.baseUrl}/generation?id=${this.lastGenerationId}`, {
+				const response = await axios.get(`${this.enkiAccountService.baseUrl}/generation?id=${this.lastGenerationId}`, {
 					headers,
 					timeout: 15_000, // this request hangs sometimes
 					...getAxiosSettings(),
@@ -321,7 +321,7 @@ export class ClineHandler implements ApiHandler {
 				}
 			} catch (error) {
 				// ignore if fails
-				Logger.error("Error fetching cline generation details:", error)
+				Logger.error("Error fetching enki generation details:", error)
 			}
 		}
 		return undefined

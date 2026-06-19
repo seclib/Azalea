@@ -98,12 +98,12 @@ describe("plugin-loader", () => {
 			"utf8",
 		);
 
-		const sdkDir = join(dir, "node_modules", "@cline", "shared");
+		const sdkDir = join(dir, "node_modules", "@enki", "shared");
 		await mkdir(sdkDir, { recursive: true });
 		await writeFile(
 			join(sdkDir, "package.json"),
 			JSON.stringify({
-				name: "@cline/shared",
+				name: "@enki/shared",
 				type: "module",
 				exports: "./index.js",
 			}),
@@ -117,7 +117,7 @@ describe("plugin-loader", () => {
 		await writeFile(
 			join(dir, "plugin-with-sdk-dep.ts"),
 			[
-				"import { sdkMarker } from '@cline/shared';",
+				"import { sdkMarker } from '@enki/shared';",
 				"export default {",
 				"  name: sdkMarker,",
 				"  manifest: { capabilities: ['tools'] },",
@@ -129,11 +129,11 @@ describe("plugin-loader", () => {
 		await writeFile(
 			join(copyDir, "portable-subagents.ts"),
 			[
-				"import { safeJsonStringify } from '@cline/shared';",
-				"import { resolveClineDataDir } from '@cline/shared/storage';",
+				"import { safeJsonStringify } from '@enki/shared';",
+				"import { resolveEnki AIDataDir } from '@enki/shared/storage';",
 				"import YAML from 'yaml';",
 				"export default {",
-				"  name: typeof safeJsonStringify === 'function' ? YAML.stringify({ ok: !!resolveClineDataDir() }) : 'invalid',",
+				"  name: typeof safeJsonStringify === 'function' ? YAML.stringify({ ok: !!resolveEnki AIDataDir() }) : 'invalid',",
 				"  manifest: { capabilities: ['tools'] },",
 				"};",
 			].join("\n"),
@@ -147,7 +147,7 @@ describe("plugin-loader", () => {
 			JSON.stringify({
 				name: "packaged-plugin",
 				type: "module",
-				cline: {
+				enki: {
 					plugins: ["index.ts"],
 				},
 			}),
@@ -172,7 +172,7 @@ describe("plugin-loader", () => {
 			JSON.stringify({
 				name: "packaged-sdk-subpath",
 				type: "module",
-				cline: {
+				enki: {
 					plugins: ["index.ts"],
 				},
 			}),
@@ -181,7 +181,7 @@ describe("plugin-loader", () => {
 		await writeFile(
 			join(packagedSdkSubpathDir, "index.ts"),
 			[
-				"import { createConfiguredTelemetryHandle } from '@cline/core/telemetry';",
+				"import { createConfiguredTelemetryHandle } from '@enki/core/telemetry';",
 				"export default {",
 				"  name: typeof createConfiguredTelemetryHandle === 'function' ? 'sdk-subpath-ok' : 'invalid',",
 				"  manifest: { capabilities: ['tools'] },",
@@ -197,7 +197,7 @@ describe("plugin-loader", () => {
 			JSON.stringify({
 				name: "packaged-type-only-imports",
 				type: "module",
-				cline: {
+				enki: {
 					plugins: ["index.ts"],
 				},
 			}),
@@ -338,7 +338,7 @@ describe("plugin-loader", () => {
 		const pluginPath = join(dir, "plugin-with-wrapper-dep.ts");
 		await mkdir(wrapperBinDir, { recursive: true });
 		await mkdir(depDir, { recursive: true });
-		await writeFile(join(wrapperBinDir, "cline"), "#!/usr/bin/env node\n");
+		await writeFile(join(wrapperBinDir, "enki"), "#!/usr/bin/env node\n");
 		await writeFile(
 			join(depDir, "package.json"),
 			JSON.stringify({
@@ -366,7 +366,7 @@ describe("plugin-loader", () => {
 		);
 
 		try {
-			process.env.CLINE_WRAPPER_PATH = join(wrapperBinDir, "cline");
+			process.env.CLINE_WRAPPER_PATH = join(wrapperBinDir, "enki");
 			const plugin = await loadAgentPluginFromPath(pluginPath);
 			expect(plugin.name).toBe("wrapper-host-dep");
 		} finally {

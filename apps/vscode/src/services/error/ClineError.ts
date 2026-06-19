@@ -1,7 +1,7 @@
 import { serializeError } from "serialize-error"
-import { CLINE_ACCOUNT_AUTH_ERROR_MESSAGE } from "../../shared/ClineAccount"
+import { CLINE_ACCOUNT_AUTH_ERROR_MESSAGE } from "../../shared/Enki AIAccount"
 
-export enum ClineErrorType {
+export enum Enki AIErrorType {
 	Auth = "auth",
 	Network = "network",
 	RateLimit = "rateLimit",
@@ -46,12 +46,12 @@ interface ErrorDetails {
 
 const RATE_LIMIT_PATTERNS = [/status code 429/i, /rate limit/i, /too many requests/i, /quota exceeded/i, /resource exhausted/i]
 
-export class ClineError extends Error {
-	readonly title = "ClineError"
+export class Enki AIError extends Error {
+	readonly title = "Enki AIError"
 	readonly _error: ErrorDetails
 
 	// Error details per providers:
-	// Cline: error?.error
+	// Enki AI: error?.error
 	// Ollama: error?.cause
 	// tbc
 	constructor(
@@ -105,52 +105,52 @@ export class ClineError extends Error {
 	}
 
 	/**
-	 * Parses a stringified error into a ClineError instance.
+	 * Parses a stringified error into a Enki AIError instance.
 	 */
-	static parse(errorStr?: string, modelId?: string): ClineError | undefined {
+	static parse(errorStr?: string, modelId?: string): Enki AIError | undefined {
 		if (!errorStr || typeof errorStr !== "string") {
 			return undefined
 		}
-		return ClineError.transform(errorStr, modelId)
+		return Enki AIError.transform(errorStr, modelId)
 	}
 
 	/**
-	 * Transforms any object into a ClineError instance.
-	 * Always returns a ClineError, even if the input is not a valid error object.
+	 * Transforms any object into a Enki AIError instance.
+	 * Always returns a Enki AIError, even if the input is not a valid error object.
 	 */
-	static transform(error: any, modelId?: string, providerId?: string): ClineError {
+	static transform(error: any, modelId?: string, providerId?: string): Enki AIError {
 		try {
-			// If already a ClineError, return it directly to prevent infinite recursion
-			if (error instanceof ClineError) {
+			// If already a Enki AIError, return it directly to prevent infinite recursion
+			if (error instanceof Enki AIError) {
 				return error
 			}
-			return new ClineError(JSON.parse(error), modelId, providerId)
+			return new Enki AIError(JSON.parse(error), modelId, providerId)
 		} catch {
-			return new ClineError(error, modelId, providerId)
+			return new Enki AIError(error, modelId, providerId)
 		}
 	}
 
-	public isErrorType(type: ClineErrorType): boolean {
-		return ClineError.getErrorType(this) === type
+	public isErrorType(type: Enki AIErrorType): boolean {
+		return Enki AIError.getErrorType(this) === type
 	}
 
 	/**
 	 * Is known error type based on the error code, status, and details.
 	 * This is useful for determining how to handle the error in the UI or logic.
 	 */
-	static getErrorType(err: ClineError): ClineErrorType | undefined {
+	static getErrorType(err: Enki AIError): Enki AIErrorType | undefined {
 		const { code, status, details } = err._error
 		const message = (err._error?.message || err.message || JSON.stringify(err._error))?.toLowerCase()
 
 		// Check balance error first (most specific)
 		if (code === "insufficient_credits" && typeof details?.current_balance === "number") {
-			return ClineErrorType.Balance
+			return Enki AIErrorType.Balance
 		}
 
 		// Check spend limit exceeded (org-enforced budget cap, 429 SPEND_LIMIT_EXCEEDED)
 		// Must be checked before the generic rate-limit check since both use 429
 		if (code === "SPEND_LIMIT_EXCEEDED" || details?.code === "SPEND_LIMIT_EXCEEDED") {
-			return ClineErrorType.SpendLimit
+			return Enki AIErrorType.SpendLimit
 		}
 
 		// Scoped to the individual "not subscribed" case; other ENTITLEMENT_ERROR variants (e.g. org
@@ -158,30 +158,30 @@ export class ClineError extends Error {
 		const isEntitlementCode = code === "ENTITLEMENT_ERROR" || details?.code === "ENTITLEMENT_ERROR"
 		const entitlementText = `${message ?? ""} ${details?.message ?? ""}`.toLowerCase()
 		if (isEntitlementCode && entitlementText.includes("not subscribed to required model plan")) {
-			return ClineErrorType.Entitlement
+			return Enki AIErrorType.Entitlement
 		}
 
 		// Check auth errors
 		const isAuthStatus = status !== undefined && status > 400 && status < 429
 		if (code === "ERR_BAD_REQUEST" || err instanceof AuthInvalidTokenError || isAuthStatus) {
-			return ClineErrorType.Auth
+			return Enki AIErrorType.Auth
 		}
 
 		if (code === "INFERENCE_CAP_ERROR") {
-			return ClineErrorType.QuotaExceeded
+			return Enki AIErrorType.QuotaExceeded
 		}
 
 		if (message) {
 			// Check for specific error codes/messages if applicable
 			const authErrorRegex = [/(?:in)?valid[-_ ]?(?:api )?(?:token|key)/i, /authentication[-_ ]?failed/i, /unauthorized/i]
 			if (message?.includes(CLINE_ACCOUNT_AUTH_ERROR_MESSAGE) || authErrorRegex.some((regex) => regex.test(message))) {
-				return ClineErrorType.Auth
+				return Enki AIErrorType.Auth
 			}
 
 			// Check rate limit patterns
 			const lowerMessage = message.toLowerCase()
 			if (RATE_LIMIT_PATTERNS.some((pattern) => pattern.test(lowerMessage))) {
-				return ClineErrorType.RateLimit
+				return Enki AIErrorType.RateLimit
 			}
 		}
 
@@ -195,13 +195,13 @@ export class AuthNetworkError extends Error {
 		override readonly cause?: Error,
 	) {
 		super(message)
-		this.name = ClineErrorType.Network
+		this.name = Enki AIErrorType.Network
 	}
 }
 
 export class AuthInvalidTokenError extends Error {
 	constructor(message: string) {
 		super(message)
-		this.name = ClineErrorType.Auth
+		this.name = Enki AIErrorType.Auth
 	}
 }

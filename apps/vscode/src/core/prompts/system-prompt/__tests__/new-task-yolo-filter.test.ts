@@ -1,8 +1,8 @@
 import { expect } from "chai"
 import { before, describe, it } from "mocha"
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import { ClineToolSet } from "../registry/ClineToolSet"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import { Enki AIToolSet } from "../registry/Enki AIToolSet"
 import { PromptRegistry } from "../registry/PromptRegistry"
 import { new_task_variants } from "../tools/new_task"
 import type { SystemPromptContext } from "../types"
@@ -45,8 +45,8 @@ describe("new_task tool contextRequirements", () => {
 	})
 
 	it("should follow the same pattern as ask_followup_question", () => {
-		const newTaskTool = ClineToolSet.getToolByNameWithFallback(ClineDefaultTool.NEW_TASK, ModelFamily.GENERIC)
-		const askTool = ClineToolSet.getToolByNameWithFallback(ClineDefaultTool.ASK, ModelFamily.GENERIC)
+		const newTaskTool = Enki AIToolSet.getToolByNameWithFallback(Enki AIDefaultTool.NEW_TASK, ModelFamily.GENERIC)
+		const askTool = Enki AIToolSet.getToolByNameWithFallback(Enki AIDefaultTool.ASK, ModelFamily.GENERIC)
 
 		expect(newTaskTool).to.exist
 		expect(askTool).to.exist

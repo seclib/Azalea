@@ -4,9 +4,9 @@ import type {
 	TeamEvent,
 	ToolApprovalRequest,
 	ToolApprovalResult,
-} from "@cline/core";
-import { SessionNotFoundError } from "@cline/core";
-import type { AgentTool, Message } from "@cline/shared";
+} from "@enki/core";
+import { SessionNotFoundError } from "@enki/core";
+import type { AgentTool, Message } from "@enki/shared";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChatCommandState } from "../../utils/chat-commands";
 import type { Config } from "../../utils/types";
@@ -57,7 +57,7 @@ import { createInteractiveSessionRuntime } from "./session-runtime";
 function makeConfig(): Config {
 	return {
 		apiKey: "",
-		providerId: "cline",
+		providerId: "enki",
 		modelId: "openai/gpt-5.3-codex",
 		verbose: false,
 		sandbox: false,
@@ -133,7 +133,7 @@ function makeTurnResult() {
 		toolCalls: [],
 		iterations: 1,
 		finishReason: "completed" as const,
-		model: { id: "openai/gpt-5.3-codex", provider: "cline" },
+		model: { id: "openai/gpt-5.3-codex", provider: "enki" },
 		startedAt: new Date("2026-01-01T00:00:00.000Z"),
 		endedAt: new Date("2026-01-01T00:00:00.100Z"),
 		durationMs: 100,

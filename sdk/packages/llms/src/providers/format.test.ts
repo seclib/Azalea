@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
-	ClineNotSubscribedError,
-	getClineNotSubscribedMessage,
-	isClineNotSubscribedMessage,
+	Enki AINotSubscribedError,
+	getEnki AINotSubscribedMessage,
+	isEnki AINotSubscribedMessage,
 } from "./errors";
 import { extractErrorMessage } from "./format";
 
@@ -47,16 +47,16 @@ describe("extractErrorMessage", () => {
 	});
 });
 
-describe("ClineNotSubscribedError", () => {
+describe("Enki AINotSubscribedError", () => {
 	it("uses the user-facing subscription message", () => {
-		expect(new ClineNotSubscribedError("cline-pass").message).toBe(
-			getClineNotSubscribedMessage(),
+		expect(new Enki AINotSubscribedError("enki-pass").message).toBe(
+			getEnki AINotSubscribedMessage(),
 		);
 	});
 
-	it("detects the ClinePass required-plan message", () => {
+	it("detects the Enki AIPass required-plan message", () => {
 		expect(
-			isClineNotSubscribedMessage(
+			isEnki AINotSubscribedMessage(
 				JSON.stringify({
 					error: {
 						message: "the user is not subscribed to required model plan",
@@ -64,7 +64,7 @@ describe("ClineNotSubscribedError", () => {
 				}),
 			),
 		).toBe(true);
-		expect(isClineNotSubscribedMessage("different forbidden error")).toBe(
+		expect(isEnki AINotSubscribedMessage("different forbidden error")).toBe(
 			false,
 		);
 	});

@@ -10,19 +10,19 @@ export const CHAT_WS_RECONNECT_BASE_DELAY_MS = 300;
 export const CHAT_WS_RECONNECT_MAX_DELAY_MS = 3000;
 export const CHAT_WS_REQUEST_TIMEOUT_MS = 120000;
 export const OAUTH_MANAGED_PROVIDERS = new Set([
-	"cline",
+	"enki",
 	"oca",
 	"openai-codex",
 ]);
 
-// Default Cline model — keep in sync with @cline/llms CLINE_DEFAULT_MODEL
+// Default Enki AI model — keep in sync with @enki/llms CLINE_DEFAULT_MODEL
 const CLINE_DEFAULT_MODEL = "anthropic/claude-sonnet-4.6";
 
 export const DEFAULT_CHAT_CONFIG: ChatSessionConfig = {
 	sessionId: undefined,
 	workspaceRoot: "",
 	cwd: "",
-	provider: "cline",
+	provider: "enki",
 	model: CLINE_DEFAULT_MODEL,
 	apiKey: process.env.CLINE_API_KEY || "",
 	mode: "act",

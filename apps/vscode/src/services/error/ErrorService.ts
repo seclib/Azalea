@@ -1,10 +1,10 @@
 import { Logger } from "@/shared/services/Logger"
-import { ClineError } from "./ClineError"
+import { Enki AIError } from "./Enki AIError"
 import { ErrorProviderFactory } from "./ErrorProviderFactory"
 import { IErrorProvider } from "./providers/IErrorProvider"
 
 /**
- * ErrorService handles error logging and tracking for the Cline extension
+ * ErrorService handles error logging and tracking for the Enki AI extension
  * Uses an abstracted error provider to support multiple error tracking backends
  * Respects user privacy settings and VSCode's global telemetry configuration
  */
@@ -40,11 +40,11 @@ export class ErrorService {
 		this.provider = provider
 	}
 
-	captureException(error: Error | ClineError, properties?: Record<string, unknown>) {
+	captureException(error: Error | Enki AIError, properties?: Record<string, unknown>) {
 		return this.provider.captureException(error, properties)
 	}
 
-	public logException(error: Error | ClineError, properties?: Record<string, unknown>): void {
+	public logException(error: Error | Enki AIError, properties?: Record<string, unknown>): void {
 		this.provider.logException(error, properties)
 		Logger.error("[ErrorService] Logging exception", JSON.stringify(error))
 	}
@@ -57,8 +57,8 @@ export class ErrorService {
 		this.provider.logMessage(message, level, properties)
 	}
 
-	public toClineError(rawError: unknown, modelId?: string, providerId?: string): ClineError {
-		const transformed = ClineError.transform(rawError, modelId, providerId)
+	public toEnki AIError(rawError: unknown, modelId?: string, providerId?: string): Enki AIError {
+		const transformed = Enki AIError.transform(rawError, modelId, providerId)
 		this.logException(transformed, { modelId, providerId })
 		return transformed
 	}

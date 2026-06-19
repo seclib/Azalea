@@ -5,17 +5,17 @@ export interface SkillCommandIo {
 	writeErr: (text: string) => void;
 }
 
-// `cline skill` is a thin wrapper around the open skills CLI
+// `enki skill` is a thin wrapper around the open skills CLI
 // (https://www.npmjs.com/package/skills). We run it through `npx` so users
 // don't need a separate global install. Pin the version here if we ever need to
 // lock behavior to a known-good release.
 const SKILLS_PACKAGE = "skills@latest";
 
 // Subcommands that write skill files into an agent's skills directory. For a
-// `cline skill` command we default these to Cline unless the user picked their
+// `enki skill` command we default these to Enki AI unless the user picked their
 // own agent. `use` is intentionally excluded: without --agent it prints the
 // generated prompt to stdout, whereas adding --agent would launch that agent
-// interactively instead — not what someone scoping to Cline would expect.
+// interactively instead — not what someone scoping to Enki AI would expect.
 const CLINE_SCOPED_SUBCOMMANDS = new Set([
 	"add",
 	"install",
@@ -71,7 +71,7 @@ function normalizeSkillsSubcommandAliases(args: string[]): void {
 }
 
 /**
- * Build the argument list passed to `npx`, injecting `--agent cline` for
+ * Build the argument list passed to `npx`, injecting `--agent enki` for
  * install-style subcommands unless the user already targeted an agent.
  */
 export function buildSkillsArgs(userArgs: readonly string[]): string[] {
@@ -83,7 +83,7 @@ export function buildSkillsArgs(userArgs: readonly string[]): string[] {
 		CLINE_SCOPED_SUBCOMMANDS.has(subcommand) &&
 		!hasAgentFlag(args)
 	) {
-		args.push("--agent", "cline");
+		args.push("--agent", "enki");
 	}
 	return ["-y", SKILLS_PACKAGE, ...args];
 }
@@ -145,7 +145,7 @@ export async function runSkillCommand(
 			cleanup();
 			if (error.code === "ENOENT") {
 				io.writeErr(
-					'npx was not found. Install Node.js (which includes npx) to use "cline skill".',
+					'npx was not found. Install Node.js (which includes npx) to use "enki skill".',
 				);
 			} else {
 				io.writeErr(`Failed to run npx ${SKILLS_PACKAGE}: ${error.message}`);

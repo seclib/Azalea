@@ -1,8 +1,8 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { AgentTool } from "@cline/shared";
-import { setClineDir, setHomeDir } from "@cline/shared/storage";
+import type { AgentTool } from "@enki/shared";
+import { setEnki AIDir, setHomeDir } from "@enki/shared/storage";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createBuiltinTools } from "../../extensions/tools";
 import { DefaultRuntimeBuilder } from "./runtime-builder";
@@ -79,16 +79,16 @@ describe("runtime tool parity", () => {
 	beforeEach(() => {
 		isolatedHomeDir = mkdtempSync(join(tmpdir(), "runtime-parity-home-"));
 		process.env.HOME = isolatedHomeDir;
-		process.env.CLINE_DIR = join(isolatedHomeDir, ".cline");
+		process.env.CLINE_DIR = join(isolatedHomeDir, ".enki");
 		setHomeDir(isolatedHomeDir);
-		setClineDir(process.env.CLINE_DIR);
+		setEnki AIDir(process.env.CLINE_DIR);
 	});
 
 	afterEach(() => {
 		process.env.HOME = envSnapshot.HOME;
 		process.env.CLINE_DIR = envSnapshot.CLINE_DIR;
 		setHomeDir(envSnapshot.HOME ?? "~");
-		setClineDir(envSnapshot.CLINE_DIR ?? join("~", ".cline"));
+		setEnki AIDir(envSnapshot.CLINE_DIR ?? join("~", ".enki"));
 	});
 
 	it("matches legacy tool list when tools+spawn are enabled", async () => {

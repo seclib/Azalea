@@ -9,8 +9,8 @@ import {
 	ProviderSettingsManager,
 	stopLocalHubServerGracefully,
 	toHubStatusUrl,
-} from "@cline/core";
-import type { HubUINotifyPayload, SessionRecord } from "@cline/shared";
+} from "@enki/core";
+import type { HubUINotifyPayload, SessionRecord } from "@enki/shared";
 
 interface TrackedClient {
 	clientId: string;
@@ -83,7 +83,7 @@ function isBundledDaemonEntryInvocation(): boolean {
 		entryArg.includes("/$bunfs/") &&
 		(entryArg.endsWith("/entry.js") || entryArg.endsWith("/entry.ts"));
 	return (
-		process.argv.includes("--cline-hub-daemon") ||
+		process.argv.includes("--enki-hub-daemon") ||
 		isBunEmbeddedEntry ||
 		entryArg.endsWith("/daemon-entry.js") ||
 		entryArg.endsWith("/daemon-entry.ts") ||
@@ -230,8 +230,8 @@ function formatClientLabel(clientType: string | undefined): string {
 	if (!normalized || normalized === "unknown") {
 		return "Client";
 	}
-	if (normalized.includes("cline")) {
-		return "Cline";
+	if (normalized.includes("enki")) {
+		return "Enki AI";
 	}
 	return normalized
 		.split(/[-_\s]+/)
@@ -441,13 +441,13 @@ async function main(): Promise<void> {
 		address: hubUrl,
 		authToken: hubAuthToken,
 		clientType: "menubar-app",
-		displayName: "Cline Menu Bar App",
+		displayName: "Enki AI Menu Bar App",
 	});
 	const sessionClient = new HubSessionClient({
 		address: hubUrl,
 		authToken: hubAuthToken,
 		clientType: "menubar-background-client",
-		displayName: "Cline Background Client",
+		displayName: "Enki AI Background Client",
 	});
 
 	await uiClient.connect();
@@ -615,7 +615,7 @@ async function main(): Promise<void> {
 				enableSpawn: false,
 				enableTeams: true,
 				autoApproveTools: true,
-				source: "cline-menubar",
+				source: "enki-menubar",
 				interactive: false,
 			});
 			await sessionClient.sendRuntimeSession(started.sessionId, {
@@ -938,7 +938,7 @@ async function main(): Promise<void> {
 }
 
 if (isBundledDaemonEntryInvocation()) {
-	await import("@cline/core/hub/daemon-entry");
+	await import("@enki/core/hub/daemon-entry");
 } else {
 	main().catch((err) => {
 		const msg = err instanceof Error ? err.message : String(err);

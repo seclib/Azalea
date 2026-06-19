@@ -83,7 +83,7 @@ function toErrorMessage(error: unknown): string {
 
 function createOAuthClientMetadata(redirectUrl: string): OAuthClientMetadata {
 	return {
-		client_name: "Cline",
+		client_name: "Enki AI",
 		redirect_uris: [redirectUrl],
 		grant_types: ["authorization_code", "refresh_token"],
 		response_types: ["code"],
@@ -266,7 +266,7 @@ function buildClient(input: {
 	clientVersion?: string;
 }): Client {
 	return new Client({
-		name: input.clientName?.trim() || "@cline/core",
+		name: input.clientName?.trim() || "@enki/core",
 		version: input.clientVersion?.trim() || "0.0.0",
 	});
 }

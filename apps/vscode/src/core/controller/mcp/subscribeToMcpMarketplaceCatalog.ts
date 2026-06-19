@@ -1,5 +1,5 @@
-import { EmptyRequest } from "@shared/proto/cline/common"
-import { McpMarketplaceCatalog } from "@shared/proto/cline/mcp"
+import { EmptyRequest } from "@shared/proto/enki/common"
+import { McpMarketplaceCatalog } from "@shared/proto/enki/mcp"
 import { Logger } from "@/shared/services/Logger"
 import { getRequestRegistry, StreamingResponseHandler } from "../grpc-handler"
 import { Controller } from "../index"

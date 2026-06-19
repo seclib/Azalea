@@ -17,7 +17,7 @@ import {
 	readGlobalSettings,
 	resolvePluginConfigSearchPaths,
 	resolveAgentConfigSearchPaths as resolveSharedAgentConfigSearchPaths,
-} from "@cline/core";
+} from "@enki/core";
 import { readMcpServersResponse } from "./mcp";
 import type { JsonRecord } from "./types";
 

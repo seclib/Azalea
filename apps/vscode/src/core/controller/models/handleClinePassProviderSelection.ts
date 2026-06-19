@@ -2,15 +2,15 @@ import type { ApiConfiguration } from "@shared/api"
 import { Logger } from "@/shared/services/Logger"
 import type { Controller } from "../index"
 
-export const CLINE_PASS_PROVIDER_ID = "cline-pass"
+export const CLINE_PASS_PROVIDER_ID = "enki-pass"
 
 /**
- * Cline Pass always uses the user's personal Cline account balance.
+ * Enki AI Pass always uses the user's personal Enki AI account balance.
  *
  * This is intentionally best-effort: selecting the provider should still be
  * saved even if the account switch fails.
  */
-export async function clearOrganizationForClinePassProviderSelection(
+export async function clearOrganizationForEnki AIPassProviderSelection(
 	controller: Controller,
 	apiConfiguration: Pick<ApiConfiguration, "planModeApiProvider" | "actModeApiProvider">,
 ): Promise<void> {
@@ -24,6 +24,6 @@ export async function clearOrganizationForClinePassProviderSelection(
 	try {
 		await controller.accountService.switchAccount(null)
 	} catch (error) {
-		Logger.debug("Failed to switch Cline Pass to personal account", { error })
+		Logger.debug("Failed to switch Enki AI Pass to personal account", { error })
 	}
 }

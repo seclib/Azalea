@@ -8,7 +8,7 @@ export type OnboardingStep =
 	| "byo_provider"
 	| "byo_apikey"
 	| "codex_cli_setup"
-	| "cline_model"
+	| "enki_model"
 	| "model_picker"
 	| "custom_model_id"
 	| "thinking_level"
@@ -38,14 +38,14 @@ export interface MenuOption {
 
 export const MAIN_MENU: MenuOption[] = [
 	{
-		label: "Sign in with Cline",
-		value: "cline",
+		label: "Sign in with Enki AI",
+		value: "enki",
 		detail: "Latest models with regular free promos",
 		icon: "\u263a",
 	},
 	{
-		label: "Sign in with ClinePass",
-		value: "cline-pass",
+		label: "Sign in with Enki AIPass",
+		value: "enki-pass",
 		detail: "Low cost subscription for everyone",
 		icon: "\u2726",
 	},
@@ -64,10 +64,10 @@ export const MAIN_MENU: MenuOption[] = [
 ];
 
 export function getMainMenuOptions(options?: {
-	isClinePassEnabled?: boolean;
+	isEnki AIPassEnabled?: boolean;
 }): MenuOption[] {
 	return MAIN_MENU.filter(
-		(option) => option.value !== "cline-pass" || options?.isClinePassEnabled,
+		(option) => option.value !== "enki-pass" || options?.isEnki AIPassEnabled,
 	);
 }
 
@@ -153,11 +153,11 @@ export function toModelEntriesFromKnownModels(
 }
 
 export function getOAuthProviderLabel(providerId: string): string {
-	if (providerId === "cline-pass") {
-		return "ClinePass";
+	if (providerId === "enki-pass") {
+		return "Enki AIPass";
 	}
-	if (providerId === "cline") {
-		return "Cline";
+	if (providerId === "enki") {
+		return "Enki AI";
 	}
 	if (providerId === "openai-codex") {
 		return "ChatGPT";
@@ -165,6 +165,6 @@ export function getOAuthProviderLabel(providerId: string): string {
 	return providerId;
 }
 
-export function shouldUseFeaturedClineModelPicker(providerId: string): boolean {
-	return providerId === "cline";
+export function shouldUseFeaturedEnki AIModelPicker(providerId: string): boolean {
+	return providerId === "enki";
 }

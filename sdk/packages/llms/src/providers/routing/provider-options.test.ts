@@ -1,7 +1,7 @@
 import type {
 	GatewayProviderContext,
 	GatewayStreamRequest,
-} from "@cline/shared";
+} from "@enki/shared";
 import { describe, expect, it } from "vitest";
 import { GLM_THINKING_ROUTING_METADATA } from "./glm-thinking";
 import { MINIMAX_THINKING_ROUTING_METADATA } from "./minimax-thinking";
@@ -509,16 +509,16 @@ describe("composeAiSdkProviderOptions: Anthropic thinking precedence", () => {
 			],
 		},
 		{
-			name: "Cline-routed Sonnet 4.5 -> gateway reasoning, no thinking, no effort",
+			name: "Enki AI-routed Sonnet 4.5 -> gateway reasoning, no thinking, no effort",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "anthropic/claude-sonnet-4-5",
 				reasoning: { enabled: true, effort: "low" },
 			},
 			context: { family: "claude-sonnet" },
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					has: { reasoning: { enabled: true, max_tokens: 1024 } },
 					lacks: ["thinking"],
 				},
@@ -745,15 +745,15 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			],
 		},
 		{
-			name: "cline GLM thinking-disabled -> routed reasoning only, no thinking leak",
+			name: "enki GLM thinking-disabled -> routed reasoning only, no thinking leak",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "z-ai/glm-4.7",
 				reasoning: { enabled: false },
 			},
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					has: { reasoning: { exclude: true } },
 					lacks: ["thinking"],
 				},
@@ -797,15 +797,15 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 		},
 		// Kimi K2.6 family: explicit enabled/disabled and unset defaults to enabled
 		{
-			name: "cline Kimi K2.6 family reasoning.enabled=false -> thinking.type=disabled",
+			name: "enki Kimi K2.6 family reasoning.enabled=false -> thinking.type=disabled",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "moonshotai/kimi-k2.6",
 				reasoning: { enabled: false },
 			},
 			context: { family: "kimi-k2.6" },
 			expect: [
-				{ bucket: "cline", has: { thinking: { type: "disabled" } } },
+				{ bucket: "enki", has: { thinking: { type: "disabled" } } },
 				{
 					bucket: "openaiCompatible",
 					has: { thinking: { type: "disabled" } },
@@ -813,28 +813,28 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			],
 		},
 		{
-			name: "cline Kimi K2.6 family reasoning.enabled=true -> thinking.type=enabled",
+			name: "enki Kimi K2.6 family reasoning.enabled=true -> thinking.type=enabled",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "moonshotai/kimi-k2.6",
 				reasoning: { enabled: true },
 			},
 			context: { family: "kimi-k2.6" },
 			expect: [
-				{ bucket: "cline", has: { thinking: { type: "enabled" } } },
+				{ bucket: "enki", has: { thinking: { type: "enabled" } } },
 				{ bucket: "openaiCompatible", has: { thinking: { type: "enabled" } } },
 			],
 		},
 		{
-			name: "cline generic reasoning.enabled=false -> gateway reasoning only, no thinking patch",
+			name: "enki generic reasoning.enabled=false -> gateway reasoning only, no thinking patch",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "gpt-5.4",
 				reasoning: { enabled: false },
 			},
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					has: { reasoning: { enabled: false } },
 					lacks: ["thinking"],
 				},
@@ -845,16 +845,16 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			],
 		},
 		{
-			name: "cline non-K2.6 Moonshot Kimi reasoning.enabled=false -> thinking.type=disabled",
+			name: "enki non-K2.6 Moonshot Kimi reasoning.enabled=false -> thinking.type=disabled",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "moonshotai/kimi-k2.5",
 				reasoning: { enabled: false },
 			},
 			context: { family: "kimi-k2.5" },
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					has: {
 						reasoning: { enabled: false },
 						thinking: { type: "disabled" },
@@ -1013,9 +1013,9 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			],
 		},
 		{
-			name: "cline qwen prompt-cache-only route reasoning.enabled=true -> cache control, no gateway reasoning",
+			name: "enki qwen prompt-cache-only route reasoning.enabled=true -> cache control, no gateway reasoning",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "qwen/qwen3.6-plus",
 				reasoning: { enabled: true, effort: "high" },
 			},
@@ -1039,7 +1039,7 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			},
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					has: { cache_control: { type: "ephemeral" } },
 					lacks: [
 						"reasoning",
@@ -1052,9 +1052,9 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			],
 		},
 		{
-			name: "cline unregistered qwen reasoning.enabled=true -> no gateway reasoning",
+			name: "enki unregistered qwen reasoning.enabled=true -> no gateway reasoning",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "qwen/qwen3.7-plus",
 				reasoning: { enabled: true, effort: "high" },
 			},
@@ -1076,7 +1076,7 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			},
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					lacks: [
 						"reasoning",
 						"thinking",
@@ -1092,39 +1092,39 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			],
 		},
 		{
-			name: "cline Kimi K2.6 family reasoning.enabled=false also keeps gateway reasoning shape",
+			name: "enki Kimi K2.6 family reasoning.enabled=false also keeps gateway reasoning shape",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "moonshotai/kimi-k2.6",
 				reasoning: { enabled: false },
 			},
 			context: { family: "kimi-k2.6" },
-			expect: [{ bucket: "cline", has: { reasoning: { enabled: false } } }],
+			expect: [{ bucket: "enki", has: { reasoning: { enabled: false } } }],
 		},
 		{
-			name: "cline Claude Fable reasoning.enabled=false uses lowest supported reasoning",
+			name: "enki Claude Fable reasoning.enabled=false uses lowest supported reasoning",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "anthropic/claude-fable-5",
 				reasoning: { enabled: false },
 			},
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					has: { reasoning: { max_tokens: 1024 } },
 				},
 			],
 		},
 		{
-			name: "cline StepFun 3.7 Flash reasoning.enabled=false omits disabled reasoning",
+			name: "enki StepFun 3.7 Flash reasoning.enabled=false omits disabled reasoning",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "stepfun/step-3.7-flash",
 				reasoning: { enabled: false },
 			},
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					lacks: ["reasoning", "thinking"],
 				},
 				{
@@ -1134,15 +1134,15 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			],
 		},
 		{
-			name: "cline StepFun 3.7 Flash variants reasoning.enabled=false omit disabled reasoning",
+			name: "enki StepFun 3.7 Flash variants reasoning.enabled=false omit disabled reasoning",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "stepfun/step-3.7-flash-v2",
 				reasoning: { enabled: false },
 			},
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					lacks: ["reasoning", "thinking"],
 				},
 			],
@@ -1388,9 +1388,9 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			],
 		},
 		{
-			name: "cline MiniMax M3 reasoning enabled -> gateway reasoning without thinking leak",
+			name: "enki MiniMax M3 reasoning enabled -> gateway reasoning without thinking leak",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "minimax/minimax-m3",
 				reasoning: { enabled: true, effort: "high" },
 			},
@@ -1400,7 +1400,7 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			},
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					has: { reasoning: { enabled: true, effort: "high" } },
 					lacks: ["thinking", "effort", "reasoningEffort", "reasoningSummary"],
 				},
@@ -1411,9 +1411,9 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			],
 		},
 		{
-			name: "cline MiniMax M3 reasoning disabled -> gateway reasoning disabled",
+			name: "enki MiniMax M3 reasoning disabled -> gateway reasoning disabled",
 			request: {
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "minimax/minimax-m3",
 				reasoning: { enabled: false },
 			},
@@ -1423,7 +1423,7 @@ describe("composeAiSdkProviderOptions: family/provider thinking patches", () => 
 			},
 			expect: [
 				{
-					bucket: "cline",
+					bucket: "enki",
 					has: { reasoning: { enabled: false } },
 					lacks: ["thinking"],
 				},

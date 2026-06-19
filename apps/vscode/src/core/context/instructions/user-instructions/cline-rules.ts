@@ -9,7 +9,7 @@ import {
 import { formatResponse } from "@core/prompts/responses"
 import { ensureRulesDirectoryExists, GlobalFileNames } from "@core/storage/disk"
 import { StateManager } from "@core/storage/StateManager"
-import { ClineRulesToggles } from "@shared/cline-rules"
+import { Enki AIRulesToggles } from "@shared/enki-rules"
 import { fileExistsAtPath, isDirectory, readDirectory } from "@utils/fs"
 import fs from "fs/promises"
 import path from "path"
@@ -18,23 +18,23 @@ import { Logger } from "@/shared/services/Logger"
 import { parseYamlFrontmatter } from "./frontmatter"
 import { evaluateRuleConditionals, type RuleEvaluationContext } from "./rule-conditionals"
 
-export const getGlobalClineRules = async (
-	globalClineRulesFilePath: string,
-	toggles: ClineRulesToggles,
+export const getGlobalEnki AIRules = async (
+	globalEnki AIRulesFilePath: string,
+	toggles: Enki AIRulesToggles,
 	opts?: { evaluationContext?: RuleEvaluationContext },
 ): Promise<RuleLoadResultWithInstructions> => {
 	let combinedContent = ""
 	const activatedConditionalRules: ActivatedConditionalRule[] = []
 
 	// 1. Get file-based rules
-	if (await fileExistsAtPath(globalClineRulesFilePath)) {
-		if (await isDirectory(globalClineRulesFilePath)) {
+	if (await fileExistsAtPath(globalEnki AIRulesFilePath)) {
+		if (await isDirectory(globalEnki AIRulesFilePath)) {
 			try {
-				const rulesFilePaths = await readDirectory(globalClineRulesFilePath)
+				const rulesFilePaths = await readDirectory(globalEnki AIRulesFilePath)
 				// Note: ruleNamePrefix explicitly set to "global" for clarity (matches the default)
 				const rulesFilesTotal = await getRuleFilesTotalContentWithMetadata(
 					rulesFilePaths,
-					globalClineRulesFilePath,
+					globalEnki AIRulesFilePath,
 					toggles,
 					{
 						evaluationContext: opts?.evaluationContext,
@@ -46,10 +46,10 @@ export const getGlobalClineRules = async (
 					activatedConditionalRules.push(...rulesFilesTotal.activatedConditionalRules)
 				}
 			} catch {
-				Logger.error(`Failed to read .clinerules directory at ${globalClineRulesFilePath}`)
+				Logger.error(`Failed to read .enkirules directory at ${globalEnki AIRulesFilePath}`)
 			}
 		} else {
-			Logger.error(`${globalClineRulesFilePath} is not a directory`)
+			Logger.error(`${globalEnki AIRulesFilePath} is not a directory`)
 		}
 	}
 
@@ -73,28 +73,28 @@ export const getGlobalClineRules = async (
 	}
 
 	return {
-		instructions: formatResponse.clineRulesGlobalDirectoryInstructions(globalClineRulesFilePath, combinedContent),
+		instructions: formatResponse.enkiRulesGlobalDirectoryInstructions(globalEnki AIRulesFilePath, combinedContent),
 		activatedConditionalRules,
 	}
 }
 
-export const getLocalClineRules = async (
+export const getLocalEnki AIRules = async (
 	cwd: string,
-	toggles: ClineRulesToggles,
+	toggles: Enki AIRulesToggles,
 	opts?: { evaluationContext?: RuleEvaluationContext },
 ): Promise<RuleLoadResultWithInstructions> => {
-	const clineRulesFilePath = path.resolve(cwd, GlobalFileNames.clineRules)
+	const enkiRulesFilePath = path.resolve(cwd, GlobalFileNames.enkiRules)
 
 	let instructions: string | undefined
 	const activatedConditionalRules: ActivatedConditionalRule[] = []
 
-	if (await fileExistsAtPath(clineRulesFilePath)) {
-		if (await isDirectory(clineRulesFilePath)) {
+	if (await fileExistsAtPath(enkiRulesFilePath)) {
+		if (await isDirectory(enkiRulesFilePath)) {
 			try {
-				const rulesFilePaths = await readDirectory(clineRulesFilePath, [
-					[".clinerules", "workflows"],
-					[".clinerules", "hooks"],
-					[".clinerules", "skills"],
+				const rulesFilePaths = await readDirectory(enkiRulesFilePath, [
+					[".enkirules", "workflows"],
+					[".enkirules", "hooks"],
+					[".enkirules", "skills"],
 				])
 
 				const rulesFilesTotal = await getRuleFilesTotalContentWithMetadata(rulesFilePaths, cwd, toggles, {
@@ -102,34 +102,34 @@ export const getLocalClineRules = async (
 					ruleNamePrefix: "workspace",
 				})
 				if (rulesFilesTotal.content) {
-					instructions = formatResponse.clineRulesLocalDirectoryInstructions(cwd, rulesFilesTotal.content)
+					instructions = formatResponse.enkiRulesLocalDirectoryInstructions(cwd, rulesFilesTotal.content)
 					activatedConditionalRules.push(...rulesFilesTotal.activatedConditionalRules)
 				}
 			} catch {
-				Logger.error(`Failed to read .clinerules directory at ${clineRulesFilePath}`)
+				Logger.error(`Failed to read .enkirules directory at ${enkiRulesFilePath}`)
 			}
 		} else {
 			try {
-				if (clineRulesFilePath in toggles && toggles[clineRulesFilePath] !== false) {
-					const raw = (await fs.readFile(clineRulesFilePath, "utf8")).trim()
+				if (enkiRulesFilePath in toggles && toggles[enkiRulesFilePath] !== false) {
+					const raw = (await fs.readFile(enkiRulesFilePath, "utf8")).trim()
 					if (raw) {
-						// Keep single-file .clinerules behavior consistent with directory/remote rules:
+						// Keep single-file .enkirules behavior consistent with directory/remote rules:
 						// - Parse YAML frontmatter (fail-open on parse errors)
 						// - Evaluate conditionals against the request's evaluation context
 						const parsed = parseYamlFrontmatter(raw)
 						if (parsed.hadFrontmatter && parsed.parseError) {
 							// Fail-open: preserve the raw contents so the LLM can still see the author's intent.
-							instructions = formatResponse.clineRulesLocalFileInstructions(cwd, raw)
+							instructions = formatResponse.enkiRulesLocalFileInstructions(cwd, raw)
 						} else {
 							const { passed, matchedConditions } = evaluateRuleConditionals(
 								parsed.data,
 								opts?.evaluationContext ?? {},
 							)
 							if (passed) {
-								instructions = formatResponse.clineRulesLocalFileInstructions(cwd, parsed.body.trim())
+								instructions = formatResponse.enkiRulesLocalFileInstructions(cwd, parsed.body.trim())
 								if (parsed.hadFrontmatter && Object.keys(matchedConditions).length > 0) {
 									activatedConditionalRules.push({
-										name: `${RULE_SOURCE_PREFIX.workspace}:${GlobalFileNames.clineRules}`,
+										name: `${RULE_SOURCE_PREFIX.workspace}:${GlobalFileNames.enkiRules}`,
 										matchedConditions,
 									})
 								}
@@ -138,7 +138,7 @@ export const getLocalClineRules = async (
 					}
 				}
 			} catch {
-				Logger.error(`Failed to read .clinerules file at ${clineRulesFilePath}`)
+				Logger.error(`Failed to read .enkirules file at ${enkiRulesFilePath}`)
 			}
 		}
 	}
@@ -146,28 +146,28 @@ export const getLocalClineRules = async (
 	return { instructions, activatedConditionalRules }
 }
 
-export async function refreshClineRulesToggles(
+export async function refreshEnki AIRulesToggles(
 	controller: Controller,
 	workingDirectory: string,
 ): Promise<{
-	globalToggles: ClineRulesToggles
-	localToggles: ClineRulesToggles
+	globalToggles: Enki AIRulesToggles
+	localToggles: Enki AIRulesToggles
 }> {
 	// Global toggles
-	const globalClineRulesToggles = controller.stateManager.getGlobalSettingsKey("globalClineRulesToggles")
-	const globalClineRulesFilePath = await ensureRulesDirectoryExists()
-	const updatedGlobalToggles = await synchronizeRuleToggles(globalClineRulesFilePath, globalClineRulesToggles)
-	controller.stateManager.setGlobalState("globalClineRulesToggles", updatedGlobalToggles)
+	const globalEnki AIRulesToggles = controller.stateManager.getGlobalSettingsKey("globalEnki AIRulesToggles")
+	const globalEnki AIRulesFilePath = await ensureRulesDirectoryExists()
+	const updatedGlobalToggles = await synchronizeRuleToggles(globalEnki AIRulesFilePath, globalEnki AIRulesToggles)
+	controller.stateManager.setGlobalState("globalEnki AIRulesToggles", updatedGlobalToggles)
 
 	// Local toggles
-	const localClineRulesToggles = controller.stateManager.getWorkspaceStateKey("localClineRulesToggles")
-	const localClineRulesFilePath = path.resolve(workingDirectory, GlobalFileNames.clineRules)
-	const updatedLocalToggles = await synchronizeRuleToggles(localClineRulesFilePath, localClineRulesToggles, "", [
-		[".clinerules", "workflows"],
-		[".clinerules", "hooks"],
-		[".clinerules", "skills"],
+	const localEnki AIRulesToggles = controller.stateManager.getWorkspaceStateKey("localEnki AIRulesToggles")
+	const localEnki AIRulesFilePath = path.resolve(workingDirectory, GlobalFileNames.enkiRules)
+	const updatedLocalToggles = await synchronizeRuleToggles(localEnki AIRulesFilePath, localEnki AIRulesToggles, "", [
+		[".enkirules", "workflows"],
+		[".enkirules", "hooks"],
+		[".enkirules", "skills"],
 	])
-	controller.stateManager.setWorkspaceState("localClineRulesToggles", updatedLocalToggles)
+	controller.stateManager.setWorkspaceState("localEnki AIRulesToggles", updatedLocalToggles)
 
 	return {
 		globalToggles: updatedGlobalToggles,

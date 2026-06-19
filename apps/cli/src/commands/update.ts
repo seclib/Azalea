@@ -8,8 +8,8 @@ import {
 	resolveProductionHubOwnerContext,
 	resolveSharedHubOwnerContext,
 	stopLocalHubServerGracefully,
-} from "@cline/core";
-import { resolveClineBuildEnv } from "@cline/shared";
+} from "@enki/core";
+import { resolveEnki AIBuildEnv } from "@enki/shared";
 import { version } from "../../package.json";
 import { ensureCliHubServer } from "../utils/hub-runtime";
 import { c, writeErr, writeln } from "../utils/output";
@@ -20,7 +20,7 @@ import {
 	spawnKanbanInstallProcess,
 } from "./kanban";
 
-const DEFAULT_PACKAGE_NAME = "cline";
+const DEFAULT_PACKAGE_NAME = "enki";
 
 type CliPackageName = typeof DEFAULT_PACKAGE_NAME;
 
@@ -272,7 +272,7 @@ export function getPreferredKanbanInstaller(
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 export function resolveCliHubOwnerContext() {
-	return resolveClineBuildEnv() === "production"
+	return resolveEnki AIBuildEnv() === "production"
 		? resolveProductionHubOwnerContext()
 		: resolveSharedHubOwnerContext();
 }
@@ -404,7 +404,7 @@ export async function checkForUpdates(
 	const currentVersion = version;
 	const includeKanban = options.includeKanban ?? true;
 	writeln(
-		`${c.cyan}Checking for updates${includeKanban ? " to Cline CLI and kanban" : ""}…${c.reset}`,
+		`${c.cyan}Checking for updates${includeKanban ? " to Enki AI CLI and kanban" : ""}…${c.reset}`,
 	);
 
 	const { packageName, updateCommand, packageManager } =
@@ -490,7 +490,7 @@ export async function checkForUpdates(
 		if (cliUpdateAvailable && latestVersion) {
 			if (!updateCommand) {
 				writeln(
-					`${c.dim}Unable to determine Cline update command. Please update manually with your package manager.${c.reset}`,
+					`${c.dim}Unable to determine Enki AI update command. Please update manually with your package manager.${c.reset}`,
 				);
 				hadFailure = true;
 			} else {
@@ -508,7 +508,7 @@ export async function checkForUpdates(
 						await restartHubServerIfRunning();
 					} else {
 						writeErr(
-							`Cline update failed (exit code ${exitCode}). Try running: ${manualUpdateCommand.command}`,
+							`Enki AI update failed (exit code ${exitCode}). Try running: ${manualUpdateCommand.command}`,
 						);
 						hadFailure = true;
 					}
@@ -516,7 +516,7 @@ export async function checkForUpdates(
 					const message =
 						error instanceof Error ? error.message : String(error);
 					writeErr(
-						`Failed to run Cline update command ${manualUpdateCommand.command}: ${message}`,
+						`Failed to run Enki AI update command ${manualUpdateCommand.command}: ${message}`,
 					);
 					hadFailure = true;
 				}

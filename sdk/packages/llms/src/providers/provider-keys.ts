@@ -1,4 +1,4 @@
-/** Maps provider identifiers across Cline legacy provider ids, models.dev keys, and runtime provider ids. */
+/** Maps provider identifiers across Enki AI legacy provider ids, models.dev keys, and runtime provider ids. */
 const PROVIDER_IDS_MAP: ReadonlyArray<{
 	modelsDevKey: string;
 	generatedProviderId?: string;
@@ -90,7 +90,7 @@ const PROVIDER_IDS_MAP: ReadonlyArray<{
 	{
 		modelsDevKey: "openrouter",
 		generatedProviderId: "openrouter",
-		runtimeProviderId: "cline",
+		runtimeProviderId: "enki",
 	},
 	{
 		modelsDevKey: "aihubmix",

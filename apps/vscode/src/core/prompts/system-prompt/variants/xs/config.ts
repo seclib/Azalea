@@ -1,7 +1,7 @@
 import { isLocalModel } from "@utils/model-utils"
 import { ModelFamily } from "@/shared/prompts"
 import { Logger } from "@/shared/services/Logger"
-import { ClineDefaultTool } from "@/shared/tools"
+import { Enki AIDefaultTool } from "@/shared/tools"
 import { SystemPromptSection } from "../../templates/placeholders"
 import { createVariant } from "../variant-builder"
 import { validateVariant } from "../variant-validator"
@@ -41,15 +41,15 @@ export const config = createVariant(ModelFamily.XS)
 		SystemPromptSection.SKILLS,
 	)
 	.tools(
-		ClineDefaultTool.BASH,
-		ClineDefaultTool.FILE_READ,
-		ClineDefaultTool.FILE_NEW,
-		ClineDefaultTool.FILE_EDIT,
-		ClineDefaultTool.SEARCH,
-		ClineDefaultTool.ASK,
-		ClineDefaultTool.ATTEMPT,
-		ClineDefaultTool.PLAN_MODE,
-		ClineDefaultTool.USE_SUBAGENTS,
+		Enki AIDefaultTool.BASH,
+		Enki AIDefaultTool.FILE_READ,
+		Enki AIDefaultTool.FILE_NEW,
+		Enki AIDefaultTool.FILE_EDIT,
+		Enki AIDefaultTool.SEARCH,
+		Enki AIDefaultTool.ASK,
+		Enki AIDefaultTool.ATTEMPT,
+		Enki AIDefaultTool.PLAN_MODE,
+		Enki AIDefaultTool.USE_SUBAGENTS,
 	)
 	.placeholders({
 		MODEL_FAMILY: ModelFamily.XS,

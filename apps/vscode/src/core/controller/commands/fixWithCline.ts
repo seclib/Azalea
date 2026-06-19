@@ -1,11 +1,11 @@
 import { getFileMentionFromPath } from "@/core/mentions"
 import { singleFileDiagnosticsToProblemsString } from "@/integrations/diagnostics"
 import { telemetryService } from "@/services/telemetry"
-import { CommandContext, Empty } from "@/shared/proto/index.cline"
+import { CommandContext, Empty } from "@/shared/proto/index.enki"
 import { Logger } from "@/shared/services/Logger"
 import { Controller } from "../index"
 
-export async function fixWithCline(controller: Controller, request: CommandContext): Promise<Empty> {
+export async function fixWithEnki AI(controller: Controller, request: CommandContext): Promise<Empty> {
 	const filePath = request.filePath || ""
 	const fileMention = await getFileMentionFromPath(filePath)
 	const problemsString = await singleFileDiagnosticsToProblemsString(filePath, request.diagnostics)
@@ -14,8 +14,8 @@ export async function fixWithCline(controller: Controller, request: CommandConte
 		`Fix the following code in ${fileMention}
 \`\`\`\n${request.selectedText}\n\`\`\`\n\nProblems:\n${problemsString}`,
 	)
-	Logger.log("fixWithCline", request.selectedText, request.filePath, request.language, problemsString)
+	Logger.log("fixWithEnki AI", request.selectedText, request.filePath, request.language, problemsString)
 
-	telemetryService.captureButtonClick("codeAction_fixWithCline", controller.task?.ulid)
+	telemetryService.captureButtonClick("codeAction_fixWithEnki AI", controller.task?.ulid)
 	return {}
 }

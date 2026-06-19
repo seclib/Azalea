@@ -10,7 +10,7 @@ plugin code. A plugin or external tool can correlate records by stamping
 
 ## Why This Exists
 
-Plugin hooks can observe Cline's conversation state, but they run before Core's
+Plugin hooks can observe Enki AI's conversation state, but they run before Core's
 final provider-message preparation. That final pass can repair missing tool
 results, truncate tool outputs, rewrite stale file content, apply prompt-cache
 provider options, and format messages for the provider.
@@ -38,7 +38,7 @@ Provider receives request
 
 If token growth appears only in `wire_request`, the issue is provider
 serialization. If it appears in `ai_sdk_prompt` but not `pre_build_for_api`, the
-issue is in Cline's final provider formatting/build step. If it is already in
+issue is in Enki AI's final provider formatting/build step. If it is already in
 `pre_build_for_api`, the issue is upstream of the final build step.
 
 ## Environment Variables
@@ -101,7 +101,7 @@ export CLINE_DATA_DIR="$(mktemp -d)"
 export CLINE_CAPTURE_PROVIDER_REQUEST=summary
 export CLINE_CAPTURE_WIRE=true
 
-cline --provider openrouter --model openai/gpt-4o-mini "Say hello"
+enki --provider openrouter --model openai/gpt-4o-mini "Say hello"
 
 ls "$CLINE_DATA_DIR/provider-request-captures"
 ```

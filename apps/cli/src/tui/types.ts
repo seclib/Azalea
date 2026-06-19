@@ -3,12 +3,12 @@ import type {
 	AgentMode,
 	CheckpointEntry,
 	TeamEvent,
-} from "@cline/core";
+} from "@enki/core";
 import type {
 	Message,
 	ToolApprovalRequest,
 	ToolApprovalResult,
-} from "@cline/shared";
+} from "@enki/shared";
 import type { CliMigrationNotice } from "../kanban-migration/notice";
 import type {
 	PendingPromptSnapshot,
@@ -16,7 +16,7 @@ import type {
 } from "../runtime/session-events";
 import type { RepoStatus } from "../utils/repo-status";
 import type { CliCompactionMode, Config } from "../utils/types";
-import type { ClineAccountSnapshot } from "./cline-account";
+import type { Enki AIAccountSnapshot } from "./enki-account";
 import type {
 	InteractiveConfigData,
 	InteractiveConfigItem,
@@ -128,8 +128,8 @@ export interface TuiProps {
 	workflowSlashCommands?: InteractiveSlashCommand[];
 	loadAdditionalSlashCommands?: () => Promise<InteractiveSlashCommand[]>;
 	loadWelcomeLine?: () => Promise<string | undefined>;
-	loadClineAccount: () => Promise<ClineAccountSnapshot>;
-	switchClineAccount: (organizationId?: string | null) => Promise<void>;
+	loadEnki AIAccount: () => Promise<Enki AIAccountSnapshot>;
+	switchEnki AIAccount: (organizationId?: string | null) => Promise<void>;
 	loadConfigData: (
 		options?: LoadInteractiveConfigDataOptions,
 	) => Promise<InteractiveConfigData>;

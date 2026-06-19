@@ -1,65 +1,65 @@
 import { AgentConfigLoader } from "@core/task/tools/subagent/AgentConfigLoader"
 import { CLINE_MCP_TOOL_IDENTIFIER, McpServer } from "@/shared/mcp"
 import { ModelFamily } from "@/shared/prompts"
-import { ClineDefaultTool } from "@/shared/tools"
-import { type ClineToolSpec, toolSpecFunctionDeclarations, toolSpecFunctionDefinition, toolSpecInputSchema } from "../spec"
+import { Enki AIDefaultTool } from "@/shared/tools"
+import { type Enki AIToolSpec, toolSpecFunctionDeclarations, toolSpecFunctionDefinition, toolSpecInputSchema } from "../spec"
 import { PromptVariant, SystemPromptContext } from "../types"
 
-export class ClineToolSet {
+export class Enki AIToolSet {
 	// A list of tools mapped by model group
-	private static variants: Map<ModelFamily, Set<ClineToolSet>> = new Map()
+	private static variants: Map<ModelFamily, Set<Enki AIToolSet>> = new Map()
 
 	private constructor(
 		public readonly id: string,
-		public readonly config: ClineToolSpec,
+		public readonly config: Enki AIToolSpec,
 	) {
 		this._register()
 	}
 
-	public static register(config: ClineToolSpec): ClineToolSet {
-		return new ClineToolSet(config.id, config)
+	public static register(config: Enki AIToolSpec): Enki AIToolSet {
+		return new Enki AIToolSet(config.id, config)
 	}
 
 	private _register(): void {
-		const existingTools = ClineToolSet.variants.get(this.config.variant) || new Set()
+		const existingTools = Enki AIToolSet.variants.get(this.config.variant) || new Set()
 		if (!Array.from(existingTools).some((t) => t.config.id === this.config.id)) {
 			existingTools.add(this)
-			ClineToolSet.variants.set(this.config.variant, existingTools)
+			Enki AIToolSet.variants.set(this.config.variant, existingTools)
 		}
 	}
 
-	public static getTools(variant: ModelFamily): ClineToolSet[] {
-		const toolsSet = ClineToolSet.variants.get(variant) || new Set()
-		const defaultSet = ClineToolSet.variants.get(ModelFamily.GENERIC) || new Set()
+	public static getTools(variant: ModelFamily): Enki AIToolSet[] {
+		const toolsSet = Enki AIToolSet.variants.get(variant) || new Set()
+		const defaultSet = Enki AIToolSet.variants.get(ModelFamily.GENERIC) || new Set()
 
 		return toolsSet ? Array.from(toolsSet) : Array.from(defaultSet)
 	}
 
 	public static getRegisteredModelIds(): string[] {
-		return Array.from(ClineToolSet.variants.keys())
+		return Array.from(Enki AIToolSet.variants.keys())
 	}
 
-	public static getToolByName(toolName: string, variant: ModelFamily): ClineToolSet | undefined {
-		const tools = ClineToolSet.getTools(variant)
+	public static getToolByName(toolName: string, variant: ModelFamily): Enki AIToolSet | undefined {
+		const tools = Enki AIToolSet.getTools(variant)
 		return tools.find((tool) => tool.config.id === toolName)
 	}
 
 	// Return a tool by name with fallback to GENERIC and then any other variant where it exists
-	public static getToolByNameWithFallback(toolName: string, variant: ModelFamily): ClineToolSet | undefined {
+	public static getToolByNameWithFallback(toolName: string, variant: ModelFamily): Enki AIToolSet | undefined {
 		// Try exact variant first
-		const exact = ClineToolSet.getToolByName(toolName, variant)
+		const exact = Enki AIToolSet.getToolByName(toolName, variant)
 		if (exact) {
 			return exact
 		}
 
 		// Fallback to GENERIC
-		const generic = ClineToolSet.getToolByName(toolName, ModelFamily.GENERIC)
+		const generic = Enki AIToolSet.getToolByName(toolName, ModelFamily.GENERIC)
 		if (generic) {
 			return generic
 		}
 
 		// Final fallback: search across all registered variants
-		for (const [, tools] of ClineToolSet.variants) {
+		for (const [, tools] of Enki AIToolSet.variants) {
 			const found = Array.from(tools).find((t) => t.config.id === toolName)
 			if (found) {
 				return found
@@ -70,10 +70,10 @@ export class ClineToolSet {
 	}
 
 	// Build a list of tools for a variant using requested ids, falling back to GENERIC when missing
-	public static getToolsForVariantWithFallback(variant: ModelFamily, requestedIds: string[]): ClineToolSet[] {
-		const resolved: ClineToolSet[] = []
+	public static getToolsForVariantWithFallback(variant: ModelFamily, requestedIds: string[]): Enki AIToolSet[] {
+		const resolved: Enki AIToolSet[] = []
 		for (const id of requestedIds) {
-			const tool = ClineToolSet.getToolByNameWithFallback(id, variant)
+			const tool = Enki AIToolSet.getToolByNameWithFallback(id, variant)
 			if (tool) {
 				// Avoid duplicates by id
 				if (!resolved.some((t) => t.config.id === tool.config.id)) {
@@ -84,11 +84,11 @@ export class ClineToolSet {
 		return resolved
 	}
 
-	public static getEnabledTools(variant: PromptVariant, context: SystemPromptContext): ClineToolSet[] {
-		const resolved: ClineToolSet[] = []
+	public static getEnabledTools(variant: PromptVariant, context: SystemPromptContext): Enki AIToolSet[] {
+		const resolved: Enki AIToolSet[] = []
 		const requestedIds = variant.tools ? [...variant.tools] : []
 		for (const id of requestedIds) {
-			const tool = ClineToolSet.getToolByNameWithFallback(id, variant.family)
+			const tool = Enki AIToolSet.getToolByNameWithFallback(id, variant.family)
 			if (tool) {
 				// Avoid duplicates by id
 				if (!resolved.some((t) => t.config.id === tool.config.id)) {
@@ -105,13 +105,13 @@ export class ClineToolSet {
 		return enabledTools
 	}
 
-	private static getDynamicSubagentToolSpecs(variant: PromptVariant, context: SystemPromptContext): ClineToolSpec[] {
+	private static getDynamicSubagentToolSpecs(variant: PromptVariant, context: SystemPromptContext): Enki AIToolSpec[] {
 		if (context.subagentsEnabled !== true || context.isSubagentRun) {
 			return []
 		}
 
 		const requestedIds = variant.tools ? [...variant.tools] : []
-		const shouldIncludeSubagentTools = requestedIds.length === 0 || requestedIds.includes(ClineDefaultTool.USE_SUBAGENTS)
+		const shouldIncludeSubagentTools = requestedIds.length === 0 || requestedIds.includes(Enki AIDefaultTool.USE_SUBAGENTS)
 		if (!shouldIncludeSubagentTools) {
 			return []
 		}
@@ -119,7 +119,7 @@ export class ClineToolSet {
 		const agentConfigs = AgentConfigLoader.getInstance().getAllCachedConfigsWithToolNames()
 		return agentConfigs.map(({ toolName, config }) => ({
 			variant: variant.family,
-			id: ClineDefaultTool.USE_SUBAGENTS,
+			id: Enki AIDefaultTool.USE_SUBAGENTS,
 			name: toolName,
 			description: `Use the "${config.name}" subagent: ${config.description}`,
 			contextRequirements: (ctx) => ctx.subagentsEnabled === true && !ctx.isSubagentRun,
@@ -133,13 +133,13 @@ export class ClineToolSet {
 		}))
 	}
 
-	public static getEnabledToolSpecs(variant: PromptVariant, context: SystemPromptContext): ClineToolSpec[] {
-		const registeredTools = ClineToolSet.getEnabledTools(variant, context).map((tool) => tool.config)
-		const dynamicSubagentTools = ClineToolSet.getDynamicSubagentToolSpecs(variant, context)
+	public static getEnabledToolSpecs(variant: PromptVariant, context: SystemPromptContext): Enki AIToolSpec[] {
+		const registeredTools = Enki AIToolSet.getEnabledTools(variant, context).map((tool) => tool.config)
+		const dynamicSubagentTools = Enki AIToolSet.getDynamicSubagentToolSpecs(variant, context)
 
 		const includesDynamicSubagents = dynamicSubagentTools.length > 0
 		const filteredRegistered = includesDynamicSubagents
-			? registeredTools.filter((tool) => tool.id !== ClineDefaultTool.USE_SUBAGENTS)
+			? registeredTools.filter((tool) => tool.id !== Enki AIDefaultTool.USE_SUBAGENTS)
 			: registeredTools
 
 		return [...filteredRegistered, ...dynamicSubagentTools]
@@ -177,25 +177,25 @@ export class ClineToolSet {
 		}
 
 		// Base set
-		const toolConfigs = ClineToolSet.getEnabledToolSpecs(variant, context)
+		const toolConfigs = Enki AIToolSet.getEnabledToolSpecs(variant, context)
 
 		// MCP tools
 		const mcpServers = context.mcpHub?.getServers()?.filter((s) => s.disabled !== true) || []
-		const mcpTools = mcpServers?.flatMap((server) => mcpToolToClineToolSpec(variant.family, server))
+		const mcpTools = mcpServers?.flatMap((server) => mcpToolToEnki AIToolSpec(variant.family, server))
 
 		const enabledTools = [...toolConfigs, ...mcpTools].filter(
 			(tool) => typeof tool.description === "string" && tool.description.trim().length > 0,
 		)
-		const converter = ClineToolSet.getNativeConverter(context.providerInfo.providerId, context.providerInfo.model.id)
+		const converter = Enki AIToolSet.getNativeConverter(context.providerInfo.providerId, context.providerInfo.model.id)
 
 		return enabledTools.map((tool) => converter(tool, context))
 	}
 }
 
 /**
- * Convert an MCP server's tools to ClineToolSpec format
+ * Convert an MCP server's tools to Enki AIToolSpec format
  */
-export function mcpToolToClineToolSpec(family: ModelFamily, server: McpServer): ClineToolSpec[] {
+export function mcpToolToEnki AIToolSpec(family: ModelFamily, server: McpServer): Enki AIToolSpec[] {
 	const tools = server.tools || []
 	return tools
 		.map((mcpTool) => {
@@ -243,7 +243,7 @@ export function mcpToolToClineToolSpec(family: ModelFamily, server: McpServer): 
 			if (mcpToolName?.length <= 64) {
 				return {
 					variant: family,
-					id: ClineDefaultTool.MCP_USE,
+					id: Enki AIDefaultTool.MCP_USE,
 					// We will use the identifier to reconstruct the MCP server and tool name later
 					name: mcpToolName,
 					description: `${server.name}: ${mcpTool.description || mcpTool.name}`,

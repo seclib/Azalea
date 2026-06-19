@@ -6,11 +6,11 @@ import {
 
 const {
 	getValidOpenAICodexCredentials,
-	getValidClineCredentials,
+	getValidEnki AICredentials,
 	getValidOcaCredentials,
 } = vi.hoisted(() => ({
 	getValidOpenAICodexCredentials: vi.fn(),
-	getValidClineCredentials: vi.fn(),
+	getValidEnki AICredentials: vi.fn(),
 	getValidOcaCredentials: vi.fn(),
 }));
 
@@ -18,8 +18,8 @@ vi.mock("../../auth/codex", () => ({
 	getValidOpenAICodexCredentials,
 }));
 
-vi.mock("../../auth/cline", () => ({
-	getValidClineCredentials,
+vi.mock("../../auth/enki", () => ({
+	getValidEnki AICredentials,
 }));
 
 vi.mock("../../auth/oca", () => ({
@@ -79,10 +79,10 @@ describe("RuntimeOAuthTokenManager", () => {
 		);
 	});
 
-	it("resolves ClinePass OAuth using Cline storage and WorkOS formatting", async () => {
+	it("resolves Enki AIPass OAuth using Enki AI storage and WorkOS formatting", async () => {
 		const getProviderSettings = vi.fn().mockReturnValue({
-			provider: "cline",
-			baseUrl: "https://api.cline.test",
+			provider: "enki",
+			baseUrl: "https://api.enki.test",
 			auth: {
 				accessToken: "workos:access-old",
 				refreshToken: "refresh-old",
@@ -92,7 +92,7 @@ describe("RuntimeOAuthTokenManager", () => {
 		});
 		const saveProviderSettings = vi.fn();
 
-		getValidClineCredentials.mockResolvedValueOnce({
+		getValidEnki AICredentials.mockResolvedValueOnce({
 			access: "access-new",
 			refresh: "refresh-new",
 			expires: 4_000_000_000_000,
@@ -107,16 +107,16 @@ describe("RuntimeOAuthTokenManager", () => {
 		});
 
 		const result = await manager.resolveProviderApiKey({
-			providerId: "cline-pass",
+			providerId: "enki-pass",
 		});
 
-		expect(getProviderSettings).toHaveBeenCalledWith("cline");
-		expect(getValidClineCredentials).toHaveBeenCalledWith(
+		expect(getProviderSettings).toHaveBeenCalledWith("enki");
+		expect(getValidEnki AICredentials).toHaveBeenCalledWith(
 			expect.objectContaining({
 				access: "access-old",
 				refresh: "refresh-old",
 			}),
-			expect.objectContaining({ apiBaseUrl: "https://api.cline.test" }),
+			expect.objectContaining({ apiBaseUrl: "https://api.enki.test" }),
 			{ forceRefresh: false },
 		);
 		expect(result).toMatchObject({
@@ -126,7 +126,7 @@ describe("RuntimeOAuthTokenManager", () => {
 		});
 		expect(saveProviderSettings).toHaveBeenCalledWith(
 			expect.objectContaining({
-				provider: "cline",
+				provider: "enki",
 				auth: expect.objectContaining({
 					accessToken: "workos:access-new",
 					refreshToken: "refresh-new",

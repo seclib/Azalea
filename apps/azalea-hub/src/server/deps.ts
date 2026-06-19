@@ -1,10 +1,10 @@
 import { dirname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { ProviderSettingsManager } from "@cline/core";
-import { buildInviteUrl, resolveClineHubServerOptions } from "../options";
+import { ProviderSettingsManager } from "@enki/core";
+import { buildInviteUrl, resolveEnki AIHubServerOptions } from "../options";
 import type { BrowserConfig } from "./types";
 
-export const options = resolveClineHubServerOptions();
+export const options = resolveEnki AIHubServerOptions();
 export const { host, port, publicUrl, roomSecret, workspaceRoot } = options;
 export const inviteUrl = buildInviteUrl(publicUrl, roomSecret);
 

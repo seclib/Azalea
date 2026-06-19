@@ -47,7 +47,7 @@ describe("resolveProviderConfig", () => {
 			}),
 		);
 
-		const resolved = await resolveProviderConfig("cline", {
+		const resolved = await resolveProviderConfig("enki", {
 			loadLatestOnInit: true,
 			failOnError: false,
 			cacheTtlMs: 0,

@@ -11,7 +11,7 @@
 	"exports": {
 		".": "./index.ts"
 	},
-	"cline": {
+	"enki": {
 		"plugins": [
 			{
 				"paths": [

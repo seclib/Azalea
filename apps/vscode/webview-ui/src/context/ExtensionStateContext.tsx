@@ -4,14 +4,14 @@ import { DEFAULT_BROWSER_SETTINGS } from "@shared/BrowserSettings"
 import { DEFAULT_PLATFORM, type ExtensionState } from "@shared/ExtensionMessage"
 import { DEFAULT_FOCUS_CHAIN_SETTINGS } from "@shared/FocusChainSettings"
 import { DEFAULT_MCP_DISPLAY_MODE } from "@shared/McpDisplayMode"
-import type { UserInfo } from "@shared/proto/cline/account"
-import { EmptyRequest } from "@shared/proto/cline/common"
-import type { OpenRouterCompatibleModelInfo } from "@shared/proto/cline/models"
-import { OnboardingModelGroup, type TerminalProfile } from "@shared/proto/cline/state"
-import { convertProtoToClineMessage } from "@shared/proto-conversions/cline-message"
+import type { UserInfo } from "@shared/proto/enki/account"
+import { EmptyRequest } from "@shared/proto/enki/common"
+import type { OpenRouterCompatibleModelInfo } from "@shared/proto/enki/models"
+import { OnboardingModelGroup, type TerminalProfile } from "@shared/proto/enki/state"
+import { convertProtoToEnki AIMessage } from "@shared/proto-conversions/enki-message"
 import { convertProtoMcpServersToMcpServers } from "@shared/proto-conversions/mcp/mcp-server-conversion"
 import { fromProtobufModels } from "@shared/proto-conversions/models/typeConversion"
-import { isClineProvider } from "@shared/utils/cline"
+import { isEnki AIProvider } from "@shared/utils/enki"
 import type React from "react"
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
 import {
@@ -33,7 +33,7 @@ export interface ExtensionStateContextType extends ExtensionState {
 	didHydrateState: boolean
 	showWelcome: boolean
 	onboardingModels: OnboardingModelGroup | undefined
-	clineModels: Record<string, ModelInfo> | null
+	enkiModels: Record<string, ModelInfo> | null
 	openRouterModels: Record<string, ModelInfo>
 	vercelAiGatewayModels: Record<string, ModelInfo>
 	hicapModels: Record<string, ModelInfo>
@@ -71,8 +71,8 @@ export interface ExtensionStateContextType extends ExtensionState {
 	setGroqModels: (value: Record<string, ModelInfo>) => void
 	setBasetenModels: (value: Record<string, ModelInfo>) => void
 	setHuggingFaceModels: (value: Record<string, ModelInfo>) => void
-	setGlobalClineRulesToggles: (toggles: Record<string, boolean>) => void
-	setLocalClineRulesToggles: (toggles: Record<string, boolean>) => void
+	setGlobalEnki AIRulesToggles: (toggles: Record<string, boolean>) => void
+	setLocalEnki AIRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalCursorRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalWindsurfRulesToggles: (toggles: Record<string, boolean>) => void
 	setLocalAgentsRulesToggles: (toggles: Record<string, boolean>) => void
@@ -89,7 +89,7 @@ export interface ExtensionStateContextType extends ExtensionState {
 	setOnboardingModels: (value: OnboardingModelGroup | undefined) => void
 
 	// Refresh functions
-	refreshClineModels: () => void
+	refreshEnki AIModels: () => void
 	refreshOpenRouterModels: () => void
 	refreshVercelAiGatewayModels: () => void
 	refreshHicapModels: () => void
@@ -229,7 +229,7 @@ export const ExtensionStateContextProvider: React.FC<{
 
 	const [state, setState] = useState<ExtensionState>({
 		version: "",
-		clineMessages: [],
+		enkiMessages: [],
 		taskHistory: [],
 		shouldShowAnnouncement: false,
 		autoApprovalSettings: DEFAULT_AUTO_APPROVAL_SETTINGS,
@@ -244,8 +244,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		planActSeparateModelsSetting: true,
 		enableCheckpointsSetting: true,
 		mcpDisplayMode: DEFAULT_MCP_DISPLAY_MODE,
-		globalClineRulesToggles: {},
-		localClineRulesToggles: {},
+		globalEnki AIRulesToggles: {},
+		localEnki AIRulesToggles: {},
 		localCursorRulesToggles: {},
 		localWindsurfRulesToggles: {},
 		localAgentsRulesToggles: {},
@@ -266,7 +266,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		customPrompt: undefined,
 		useAutoCondense: false,
 		subagentsEnabled: false,
-		clineWebToolsEnabled: { user: true, featureFlag: false },
+		enkiWebToolsEnabled: { user: true, featureFlag: false },
 		worktreesEnabled: { user: true, featureFlag: false },
 		favoritedModelIds: [],
 		lastDismissedInfoBannerVersion: 0,
@@ -298,7 +298,7 @@ export const ExtensionStateContextProvider: React.FC<{
 	const [showWelcome, setShowWelcome] = useState(false)
 	const [onboardingModels, setOnboardingModels] = useState<OnboardingModelGroup | undefined>(undefined)
 
-	const [clineModels, setClineModels] = useState<Record<string, ModelInfo> | null>(null)
+	const [enkiModels, setEnki AIModels] = useState<Record<string, ModelInfo> | null>(null)
 	const [openRouterModels, setOpenRouterModels] = useState<Record<string, ModelInfo>>({
 		[openRouterDefaultModelId]: openRouterDefaultModelInfo,
 	})
@@ -364,11 +364,11 @@ export const ExtensionStateContextProvider: React.FC<{
 							const incomingVersion = stateData.autoApprovalSettings?.version ?? 1
 							const currentVersion = prevState.autoApprovalSettings?.version ?? 1
 							const shouldUpdateAutoApproval = incomingVersion > currentVersion
-							// HACK: Preserve clineMessages if currentTaskItem is the same
+							// HACK: Preserve enkiMessages if currentTaskItem is the same
 							if (stateData.currentTaskItem?.id === prevState.currentTaskItem?.id) {
-								stateData.clineMessages = stateData.clineMessages?.length
-									? stateData.clineMessages
-									: prevState.clineMessages
+								stateData.enkiMessages = stateData.enkiMessages?.length
+									? stateData.enkiMessages
+									: prevState.enkiMessages
 							}
 
 							const newState = {
@@ -514,14 +514,14 @@ export const ExtensionStateContextProvider: React.FC<{
 						return
 					}
 
-					const partialMessage = convertProtoToClineMessage(protoMessage)
+					const partialMessage = convertProtoToEnki AIMessage(protoMessage)
 					setState((prevState) => {
 						// worth noting it will never be possible for a more up-to-date message to be sent here or in normal messages post since the presentAssistantContent function uses lock
-						const lastIndex = findLastIndex(prevState.clineMessages, (msg) => msg.ts === partialMessage.ts)
+						const lastIndex = findLastIndex(prevState.enkiMessages, (msg) => msg.ts === partialMessage.ts)
 						if (lastIndex !== -1) {
-							const newClineMessages = [...prevState.clineMessages]
-							newClineMessages[lastIndex] = partialMessage
-							return { ...prevState, clineMessages: newClineMessages }
+							const newEnki AIMessages = [...prevState.enkiMessages]
+							newEnki AIMessages[lastIndex] = partialMessage
+							return { ...prevState, enkiMessages: newEnki AIMessages }
 						}
 						return prevState
 					})
@@ -765,32 +765,32 @@ export const ExtensionStateContextProvider: React.FC<{
 		refreshLiteLlmModels,
 	])
 
-	// Refresh Cline models function
-	const refreshClineModels = useCallback(() => {
-		ModelsServiceClient.refreshClineModelsRpc(EmptyRequest.create({}))
+	// Refresh Enki AI models function
+	const refreshEnki AIModels = useCallback(() => {
+		ModelsServiceClient.refreshEnki AIModelsRpc(EmptyRequest.create({}))
 			.then((response: OpenRouterCompatibleModelInfo) => {
 				const models = fromProtobufModels(response.models)
-				setClineModels((prev) => (Object.keys(models).length > 0 ? models : (prev ?? null)))
+				setEnki AIModels((prev) => (Object.keys(models).length > 0 ? models : (prev ?? null)))
 			})
-			.catch((error: Error) => console.error("Failed to refresh Cline models:", error))
+			.catch((error: Error) => console.error("Failed to refresh Enki AI models:", error))
 	}, [])
 
-	// Auto-refresh Cline models when provider is cline
+	// Auto-refresh Enki AI models when provider is enki
 	useEffect(() => {
-		const hasClineProvider =
-			isClineProvider(state.apiConfiguration?.actModeApiProvider) ||
-			isClineProvider(state.apiConfiguration?.planModeApiProvider)
-		if (hasClineProvider && clineModels === null) {
-			refreshClineModels()
+		const hasEnki AIProvider =
+			isEnki AIProvider(state.apiConfiguration?.actModeApiProvider) ||
+			isEnki AIProvider(state.apiConfiguration?.planModeApiProvider)
+		if (hasEnki AIProvider && enkiModels === null) {
+			refreshEnki AIModels()
 		}
-	}, [state.apiConfiguration?.actModeApiProvider, state.apiConfiguration?.planModeApiProvider, clineModels, refreshClineModels])
+	}, [state.apiConfiguration?.actModeApiProvider, state.apiConfiguration?.planModeApiProvider, enkiModels, refreshEnki AIModels])
 
 	const contextValue: ExtensionStateContextType = {
 		...state,
 		didHydrateState,
 		showWelcome,
 		onboardingModels,
-		clineModels,
+		enkiModels,
 		openRouterModels,
 		vercelAiGatewayModels,
 		hicapModels,
@@ -813,8 +813,8 @@ export const ExtensionStateContextProvider: React.FC<{
 		showAccount,
 		showWorktrees,
 		showAnnouncement,
-		globalClineRulesToggles: state.globalClineRulesToggles || {},
-		localClineRulesToggles: state.localClineRulesToggles || {},
+		globalEnki AIRulesToggles: state.globalEnki AIRulesToggles || {},
+		localEnki AIRulesToggles: state.localEnki AIRulesToggles || {},
 		localCursorRulesToggles: state.localCursorRulesToggles || {},
 		localWindsurfRulesToggles: state.localWindsurfRulesToggles || {},
 		localAgentsRulesToggles: state.localAgentsRulesToggles || {},
@@ -856,15 +856,15 @@ export const ExtensionStateContextProvider: React.FC<{
 		setMcpMarketplaceCatalog,
 		setShowMcp,
 		closeMcpView,
-		setGlobalClineRulesToggles: (toggles) =>
+		setGlobalEnki AIRulesToggles: (toggles) =>
 			setState((prevState) => ({
 				...prevState,
-				globalClineRulesToggles: toggles,
+				globalEnki AIRulesToggles: toggles,
 			})),
-		setLocalClineRulesToggles: (toggles) =>
+		setLocalEnki AIRulesToggles: (toggles) =>
 			setState((prevState) => ({
 				...prevState,
-				localClineRulesToggles: toggles,
+				localEnki AIRulesToggles: toggles,
 			})),
 		setLocalCursorRulesToggles: (toggles) =>
 			setState((prevState) => ({
@@ -913,7 +913,7 @@ export const ExtensionStateContextProvider: React.FC<{
 			})),
 		setMcpTab,
 		setTotalTasksSize,
-		refreshClineModels,
+		refreshEnki AIModels,
 		refreshOpenRouterModels,
 		refreshVercelAiGatewayModels,
 		refreshHicapModels,

@@ -1,4 +1,4 @@
-import type { AgentToolContext, HubEventEnvelope } from "@cline/shared";
+import type { AgentToolContext, HubEventEnvelope } from "@enki/shared";
 import { describe, expect, it, vi } from "vitest";
 import {
 	SessionNotFoundError,
@@ -146,7 +146,7 @@ describe("HubServerTransport boundaries", () => {
 					startedAt: new Date(0).toISOString(),
 					status: "completed",
 					interactive: false,
-					provider: "cline",
+					provider: "enki",
 					model: "test-model",
 					cwd: "/tmp/project",
 					workspaceRoot: "/tmp/project",
@@ -213,7 +213,7 @@ describe("HubServerTransport boundaries", () => {
 					startedAt: new Date(0).toISOString(),
 					status: "completed",
 					interactive: false,
-					provider: "cline",
+					provider: "enki",
 					model: "test-model",
 					cwd: "/tmp/project",
 					workspaceRoot: "/tmp/project",
@@ -321,7 +321,7 @@ describe("HubServerTransport boundaries", () => {
 			workspaceRoot: "/tmp/project",
 			cwd: "/tmp/project",
 			interactive: true,
-			provider: "cline",
+			provider: "enki",
 			model: "test-model",
 			enableTools: true,
 			enableSpawn: true,
@@ -537,7 +537,7 @@ describe("HubServerTransport boundaries", () => {
 						started_at: new Date(0).toISOString(),
 						status: "running",
 						interactive: true,
-						provider: "cline",
+						provider: "enki",
 						model: "test-model",
 						cwd: "/tmp/project",
 						workspace_root: "/tmp/project",
@@ -586,7 +586,7 @@ describe("HubServerTransport boundaries", () => {
 				workspaceRoot: "/tmp/project",
 				cwd: "/tmp/project",
 				sessionConfig: {
-					providerId: "cline",
+					providerId: "enki",
 					modelId: "test-model",
 					cwd: "/tmp/project",
 					workspaceRoot: "/tmp/project",
@@ -669,7 +669,7 @@ describe("HubServerTransport boundaries", () => {
 					started_at: new Date(0).toISOString(),
 					status: "running",
 					interactive: true,
-					provider: "cline",
+					provider: "enki",
 					model: "test-model",
 					cwd: "/tmp/project",
 					workspace_root: "/tmp/project",
@@ -718,7 +718,7 @@ describe("HubServerTransport boundaries", () => {
 				workspaceRoot: "/tmp/project",
 				cwd: "/tmp/project",
 				sessionConfig: {
-					providerId: "cline",
+					providerId: "enki",
 					modelId: "test-model",
 					cwd: "/tmp/project",
 					workspaceRoot: "/tmp/project",
@@ -866,7 +866,7 @@ describe("HubServerTransport boundaries", () => {
 					startedAt: new Date(0).toISOString(),
 					status: "running",
 					interactive: true,
-					provider: "cline",
+					provider: "enki",
 					model: "test-model",
 					cwd: "/tmp/project",
 					workspaceRoot: "/tmp/project",

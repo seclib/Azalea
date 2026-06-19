@@ -24,7 +24,7 @@ export function hubStatePayload(ctx: HubContext): WebviewHubState {
 	);
 	return {
 		type: "hub_state",
-		connected: Boolean(ctx.cline && ctx.uiClient),
+		connected: Boolean(ctx.enki && ctx.uiClient),
 		hubUrl: ctx.hubUrl,
 		hubStartedAt: ctx.hubStartedAt,
 		coreVersion: ctx.coreVersion,
@@ -50,7 +50,7 @@ export function hubStatusPayload(ctx: HubContext) {
 		address: ctx.hubUrl,
 		status: ctx.hubHealthy ? "healthy" : "unhealthy",
 		healthy: ctx.hubHealthy,
-		connected: Boolean(ctx.cline && ctx.uiClient),
+		connected: Boolean(ctx.enki && ctx.uiClient),
 		startedAt: ctx.hubStartedAt,
 		uptime: ctx.hubStartedAt
 			? formatUptime(Date.now() - Date.parse(ctx.hubStartedAt))

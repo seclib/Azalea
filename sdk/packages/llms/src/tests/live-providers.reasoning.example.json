@@ -89,7 +89,7 @@
 		},
 		"cline-reasoning": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "anthropic/claude-sonnet-4.6",
 				"reasoning": {
 					"effort": "high"
@@ -101,7 +101,7 @@
 		},
 		"cline-opus-reasoning": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "anthropic/claude-opus-4.7",
 				"reasoning": {
 					"effort": "high"
@@ -113,7 +113,7 @@
 		},
 		"cline-gpt-5.4-reasoning": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "openai/gpt-5.4",
 				"reasoning": {
 					"effort": "high"
@@ -125,7 +125,7 @@
 		},
 		"cline-gpt-5.3-codex-reasoning": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "openai/gpt-5.3-codex",
 				"reasoning": {
 					"effort": "high"
@@ -185,7 +185,7 @@
 		},
 		"cline-glm-4.6-thinking-on": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "z-ai/glm-4.6",
 				"reasoning": {
 					"enabled": true
@@ -199,7 +199,7 @@
 		},
 		"cline-glm-4.7-thinking-on": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "z-ai/glm-4.7",
 				"reasoning": {
 					"enabled": true
@@ -213,7 +213,7 @@
 		},
 		"cline-glm-5-thinking-on": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "z-ai/glm-5",
 				"reasoning": {
 					"enabled": true
@@ -311,7 +311,7 @@
 		},
 		"cline-kimi-k2-thinking": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "moonshotai/kimi-k2-thinking"
 			},
 			"prompt": "Solve this multi-step problem briefly: A shop has 17 boxes with 23 bolts each, sells 128 bolts, then receives 4 boxes with 19 bolts each. How many bolts are left? Give only the final arithmetic result and one short explanation.",
@@ -322,7 +322,7 @@
 		},
 		"cline-kimi-k2.6-thinking-on": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "moonshotai/kimi-k2.6",
 				"reasoning": {
 					"enabled": true
@@ -336,7 +336,7 @@
 		},
 		"cline-qwen3-next-thinking": {
 			"settings": {
-				"provider": "cline",
+				"provider": "enki",
 				"model": "qwen/qwen3-next-80b-a3b-thinking"
 			},
 			"prompt": "Solve this multi-step problem briefly: A shop has 17 boxes with 23 bolts each, sells 128 bolts, then receives 4 boxes with 19 bolts each. How many bolts are left? Give only the final arithmetic result and one short explanation.",

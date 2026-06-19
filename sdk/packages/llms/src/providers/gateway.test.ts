@@ -8,7 +8,7 @@ import {
 import { access } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { AgentMessage, AgentModelEvent } from "@cline/shared";
+import type { AgentMessage, AgentModelEvent } from "@enki/shared";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { normalizeModelsDevProviderModels } from "../catalog/catalog-live";
 import {
@@ -406,8 +406,8 @@ describe("sdk-gateway", () => {
 			"aihubmix",
 			"anthropic",
 			"bedrock",
-			"cline",
-			"cline-pass",
+			"enki",
+			"enki-pass",
 			"minimax",
 			"oca",
 			"openrouter",
@@ -910,8 +910,8 @@ describe("sdk-gateway", () => {
 		const gateway = createGateway({
 			providerConfigs: [
 				{
-					providerId: "cline",
-					apiKey: "cline-key",
+					providerId: "enki",
+					apiKey: "enki-key",
 					models: [
 						{
 							id: "openai/gpt-5.4",
@@ -927,7 +927,7 @@ describe("sdk-gateway", () => {
 
 		const events = await collect(
 			await gateway.stream({
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "openai/gpt-5.4",
 				messages: baseMessages,
 			}),
@@ -1059,7 +1059,7 @@ describe("sdk-gateway", () => {
 		expect(usageEvent?.usage.totalCost).toBeCloseTo(0.003475, 12);
 	});
 
-	it("reads nested raw market cost for cline before falling back to pricing", async () => {
+	it("reads nested raw market cost for enki before falling back to pricing", async () => {
 		streamTextSpy.mockReturnValue({
 			fullStream: makeStreamParts([
 				{
@@ -1079,8 +1079,8 @@ describe("sdk-gateway", () => {
 		const gateway = createGateway({
 			providerConfigs: [
 				{
-					providerId: "cline",
-					apiKey: "cline-key",
+					providerId: "enki",
+					apiKey: "enki-key",
 					models: [
 						{
 							id: "openai/gpt-5.4",
@@ -1096,7 +1096,7 @@ describe("sdk-gateway", () => {
 
 		const events = await collect(
 			await gateway.stream({
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "openai/gpt-5.4",
 				messages: baseMessages,
 			}),
@@ -1347,8 +1347,8 @@ describe("sdk-gateway", () => {
 		const gateway = createGateway({
 			providerConfigs: [
 				{
-					providerId: "cline",
-					apiKey: "cline-key",
+					providerId: "enki",
+					apiKey: "enki-key",
 					models: [{ id: "openai/gpt-5.3-codex", name: "GPT-5.3 Codex" }],
 				},
 			],
@@ -1356,7 +1356,7 @@ describe("sdk-gateway", () => {
 
 		const events = await collect(
 			await gateway.stream({
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "openai/gpt-5.3-codex",
 				messages: baseMessages,
 			}),
@@ -1396,8 +1396,8 @@ describe("sdk-gateway", () => {
 		const gateway = createGateway({
 			providerConfigs: [
 				{
-					providerId: "cline",
-					apiKey: "cline-key",
+					providerId: "enki",
+					apiKey: "enki-key",
 					models: [
 						{
 							id: "anthropic/claude-opus-4.6",
@@ -1410,7 +1410,7 @@ describe("sdk-gateway", () => {
 
 		const events = await collect(
 			await gateway.stream({
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "anthropic/claude-opus-4.6",
 				messages: baseMessages,
 			}),
@@ -2924,9 +2924,9 @@ describe("sdk-gateway", () => {
 
 	it.each([
 		{
-			providerId: "cline",
+			providerId: "enki",
 			modelId: "qwen/qwen3.6-plus",
-			providerOptionsKey: "cline",
+			providerOptionsKey: "enki",
 			aliasKey: undefined,
 		},
 		{
@@ -3097,8 +3097,8 @@ describe("sdk-gateway", () => {
 		const gateway = createGateway({
 			providerConfigs: [
 				{
-					providerId: "cline",
-					apiKey: "cline-key",
+					providerId: "enki",
+					apiKey: "enki-key",
 					models: [
 						{
 							id: "openai/gpt-5.4",
@@ -3114,7 +3114,7 @@ describe("sdk-gateway", () => {
 
 		await collect(
 			await gateway.stream({
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "openai/gpt-5.4",
 				messages: baseMessages,
 				reasoning: {
@@ -3130,7 +3130,7 @@ describe("sdk-gateway", () => {
 						reasoningEffort: "high",
 						reasoningSummary: "auto",
 					}),
-					cline: expect.objectContaining({
+					enki: expect.objectContaining({
 						reasoning: expect.objectContaining({
 							enabled: true,
 							effort: "high",
@@ -3266,8 +3266,8 @@ describe("sdk-gateway", () => {
 					apiKey: "openrouter-key",
 				},
 				{
-					providerId: "cline",
-					apiKey: "cline-key",
+					providerId: "enki",
+					apiKey: "enki-key",
 				},
 				{
 					providerId: "vercel-ai-gateway",
@@ -3298,7 +3298,7 @@ describe("sdk-gateway", () => {
 		);
 		await collect(
 			await gateway.stream({
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "z-ai/glm-4.7",
 				messages: baseMessages,
 				reasoning: {
@@ -3347,7 +3347,7 @@ describe("sdk-gateway", () => {
 					openaiCompatible: expect.objectContaining({
 						reasoning: { exclude: true },
 					}),
-					cline: expect.objectContaining({
+					enki: expect.objectContaining({
 						reasoning: { exclude: true },
 					}),
 				}),
@@ -3531,18 +3531,18 @@ describe("sdk-gateway", () => {
 	it("allows unregistered model ids on known providers", async () => {
 		streamTextSpy.mockReturnValue({
 			fullStream: makeStreamParts([
-				{ type: "text-delta", textDelta: "Cline custom model" },
+				{ type: "text-delta", textDelta: "Enki AI custom model" },
 				{ type: "finish", usage: { inputTokens: 4, outputTokens: 2 } },
 			]),
 		});
 
 		const gateway = createGateway({
-			providerConfigs: [{ providerId: "cline", apiKey: "test-key" }],
+			providerConfigs: [{ providerId: "enki", apiKey: "test-key" }],
 		});
 
 		const events = await collect(
 			await gateway.stream({
-				providerId: "cline",
+				providerId: "enki",
 				modelId: "google/gemma-4-31b-it",
 				messages: baseMessages,
 			}),
@@ -3551,7 +3551,7 @@ describe("sdk-gateway", () => {
 		expect(openaiCompatibleSpy).toHaveBeenCalledWith("google/gemma-4-31b-it");
 		expect(events[0]).toEqual({
 			type: "text-delta",
-			text: "Cline custom model",
+			text: "Enki AI custom model",
 		});
 	});
 
@@ -3812,7 +3812,7 @@ describe("sdk-gateway", () => {
 			);
 
 			await expect(
-				access(join(tempCwd, ".cline", "provider-request-captures")),
+				access(join(tempCwd, ".enki", "provider-request-captures")),
 			).rejects.toThrow();
 		} finally {
 			process.chdir(cwd);

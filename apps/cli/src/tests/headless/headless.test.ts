@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
-// CLI headless use cases  (cline -y / cline --json / piped stdin)
+// CLI headless use cases  (enki -y / enki --json / piped stdin)
 //
-// These tests run cline as a child process (no TUI harness) and assert on
+// These tests run enki as a child process (no TUI harness) and assert on
 // stdout, stderr, and exit codes.
 //
 // Tests tagged @live require a configured provider and are skipped by default.
@@ -15,19 +15,19 @@ import {
 	EXIT_CODE_SUCCESS,
 	TERMINAL_WIDE,
 } from "../helpers/constants.js";
-import { clineEnv } from "../helpers/env.js";
+import { enkiEnv } from "../helpers/env.js";
 import { expectExitCode, expectVisible } from "../helpers/terminal.js";
 
 // ---------------------------------------------------------------------------
-// cline -y "tell me a joke"
+// enki -y "tell me a joke"
 // Golden path: prints only LLM output (no chrome), then exits 0.
 // Unauthenticated: prints "Not authenticated" and exits 1.
 // ---------------------------------------------------------------------------
-test.describe("cline -y (headless auth failure mode) - unauthenticated", () => {
+test.describe("enki -y (headless auth failure mode) - unauthenticated", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["-y", "tell me a joke"] },
 		...TERMINAL_WIDE,
-		env: clineEnv("unauthenticated"),
+		env: enkiEnv("unauthenticated"),
 	});
 
 	test("prints Not authenticated and exits 1", async ({ terminal }) => {
@@ -37,10 +37,10 @@ test.describe("cline -y (headless auth failure mode) - unauthenticated", () => {
 });
 
 // ---------------------------------------------------------------------------
-// echo "max paulus" | cline "print only the second word I gave you"
+// echo "max paulus" | enki "print only the second word I gave you"
 // Piped stdin test - uses TUI harness with stdin pre-written
 // ---------------------------------------------------------------------------
-test.describe("piped stdin | cline - unauthenticated", () => {
+test.describe("piped stdin | enki - unauthenticated", () => {
 	test.use({
 		program: {
 			file: "sh",
@@ -50,7 +50,7 @@ test.describe("piped stdin | cline - unauthenticated", () => {
 			],
 		},
 		...TERMINAL_WIDE,
-		env: clineEnv("unauthenticated"),
+		env: enkiEnv("unauthenticated"),
 	});
 
 	test("prints Not Authenticated for piped stdin", async ({ terminal }) => {
@@ -60,17 +60,17 @@ test.describe("piped stdin | cline - unauthenticated", () => {
 });
 
 // ---------------------------------------------------------------------------
-// cline -y --verbose "tell me a joke" 2>&1
+// enki -y --verbose "tell me a joke" 2>&1
 // Golden path: prints model info, prompt, api request, reasoning, task_completion lines
 // ---------------------------------------------------------------------------
-test.describe("cline -y --verbose - unauthenticated", () => {
+test.describe("enki -y --verbose - unauthenticated", () => {
 	test.use({
 		program: {
 			file: "sh",
 			args: ["-c", `${CLINE_BIN} -y --verbose "tell me a joke" 2>&1`],
 		},
 		...TERMINAL_WIDE,
-		env: clineEnv("unauthenticated"),
+		env: enkiEnv("unauthenticated"),
 	});
 
 	test("shows verbose output or not-authenticated", async ({ terminal }) => {
@@ -80,14 +80,14 @@ test.describe("cline -y --verbose - unauthenticated", () => {
 });
 
 // ---------------------------------------------------------------------------
-// cline -y --json "tell me a joke"
+// enki -y --json "tell me a joke"
 // Headless yolo with JSON output (one JSON object per line)
 // ---------------------------------------------------------------------------
-test.describe("cline -y --json - unauthenticated", () => {
+test.describe("enki -y --json - unauthenticated", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["-y", "--json", "tell me a joke"] },
 		...TERMINAL_WIDE,
-		env: clineEnv("unauthenticated"),
+		env: enkiEnv("unauthenticated"),
 	});
 
 	test("outputs JSON error for unauthenticated", async ({ terminal }) => {
@@ -97,11 +97,11 @@ test.describe("cline -y --json - unauthenticated", () => {
 	});
 });
 
-test.describe("cline (headless prompt mode) - authenticated @live", () => {
+test.describe("enki (headless prompt mode) - authenticated @live", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["tell me a joke"] },
 		...TERMINAL_WIDE,
-		env: clineEnv("default", {
+		env: enkiEnv("default", {
 			CLINE_VCR_CASSETTE: "./fixtures/headless-yolo-basic.json",
 		}),
 	});
@@ -114,10 +114,10 @@ test.describe("cline (headless prompt mode) - authenticated @live", () => {
 });
 
 // ---------------------------------------------------------------------------
-// echo "max paulus" | cline "..." - authenticated
+// echo "max paulus" | enki "..." - authenticated
 // Piped stdin test with valid credentials
 // ---------------------------------------------------------------------------
-test.describe("piped stdin | cline - authenticated", () => {
+test.describe("piped stdin | enki - authenticated", () => {
 	test.use({
 		program: {
 			file: "sh",
@@ -127,7 +127,7 @@ test.describe("piped stdin | cline - authenticated", () => {
 			],
 		},
 		...TERMINAL_WIDE,
-		env: clineEnv("default", {
+		env: enkiEnv("default", {
 			CLINE_VCR_CASSETTE: "./fixtures/headless-piped-stdin.json",
 		}),
 	});
@@ -140,17 +140,17 @@ test.describe("piped stdin | cline - authenticated", () => {
 });
 
 // ---------------------------------------------------------------------------
-// cline --verbose "tell me a joke" 2>&1 - authenticated
+// enki --verbose "tell me a joke" 2>&1 - authenticated
 // Golden path: prints model info, prompt, api request, reasoning, task_completion
 // ---------------------------------------------------------------------------
-test.describe("cline --verbose - authenticated @live", () => {
+test.describe("enki --verbose - authenticated @live", () => {
 	test.use({
 		program: {
 			file: "sh",
 			args: ["-c", `${CLINE_BIN} --verbose "tell me a joke" 2>&1`],
 		},
 		...TERMINAL_WIDE,
-		env: clineEnv("default", {
+		env: enkiEnv("default", {
 			CLINE_VCR_CASSETTE: "./fixtures/headless-verbose.json",
 		}),
 	});
@@ -165,14 +165,14 @@ test.describe("cline --verbose - authenticated @live", () => {
 });
 
 // ---------------------------------------------------------------------------
-// cline --json "tell me a joke" - authenticated
+// enki --json "tell me a joke" - authenticated
 // All output must conform to JSON (one JSON object per line)
 // ---------------------------------------------------------------------------
-test.describe("cline --json - authenticated @live", () => {
+test.describe("enki --json - authenticated @live", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["--json", "tell me a joke"] },
 		...TERMINAL_WIDE,
-		env: clineEnv("default", {
+		env: enkiEnv("default", {
 			CLINE_VCR_CASSETTE: "./fixtures/headless-json.json",
 		}),
 	});
@@ -184,17 +184,17 @@ test.describe("cline --json - authenticated @live", () => {
 });
 
 // ---------------------------------------------------------------------------
-// cline -t 2 -y "tell me a joke"
+// enki -t 2 -y "tell me a joke"
 // Timeout: should print "Error: Timeout" and exit 1
 // ---------------------------------------------------------------------------
-test.describe("cline -t (timeout) - headless yolo", () => {
+test.describe("enki -t (timeout) - headless yolo", () => {
 	test.use({
 		program: {
 			file: CLINE_BIN,
 			args: ["-t", "2", "-y", "tell me a long detailed joke"],
 		},
 		...TERMINAL_WIDE,
-		env: clineEnv("default", {
+		env: enkiEnv("default", {
 			CLINE_VCR_CASSETTE: "./fixtures/headless-timeout.json",
 		}),
 	});
@@ -207,14 +207,14 @@ test.describe("cline -t (timeout) - headless yolo", () => {
 	});
 });
 
-test.describe("cline --json -t (timeout) - JSON mode", () => {
+test.describe("enki --json -t (timeout) - JSON mode", () => {
 	test.use({
 		program: {
 			file: CLINE_BIN,
 			args: ["--json", "-t", "2", "tell me a long detailed joke"],
 		},
 		...TERMINAL_WIDE,
-		env: clineEnv("default", {
+		env: enkiEnv("default", {
 			CLINE_VCR_CASSETTE: "./fixtures/headless-json-timeout.json",
 		}),
 	});
@@ -226,17 +226,17 @@ test.describe("cline --json -t (timeout) - JSON mode", () => {
 });
 
 // ---------------------------------------------------------------------------
-// cline -y -m <model-id> "what model are you"
+// enki -y -m <model-id> "what model are you"
 // Model flag in headless mode - should use specified model but not persist
 // ---------------------------------------------------------------------------
-test.describe("cline -m (model flag in headless) @live", () => {
+test.describe("enki -m (model flag in headless) @live", () => {
 	test.use({
 		program: {
 			file: CLINE_BIN,
 			args: ["-m", "anthropic/claude-sonnet-4", "what model are you"],
 		},
 		...TERMINAL_WIDE,
-		env: clineEnv("default", {
+		env: enkiEnv("default", {
 			CLINE_VCR_CASSETTE: "./fixtures/headless-model-flag.json",
 		}),
 	});
@@ -244,7 +244,7 @@ test.describe("cline -m (model flag in headless) @live", () => {
 	test("prints a message and exits 0 with --model flag", async ({
 		terminal,
 	}) => {
-		await expectVisible(terminal, /Cline/i);
+		await expectVisible(terminal, /Enki AI/i);
 		await expectExitCode(terminal, EXIT_CODE_SUCCESS);
 	});
 });

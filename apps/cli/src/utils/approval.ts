@@ -1,5 +1,5 @@
 import { createInterface } from "node:readline";
-import type { ToolApprovalRequest, ToolApprovalResult } from "@cline/shared";
+import type { ToolApprovalRequest, ToolApprovalResult } from "@enki/shared";
 import { truncate } from "./helpers";
 import { c, getActiveCliSession, write } from "./output";
 
@@ -25,7 +25,7 @@ async function requestDesktopToolApprovalFromCore(
 	request: ToolApprovalRequest,
 ): Promise<ToolApprovalResult> {
 	if (!cachedDesktopApprovalRequester) {
-		cachedDesktopApprovalRequester = import("@cline/core")
+		cachedDesktopApprovalRequester = import("@enki/core")
 			.then((module) => {
 				const fn = (
 					module as {
@@ -40,7 +40,7 @@ async function requestDesktopToolApprovalFromCore(
 				).requestDesktopToolApproval;
 				if (typeof fn !== "function") {
 					throw new Error(
-						"Installed @cline/core does not expose requestDesktopToolApproval",
+						"Installed @enki/core does not expose requestDesktopToolApproval",
 					);
 				}
 				return fn;

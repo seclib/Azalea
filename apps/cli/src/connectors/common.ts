@@ -8,9 +8,9 @@ import {
 	writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
-import type { HubSessionClient, HubSessionRow } from "@cline/core";
-import { ensureParentDir, resolveClineDataDir } from "@cline/core";
-import { withResolvedClineBuildEnv } from "@cline/shared";
+import type { HubSessionClient, HubSessionRow } from "@enki/core";
+import { ensureParentDir, resolveEnki AIDataDir } from "@enki/core";
+import { withResolvedEnki AIBuildEnv } from "@enki/shared";
 import { createCliLoggerAdapter } from "../logging/adapter";
 import { logSpawnedProcess } from "../logging/process";
 import { resolveCliLaunchSpec } from "../utils/internal-launch";
@@ -130,7 +130,7 @@ export function resolveConnectorDebugLogPath(
 	const safeAdapter = adapterName.replace(/[^a-zA-Z0-9._-]+/g, "_");
 	const safeKey = instanceKey.replace(/[^a-zA-Z0-9._-]+/g, "_");
 	return join(
-		resolveClineDataDir(),
+		resolveEnki AIDataDir(),
 		"logs",
 		"connectors",
 		safeAdapter,
@@ -191,7 +191,7 @@ export function spawnDetachedConnector(
 					? "ignore"
 					: ["ignore", detachedLogFd, detachedLogFd],
 			env: {
-				...withResolvedClineBuildEnv(process.env),
+				...withResolvedEnki AIBuildEnv(process.env),
 				[childEnvKey]: "1",
 			},
 			// Prevent a console window from appearing on Windows; detached

@@ -5,7 +5,7 @@ import "../../src/index.css"
 import { cn } from "@heroui/react"
 import type { Decorator } from "@storybook/react-vite"
 import React from "react"
-import { ClineAuthContext, ClineAuthContextType, ClineAuthProvider, useClineAuth } from "@/context/ClineAuthContext"
+import { Enki AIAuthContext, Enki AIAuthContextType, Enki AIAuthProvider, useEnki AIAuth } from "@/context/Enki AIAuthContext"
 import {
 	ExtensionStateContext,
 	ExtensionStateContextProvider,
@@ -45,9 +45,9 @@ function StorybookDecoratorProvider(className = "relative"): Decorator {
 		return (
 			<div className={className}>
 				<ExtensionStateContextProvider>
-					<ClineAuthProvider>
+					<Enki AIAuthProvider>
 						<ThemeHandler theme={parameters?.globals?.theme}>{React.createElement(story)}</ThemeHandler>
-					</ClineAuthProvider>
+					</Enki AIAuthProvider>
 				</ExtensionStateContextProvider>
 			</div>
 		)
@@ -63,23 +63,23 @@ const ExtensionStateProviderWithOverrides: React.FC<{
 	return <ExtensionStateContext.Provider value={{ ...extensionState, ...overrides }}>{children}</ExtensionStateContext.Provider>
 }
 
-const ClineAuthProviderWithOverrides: React.FC<{
-	overrides?: Partial<ClineAuthContextType>
+const Enki AIAuthProviderWithOverrides: React.FC<{
+	overrides?: Partial<Enki AIAuthContextType>
 	children: React.ReactNode
 }> = ({ overrides, children }) => {
-	const authContext = useClineAuth()
-	return <ClineAuthContext.Provider value={{ ...authContext, ...overrides }}>{children}</ClineAuthContext.Provider>
+	const authContext = useEnki AIAuth()
+	return <Enki AIAuthContext.Provider value={{ ...authContext, ...overrides }}>{children}</Enki AIAuthContext.Provider>
 }
 
 export const createStorybookDecorator =
-	(overrideStates?: Partial<ExtensionStateContextType>, classNames?: string, authOverrides?: Partial<ClineAuthContextType>) =>
+	(overrideStates?: Partial<ExtensionStateContextType>, classNames?: string, authOverrides?: Partial<Enki AIAuthContextType>) =>
 	(Story: any) => (
 		<ExtensionStateProviderWithOverrides overrides={overrideStates}>
-			<ClineAuthProviderWithOverrides overrides={authOverrides}>
+			<Enki AIAuthProviderWithOverrides overrides={authOverrides}>
 				<div className={cn("max-w-lg mx-auto", classNames)}>
 					<Story />
 				</div>
-			</ClineAuthProviderWithOverrides>
+			</Enki AIAuthProviderWithOverrides>
 		</ExtensionStateProviderWithOverrides>
 	)
 

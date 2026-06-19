@@ -2,12 +2,12 @@ import type { Anthropic } from "@anthropic-ai/sdk";
 import type OpenAI from "openai";
 import type { ApiProvider } from "@/shared/api";
 import {
-	type ClineAssistantRedactedThinkingBlock,
-	type ClineAssistantThinkingBlock,
-	type ClineAssistantToolUseBlock,
-	type ClineImageContentBlock,
-	type ClineTextContentBlock,
-	type ClineUserToolResultContentBlock,
+	type Enki AIAssistantRedactedThinkingBlock,
+	type Enki AIAssistantThinkingBlock,
+	type Enki AIAssistantToolUseBlock,
+	type Enki AIImageContentBlock,
+	type Enki AITextContentBlock,
+	type Enki AIUserToolResultContentBlock,
 	getImageDataUrl,
 } from "@/shared/messages/content";
 import { Logger } from "@/shared/services/Logger";
@@ -33,7 +33,7 @@ function isOpenAIResponseToolId(callId: string): boolean {
  * to ensure they match - otherwise OpenAI will reject the request with:
  * "Invalid parameter: 'tool_call_id' of 'xxx' not found in 'tool_calls' of previous message."
  *
- * @param toolId - The original tool ID from Cline/Anthropic format
+ * @param toolId - The original tool ID from Enki AI/Anthropic format
  * @param provider - The API provider that the OpenAI formatted messages will be sent to
  * @returns The transformed ID suitable for OpenAI API
  */
@@ -58,12 +58,12 @@ function transformToolCallIdForNativeApi(
 }
 
 /**
- * Converts an array of ClineStorageMessage objects to OpenAI's Completions API format.
+ * Converts an array of Enki AIStorageMessage objects to OpenAI's Completions API format.
  *
- * Handles conversion of Cline-specific content types (tool uses, tool results, images, reasoning details)
+ * Handles conversion of Enki AI-specific content types (tool uses, tool results, images, reasoning details)
  * into OpenAI's expected message structure, including tool_calls and tool_call_id fields.
  *
- * @param anthropicMessages - Array of ClineStorageMessage objects to be converted
+ * @param anthropicMessages - Array of Enki AIStorageMessage objects to be converted
  * @param provider - Optional parameter to indicate the API provider, which may affect ID transformation logic
  * @returns Array of OpenAI.Chat.ChatCompletionMessageParam objects
  */
@@ -91,8 +91,8 @@ export function convertToOpenAiMessages(
 			if (anthropicMessage.role === "user") {
 				const { nonToolMessages, toolMessages } =
 					anthropicMessage.content.reduce<{
-						nonToolMessages: (ClineTextContentBlock | ClineImageContentBlock)[];
-						toolMessages: ClineUserToolResultContentBlock[];
+						nonToolMessages: (Enki AITextContentBlock | Enki AIImageContentBlock)[];
+						toolMessages: Enki AIUserToolResultContentBlock[];
 					}>(
 						(acc, part) => {
 							if (part.type === "tool_result") {
@@ -106,7 +106,7 @@ export function convertToOpenAiMessages(
 					);
 
 				// Process tool result messages FIRST since they must follow the tool use messages
-				const toolResultImages: ClineImageContentBlock[] = [];
+				const toolResultImages: Enki AIImageContentBlock[] = [];
 				toolMessages.forEach((toolMessage) => {
 					// The Anthropic SDK allows tool results to be a string or an array of text and image blocks, enabling rich and structured content. In contrast, the OpenAI SDK only supports tool results as a single string, so we map the Anthropic tool result parts into one concatenated string to maintain compatibility.
 					let content: string;
@@ -177,12 +177,12 @@ export function convertToOpenAiMessages(
 				const { nonToolMessages, toolMessages } =
 					anthropicMessage.content.reduce<{
 						nonToolMessages: (
-							| ClineTextContentBlock
-							| ClineImageContentBlock
-							| ClineAssistantThinkingBlock
-							| ClineAssistantRedactedThinkingBlock
+							| Enki AITextContentBlock
+							| Enki AIImageContentBlock
+							| Enki AIAssistantThinkingBlock
+							| Enki AIAssistantRedactedThinkingBlock
 						)[];
-						toolMessages: ClineAssistantToolUseBlock[];
+						toolMessages: Enki AIAssistantToolUseBlock[];
 					}>(
 						(acc, part) => {
 							if (part.type === "tool_use") {
@@ -234,7 +234,7 @@ export function convertToOpenAiMessages(
 								// For Gemini: reasoning details must be linkable back to the tool call.
 								// Sometimes OpenRouter/Gemini returns entries without `id`; those poison the next request.
 								// Keep only entries with an id matching the tool call id.
-								// See: https://github.com/cline/cline/issues/8214
+								// See: https://github.com/enki/enki/issues/8214
 								const validDetails = toolDetails.filter(
 									(detail: any) => detail?.id === toolId,
 								);
@@ -330,7 +330,7 @@ function consolidateReasoningDetails(
 	for (const detail of reasoningDetails) {
 		// Drop corrupted encrypted reasoning blocks that would otherwise trigger:
 		// "Invalid input: expected string, received undefined" for reasoning_details.*.data
-		// See: https://github.com/cline/cline/issues/8214
+		// See: https://github.com/enki/enki/issues/8214
 		if (detail.type === "reasoning.encrypted" && !detail.data) continue;
 
 		const index = detail.index ?? 0;
@@ -408,7 +408,7 @@ function consolidateReasoningDetails(
 }
 
 // Unique name to use to filter out tool call that cannot be parsed correctly
-const UNIQUE_ERROR_TOOL_NAME = "_cline_error_unknown_function_";
+const UNIQUE_ERROR_TOOL_NAME = "_enki_error_unknown_function_";
 
 // Convert OpenAI response to Anthropic format
 export function convertToAnthropicMessage(

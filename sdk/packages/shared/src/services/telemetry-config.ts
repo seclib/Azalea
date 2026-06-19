@@ -1,7 +1,7 @@
 import { parseKeyPairsIntoRecord } from "../parse/headers/utils";
 import type { OpenTelemetryClientConfig, TelemetryMetadata } from "./telemetry";
 
-export interface ClineTelemetryServiceConfig extends OpenTelemetryClientConfig {
+export interface Enki AITelemetryServiceConfig extends OpenTelemetryClientConfig {
 	metadata: TelemetryMetadata;
 }
 
@@ -30,12 +30,12 @@ function getTelemetryBuildTimeConfig(): OpenTelemetryClientConfig {
 	};
 }
 
-export function createClineTelemetryServiceMetadata(
+export function createEnki AITelemetryServiceMetadata(
 	overrides: Partial<TelemetryMetadata> = {},
 ): TelemetryMetadata {
 	return {
 		extension_version: "unknown",
-		cline_type: "unknown",
+		enki_type: "unknown",
 		platform: "terminal",
 		platform_version: process?.version || "unknown",
 		os_type: process?.platform || "unknown",
@@ -47,12 +47,12 @@ export function createClineTelemetryServiceMetadata(
 	};
 }
 
-export function createClineTelemetryServiceConfig(
-	configOverrides: Partial<ClineTelemetryServiceConfig> = {},
-): ClineTelemetryServiceConfig {
+export function createEnki AITelemetryServiceConfig(
+	configOverrides: Partial<Enki AITelemetryServiceConfig> = {},
+): Enki AITelemetryServiceConfig {
 	return {
 		...getTelemetryBuildTimeConfig(),
 		...configOverrides,
-		metadata: createClineTelemetryServiceMetadata(configOverrides.metadata),
+		metadata: createEnki AITelemetryServiceMetadata(configOverrides.metadata),
 	};
 }

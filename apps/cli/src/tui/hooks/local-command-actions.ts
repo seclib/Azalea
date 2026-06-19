@@ -15,7 +15,7 @@ export interface LocalSlashCommandActionInput {
 	clearConversation: () => Promise<void>;
 	openHelp: () => void;
 	openHistory: () => void;
-	exitCline: () => void;
+	exitEnki AI: () => void;
 }
 
 export function runLocalSlashCommandAction(
@@ -68,7 +68,7 @@ export function runLocalSlashCommandAction(
 		return true;
 	}
 	if (normalized === "quit") {
-		setTimeout(input.exitCline, 0);
+		setTimeout(input.exitEnki AI, 0);
 		return true;
 	}
 	return false;

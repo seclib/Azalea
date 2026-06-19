@@ -4,8 +4,8 @@ import {
 	type BasicLogger,
 	createContributionRegistry,
 	resolveAndLoadAgentPlugins,
-} from "@cline/core";
-import type { AgentTool, Message } from "@cline/shared";
+} from "@enki/core";
+import type { AgentTool, Message } from "@enki/shared";
 import {
 	type ChatCommandDefinition,
 	type ChatCommandHost,

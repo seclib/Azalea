@@ -3,7 +3,7 @@ import {
 	formatMessagesForAiSdk,
 	type Message,
 	type ToolResultContent,
-} from "@cline/shared";
+} from "@enki/shared";
 import { describe, expect, it } from "vitest";
 import { messagesToAgentMessages } from "../../runtime/config/agent-message-codec";
 import { MessageBuilder } from "./message-builder";
@@ -382,7 +382,7 @@ describe("MessageBuilder", () => {
 
 /**
  * Regression coverage for the real `ToolOperationResult[]` shape emitted by
- * the default Cline tools (run_commands, read_files, search_codebase).
+ * the default Enki AI tools (run_commands, read_files, search_codebase).
  *
  * The runtime stores these structured results directly as the tool_result
  * `content` array (see `agentPartToContentBlock` in

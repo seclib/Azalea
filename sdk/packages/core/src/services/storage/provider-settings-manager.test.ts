@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import * as LlmsModels from "@cline/llms";
+import * as LlmsModels from "@enki/llms";
 import { afterEach, describe, expect, it } from "vitest";
 import { ProviderSettingsManager } from "./provider-settings-manager";
 
@@ -61,7 +61,7 @@ describe("ProviderSettingsManager", () => {
 
 		manager.saveProviderSettings(
 			{
-				provider: "cline",
+				provider: "enki",
 				model: "anthropic/claude-sonnet-4.6",
 				baseUrl: "https://api.example.test",
 				auth: {
@@ -72,31 +72,31 @@ describe("ProviderSettingsManager", () => {
 			{ setLastUsed: false, tokenSource: "oauth" },
 		);
 
-		expect(manager.getProviderSettings("cline-pass")).toEqual({
-			provider: "cline-pass",
+		expect(manager.getProviderSettings("enki-pass")).toEqual({
+			provider: "enki-pass",
 			baseUrl: "https://api.example.test",
 			auth: {
 				accessToken: "workos:shared-token",
 				refreshToken: "shared-refresh",
 			},
 		});
-		expect(manager.getProviderConfig("cline-pass")).toMatchObject({
-			providerId: "cline-pass",
+		expect(manager.getProviderConfig("enki-pass")).toMatchObject({
+			providerId: "enki-pass",
 			apiKey: "workos:shared-token",
 			baseUrl: "https://api.example.test",
 		});
 
 		manager.saveProviderSettings(
 			{
-				provider: "cline-pass",
-				model: "cline-pass/glm-5.1",
+				provider: "enki-pass",
+				model: "enki-pass/glm-5.1",
 			},
 			{ setLastUsed: true },
 		);
 
-		expect(manager.getProviderSettings("cline-pass")).toEqual({
-			provider: "cline-pass",
-			model: "cline-pass/glm-5.1",
+		expect(manager.getProviderSettings("enki-pass")).toEqual({
+			provider: "enki-pass",
+			model: "enki-pass/glm-5.1",
 			baseUrl: "https://api.example.test",
 			auth: {
 				accessToken: "workos:shared-token",
@@ -105,7 +105,7 @@ describe("ProviderSettingsManager", () => {
 		});
 	});
 
-	it("falls back to cline when last-used provider is cline-pass and the feature is disabled", () => {
+	it("falls back to enki when last-used provider is enki-pass and the feature is disabled", () => {
 		const tempDir = mkdtempSync(
 			path.join(os.tmpdir(), "core-provider-settings-"),
 		);
@@ -115,7 +115,7 @@ describe("ProviderSettingsManager", () => {
 
 		manager.saveProviderSettings(
 			{
-				provider: "cline",
+				provider: "enki",
 				model: "anthropic/claude-sonnet-4.6",
 				baseUrl: "https://api.example.test",
 				auth: {
@@ -127,20 +127,20 @@ describe("ProviderSettingsManager", () => {
 		);
 		manager.saveProviderSettings(
 			{
-				provider: "cline-pass",
-				model: "cline-pass/glm-5.1",
+				provider: "enki-pass",
+				model: "enki-pass/glm-5.1",
 			},
 			{ setLastUsed: true },
 		);
 
 		expect(manager.getLastUsedProviderSettings()).toMatchObject({
-			provider: "cline-pass",
-			model: "cline-pass/glm-5.1",
+			provider: "enki-pass",
+			model: "enki-pass/glm-5.1",
 		});
 		expect(
-			manager.getLastUsedProviderSettings({ isClinePassEnabled: false }),
+			manager.getLastUsedProviderSettings({ isEnki AIPassEnabled: false }),
 		).toEqual({
-			provider: "cline",
+			provider: "enki",
 			model: "anthropic/claude-sonnet-4.6",
 			baseUrl: "https://api.example.test",
 			auth: {
@@ -149,15 +149,15 @@ describe("ProviderSettingsManager", () => {
 			},
 		});
 		expect(
-			manager.getLastUsedProviderConfig({ isClinePassEnabled: false }),
+			manager.getLastUsedProviderConfig({ isEnki AIPassEnabled: false }),
 		).toMatchObject({
-			providerId: "cline",
+			providerId: "enki",
 			apiKey: "workos:shared-token",
 			baseUrl: "https://api.example.test",
 		});
 	});
 
-	it("returns default cline settings when cline-pass is last-used and no cline settings exist", () => {
+	it("returns default enki settings when enki-pass is last-used and no enki settings exist", () => {
 		const tempDir = mkdtempSync(
 			path.join(os.tmpdir(), "core-provider-settings-"),
 		);
@@ -167,26 +167,26 @@ describe("ProviderSettingsManager", () => {
 
 		manager.saveProviderSettings(
 			{
-				provider: "cline-pass",
-				model: "cline-pass/glm-5.1",
+				provider: "enki-pass",
+				model: "enki-pass/glm-5.1",
 			},
 			{ setLastUsed: true },
 		);
 
 		manager.saveProviderSettings(
 			{
-				provider: "cline",
+				provider: "enki",
 			},
 			{ setLastUsed: true },
 		);
 
 		expect(
-			manager.getLastUsedProviderSettings({ isClinePassEnabled: false }),
-		).toEqual({ provider: "cline" });
+			manager.getLastUsedProviderSettings({ isEnki AIPassEnabled: false }),
+		).toEqual({ provider: "enki" });
 		expect(
-			manager.getLastUsedProviderConfig({ isClinePassEnabled: false })
+			manager.getLastUsedProviderConfig({ isEnki AIPassEnabled: false })
 				?.providerId,
-		).toBe("cline");
+		).toBe("enki");
 	});
 
 	it("migrates legacy provider settings during manager construction", () => {

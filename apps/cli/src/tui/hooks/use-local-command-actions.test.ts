@@ -20,7 +20,7 @@ function makeActions(
 		clearConversation: vi.fn(async () => {}),
 		openHelp: vi.fn(),
 		openHistory: vi.fn(),
-		exitCline: vi.fn(),
+		exitEnki AI: vi.fn(),
 		...overrides,
 	};
 }
@@ -120,10 +120,10 @@ describe("runLocalSlashCommandAction", () => {
 		expect(settled).toBe(true);
 	});
 
-	it("exits Cline with quit", () => {
+	it("exits Enki AI with quit", () => {
 		vi.useFakeTimers();
-		const exitCline = vi.fn();
-		const actions = makeActions({ exitCline });
+		const exitEnki AI = vi.fn();
+		const actions = makeActions({ exitEnki AI });
 
 		try {
 			const handled = runLocalSlashCommandAction({
@@ -132,11 +132,11 @@ describe("runLocalSlashCommandAction", () => {
 			});
 
 			expect(handled).toBe(true);
-			expect(exitCline).not.toHaveBeenCalled();
+			expect(exitEnki AI).not.toHaveBeenCalled();
 
 			vi.runAllTimers();
 
-			expect(exitCline).toHaveBeenCalledOnce();
+			expect(exitEnki AI).toHaveBeenCalledOnce();
 		} finally {
 			vi.useRealTimers();
 		}

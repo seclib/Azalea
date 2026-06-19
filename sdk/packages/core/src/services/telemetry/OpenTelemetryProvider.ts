@@ -4,7 +4,7 @@ import type {
 	OpenTelemetryClientConfig,
 	TelemetryMetadata,
 	TelemetryProperties,
-} from "@cline/shared";
+} from "@enki/shared";
 import { metrics, type Tracer, trace } from "@opentelemetry/api";
 import { logs } from "@opentelemetry/api-logs";
 import { OTLPLogExporter as OTLPLogExporterHttp } from "@opentelemetry/exporter-logs-otlp-http";
@@ -146,7 +146,7 @@ export class OpenTelemetryProvider {
 	constructor(options: OpenTelemetryProviderOptions = {}) {
 		this.options = options;
 		const resource = resourceFromAttributes({
-			[ATTR_SERVICE_NAME]: options.serviceName ?? "cline",
+			[ATTR_SERVICE_NAME]: options.serviceName ?? "enki",
 			...(options.serviceVersion
 				? { [ATTR_SERVICE_VERSION]: options.serviceVersion }
 				: {}),
@@ -171,7 +171,7 @@ export class OpenTelemetryProvider {
 	 * Returns a tracer for manual spans. Requires {@link OpenTelemetryProviderOptions.tracesExporter}
 	 * so that a {@link NodeTracerProvider} is registered.
 	 */
-	getTracer(name = "cline", version?: string): Tracer {
+	getTracer(name = "enki", version?: string): Tracer {
 		return trace.getTracer(name, version ?? this.options.serviceVersion);
 	}
 

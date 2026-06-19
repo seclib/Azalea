@@ -9,9 +9,9 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type * as LlmsProviders from "@cline/llms";
-import type { AgentResult } from "@cline/shared";
-import { setClineDir, setHomeDir } from "@cline/shared/storage";
+import type * as LlmsProviders from "@enki/llms";
+import type { AgentResult } from "@enki/shared";
+import { setEnki AIDir, setHomeDir } from "@enki/shared/storage";
 import { nanoid } from "nanoid";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionManifest } from "../../session/models/session-manifest";
@@ -226,16 +226,16 @@ describe("LocalRuntimeHost e2e", () => {
 	beforeEach(() => {
 		isolatedHomeDir = mkdtempSync(join(tmpdir(), "core-session-home-"));
 		process.env.HOME = isolatedHomeDir;
-		process.env.CLINE_DIR = join(isolatedHomeDir, ".cline");
+		process.env.CLINE_DIR = join(isolatedHomeDir, ".enki");
 		setHomeDir(isolatedHomeDir);
-		setClineDir(process.env.CLINE_DIR);
+		setEnki AIDir(process.env.CLINE_DIR);
 	});
 
 	afterEach(() => {
 		process.env.HOME = envSnapshot.HOME;
 		process.env.CLINE_DIR = envSnapshot.CLINE_DIR;
 		setHomeDir(envSnapshot.HOME ?? "~");
-		setClineDir(envSnapshot.CLINE_DIR ?? join("~", ".cline"));
+		setEnki AIDir(envSnapshot.CLINE_DIR ?? join("~", ".enki"));
 		for (const dir of tempDirs.splice(0)) {
 			rmSync(dir, { recursive: true, force: true });
 		}

@@ -12,11 +12,11 @@ export enum FeatureFlag {
 	// Feature flag for DB-backed welcome banners (What's New modal)
 	// When off, hardcoded welcome items are shown instead
 	REMOTE_WELCOME_BANNERS = "remote-welcome-banners",
-	// Rollout flag for Cline provider model sourcing:
-	// off => OpenRouter model list, on => Cline endpoint model list.
-	EXTENSION_CLINE_MODELS_ENDPOINT = "extension_cline_models_endpoint",
-	// Enables Cline Pass provider/model list exposure.
-	CLINE_PASS = "ext-cline-pass",
+	// Rollout flag for Enki AI provider model sourcing:
+	// off => OpenRouter model list, on => Enki AI endpoint model list.
+	EXTENSION_CLINE_MODELS_ENDPOINT = "extension_enki_models_endpoint",
+	// Enables Enki AI Pass provider/model list exposure.
+	CLINE_PASS = "ext-enki-pass",
 	// Use the websocket mode for OpenAI native Responses API format
 	OPENAI_RESPONSES_WEBSOCKET_MODE = "openai-responses-websocket-mode",
 }

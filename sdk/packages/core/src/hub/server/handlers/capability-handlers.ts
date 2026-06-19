@@ -1,5 +1,5 @@
-import type { HubCommandEnvelope, HubReplyEnvelope } from "@cline/shared";
-import { createSessionId } from "@cline/shared";
+import type { HubCommandEnvelope, HubReplyEnvelope } from "@enki/shared";
+import { createSessionId } from "@enki/shared";
 import { logHubMessage } from "../hub-server-logging";
 import { errorReply, type HubTransportContext, okReply } from "./context";
 
