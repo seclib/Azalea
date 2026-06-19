@@ -1,5 +1,5 @@
 {
-	"name": "@cline/core",
+	"name": "@azalea/core",
 	"description": "Cline Core SDK for Node Runtime",
 	"version": "0.0.49",
 	"repository": {
@@ -48,9 +48,9 @@
 		"test:watch": "vitest --config vitest.config.ts"
 	},
 	"dependencies": {
-		"@cline/agents": "workspace:*",
-		"@cline/shared": "workspace:*",
-		"@cline/llms": "workspace:*",
+		"@azalea/agents": "workspace:*",
+		"@azalea/shared": "workspace:*",
+		"@azalea/llms": "workspace:*",
 		"@modelcontextprotocol/sdk": "^1.29.0",
 		"@opentelemetry/api": "^1.9.0",
 		"@opentelemetry/api-logs": "^0.214.0",
